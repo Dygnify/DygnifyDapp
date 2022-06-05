@@ -92,7 +92,7 @@ const Test = () => {
         >
           <Graph />
           <div className="dai">
-            <Avatar alt="" src="./dai.png" />
+            <Avatar alt="" src="./assets/dai.png" />
             <Typography>82,516,815</Typography>
             &nbsp;
             <span>DAI</span>
@@ -113,7 +113,7 @@ const Test = () => {
             alignItems: "center",
           }}
         >
-          <Avatar alt="" src="./dai.png" />
+          <Avatar alt="" src="./assets/dai.png" />
           <Button variant="outlined" sx={{ height: "40px" }}>
             {" Claim CFG"}
           </Button>

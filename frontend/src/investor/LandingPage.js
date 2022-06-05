@@ -23,7 +23,7 @@ const LandingPage = () => {
         <div>
           <img
             style={{ width: "150px", height: "80px", objectFit: "contain" }}
-            src="./logo.png"
+            src="./assets/logo.png"
             alt="company logo"
           />
         </div>
@@ -105,14 +105,14 @@ const LandingPage = () => {
       </Stack>
       <Box>
         <Company
-          src="./indianWomen.png"
+          src="./assets/indianWomen.png"
           name="Income Generating Loans"
           data="Individual Business Loans to micro and small women entrepreneurs"
           value="59,87,197"
           apy="10.45"
         />
         <Company
-          src="./woman-riding-a-motorbike.png"
+          src="./assets/woman-riding-a-motorbike.png"
           name="EVs : New-age delivery partners"
           data="EV Loans to women generating income
           as delivery partners"
@@ -120,7 +120,7 @@ const LandingPage = () => {
           apy="12.15"
         />
         <Company
-          src="./planet-earth.png"
+          src="./assets/planet-earth.png"
           name="Green Business with Pink hearts"
           data="Loans to women who have Agri based businesses"
           value="59,52,577"

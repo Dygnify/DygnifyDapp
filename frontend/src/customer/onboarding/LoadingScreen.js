@@ -22,7 +22,7 @@ const LoadingScreen = () => {
               backgroundColor: "#ffffff",
               borderRadius: "22px",
             }}
-            src="./logo.png"
+            src="./assets/logo.png"
             alt="logo"
           />
         </Stack>
@@ -46,7 +46,7 @@ const LoadingScreen = () => {
               backgroundColor: "#ffffff",
               borderRadius: "12px",
             }}
-            src="./logo.png"
+            src="./assets/logo.png"
             alt="logo"
           />
         </Stack>

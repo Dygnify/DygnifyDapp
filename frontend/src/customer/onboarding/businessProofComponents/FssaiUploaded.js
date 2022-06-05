@@ -49,7 +49,7 @@ const FssaiUploaded = ({ handleClick }) => {
         />
         <Stack sx={{ alignItems: "center" }}>
           <img
-            src="./assets/ok.png"
+            src="./assets/assets/ok.png"
             alt=""
             style={{ height: "48px", width: "48px", objectFit: "contain" }}
           />

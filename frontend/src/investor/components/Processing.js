@@ -52,7 +52,7 @@ const Processing = ({ handleClick,fullName }) => {
       >
         <img
           style={{ width: "110px", height: "70px", objectFit: "contain" }}
-          src="./sand-timer.gif"
+          src="./assets/sand-timer.gif"
           alt=""
         />
       </Box>

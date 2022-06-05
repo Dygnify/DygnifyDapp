@@ -30,7 +30,7 @@ const Disbursement = () => {
         <div>
           <img
             style={{ width: "150px", height: "80px", objectFit: "contain" }}
-            src="./logo.png"
+            src="./assets/logo.png"
             alt="company logo"
           />
         </div>
@@ -147,7 +147,7 @@ const Disbursement = () => {
               marginLeft: "160px",
               marginTop: "16px",
             }}
-            src="./Arrow.png"
+            src="./assets/Arrow.png"
             alt=""
           />
           <Stack
@@ -159,7 +159,7 @@ const Disbursement = () => {
               alignItems: "center",
             }}
           >
-            <img src="./rupee.png" alt="" />
+            <img src="./assets/rupee.png" alt="" />
             <Typography>On-Off Ramp Wallet in INR</Typography>
           </Stack>
           <img
@@ -168,7 +168,7 @@ const Disbursement = () => {
               marginLeft: "160px",
               marginTop: "16px",
             }}
-            src="./Arrow.png"
+            src="./assets/Arrow.png"
             alt=""
           />
           <Stack
@@ -180,7 +180,7 @@ const Disbursement = () => {
               alignItems: "center",
             }}
           >
-            <img src="./crypto.png" alt="" />
+            <img src="./assets/crypto.png" alt="" />
             <Typography>Credit to ESCROW Account in INR </Typography>
           </Stack>
           <img
@@ -189,7 +189,7 @@ const Disbursement = () => {
               marginLeft: "160px",
               marginTop: "16px",
             }}
-            src="./Arrow.png"
+            src="./assets/Arrow.png"
             alt=""
           />
           <Box
@@ -218,7 +218,7 @@ const Disbursement = () => {
             {isDisburse===2 ? <Typography sx={{ ml: "200px" }}>INR 10,00,000</Typography> : (isDisburse===1 ? 
              <img
                 style={{ width: "110px", height: "70px", objectFit: "contain" }}
-                src="./sand-timer.gif"
+                src="./assets/sand-timer.gif"
                 alt=""
               />
             : null) }
@@ -226,7 +226,7 @@ const Disbursement = () => {
         </Box>
         <img
           style={{ width: "150px", height: "400px", objectFit: "contain" }}
-          src="./close-bracket.png"
+          src="./assets/close-bracket.png"
           alt=""
         />
         <div>
@@ -248,7 +248,7 @@ const Disbursement = () => {
               objectFit: "contain",
               marginLeft: "10px",
             }}
-            src="./smart-contracts.png"
+            src="./assets/smart-contracts.png"
             alt=""
           />
         </div>  

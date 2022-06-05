@@ -80,7 +80,7 @@ const Overview = () => {
         }}
       >
         <div className="content">
-          <img src="./rwa-market-icon.png" alt="" />
+          <img src="./assets/rwa-market-icon.png" alt="" />
           <div className="text">
             <p> Branch Series 3(1754 Factory)</p>
             <p>Overview</p>
@@ -159,7 +159,7 @@ const Overview = () => {
         >
           <Stack sx={{ py: "15px", px: "15px" }}>
             <img
-              src="./branch.png"
+              src="./assets/branch.png"
               alt=""
               style={{ height: "60px", width: "15%" }}
             />

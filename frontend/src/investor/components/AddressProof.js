@@ -20,7 +20,7 @@ const AddressProof = ({ handleClick }) => {
       >
         <img
           style={{ height: "250px", width: "250px", objectFit: "contain" }}
-          src="./utilities.png"
+          src="./assets/utilities.png"
           alt=""
         />
       </Box>

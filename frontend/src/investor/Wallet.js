@@ -140,7 +140,7 @@ const Wallet = () => {
         <div>
           <img
             style={{ width: "150px", height: "80px", objectFit: "contain" }}
-            src="./logo.png"
+            src="./assets/logo.png"
             alt="company logo"
           />
         </div>
@@ -195,7 +195,7 @@ const Wallet = () => {
         >
           <img
             style={{ width: "88px", height: "77px" }}
-            src="./indianWomen.png"
+            src="./assets/indianWomen.png"
             alt=""
           />
           </Card>

@@ -41,7 +41,7 @@ const DashboardMain = () => {
         >
           <Avatar
             alt="women"
-            src="./woman.png"
+            src="./assets/woman.png"
             sx={{ width: 70, height: 70, ml: "100px", cursor: "pointer" }}
             aria-describedby={id}
             type="button"
@@ -166,7 +166,7 @@ const DashboardMain = () => {
         </Stack>
         <img
           style={{ width: "100%", height: "185px" }}
-          src="./devi.png"
+          src="./assets/devi.png"
           alt="devi"
         />
       </Box>

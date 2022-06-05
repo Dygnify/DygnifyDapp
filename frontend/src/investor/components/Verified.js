@@ -16,7 +16,7 @@ const Verified = ({verified}) => {
       >
         <img
           style={{ width: "210px", height: "110px", objectFit: "contain" }}
-          src="./thumbsUp.png"
+          src="./assets/thumbsUp.png"
           alt=""
         />
       </Box>

@@ -40,7 +40,7 @@ const KYC = () => {
       >
         <img
           style={{ width: "150px", height: "80px", objectFit: "contain" }}
-          src="./logo.png"
+          src="./assets/logo.png"
           alt="company logo"
         />
       </Box>

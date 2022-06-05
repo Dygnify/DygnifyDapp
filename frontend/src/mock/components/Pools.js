@@ -26,7 +26,7 @@ const Pools = () => {
           <div className="content">
             <img
               style={{ width: "40px", height: "40px" }}
-              src="./rwa-market-icon.png"
+              src="./assets/rwa-market-icon.png"
               alt=""
             />
             <div className="text">
