@@ -88,7 +88,7 @@ const renderActiveShape = (props) => {
         textAnchor: textAnchor,
         fill: "#999",
       },
-      `${value} INRC`
+      `${value} {process.env.REACT_APP_TOKEN_NAME}`
     )
   );
 };

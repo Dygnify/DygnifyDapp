@@ -56,7 +56,7 @@ const Company = ({ src, name, data, value, apy }) => {
         >
           <Typography variant="subtitle2">{value}</Typography>
           &nbsp;
-          <Typography variant="body2">INRC</Typography>
+          <Typography variant="body2">{process.env.REACT_APP_TOKEN_NAME}</Typography>
         </Stack>
         <Typography>{apy}%</Typography>
       </Card>

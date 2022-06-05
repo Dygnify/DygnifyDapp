@@ -48,7 +48,7 @@ const Dashboard = () => {
               size="small"
               sx={{ backgroundColor: "#E5E5E5", borderRadius: "120px" }}
             >
-              USDC
+              {process.env.REACT_APP_TOKEN_NAME}
             </Button>
           </div>
         </div>
@@ -104,12 +104,12 @@ const Dashboard = () => {
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />{" "}
           <div>
-            <Typography variant="subtitle2">5,00,000 INRC</Typography>
+            <Typography variant="subtitle2">5,00,000 {process.env.REACT_APP_TOKEN_NAME}</Typography>
             <Typography variant="overline">Amount Invested</Typography>
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />{" "}
           <div>
-            <Typography variant="subtitle2">52,250 INRC</Typography>
+            <Typography variant="subtitle2">52,250 {process.env.REACT_APP_TOKEN_NAME}</Typography>
             <Typography variant="overline">Yield Generated</Typography>
           </div>
         </Card>
@@ -141,12 +141,12 @@ const Dashboard = () => {
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />
           <div>
-            <Typography variant="subtitle2">2,00,000 INRC</Typography>
+            <Typography variant="subtitle2">2,00,000 {process.env.REACT_APP_TOKEN_NAME}</Typography>
             <Typography variant="overline">Amount Invested</Typography>
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />
           <div>
-            <Typography variant="subtitle2">48,600 INRC</Typography>
+            <Typography variant="subtitle2">48,600 {process.env.REACT_APP_TOKEN_NAME}</Typography>
             <Typography variant="overline">Yield Generated</Typography>
           </div>
         </Card>

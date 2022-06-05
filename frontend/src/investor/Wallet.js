@@ -157,7 +157,7 @@ const Wallet = () => {
               size="small"
               sx={{ backgroundColor: "#E5E5E5", borderRadius: "120px" }}
             >
-              USDC
+              {process.env.REACT_APP_TOKEN_NAME}
             </Button>
           </div>
           <Button
@@ -178,7 +178,7 @@ const Wallet = () => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            marginLeft: "330px"
+            marginLeft: "185px"
           }}
         >
           <Box>
@@ -191,16 +191,17 @@ const Wallet = () => {
             display: "flex",
             flexDirection: "column",
             textAlign: "justify",
+            borderRadius: "12px",
           }}
         >
           <img
             style={{ width: "88px", height: "77px" }}
-            src="./assets/indianWomen.png"
+            src="./assets/supply-chain.png"
             alt=""
           />
           </Card>
           </Box>
-          <Typography ml={2}>Income Generating Loans</Typography>
+          <Typography ml={2}>Supply Chain Finance</Typography>
         </Stack>
       <Box
         sx={{
@@ -285,16 +286,10 @@ const Wallet = () => {
         </Stack>
         <Stack
           sx={{
-            // display: "grid",
-            // gridTemplateColumns: "1fr 1fr 1fr",
-            // gap: "0px 10px",
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-between",
-            ml: "32px",
-            mr: "60px",
           }}
-        ><div style={{display:"flex"}}></div>
+        >
           <TextField
             label="Amount"
             variant="outlined"
@@ -307,16 +302,10 @@ const Wallet = () => {
             label="Amount"
             variant="outlined"
             margin="normal"
-            // value={withdraw}
-            // onChange={handleChange("withdraw")}
+            value={withdraw}
+            onChange={handleChange("withdraw")}
+            style={{marginLeft:"215px"}}
           />
-          {/* <TextField
-            label="Amount"
-            variant="outlined"
-            margin="normal"
-            // value={yieldWithdraw}
-            // onChange={handleChange("yieldWithdraw")}
-          /> */}
         </Stack>
       </Box>
       <Stack
@@ -329,7 +318,7 @@ const Wallet = () => {
         }}
       >
         <Button
-          sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginLeft:"410px",marginRight:"10px"}}
+          sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginLeft:"310px",marginRight:"10px"}}
           variant="contained"
           size="large"
           onClick={onSubmitApprove}
@@ -342,20 +331,13 @@ const Wallet = () => {
           size="large"
           onClick={onSubmitStake}
         >
-          Approve
-        </Button>
-        <Button
-          sx={{ backgroundColor: "#ffffff", color: "#7165E3" }}
-          variant="contained"
-          size="large"
-        >
           Deposit
         </Button>
         <Button
           sx={{ backgroundColor: "#ffffff", color: "#7165E3" }}
           variant="contained"
           size="large"
-          onClick={yieldWithdraw==="" ? onSubmitUnstake : onSubmitYield}
+          onClick={onSubmitUnstake}
           style={{marginLeft:"160px"}}
         >
           Withdraw

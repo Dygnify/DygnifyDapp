@@ -132,7 +132,7 @@ const CompanyInfo = () => {
               size="small"
               sx={{ backgroundColor: "#E5E5E5", borderRadius: "120px" }}
             >
-              USDC
+              {process.env.REACT_APP_TOKEN_NAME}
             </Button>
           </div>
           <Button
@@ -181,12 +181,12 @@ const CompanyInfo = () => {
         >
           <img
             style={{ width: "88px", height: "77px" }}
-            src="./assets/indianWomen.png"
+            src="./assets/supply-chain.png"
             alt=""
           />
           </Card>
           </Box>
-          <Typography ml={2}>Income Generating Loans</Typography>
+          <Typography ml={2}>Supply Chain Finance</Typography>
         </Stack>
         <Button
           sx={{ backgroundColor: "#ffffff", color: "#000000" }}
@@ -210,7 +210,7 @@ const CompanyInfo = () => {
           }}
         >
           <div>
-            <Typography variant="subtitle2">Business Loans to Women</Typography>
+            <Typography variant="subtitle2">Short term credit by financing receivables</Typography>
             <Typography variant="overline">Asset Type</Typography>
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />
@@ -225,7 +225,7 @@ const CompanyInfo = () => {
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />{" "}
           <div>
-            <Typography variant="subtitle2">59,87,197 INRC</Typography>
+            <Typography variant="subtitle2">59,87,197 {process.env.REACT_APP_TOKEN_NAME}</Typography>
             <Typography variant="overline">Value</Typography>
           </div>
         </Card>
@@ -259,15 +259,7 @@ const CompanyInfo = () => {
             ABC Finance Private Limited
           </Typography>
           <Typography variant="body2">
-            ABC is a RBI approved Microfinance company operating in Southern
-            India that provides business loans to women borrowers in sumi-urban
-            and rural India via the group lending and individual lending model
-            for income generation. ABC was founded in 20XX and has operations in
-            southern states of Karnataka, Tamil Nadu, Andhra Pradesh, Telangana,
-            and has since originated over $30 Mn in loans to over 10 millions
-            borrowers. This opportunity will consist of tranches of a secured
-            non convertible debenture with a maturity of 24 months backed by a
-            portfolio of loans made to customers.
+ABC is a  company operating in Southern India that provides invoice factoring services, which involves buying a business's unpaid invoices at a discount. ABC was founded in 20XX and has operations in southern states of Karnataka, Tamil Nadu, Andhra Pradesh, Telangana, and has since originated over $30 Mn in loans to over 10 millions borrowers. This opportunity will consist of tranches of a secured non convertible debenture with a maturity of 24 months backed by a portfolio of loans made to customers.
           </Typography>
         </Card>
       </Box>
@@ -347,7 +339,7 @@ const CompanyInfo = () => {
             }}
           >
             <Typography>Available Liquidity</Typography>
-            <Typography>5,60,000 INRC</Typography>
+            <Typography>5,60,000 {process.env.REACT_APP_TOKEN_NAME}</Typography>
           </Stack>
         </Card>
       </Box>

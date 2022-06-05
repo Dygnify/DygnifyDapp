@@ -40,7 +40,7 @@ const LandingPage = () => {
               size="small"
               sx={{ backgroundColor: "#E5E5E5", borderRadius: "120px" }}
             >
-              USDC
+              {process.env.REACT_APP_TOKEN_NAME}
             </Button>
           </div>
           <Button
@@ -87,7 +87,7 @@ const LandingPage = () => {
         <LockedValueChart />
         <Stack>
           <Typography variant="subtitle2">1,65,92,751</Typography>
-          <Typography variant="subtitle2">INRC</Typography>
+          <Typography variant="subtitle2">{process.env.REACT_APP_TOKEN_NAME}</Typography>
           <Typography variant="body2">Total Value Locked</Typography>
         </Stack>
       </Box>
@@ -97,7 +97,7 @@ const LandingPage = () => {
         }}
       >
         <div style={{display:"flex" ,}} >
-          <Typography variant="subtitle1" style={{marginLeft :"230px"}} >Opportunity</Typography>
+          <Typography variant="subtitle1" style={{marginLeft :"130px"}} >Opportunity</Typography>
           <Typography variant="subtitle1" style={{marginLeft :"380px"}} >Investment</Typography>
           <Typography variant="subtitle1" style={{marginLeft :"210px"}} >Value</Typography>
           <Typography variant="subtitle1" style={{marginLeft :"220px"}} >APY</Typography>
@@ -105,9 +105,9 @@ const LandingPage = () => {
       </Stack>
       <Box>
         <Company
-          src="./assets/indianWomen.png"
-          name="Income Generating Loans"
-          data="Individual Business Loans to micro and small women entrepreneurs"
+          src="./assets/supply-chain.png"
+          name="Supply Chain Finance"
+          data="Short term credit by financing receivables"
           value="59,87,197"
           apy="10.45"
         />

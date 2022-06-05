@@ -3,8 +3,8 @@ import dygnifyStaking from "../../artifacts/contracts/DygnifyStaking.sol/Dygnify
 import dygnifyToken from "../../artifacts/contracts/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
 
-const dygnifyStakingAddress = "0x043c0B0385870AaFe42d98A2817DDA81E462Ccc9";
-const token = "0x420d23b5D7B70fFEF09A6076B7Db1176472BaA37";
+const dygnifyStakingAddress = "0x4D4831e99939fe82F1B5Cdd83ca275d3AC6881c4";
+const token = "0x7b09770AAe0aA01D3E6eBcaDfee892766e739CE7";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0" ) {

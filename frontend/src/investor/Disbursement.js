@@ -75,7 +75,7 @@ const Disbursement = () => {
           }}
         >
           <Typography variant="subtitle1">For </Typography>
-          <Typography variant="subtitle1">INRC 10,00,000 </Typography>
+          <Typography variant="subtitle1">{process.env.REACT_APP_TOKEN_NAME} 10,00,000 </Typography>
         </Stack>
         <Stack
           sx={{
@@ -139,7 +139,7 @@ const Disbursement = () => {
               </Typography>
               <Typography variant="body2">Opportunity</Typography>
             </Stack>
-            <Typography>INRC 10,00,000 </Typography>
+            <Typography>{process.env.REACT_APP_TOKEN_NAME} 10,00,000 </Typography>
           </Box>
           <img
             style={{
