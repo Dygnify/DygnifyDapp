@@ -95,10 +95,10 @@ contract DygnifyStaking {
     ///      before it's divided by the rate. rawYield thereafter divides the product back by 10e18
     /// @param user The address of the user
     function calculateYieldTotal(address user) public view returns (uint256) {
-        uint256 time = calculateYieldTime(user) * 10**18;
+        uint256 time = calculateYieldTime(user) * (10**18);
         uint256 rate = 315360000;
         uint256 timeRate = time / rate;
-        uint256 rawYield = (stakingBalance[user] * timeRate) / 10**18;
+        uint256 rawYield = (stakingBalance[user] * timeRate) / (10**18);
         return rawYield;
     }
 
