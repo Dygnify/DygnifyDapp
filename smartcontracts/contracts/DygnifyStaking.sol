@@ -90,13 +90,13 @@ contract DygnifyStaking {
         return totalTime;
     }
 
-    /// @notice Calculates the user's yield while using a 86400 second rate (for 100% returns in 24 hours)
+    /// @notice Calculates the user's yield while using a 315360000 second rate (for 10% returns in 1 year)
     /// @dev Solidity does not compute fractions or decimals; therefore, time is multiplied by 10e18
     ///      before it's divided by the rate. rawYield thereafter divides the product back by 10e18
     /// @param user The address of the user
     function calculateYieldTotal(address user) public view returns (uint256) {
         uint256 time = calculateYieldTime(user) * 10**18;
-        uint256 rate = 86400;
+        uint256 rate = 315360000;
         uint256 timeRate = time / rate;
         uint256 rawYield = (stakingBalance[user] * timeRate) / 10**18;
         return rawYield;
