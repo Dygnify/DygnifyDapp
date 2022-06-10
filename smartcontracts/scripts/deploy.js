@@ -4,7 +4,6 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
-require("dotenv").config();
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -15,20 +14,28 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const DygnifyToken = await hre.ethers.getContractFactory("DygnifyToken");
-  const dygnifyToken = await DygnifyToken.deploy(process.env.DGNFY_TOKEN_TOTAL_SUPPLY);
-  await dygnifyToken.deployed();
-  console.log("Dygnify Token deployed to:", dygnifyToken.address);
 
+  const DygnifyToken = await hre.ethers.getContractFactory("DygnifyToken");
+  const dygnifyToken = await DygnifyToken.deploy("100000000000000000000");
+
+  await dygnifyToken.deployed();
+
+  console.log("DygnifyToken deployed to:", dygnifyToken.address);
+
+  // const usdtToken = "0x3813e82e6f7098b9583FC0F33a962D02018B6803";
   const DygnifyStaking = await hre.ethers.getContractFactory("DygnifyStaking");
-  const dygnifyStaking = await DygnifyStaking.deploy(dygnifyToken.address);
+  const dygnifyStaking = await DygnifyStaking.deploy(dygnifyToken.address,10);
+
   await dygnifyStaking.deployed();
-  console.log("Dygnify Staking deployed to:", dygnifyStaking.address);
+
+  console.log("DygnifyStaking deployed to:", dygnifyStaking.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
