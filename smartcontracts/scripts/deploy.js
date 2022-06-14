@@ -16,7 +16,7 @@ async function main() {
   // We get the contract to deploy
 
   const DygnifyToken = await hre.ethers.getContractFactory("DygnifyToken");
-  const dygnifyToken = await DygnifyToken.deploy("100000000000000000000");
+  const dygnifyToken = await DygnifyToken.deploy(process.env.DGNFY_TOKEN_TOTAL_SUPPLY);
 
   await dygnifyToken.deployed();
 

@@ -6,4 +6,3 @@ export const isConnected = async () => {
   let connectionStatus = await window.ethereum.isConnected();
   return connectionStatus;
 };
-

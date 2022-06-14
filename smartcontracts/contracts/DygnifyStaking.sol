@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /// @notice This contract creates a dygnify staking dApp that rewards users for
 ///         locking up their USDC stablecoin with Dygnify 
 
-contract DygnifyStaking  is ERC20  {
+contract DygnifyStaking  is ERC20 {
     // userAddress => stakingBalance
     mapping(address => uint256) public stakingBalance;
     // userAddress => isStaking boolean

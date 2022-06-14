@@ -18,7 +18,7 @@ import { ethers } from "ethers";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingOverlay from 'react-loading-overlay';
-import SyncLoader from "react-spinners/SyncLoader";
+import PulseLoader from "react-spinners/PulseLoader";
 
 const getEthAddress = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
@@ -74,7 +74,7 @@ const Wallet = () => {
   useEffect(() => {
     getTotalYield()
       .then((data) => {
-        setTotalYield(Number(data));
+        setTotalYield(Number(data).toFixed(2));
       })
       .catch(() => {
         console.log("Error in getting total yield");
@@ -94,7 +94,7 @@ const Wallet = () => {
       console.log("AMOUNT: " + amount);
       approve(amount)
         .then(() => {
-          setApproveLoading(false)
+          setApproveLoading(false) 
         })
         .catch(() => {
           errorNotify("Can't Approve");
@@ -383,7 +383,7 @@ const Wallet = () => {
               ><Typography>
               Approving...
               </Typography>
-              <SyncLoader size='25px' color='#7165e3' margin='5px'  /></Box>
+              <PulseLoader size='25px' color='#7165e3' margin='5px'  /></Box>
           :
             <Button
             sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginLeft:"310px",marginRight:"10px"}}
@@ -403,7 +403,7 @@ const Wallet = () => {
             ><Typography>
             Depositing...
             </Typography>
-            <SyncLoader size='25px' color='#7165e3' margin='5px'  /></Box>
+            <PulseLoader size='25px' color='#7165e3' margin='5px'  /></Box>
           :
             <Button
             sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginRight:"35px"}}
@@ -423,7 +423,7 @@ const Wallet = () => {
             ><Typography>
             Withdraw...
             </Typography>
-            <SyncLoader size='25px' color='#7165e3' margin='5px'  /></Box>
+            <PulseLoader size='25px' color='#7165e3' margin='5px'  /></Box>
           :
             <Button
             sx={{ backgroundColor: "#ffffff", color: "#7165E3" }}
