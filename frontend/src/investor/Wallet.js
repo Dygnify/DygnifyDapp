@@ -85,7 +85,7 @@ const Wallet = () => {
     setApproveLoading(true)
     event.preventDefault();
     if(parseInt( values.deposit) >  Number(walletBalance)){
-      errorNotify("Amount Exceeds the wallet balance");
+      errorNotify("Please enter an amount not exceeding the wallet balance");
       setApproveLoading(false)
     }
     else{
@@ -97,7 +97,7 @@ const Wallet = () => {
           setApproveLoading(false) 
         })
         .catch(() => {
-          errorNotify("Can't Approve");
+          errorNotify("Approval failed. Please try again.");
           setApproveLoading(false)
         });
     }
@@ -112,11 +112,11 @@ const Wallet = () => {
       re=>{
         console.log(Number(re), parseInt( values.deposit))
         if(Number(re)<parseInt( values.deposit)){
-          errorNotify("Approve required amount of token before deposite");
+          errorNotify("Please approve the amount before depositing");
           setDepositeLoading(false)
         }
         else if(parseInt( values.deposit) >  Number(walletBalance)){
-          errorNotify("Amount Exceeds the wallet balance");
+          errorNotify("Please enter an amount not exceeding the wallet balance");
           setDepositeLoading(false)
         }
         else{
@@ -132,7 +132,7 @@ const Wallet = () => {
               // setWithdrawlBal(withdrawlBal + amount);
             })
             .catch(() => {
-              errorNotify("Can't deposit");
+              errorNotify("Deposit failed. Please try again.");
               setDepositeLoading(false)
             });
         }    
@@ -144,7 +144,7 @@ const Wallet = () => {
   const onSubmitUnstake = (event) => {
     setWithdrawLoading(true)
     if( parseInt(values.withdraw) >  Number(withdrawlBal) ){
-      errorNotify("Amount Exceeds the Staking balance");
+      errorNotify("Please enter an amount not exceeding the staking balance");
       setWithdrawLoading(false)
     }
     else{
@@ -159,7 +159,7 @@ const Wallet = () => {
           setWithdrawLoading(false)
         })
         .catch(() => {
-          errorNotify("Can't withdraw");
+          errorNotify("Withdrawal failed. Please try again.");
           setWithdrawLoading(false)
         });
     }  
