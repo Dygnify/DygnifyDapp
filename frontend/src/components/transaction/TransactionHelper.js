@@ -3,8 +3,8 @@ import dygnifyStaking from "../../artifacts/contracts/DygnifyStaking.sol/Dygnify
 import dygnifyToken from "../../artifacts/contracts/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
 
-const dygnifyStakingAddress = "0x4D4831e99939fe82F1B5Cdd83ca275d3AC6881c4";
-const token = "0x7b09770AAe0aA01D3E6eBcaDfee892766e739CE7";
+const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
+const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0" ) {
@@ -21,6 +21,23 @@ export async function approve(amount) {
     );
     const transaction = await contract2.approve(dygnifyStakingAddress,amount);
     await transaction.wait()
+  }
+}
+
+export async function allowance(ownerAddress) {
+   if (typeof window.ethereum !== "undefined") {
+    await requestAccount();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    console.log({ provider });
+    const signer = provider.getSigner();
+    const contract2 = new ethers.Contract(
+      token,
+      dygnifyToken.abi,
+      signer
+    );
+    const transaction = await contract2.allowance(ownerAddress,dygnifyStakingAddress);
+    
+    return ethers.utils.formatEther(transaction);
   }
 }
 
@@ -109,6 +126,7 @@ export async function getWalletBal() {
       const bal = await contract.balanceOf(await signer.getAddress());
       // console.log(ethers.utils.formatEther(bal));
       return ethers.utils.formatEther(bal);
+      console.log(ethers.utils.formatEther(bal))
     }
   } catch (error) {
     console.log(error);

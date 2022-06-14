@@ -11,17 +11,35 @@ import {
   getTotalYield,
   getWalletBal,
   getWithdrawBal,
+  allowance
 } from "../components/transaction/TransactionHelper";
 import { ethers } from "ethers";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LoadingOverlay from 'react-loading-overlay';
+import PulseLoader from "react-spinners/PulseLoader";
+
+const getEthAddress = async () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  // Prompt user for account connections
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  console.log("Account:", await signer.getAddress());
+  return await signer.getAddress();
+};
 
 const Wallet = () => {
-
+  const errorNotify = (error) => toast.error(error);
   const [values, setValues] = useState({
     deposit: "",
     withdraw: "",
     yieldWithdraw: "",
   });
+
+  const [approveloading, setApproveLoading] = useState(false);
+  const [depositeloading, setDepositeLoading] = useState(false);
+  const [withdrawloading, setWithdrawLoading] = useState(false);
 
   const { deposit, withdraw, yieldWithdraw } = values;
 
@@ -64,47 +82,87 @@ const Wallet = () => {
   }, [totalYield, walletBalance, withdrawlBal]);
 
   const onSubmitApprove = (event) => {
+    setApproveLoading(true)
     event.preventDefault();
-    setValues({ ...values, deposit: "" });
-    const amount = ethers.utils.parseEther(values.deposit);
-    console.log("AMOUNT: " + amount);
-    approve(amount)
-      .then(() => {
-      })
-      .catch(() => {
-        console.log("Can't Approve");
-      });
+    if(parseInt( values.deposit) >  Number(walletBalance)){
+      errorNotify("Amount Exceeds the wallet balance");
+      setApproveLoading(false)
+    }
+    else{
+      setValues({ ...values, deposit: "" });
+      const amount = ethers.utils.parseEther(values.deposit);
+      console.log("AMOUNT: " + amount);
+      approve(amount)
+        .then(() => {
+          setApproveLoading(false) 
+        })
+        .catch(() => {
+          errorNotify("Can't Approve");
+          setApproveLoading(false)
+        });
+    }
+    
   };
 
-  const onSubmitStake = (event) => {
-    event.preventDefault();
-    setValues({ ...values, deposit: "" });
-    const amount = ethers.utils.parseEther(values.deposit);
-    console.log("AMOUNT: " + amount);
-    stake(amount)
-      .then(() => {
-        let temp = walletBalance - values.deposit
-        setWalletBalance(temp.toFixed(2));
-        // setWithdrawlBal(withdrawlBal + amount);
-      })
-      .catch(() => {
-        console.log("Can't deposit");
-      });
+  const onSubmitStake = async(event) => {
+    setDepositeLoading(true)
+    let address = await getEthAddress();
+    console.log(address)
+    allowance(address).then(
+      re=>{
+        console.log(Number(re), parseInt( values.deposit))
+        if(Number(re)<parseInt( values.deposit)){
+          errorNotify("Approve required amount of token before deposite");
+          setDepositeLoading(false)
+        }
+        else if(parseInt( values.deposit) >  Number(walletBalance)){
+          errorNotify("Amount Exceeds the wallet balance");
+          setDepositeLoading(false)
+        }
+        else{
+          event.preventDefault();
+          setValues({ ...values, deposit: "" });
+          const amount = ethers.utils.parseEther(values.deposit);
+          console.log("AMOUNT: " + amount);
+          stake(amount)
+            .then(() => {
+              let temp = walletBalance - values.deposit
+              setWalletBalance(temp.toFixed(2));
+              setDepositeLoading(false)
+              // setWithdrawlBal(withdrawlBal + amount);
+            })
+            .catch(() => {
+              errorNotify("Can't deposit");
+              setDepositeLoading(false)
+            });
+        }    
+      }
+    );
+    
   };
 
   const onSubmitUnstake = (event) => {
-    event.preventDefault();
-    // console.log(values.withdraw);
-    setValues({ ...values, withdraw: "" });
-    const amount = ethers.utils.parseEther(values.withdraw);
-    unstake(amount)
-      .then(() => {
-        let temp = withdrawlBal - values.withdraw
-        setWithdrawlBal(temp.toFixed(2));
-      })
-      .catch(() => {
-        console.log("Can't withdraw");
-      });
+    setWithdrawLoading(true)
+    if( parseInt(values.withdraw) >  Number(withdrawlBal) ){
+      errorNotify("Amount Exceeds the Staking balance");
+      setWithdrawLoading(false)
+    }
+    else{
+      event.preventDefault();
+      // console.log(values.withdraw);
+      setValues({ ...values, withdraw: "" });
+      const amount = ethers.utils.parseEther(values.withdraw);
+      unstake(amount)
+        .then(() => {
+          let temp = withdrawlBal - values.withdraw
+          setWithdrawlBal(temp.toFixed(2));
+          setWithdrawLoading(false)
+        })
+        .catch(() => {
+          errorNotify("Can't withdraw");
+          setWithdrawLoading(false)
+        });
+    }  
   };
 
   const onSubmitYield = (event) => {
@@ -116,10 +174,10 @@ const Wallet = () => {
         setTotalYield(0);
       })
       .catch(() => {
-        console.log("Can't withdraw yield");
+        errorNotify("Can't withdraw yield");
       });
   };
-
+  
   return (
     <>
       <style>{"body { background-color: #7165e3 }"}</style>
@@ -317,32 +375,69 @@ const Wallet = () => {
           flexDirection: "row",
         }}
       >
-        <Button
-          sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginLeft:"310px",marginRight:"10px"}}
-          variant="contained"
-          size="large"
-          onClick={onSubmitApprove}
-        >
-          Approve
-        </Button>
-        <Button
-          sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginRight:"35px"}}
-          variant="contained"
-          size="large"
-          onClick={onSubmitStake}
-        >
-          Deposit
-        </Button>
-        <Button
-          sx={{ backgroundColor: "#ffffff", color: "#7165E3" }}
-          variant="contained"
-          size="large"
-          onClick={onSubmitUnstake}
-          style={{marginLeft:"160px"}}
-        >
-          Withdraw
-        </Button>
+        {
+          approveloading 
+          ?
+              <Box 
+              sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginLeft:"310px",marginRight:"10px"}}
+              ><Typography>
+              Approving...
+              </Typography>
+              <PulseLoader size='25px' color='#7165e3' margin='5px'  /></Box>
+          :
+            <Button
+            sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginLeft:"310px",marginRight:"10px"}}
+            variant="contained"
+            size="large"
+            onClick={onSubmitApprove}
+            >
+              Approve
+            </Button>
+        }
+        
+        {
+          depositeloading
+          ?
+          <Box 
+            sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginRight:"35px"}}
+            ><Typography>
+            Depositing...
+            </Typography>
+            <PulseLoader size='25px' color='#7165e3' margin='5px'  /></Box>
+          :
+            <Button
+            sx={{ backgroundColor: "#ffffff", color: "#7165E3" ,marginRight:"35px"}}
+            variant="contained"
+            size="large"
+            onClick={onSubmitStake}
+            >
+              Deposit
+            </Button>
+        }
+        
+        {
+          withdrawloading
+          ?
+          <Box 
+            sx={{ backgroundColor: "#ffffff", color: "#7165E3" }}
+            ><Typography>
+            Withdraw...
+            </Typography>
+            <PulseLoader size='25px' color='#7165e3' margin='5px'  /></Box>
+          :
+            <Button
+            sx={{ backgroundColor: "#ffffff", color: "#7165E3" }}
+            variant="contained"
+            size="large"
+            onClick={onSubmitUnstake}
+            style={{marginLeft:"160px"}}
+            >
+              Withdraw
+            </Button>
+        }
+        
       </Stack>
+      <ToastContainer theme="colored" />
     </>
   );
 };
