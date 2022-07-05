@@ -3,8 +3,8 @@ import dygnifyStaking from "../../artifacts/contracts/DygnifyStaking.sol/Dygnify
 import dygnifyToken from "../../artifacts/contracts/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
 
-const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
-const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
+const dygnifyStakingAddress = "0x04c6f14649a7F2e204cdBb41A9624520D37101Fe";
+const token = "0xb362Be46E82007b3488Ea7252a5b175450535c3A";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0" ) {
@@ -157,3 +157,34 @@ export async function getWithdrawBal() {
 
   return 0;
 }
+
+export async function kycOf() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        dygnifyStakingAddress,
+        dygnifyStaking.abi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const data = await contract.kycOf(await signer.getAddress());
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
+}
+
+export const getEthAddress = async () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  // Prompt user for account connections
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  console.log("Account:", await signer.getAddress());
+  return await signer.getAddress();
+};
