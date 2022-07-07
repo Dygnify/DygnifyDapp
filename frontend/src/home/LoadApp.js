@@ -5,18 +5,14 @@ import { Link } from "react-router-dom";
 import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
 import { border } from "@mui/system";
 import "./LoadApp.css"
-import Popup from "./components/Popup.js"
 import { requestAccount } from "../components/navbar/NavBarHelper";
 import NavBar from "../components/navbar/NavBar";
-import { kycOf } from "../components/transaction/TransactionHelper";
-import { sessionId , clientSessionToken } from '../services/yotiIntegration';
 const LoadApp = () => {
-  const [isKYC , setKYC] = useState(false);
 
   async function handleClick(){
-    let iskyc =  await kycOf();
-    console.log(iskyc)
-    // setKYC(iskyc)
+    // let iskyc =  await kycOf();
+    // console.log(iskyc)
+    // // setKYC(iskyc)
   }
   
   return (
