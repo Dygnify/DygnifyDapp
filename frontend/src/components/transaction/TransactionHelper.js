@@ -7,7 +7,7 @@ const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
 
 export async function approve(amount) {
-  if (amount <= 0 || amount <= "0" ) {
+  if (amount <= 0 || amount <= "0") {
     console.log("Amount must be greater than 0");
   } else if (typeof window.ethereum !== "undefined") {
     await requestAccount();
@@ -19,13 +19,13 @@ export async function approve(amount) {
       dygnifyToken.abi,
       signer
     );
-    const transaction = await contract2.approve(dygnifyStakingAddress,amount);
+    const transaction = await contract2.approve(dygnifyStakingAddress, amount);
     await transaction.wait()
   }
 }
 
 export async function allowance(ownerAddress) {
-   if (typeof window.ethereum !== "undefined") {
+  if (typeof window.ethereum !== "undefined") {
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
@@ -35,14 +35,14 @@ export async function allowance(ownerAddress) {
       dygnifyToken.abi,
       signer
     );
-    const transaction = await contract2.allowance(ownerAddress,dygnifyStakingAddress);
-    
+    const transaction = await contract2.allowance(ownerAddress, dygnifyStakingAddress);
+
     return ethers.utils.formatEther(transaction);
   }
 }
 
 export async function stake(amount) {
-  if (amount <= 0 || amount <= "0" ) {
+  if (amount <= 0 || amount <= "0") {
     console.log("Amount must be greater than 0");
   } else if (typeof window.ethereum !== "undefined") {
     await requestAccount();
@@ -56,7 +56,7 @@ export async function stake(amount) {
     );
     const transaction1 = await contract.stake(amount);
     await transaction1.wait();
-      
+
   }
 }
 

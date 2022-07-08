@@ -57,13 +57,13 @@ const LandingPage = () => {
           textAlign: "center",
           color: "#ffffff",
           mt: "32px",
-          
+
         }}
       >
         <Typography variant="h4">
-        <Typography variant="h4">Democratizing access to credit for micro and small women entrepreneurs</Typography>
+          <Typography variant="h4">Democratizing access to credit for micro and small women entrepreneurs</Typography>
           through a Blockchain based DeFi protocol
-        </Typography><br/>
+        </Typography><br />
       </Stack>
       <Stack sx={{ float: "right", mr: "47%" }}>
         <Link color="#ffffff">Tell me more</Link>
@@ -96,11 +96,11 @@ const LandingPage = () => {
           color: "#ffffff",
         }}
       >
-        <div style={{display:"flex" ,}} >
-          <Typography variant="subtitle1" style={{marginLeft :"130px"}} >Opportunity</Typography>
-          <Typography variant="subtitle1" style={{marginLeft :"380px"}} >Investment</Typography>
-          <Typography variant="subtitle1" style={{marginLeft :"210px"}} >Value</Typography>
-          <Typography variant="subtitle1" style={{marginLeft :"220px"}} >APY</Typography>
+        <div style={{ display: "flex", }} >
+          <Typography variant="subtitle1" style={{ marginLeft: "130px" }} >Opportunity</Typography>
+          <Typography variant="subtitle1" style={{ marginLeft: "380px" }} >Investment</Typography>
+          <Typography variant="subtitle1" style={{ marginLeft: "210px" }} >Value</Typography>
+          <Typography variant="subtitle1" style={{ marginLeft: "220px" }} >APY</Typography>
         </div>
       </Stack>
       <Box>
@@ -110,6 +110,7 @@ const LandingPage = () => {
           data="Short term credit by financing receivables"
           value="59,87,197"
           apy="10.45"
+          path="1"
         />
         <Company
           src="./assets/woman-riding-a-motorbike.png"
@@ -118,6 +119,7 @@ const LandingPage = () => {
           as delivery partners"
           value="46,52,977"
           apy="12.15"
+          path="2"
         />
         <Company
           src="./assets/planet-earth.png"
@@ -125,6 +127,7 @@ const LandingPage = () => {
           data="Loans to women who have Agri based businesses"
           value="59,52,577"
           apy="10.21"
+          path="3"
         />
       </Box>
     </>

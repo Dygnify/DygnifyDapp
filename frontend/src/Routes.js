@@ -29,6 +29,8 @@ import PanProof from "./customer/onboarding/PanProof";
 import PanUpload from './customer/onboarding/panProofComponents/PanUpload'
 import BusinessProof from "./customer/onboarding/BusinessProof";
 import BusinessOption from "./customer/onboarding/BusinessOption";
+import LoanForm from "./pages/LoanForm/LoanForm";
+import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
 
 const Routes = () => {
   return (
@@ -51,6 +53,8 @@ const Routes = () => {
         <Route exact path="/pan" component={PanUpload} />
         <Route exact path="/mobile" component={Mobile} />
         <Route exact path="/VerifyNumber" component={VerifyNumber} />
+        <Route exact path="/loan-form" component={LoanForm} />
+        <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
       </Switch>
     </BrowserRouter>
   );

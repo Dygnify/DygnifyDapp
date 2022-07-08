@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Card, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const Company = ({ src, name, data, value, apy }) => {
+const Company = ({ src, name, data, value, apy, path }) => {
   return (
     <>
       <Card
@@ -44,7 +44,7 @@ const Company = ({ src, name, data, value, apy }) => {
             textAlign: "center",
           }}
         >
-          <Link to="/info">Open</Link>
+          <Link to={`/opportunity-details/${path}`}>Open</Link>
         </Card>
         <Stack
           sx={{
