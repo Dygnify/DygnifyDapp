@@ -31,6 +31,7 @@ import BusinessProof from "./customer/onboarding/BusinessProof";
 import BusinessOption from "./customer/onboarding/BusinessOption";
 import LoanForm from "./pages/LoanForm/LoanForm";
 import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
+import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
 
 const Routes = () => {
   return (
@@ -45,6 +46,7 @@ const Routes = () => {
         <Route exact path="/sign" component={DashboardMain} />
         <Route exact path="/landing" component={LandingPage} />
         <Route exact path="/info" component={CompanyInfo} />
+        <Route exact path="/info/:id" component={CompanyInfo} />
         <Route exact path="/kyc" component={KYC} />
         <Route exact path="/wallet" component={Wallet} />
         <Route exact path="/dashboard" component={Dashboard} />
@@ -54,6 +56,7 @@ const Routes = () => {
         <Route exact path="/mobile" component={Mobile} />
         <Route exact path="/VerifyNumber" component={VerifyNumber} />
         <Route exact path="/loan-form" component={LoanForm} />
+        <Route exact path='/opportunities' component={OpportunityPage} />
         <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
       </Switch>
     </BrowserRouter>

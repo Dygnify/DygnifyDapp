@@ -42,6 +42,7 @@ const pinJSONToIPFS = async (JSONBody) => {
         })
         .then(function (response) {
             return {
+                hash: "ipfs://" + response.data.IpfsHash,
                 success: true,
                 pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
             };
@@ -67,9 +68,12 @@ const LoanForm = () => {
         payment_frequency: ""
     });
     const [document, setDocument] = useState('');
+    const [wait, setWait] = useState(false);
 
 
     async function mint_NFT(tokenURI, imageURI) {
+        console.log('do it', tokenURI)
+        await setDocument(tokenURI)
         if (typeof window.ethereum !== 'undefined') {
             await requestAccount()
             const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -78,11 +82,11 @@ const LoanForm = () => {
             const transaction = await contract.mint(tokenURI);
             await transaction.wait();
             console.log(`${tokenURI} has minted sucessfully.`);
-            setDocument(imageURI)
         }
+        setWait(true);
     }
 
-    async function onFileUpload(selectedFile) {
+    async function onFileUpload(selectedFile, loan_purpose) {
         try {
             console.log("Upload called");
             let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
@@ -92,8 +96,8 @@ const LoanForm = () => {
             metadata.imageHash = ipfsUploadRes.res.IpfsHash;
             metadata.PinSize = ipfsUploadRes.res.PinSize;
             metadata.Timestamp = ipfsUploadRes.res.Timestamp;
+            metadata.LoanPurpose = loan_purpose;
 
-            await setDocument(metadata.imageHash);
             //make pinata call
             const pinataResponse = await pinJSONToIPFS(metadata);
             if (!pinataResponse.success) {
@@ -102,8 +106,8 @@ const LoanForm = () => {
                     status: "😢 Something went wrong while uploading your tokenURI.",
                 }
             }
-            const tokenURI = pinataResponse.pinataUrl;
-            console.log(tokenURI);
+            const tokenURI = pinataResponse.hash;
+            console.log('check check', tokenURI);
             await mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
 
         } catch (error) {
@@ -122,8 +126,12 @@ const LoanForm = () => {
         const loanDetails = { loan_type, loan_amount, loan_purpose, loan_tenure, loan_interest, payment_frequency, capital_loss }
         console.log(collateral_document);
         console.log(loanDetails);
-        await onFileUpload(collateral_document);
-        await createOpportunity(loanDetails, document);
+        await onFileUpload(collateral_document, loan_purpose);
+
+        if (wait) {
+            console.log('called')
+            await createOpportunity(loanDetails, document);
+        }
 
         // setActiveStep(prevActiveStep => prevActiveStep + 1);
     }

@@ -6,7 +6,7 @@ import opportunityOrigination from "../../artifacts/contracts/opportunityOrigina
 
 const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-const opportunityOriginationAddress = "0xda536611edC4dD37DB0C5589A3380Ec8177eEdCA";
+const opportunityOriginationAddress = "0x474FE9bCBe747a22ACee6e9A2E18d4EBaa552d94";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -188,7 +188,6 @@ export async function createOpportunity(formData, document) {
       borrower,
       loan_type,
       loan_amount,
-      loan_purpose,
       loan_tenure,
       loan_interest,
       payment_frequency,
@@ -197,4 +196,41 @@ export async function createOpportunity(formData, document) {
     );
     await transaction1.wait();
   }
+}
+
+export async function getOpportunitysOf() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      // await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        opportunityOriginationAddress,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      let borrower = await getEthAddress();
+      const data = await contract.getOpportunityOf(borrower);
+      let opportunities = [];
+      for (let i = 0; i < data.length; i++) {
+        let obj = {};
+        let tx = await contract.opportunityToId(data[i]);
+        obj.borrower = tx.borrower.toString()
+        obj.loan_type = tx.loanType.toString()
+        obj.loan_amount = tx.loanAmount.toString()
+        obj.loan_tenure = tx.loanTenure.toString()
+        obj.loan_interest = tx.loanInterest.toString()
+        obj.payment_frequency = tx.paymentFrequency.toString()
+        obj.collateral_document = tx.collateralDocument.toString()
+        obj.capital_loss = tx.capitalLoss.toString()
+        opportunities.push(obj);
+      }
+      return opportunities;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
 }

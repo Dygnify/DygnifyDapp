@@ -1,10 +1,11 @@
 import { React, useState } from "react";
 import { ethers } from 'ethers';
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import NFTMinter from "../artifacts/contracts/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from '../services/axioscall';
 import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
+import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
 const axios = require('axios');
 
 const REACT_APP_PINATA_API_KEY = "bd910e460ee4b6ef0519";
@@ -39,7 +40,15 @@ const pinJSONToIPFS = async (JSONBody) => {
     });
 };
 const CompanyInfo = () => {
-
+  const { id } = useParams();
+  console.log(id);
+  const [data, setData] = useState();
+  const dataFetch = async () => {
+    setData(await getOpportunitysOf());
+  }
+  dataFetch();
+  dataFetch();
+  console.log(data)
 
   const [selectedFile, setSelectedFile] = useState();
   const [tokenURI, setTokenURI] = useState("");

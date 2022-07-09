@@ -6,6 +6,7 @@ import NFTMinter from "../../artifacts/contracts/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from '../../services/axioscall';
 import { uploadFileToIPFS } from '../../services/PinataIPFSOptions';
 import { useEffect } from "react";
+import { getOpportunitysOf } from "../../components/transaction/TransactionHelper";
 const axios = require('axios');
 
 const REACT_APP_PINATA_API_KEY = "bd910e460ee4b6ef0519";
@@ -40,7 +41,7 @@ const pinJSONToIPFS = async (JSONBody) => {
         });
 };
 
-const OpportunityDetails = () => {
+const OpportunityDetails = ({ data }) => {
     const [selectedFile, setSelectedFile] = useState();
     const [tokenURI, setTokenURI] = useState("");
 
@@ -91,14 +92,20 @@ const OpportunityDetails = () => {
             console.log(error);
         }
     };
-    const { id } = useParams();
-    const [data, setData] = useState({});
-    useEffect(() => {
-        fetch(`http://localhost:8000/opportunities/${id}`)
-            .then(res => res.json())
-            .then(data => setData(data))
-    }, [])
+    // const { id } = useParams();
+    // const [data, setData] = useState({});
+    // const [item, setitem] = useState({});
+    // useEffect(() => {
+    //     fetch(`http://localhost:8000/opportunities/${1}`)
+    //         .then(res => res.json())
+    //         .then(data => setData(data))
+    // }, [])
 
+    // const dataFetch = async () => {
+    //     setData(await getOpportunitysOf());
+    // }
+    // setData()
+    // console.log(item)
     return (
         <>
             <style>{"body { background-color: #7165e3 }"}</style>
