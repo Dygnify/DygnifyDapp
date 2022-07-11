@@ -1,111 +1,29 @@
 import { React, useState } from "react";
-import { ethers } from 'ethers';
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import NFTMinter from "../../artifacts/contracts/NFT_minter.sol/NFTMinter.json";
-import axiosHttpService from '../../services/axioscall';
-import { uploadFileToIPFS } from '../../services/PinataIPFSOptions';
 import { useEffect } from "react";
 import { getOpportunitysOf } from "../../components/transaction/TransactionHelper";
-const axios = require('axios');
 
-const REACT_APP_PINATA_API_KEY = "bd910e460ee4b6ef0519";
-const REACT_APP_PINATA_API_SECRET = "38f736a6d364857d02414d490277de4952207f74d1f495c4f2158332639120b7";
-const tokenAddress = "0x1546A8e7389B47d2Cf1bacE7C0ad3e0A91CAae94";
-const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 
-//metadata to ipfs
-const pinJSONToIPFS = async (JSONBody) => {
-    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
-    //making axios POST request to Pinata ⬇️
-    return axios
-        .post(url, JSONBody, {
-            headers: {
-                pinata_api_key: REACT_APP_PINATA_API_KEY,
-                pinata_secret_api_key: REACT_APP_PINATA_API_SECRET,
-            }
-        })
-        .then(function (response) {
-            return {
-                success: true,
-                pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
-            };
-        })
-        .catch(function (error) {
-            console.log(error)
-            return {
-                success: false,
-                message: error.message,
-            }
 
-        });
-};
+const OpportunityDetails = () => {
+    let target = {}
+    const { id } = useParams({});
+    const [data, setData] = useState([]);
 
-const OpportunityDetails = ({ data }) => {
-    const [selectedFile, setSelectedFile] = useState();
-    const [tokenURI, setTokenURI] = useState("");
+    useEffect(() => {
+        const dataFetch = async () => {
+            setData(await getOpportunitysOf());
+        }
+        dataFetch();
+    }, [data]);
 
-    async function requestAccount() {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const test = () => {
+        target = data.find(item => item.collateral_document.slice(7, item.collateral_document.length) === id);
     }
 
+    test()
 
-
-    async function mint_NFT(tokenURI, imageURI) {
-        if (typeof window.ethereum !== 'undefined') {
-            await requestAccount()
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            const contract = new ethers.Contract(NFT_minter, NFTMinter.abi, signer);
-            const transaction = await contract.mint(tokenURI);
-            await transaction.wait();
-            console.log(`${tokenURI} has minted sucessfully.`);
-            setTokenURI(imageURI)
-        }
-    }
-
-    // On file upload (click the upload button)
-    async function onFileUpload() {
-        try {
-            console.log("Upload called");
-            let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
-            console.log(ipfsUploadRes);
-            //make metadata
-            const metadata = new Object();
-            metadata.imageHash = ipfsUploadRes.res.IpfsHash;
-            metadata.PinSize = ipfsUploadRes.res.PinSize;
-            metadata.Timestamp = ipfsUploadRes.res.Timestamp;
-
-            //make pinata call
-            const pinataResponse = await pinJSONToIPFS(metadata);
-            if (!pinataResponse.success) {
-                return {
-                    success: false,
-                    status: "😢 Something went wrong while uploading your tokenURI.",
-                }
-            }
-            const tokenURI = pinataResponse.pinataUrl;
-            console.log(tokenURI);
-            mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
-
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    // const { id } = useParams();
-    // const [data, setData] = useState({});
-    // const [item, setitem] = useState({});
-    // useEffect(() => {
-    //     fetch(`http://localhost:8000/opportunities/${1}`)
-    //         .then(res => res.json())
-    //         .then(data => setData(data))
-    // }, [])
-
-    // const dataFetch = async () => {
-    //     setData(await getOpportunitysOf());
-    // }
-    // setData()
-    // console.log(item)
     return (
         <>
             <style>{"body { background-color: #7165e3 }"}</style>
@@ -125,7 +43,7 @@ const OpportunityDetails = ({ data }) => {
                 <Box>
                     <img
                         style={{ width: "150px", height: "80px", objectFit: "contain" }}
-                        src="./assets/logo.png"
+                        src="/assets/logo.png"
                         alt="company logo"
                     />
                 </Box>
@@ -158,57 +76,6 @@ const OpportunityDetails = ({ data }) => {
                     </Button>
                 </div>
             </Box>
-            <Stack
-                sx={{
-                    my: "20px",
-                    mx: "auto",
-                    maxWidth: 1150,
-                    height: 80,
-                    py: "10px",
-                    px: "30px",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                }}
-            >
-                <Stack
-                    sx={{
-                        color: "#ffffff",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                    }}
-                >
-                    <Box>
-                        <Card
-                            sx={{
-                                mb: "5px",
-                                maxWidth: 100,
-                                py: "2px",
-                                mx: "auto",
-                                display: "flex",
-                                flexDirection: "column",
-                                textAlign: "justify",
-                            }}
-                        >
-                            <img
-                                style={{ width: "88px", height: "77px" }}
-                                src={data.img}
-                                alt=""
-                            />
-                        </Card>
-                    </Box>
-                    <Typography ml={2}>{data.opportunity_name}</Typography>
-                </Stack>
-                <Button
-                    sx={{ backgroundColor: "#ffffff", color: "#000000" }}
-                    variant="contained"
-                >
-                    <Link to="/kyc">Invest</Link>
-                </Button>
-            </Stack>
             <Box>
                 <Card
                     sx={{
@@ -224,23 +91,23 @@ const OpportunityDetails = ({ data }) => {
                     }}
                 >
                     <div>
-                        <Typography variant="subtitle2">{data.asset_type}</Typography>
-                        <Typography variant="overline">Asset Type</Typography>
+                        <Typography variant="subtitle2">{target?.loan_type}</Typography>
+                        <Typography variant="overline">Loan Type</Typography>
                     </div>
                     <Divider orientation="vertical" variant="middle" flexItem />
                     <div>
-                        <Typography variant="subtitle2">{data.loan_tenure} months</Typography>
-                        <Typography variant="overline">Asset Maturity</Typography>
+                        <Typography variant="subtitle2">{target?.loan_tenure / 30} months</Typography>
+                        <Typography variant="overline">Loan Tenure</Typography>
                     </div>
                     <Divider orientation="vertical" variant="middle" flexItem />{" "}
                     <div>
-                        <Typography variant="subtitle2">{data.loan_interest} %</Typography>
-                        <Typography variant="overline">Yield</Typography>
+                        <Typography variant="subtitle2">{target?.loan_interest} %</Typography>
+                        <Typography variant="overline">Loan Interest</Typography>
                     </div>
                     <Divider orientation="vertical" variant="middle" flexItem />{" "}
                     <div>
-                        <Typography variant="subtitle2">{data.loan_amount} {process.env.REACT_APP_TOKEN_NAME}</Typography>
-                        <Typography variant="overline">Value</Typography>
+                        <Typography variant="subtitle2">{target?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}</Typography>
+                        <Typography variant="overline">Loan Amount</Typography>
                     </div>
                 </Card>
             </Box>
@@ -253,7 +120,7 @@ const OpportunityDetails = ({ data }) => {
                     color: "#ffffff",
                 }}
             >
-                <Typography variant="h6">Impact Partner Details</Typography>
+                <Typography variant="h6">Loan Purpose</Typography>
             </Stack>
             <Box>
                 <Card
@@ -262,7 +129,6 @@ const OpportunityDetails = ({ data }) => {
                         maxWidth: 1100,
                         py: "20px",
                         px: "30px",
-                        mx: "30px",
                         mx: "auto",
                         display: "flex",
                         flexDirection: "column",
@@ -270,10 +136,10 @@ const OpportunityDetails = ({ data }) => {
                     }}
                 >
                     <Typography variant="h6">
-                        {data.company_name}
+                        {target?.company_name}
                     </Typography>
                     <Typography variant="body2">
-                        {data.company_details}
+                        {target?.company_details}
                     </Typography>
                 </Card>
             </Box>
@@ -294,11 +160,48 @@ const OpportunityDetails = ({ data }) => {
                     mb: "30px",
                     maxWidth: 1100,
                     mx: "auto",
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
                     gap: "0px 16px",
                 }}
             >
+                <Card
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        py: "30px",
+                        px: "30px",
+                    }}
+                >
+                    <Stack
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                        }}
+                    >
+                        <Typography>Loan Type</Typography>
+                        <Typography>{target?.loan_type}</Typography>
+                    </Stack>
+                    <Stack
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                        }}
+                    >
+                        <Typography>Loan Amount</Typography>
+                        <Typography>{target?.loan_amount}</Typography>
+                    </Stack>
+                    <Stack
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                        }}
+                    >
+                        <Typography>Interest Rate</Typography>
+                        <Typography>{target?.loan_interest} %</Typography>
+                    </Stack>
+                </Card>
                 <Card
                     sx={{
                         display: "flex",
@@ -308,15 +211,14 @@ const OpportunityDetails = ({ data }) => {
                         px: "30px",
                     }}
                 >
-                    <Typography variant="h6">Assets</Typography>
                     <Stack
                         sx={{
                             display: "grid",
                             gridTemplateColumns: "1fr 1fr",
                         }}
                     >
-                        <Typography>Number of Assets</Typography>
-                        <Typography>{data.assets}</Typography>
+                        <Typography>Loan Tenure</Typography>
+                        <Typography>{target?.loan_tenure / 30} months</Typography>
                     </Stack>
                     <Stack
                         sx={{
@@ -324,8 +226,8 @@ const OpportunityDetails = ({ data }) => {
                             gridTemplateColumns: "1fr 1fr",
                         }}
                     >
-                        <Typography>Average Financing fee</Typography>
-                        <Typography>{data.average_financing_fee} %</Typography>
+                        <Typography>Payment Frequency</Typography>
+                        <Typography>{target?.payment_frequency} days</Typography>
                     </Stack>
                     <Stack
                         sx={{
@@ -333,30 +235,12 @@ const OpportunityDetails = ({ data }) => {
                             gridTemplateColumns: "1fr 1fr",
                         }}
                     >
-                        <Typography>Average Maturity</Typography>
-                        <Typography>{data.loan_tenure} months</Typography>
-                    </Stack>
-                </Card>
-                <Card
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        py: "16px",
-                        px: "30px",
-                    }}
-                >
-                    <Typography variant="h6">Liquidity </Typography>
-                    <Stack
-                        sx={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                        }}
-                    >
-                        <Typography>Available Liquidity</Typography>
-                        <Typography>{data.available_liquidity} {process.env.REACT_APP_TOKEN_NAME}</Typography>
+                        <Typography>First Loss Capital</Typography>
+                        <Typography>{target?.capital_loss ? target?.capital_loss : 0} %</Typography>
                     </Stack>
                 </Card>
             </Box>
+
             {/* <Stack
                 sx={{
                     maxWidth: 1100,
@@ -387,7 +271,7 @@ const OpportunityDetails = ({ data }) => {
                             <Typography mb={1} variant="subtitle2">
                                 Upload collateral document for converting to a unique NFT
                             </Typography>
-                            <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target.files[0])} class="custom-file-upload" />
+                            <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target?.files[0])} class="custom-file-upload" />
                             <Button
                                 sx={{ backgroundColor: "#7165E3", width: "300px", marginTop: "10px" }}
                                 variant="contained"

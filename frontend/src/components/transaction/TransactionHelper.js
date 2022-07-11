@@ -164,7 +164,6 @@ export const getEthAddress = async () => {
   // Prompt user for account connections
   await provider.send("eth_requestAccounts", []);
   const signer = provider.getSigner();
-  console.log("Account:", await signer.getAddress());
   return await signer.getAddress();
 };
 
@@ -203,7 +202,6 @@ export async function getOpportunitysOf() {
     if (typeof window.ethereum !== "undefined") {
       // await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      console.log({ provider });
       const contract = new ethers.Contract(
         opportunityOriginationAddress,
         opportunityOrigination.abi,

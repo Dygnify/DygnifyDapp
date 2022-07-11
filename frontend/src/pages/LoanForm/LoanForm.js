@@ -82,8 +82,9 @@ const LoanForm = () => {
             const transaction = await contract.mint(tokenURI);
             await transaction.wait();
             console.log(`${tokenURI} has minted sucessfully.`);
+            setWait(true);
+            console.log('setWait called')
         }
-        setWait(true);
     }
 
     async function onFileUpload(selectedFile, loan_purpose) {
