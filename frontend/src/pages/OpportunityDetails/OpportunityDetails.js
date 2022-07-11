@@ -10,10 +10,12 @@ const OpportunityDetails = () => {
     let target = {}
     const { id } = useParams({});
     const [data, setData] = useState([]);
+    const [loanPurpose, setLoanPurpose] = useState('');
 
     useEffect(() => {
         const dataFetch = async () => {
-            setData(await getOpportunitysOf());
+            const temp = await getOpportunitysOf();
+            setData(temp)
         }
         dataFetch();
     }, [data]);
@@ -21,8 +23,18 @@ const OpportunityDetails = () => {
     const test = () => {
         target = data.find(item => item.collateral_document.slice(7, item.collateral_document.length) === id);
     }
-
     test()
+
+    let str = target?.collateral_document;//put your collateral hash here
+    console.log(str)
+    str = str?.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
+    console.log(str)
+    useEffect(() => {
+        console.log('entered')
+        fetch(str)
+            .then(res => res.json())
+            .then(data => setLoanPurpose(data?.LoanPurpose))
+    }, [str])
 
     return (
         <>
@@ -128,18 +140,12 @@ const OpportunityDetails = () => {
                         mb: "20px",
                         maxWidth: 1100,
                         py: "20px",
-                        px: "30px",
                         mx: "auto",
-                        display: "flex",
-                        flexDirection: "column",
-                        textAlign: "justify",
+                        textAlign: 'center'
                     }}
                 >
-                    <Typography variant="h6">
-                        {target?.company_name}
-                    </Typography>
                     <Typography variant="body2">
-                        {target?.company_details}
+                        {loanPurpose}
                     </Typography>
                 </Card>
             </Box>
@@ -190,7 +196,7 @@ const OpportunityDetails = () => {
                         }}
                     >
                         <Typography>Loan Amount</Typography>
-                        <Typography>{target?.loan_amount}</Typography>
+                        <Typography>{target?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}</Typography>
                     </Stack>
                     <Stack
                         sx={{

@@ -9,7 +9,8 @@ const OpportunityPage = () => {
     const [data, setData] = useState();
     useEffect(() => {
         const dataFetch = async () => {
-            setData(await getOpportunitysOf());
+            const temp = await getOpportunitysOf();
+            setData(temp)
         }
         dataFetch();
     }, [data])
