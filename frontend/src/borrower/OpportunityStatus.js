@@ -1,9 +1,5 @@
 import { React, useState } from "react";
-import { ethers } from "ethers";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { Link } from "react-router-dom";
-import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
-import { border } from "@mui/system";
 
 const OpportunityStatus = ({
   opportunityName,
@@ -72,7 +68,7 @@ const OpportunityStatus = ({
                     ? "1.5px solid red"
                     : "1.5px solid green"
                 }`,
-                color: `${opportunityStatus == "0" ? "red" : "green"}`,
+                color: `${opportunityStatus === "0" ? "red" : "green"}`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

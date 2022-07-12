@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useHistory } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityTable from "./OpportunityTable.js";
 import DrawdownCard from "./DrawdownCard.js";
@@ -6,6 +6,9 @@ import OpportunityStatus from "./OpportunityStatus.js";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
 
 const Borrower = () => {
+  const [opportunity, setOpportunity] = useState();
+  //const path = useHistory();
+
   const [userInfo, setUserInfo] = useState({
     companyName: "Hector Ltd",
     name: "Jane Hector",
@@ -13,8 +16,6 @@ const Borrower = () => {
     totalLoan: "84,00,000",
     amountReadyToWithdraw: "48,00,000",
   });
-
-  const [opportunity, setOpportunity] = useState();
 
   useEffect(() => {
     try {
@@ -198,16 +199,23 @@ const Borrower = () => {
       {opportunity
         ? opportunity.map((data, i) => {
             return (
-              <OpportunityStatus
-                opportunityName="Opportunity 1"
-                loanAmount={data.loanAmount}
-                loanInterest={data.loanInterest}
-                loanType={data.loanType}
-                loanTenure={data.loanTenure}
-                //opportunityStatus={data.oppurtunityStatus}
-                opportunityStatus="0"
-                mDate="12/05/2022"
-              />
+              <div
+                onClick={() => {
+                  console.log("clicked");
+                  //path.push(`/opportunity-details/${id}`)
+                }}
+              >
+                <OpportunityStatus
+                  opportunityName="Opportunity 1"
+                  loanAmount={data.loanAmount}
+                  loanInterest={data.loanInterest}
+                  loanType={data.loanType}
+                  loanTenure={data.loanTenure}
+                  //opportunityStatus={data.oppurtunityStatus}
+                  opportunityStatus="0"
+                  mDate="12/05/2022"
+                />
+              </div>
             );
           })
         : null}
