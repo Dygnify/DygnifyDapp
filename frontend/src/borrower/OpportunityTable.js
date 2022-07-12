@@ -1,9 +1,5 @@
 import {React,useState} from "react";
-import { ethers } from 'ethers';
-import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { Link } from "react-router-dom";
-import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
-import { border } from "@mui/system";
+import { Box, Button,  Card } from "@mui/material";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';

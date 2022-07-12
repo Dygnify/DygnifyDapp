@@ -31,13 +31,6 @@ const Borrower = () => {
     }
   }, []);
 
-  async function getOpportunities() {
-    let opportunities = await getOpportunitysOf();
-    console.log(opportunities);
-    return opportunities;
-    // setOpportunity(opportunities);
-  }
-
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
@@ -85,8 +78,7 @@ const Borrower = () => {
             sx={{ backgroundColor: "#7165E3" }}
             variant="contained"
             size="large"
-            //onClick={requestAccount}
-            onClick={getOpportunities}
+            onClick={requestAccount}
           >
             Connect Wallet
           </Button>
@@ -121,6 +113,15 @@ const Borrower = () => {
           </Typography>
           <Typography ml={2}>{userInfo.name}</Typography>
         </Stack>
+
+        <Button
+          sx={{ backgroundColor: "#843bc5" }}
+          variant="contained"
+          size="large"
+          //onClick={()=> path.push(`/loan-form`)}
+        >
+          Create New Loan request
+        </Button>
       </Stack>
 
       <Box
@@ -189,7 +190,7 @@ const Borrower = () => {
         </Card>
       </Box>
 
-      {/* <OpportunityTable />
+      {/* {opportunity? opportunity.map((data,i)=>{return(<OpportunityTable loanAmount={data.loanAmount} />)}) :null}
 
       <DrawdownCard /> */}
       <br />
