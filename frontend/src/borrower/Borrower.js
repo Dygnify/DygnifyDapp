@@ -1,37 +1,11 @@
 import { React, useState, useEffect } from "react";
-import { ethers } from "ethers";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { Link } from "react-router-dom";
-import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
-import { border } from "@mui/system";
 import OpportunityTable from "./OpportunityTable.js";
 import DrawdownCard from "./DrawdownCard.js";
 import OpportunityStatus from "./OpportunityStatus.js";
-import { LogDescription } from "ethers/lib/utils";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
 
 const Borrower = () => {
-  // const [opportunity, setOpportunity] = useState([
-  //   {
-  //     mDate: "12/05/2020",
-  //     name: "Opportunity 1",
-  //     status: "Active",
-  //     percentage: "100%",
-  //   },
-  //   {
-  //     mDate: "12/05/2020",
-  //     name: "Opportunity 2",
-  //     status: "Closed",
-  //     percentage: "100%",
-  //   },
-  //   {
-  //     mDate: "12/05/2020",
-  //     name: "Opportunity 3",
-  //     status: "Funded",
-  //     percentage: "50%",
-  //   },
-  // ]);
-
   const [userInfo, setUserInfo] = useState({
     companyName: "Hector Ltd",
     name: "Jane Hector",
@@ -39,36 +13,22 @@ const Borrower = () => {
     totalLoan: "84,00,000",
     amountReadyToWithdraw: "48,00,000",
   });
-  const [opportunity, setOpportunity] = useState([
-    {
-      borrower: "0xC78810A9EDb753C3FdC71EEe6998A68d3B823705",
-      capitalLoss: "12",
-      collateralDocument: "doc",
-      loanAmount: "12",
-      loanInterest: "12",
-      loanTenure: "12",
-      loanType: "Bullet",
-      oppurtunityStatus: "0",
-      paymentFrequency: "12",
-    },
-    {
-      borrower: "0xC78810A9EDb753C3FdC71EEe6998A68d3B823705",
-      capitalLoss: "12",
-      collateralDocument: "doc",
-      loanAmount: "12",
-      loanInterest: "12",
-      loanTenure: "12",
-      loanType: "Bullet",
-      oppurtunityStatus: "0",
-      paymentFrequency: "12",
-    },
-  ]);
 
-  // const [opportunity, setOpportunity] = useState();
+  const [opportunity, setOpportunity] = useState();
 
-  // useEffect(() => {
-  //   setOpportunity(getOpportunities());
-  // }, []);
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        console.log("******************");
+        let opportunities = await getOpportunitysOf();
+        setOpportunity(opportunities);
+        console.log(opportunities);
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   async function getOpportunities() {
     let opportunities = await getOpportunitysOf();
@@ -233,20 +193,24 @@ const Borrower = () => {
       <DrawdownCard /> */}
       <br />
 
-      {opportunity.map((data, i) => {
-        return (
-          <OpportunityStatus
-            opportunityName="Opportunity 1"
-            loanAmount={data.loanAmount}
-            loanInterest={data.loanInterest}
-            loanType={data.loanType}
-            loanTenure={data.loanTenure}
-            //opportunityStatus={data.oppurtunityStatus}
-            opportunityStatus="0"
-            mDate="12/05/2022"
-          />
-        );
-      })}
+      {/*add a if statement for data*/}
+
+      {opportunity
+        ? opportunity.map((data, i) => {
+            return (
+              <OpportunityStatus
+                opportunityName="Opportunity 1"
+                loanAmount={data.loanAmount}
+                loanInterest={data.loanInterest}
+                loanType={data.loanType}
+                loanTenure={data.loanTenure}
+                //opportunityStatus={data.oppurtunityStatus}
+                opportunityStatus="0"
+                mDate="12/05/2022"
+              />
+            );
+          })
+        : null}
 
       <br />
       <br />
