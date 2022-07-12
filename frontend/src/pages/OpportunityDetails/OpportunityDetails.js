@@ -10,7 +10,18 @@ const OpportunityDetails = () => {
     let target = {}
     const { id } = useParams({});
     const [data, setData] = useState([]);
+    const [company, setCompanyDetails] = useState({});
     const [loanPurpose, setLoanPurpose] = useState('');
+
+    useEffect(() => {
+        const fetchJSON = async () => {
+            const response = await fetch("/db.json");
+            let json = await response.json();
+            setCompanyDetails(json);
+        };
+
+        fetchJSON();
+    }, []);
 
     useEffect(() => {
         const dataFetch = async () => {
@@ -26,16 +37,19 @@ const OpportunityDetails = () => {
     test()
 
     let str = target?.collateral_document;//put your collateral hash here
-    console.log(str)
     str = str?.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
-    console.log(str)
     useEffect(() => {
-        console.log('entered')
-        fetch(str)
-            .then(res => res.json())
-            .then(data => setLoanPurpose(data?.LoanPurpose))
-    }, [str])
-
+        // fetch(str)
+        //     .then(res => res.json())
+        //     .then(data => setLoanPurpose(data?.LoanPurpose))
+        const dataFetch = async () => {
+            await fetch(str)
+                .then(res => res.json())
+                .then(data => setLoanPurpose(data?.LoanPurpose))
+        }
+        dataFetch();
+    })
+    console.log(loanPurpose)
     return (
         <>
             <style>{"body { background-color: #7165e3 }"}</style>
@@ -132,6 +146,38 @@ const OpportunityDetails = () => {
                     color: "#ffffff",
                 }}
             >
+                <Typography variant="h6">Impact Partner Details</Typography>
+            </Stack>
+            <Box>
+                <Card
+                    sx={{
+                        mb: "20px",
+                        maxWidth: 1100,
+                        py: "20px",
+                        mx: "30px",
+                        mx: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        textAlign: "justify",
+                    }}
+                >
+                    <Typography px='20px' variant="h6">
+                        {company?.company_name}
+                    </Typography>
+                    <Typography px='20px' variant="body2">
+                        {company?.company_details}
+                    </Typography>
+                </Card>
+            </Box>
+            {/* <Stack
+                sx={{
+                    maxWidth: 1100,
+                    py: "10px",
+                    px: "30px",
+                    mx: "auto",
+                    color: "#ffffff",
+                }}
+            >
                 <Typography variant="h6">Loan Purpose</Typography>
             </Stack>
             <Box>
@@ -148,7 +194,7 @@ const OpportunityDetails = () => {
                         {loanPurpose}
                     </Typography>
                 </Card>
-            </Box>
+            </Box> */}
             <Stack
                 sx={{
                     mt: "10px",

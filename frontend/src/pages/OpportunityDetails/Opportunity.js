@@ -5,11 +5,11 @@ const Opportunity = ({ data }) => {
     const path = useHistory();
     const id = data.collateral_document.slice(7, data.collateral_document.length)
     return (
-        <div>
-            <p>{data?.loan_amount}</p>
-            <p>{data?.loan_tenure}</p>
-            <p>{data?.loan_interest}</p>
-            <button onClick={() => path.push(`/opportunity-details/${id}`)}>see more</button>
+        <div style={{ border: '1px solid gray', padding: '10px 20px', margin: '20px' }}>
+            <p>Loan Amount: {data?.loan_amount}</p>
+            <p>Loan Tenure: {data?.loan_tenure}</p>
+            <p>Loan Interest: {data?.loan_interest}</p>
+            <button onClick={() => path.push(`/opportunity-details/${id}`)}>See Details</button>
         </div>
     );
 };

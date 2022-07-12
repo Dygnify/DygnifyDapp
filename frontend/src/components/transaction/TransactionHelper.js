@@ -170,9 +170,8 @@ export const getEthAddress = async () => {
 
 export async function createOpportunity(formData, document) {
   let borrower = await getEthAddress();
-  let { loan_type, loan_amount, loan_purpose, loan_tenure, loan_interest, capital_loss, payment_frequency } = formData;
-  loan_purpose = ethers.utils.id(loan_purpose);
-  console.log(formData, document, loan_purpose)
+  let { loan_type, loan_amount, loan_tenure, loan_interest, capital_loss, payment_frequency } = formData;
+  console.log(formData, document)
   if (typeof window.ethereum !== "undefined") {
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);

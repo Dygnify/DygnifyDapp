@@ -66,7 +66,7 @@ const LoanDetails = ({ handleNext, formData }) => {
                 <InputText
                     className={classes.input}
                     name='loan_amount'
-                    label="Loan Amount"
+                    label="Loan Amount (USDC)"
                     value={formik.values.loan_amount}
                     error={
                         formik.touched.loan_amount && formik.errors.loan_amount

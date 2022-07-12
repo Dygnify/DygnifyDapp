@@ -5,12 +5,15 @@ import CollateralDocuments from './CollateralDocuments';
 import ConfirmSubmission from './ConfirmSubmission';
 import LoanDetails from './LoanDetails';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PendingIcon from '@mui/icons-material/Pending';
 import { createOpportunity } from '../../components/transaction/TransactionHelper';
 import { requestAccount } from '../../components/navbar/NavBarHelper';
 import { ethers } from 'ethers';
 import NFTMinter from "../../artifacts/contracts/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from '../../services/axioscall';
-import { uploadFileToIPFS } from '../../services/PinataIPFSOptions';
+import { pinJSONToIPFS, uploadFileToIPFS } from '../../services/PinataIPFSOptions';
+import { Button } from '@mui/material';
+import { useHistory } from 'react-router-dom';
 const axios = require('axios');
 
 
@@ -28,35 +31,6 @@ const useStyles = makeStyles({
 })
 
 
-const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
-
-const pinJSONToIPFS = async (JSONBody) => {
-    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
-    //making axios POST request to Pinata ⬇️
-    return axios
-        .post(url, JSONBody, {
-            headers: {
-                pinata_api_key: process.env.REACT_APP_PINATA_API_KEY,
-                pinata_secret_api_key: process.env.REACT_APP_PINATA_API_SECRET,
-            }
-        })
-        .then(function (response) {
-            return {
-                hash: "ipfs://" + response.data.IpfsHash,
-                success: true,
-                pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
-            };
-        })
-        .catch(function (error) {
-            console.log(error)
-            return {
-                success: false,
-                message: error.message,
-            }
-
-        });
-};
-
 const LoanForm = () => {
     const classes = useStyles();
     const [formData, setFormData] = useState({
@@ -67,32 +41,16 @@ const LoanForm = () => {
         loan_interest: "",
         payment_frequency: ""
     });
-    const [document, setDocument] = useState('');
-    const [wait, setWait] = useState(false);
 
-
-    async function mint_NFT(tokenURI, imageURI) {
-        console.log('do it', tokenURI)
-        await setDocument(tokenURI)
-        if (typeof window.ethereum !== 'undefined') {
-            await requestAccount()
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            const contract = new ethers.Contract(NFT_minter, NFTMinter.abi, signer);
-            const transaction = await contract.mint(tokenURI);
-            await transaction.wait();
-            console.log(`${tokenURI} has minted sucessfully.`);
-            setWait(true);
-            console.log('setWait called')
-        }
-    }
+    const [processed, setProcessed] = useState(false);
+    const path = useHistory();
 
     async function onFileUpload(selectedFile, loan_purpose) {
         try {
             console.log("Upload called");
             let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
             console.log(ipfsUploadRes);
-            //make metadata
+            // make metadata
             const metadata = new Object();
             metadata.imageHash = ipfsUploadRes.res.IpfsHash;
             metadata.PinSize = ipfsUploadRes.res.PinSize;
@@ -109,8 +67,9 @@ const LoanForm = () => {
             }
             const tokenURI = pinataResponse.hash;
             console.log('check check', tokenURI);
-            await mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
-
+            // const uri = await mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
+            // return uri;
+            return tokenURI;
         } catch (error) {
             console.log(error);
         }
@@ -127,14 +86,13 @@ const LoanForm = () => {
         const loanDetails = { loan_type, loan_amount, loan_purpose, loan_tenure, loan_interest, payment_frequency, capital_loss }
         console.log(collateral_document);
         console.log(loanDetails);
-        await onFileUpload(collateral_document, loan_purpose);
+        setActiveStep(prevActiveStep => prevActiveStep + 1);
+        const document = await onFileUpload(collateral_document, loan_purpose);
 
-        if (wait) {
-            console.log('called')
-            await createOpportunity(loanDetails, document);
-        }
+        console.log('called', document)
+        await createOpportunity(loanDetails, document);
+        setProcessed(true);
 
-        // setActiveStep(prevActiveStep => prevActiveStep + 1);
     }
 
     const handleNext = (newData, value) => {
@@ -187,24 +145,43 @@ const LoanForm = () => {
             </Stepper>
             {activeStep === steps.length ?
                 <>
-                    <Typography
-                        variant='h5'
-                        style={{ color: '#999', textAlign: 'center', margin: '1rem 0' }}
-                    >
-                        <CheckCircleIcon
-                            style={{ fontSize: '80px' }}
-                            color='success'
-                        ></CheckCircleIcon>
-                        <br />
-                        Loan Request Submitted Successfully
-                    </Typography>
+                    {
+                        processed ?
+                            <>
+                                <Typography
+                                    variant='h5'
+                                    style={{ color: '#999', textAlign: 'center', margin: '1rem 0' }}
+                                >
+                                    <CheckCircleIcon
+                                        style={{ fontSize: '80px' }}
+                                        color='success'
+                                    ></CheckCircleIcon>
+                                    <br />
+                                    Loan Request Submitted Successfully
+                                    <br />
+                                    <Button onClick={() => path.push('/opportunities')} variant="outlined">Back to Dashboard</Button>
+                                </Typography>
+
+                            </>
+                            : <Typography
+                                variant='h5'
+                                style={{ color: '#999', textAlign: 'center', margin: '1rem 0' }}
+                            >
+                                <PendingIcon
+                                    style={{ fontSize: '80px' }}
+                                    color='warning'
+                                ></PendingIcon>
+                                <br />
+                                Confirm the transactions to submit Successfully
+                            </Typography>
+                    }
                 </>
                 : (
                     <>
                         {getStepsContent(activeStep)}
                     </>
                 )}
-        </div>
+        </div >
     );
 };
 

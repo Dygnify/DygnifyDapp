@@ -12,7 +12,6 @@ export const loanDetailsValidationSchema = Yup.object().shape({
 const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
-    "image/gif",
     "image/png",
     "application/pdf",
     "application/msword",
