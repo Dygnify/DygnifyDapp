@@ -45,6 +45,7 @@ const LoanForm = () => {
     const [processed, setProcessed] = useState(false);
     const path = useHistory();
 
+    // stroing bigger data in IPFS
     async function onFileUpload(selectedFile, loan_purpose) {
         try {
             console.log("Upload called");
@@ -67,8 +68,8 @@ const LoanForm = () => {
             }
             const tokenURI = pinataResponse.hash;
             console.log('check check', tokenURI);
-            // const uri = await mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
-            // return uri;
+
+            // returing the hash code of stored data
             return tokenURI;
         } catch (error) {
             console.log(error);
@@ -89,10 +90,10 @@ const LoanForm = () => {
         setActiveStep(prevActiveStep => prevActiveStep + 1);
         const document = await onFileUpload(collateral_document, loan_purpose);
 
-        console.log('called', document)
+        console.log('called', document);
+        // sending data in backend to create opportunity with hash code
         await createOpportunity(loanDetails, document);
         setProcessed(true);
-
     }
 
     const handleNext = (newData, value) => {
