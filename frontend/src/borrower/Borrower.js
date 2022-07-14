@@ -162,7 +162,6 @@ const Borrower = () => {
           }}
         >
           <Typography variant="h6">
-            {`\u20B9`}
             {userInfo.totalLoan} {process.env.REACT_APP_TOKEN_NAME}
           </Typography>
           <Typography variant="h6" color="#979797">
@@ -180,7 +179,6 @@ const Borrower = () => {
           }}
         >
           <Typography variant="h6">
-            {`\u20B9`}
             {userInfo.amountReadyToWithdraw} {process.env.REACT_APP_TOKEN_NAME}
           </Typography>
 
@@ -197,29 +195,32 @@ const Borrower = () => {
 
       {/*add a if statement for data*/}
 
-      {opportunity
-        ? opportunity.map((data, i) => {
-            return (
-              <div
-                onClick={() => {
-                  console.log("clicked");
-                  //path.push(`/opportunity-details/${id}`)
-                }}
-              >
-                <OpportunityStatus
-                  opportunityName="Opportunity 1"
-                  loanAmount={data.loanAmount}
-                  loanInterest={data.loanInterest}
-                  loanType={data.loanType}
-                  loanTenure={data.loanTenure}
-                  //opportunityStatus={data.oppurtunityStatus}
-                  opportunityStatus="0"
-                  mDate="12/05/2022"
-                />
-              </div>
-            );
-          })
-        : null}
+      {opportunity ? (
+        opportunity.map((data, i) => {
+          return (
+            <div
+              onClick={() => {
+                console.log("clicked");
+                //path.push(`/opportunity-details/${id}`)
+              }}
+              key={i}
+            >
+              <OpportunityStatus
+                opportunityName="Opportunity 1"
+                loanAmount={data.loanAmount}
+                loanInterest={data.loanInterest}
+                loanType={data.loanType}
+                loanTenure={data.loanTenure}
+                //opportunityStatus={data.oppurtunityStatus}
+                opportunityStatus="0"
+                mDate="12/05/2022"
+              />
+            </div>
+          );
+        })
+      ) : (
+        <h2>No Opportunity Created Yet.</h2>
+      )}
 
       <br />
       <br />

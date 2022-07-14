@@ -108,7 +108,7 @@ const OpportunityStatus = ({
             </div>
             <div style={{ width: "20%" }}>
               <Typography variant="subtitle1">{loanTenure}</Typography>
-              <Typography variant="overline">Tenor</Typography>
+              <Typography variant="overline">Tenure</Typography>
             </div>
             <div style={{ width: "20%" }}>
               <Typography variant="subtitle1">
