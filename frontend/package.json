@@ -52,7 +52,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@getyoti/sdk-sandbox": "1.6.0"
-  }
+  "devDependencies": {}
 }
