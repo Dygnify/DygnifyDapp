@@ -26,12 +26,13 @@ import Welcome from "./customer/onboarding/Welcome";
 import Docs from "./customer/onboarding/Docs";
 import PanOption from "./customer/onboarding/PanOption";
 import PanProof from "./customer/onboarding/PanProof";
-import PanUpload from './customer/onboarding/panProofComponents/PanUpload'
+import PanUpload from "./customer/onboarding/panProofComponents/PanUpload";
 import BusinessProof from "./customer/onboarding/BusinessProof";
 import BusinessOption from "./customer/onboarding/BusinessOption";
 import Borrower from "./borrower/Borrower";
 import Drawdown from "./borrower/Drawdown";
 import LoadApp from "./home/LoadApp";
+import AuditorDashboard from "./auditor/AuditorDashboard";
 
 const Routes = () => {
   return (
@@ -57,6 +58,7 @@ const Routes = () => {
         <Route exact path="/Borrower" component={Borrower} />
         <Route exact path="/Drawdown" component={Drawdown} />
         <Route exact path="/LoadApp" component={LoadApp} />
+        <Route exact path="/auditor" component={AuditorDashboard} />
       </Switch>
     </BrowserRouter>
   );

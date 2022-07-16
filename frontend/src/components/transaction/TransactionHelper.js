@@ -6,6 +6,8 @@ import opportunityOrigination from "../../artifacts/contracts/opportunityOrigina
 
 const dygnifyStakingAddress = "0x535f2B176CA3f39D9B5e99b8BEFb85bbA43f5045";
 const token = "0x310FC4DCC85C212475f0671fc90aC8Ec3971bd87";
+const opportunityOriginationAddress =
+  "0x535f2B176CA3f39D9B5e99b8BEFb85bbA43f5045"; //wrong id
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
