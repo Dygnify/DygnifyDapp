@@ -1,10 +1,11 @@
-import {React,useState} from "react";
+import { React, useState } from "react";
 import { ethers } from 'ethers';
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import NFTMinter from "../artifacts/contracts/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from '../services/axioscall';
 import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
+import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
 const axios = require('axios');
 
 const REACT_APP_PINATA_API_KEY = "bd910e460ee4b6ef0519";
@@ -13,44 +14,52 @@ const tokenAddress = "0x1546A8e7389B47d2Cf1bacE7C0ad3e0A91CAae94";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 
 //metadata to ipfs
-const pinJSONToIPFS = async(JSONBody) => {
+const pinJSONToIPFS = async (JSONBody) => {
   const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
   //making axios POST request to Pinata ⬇️
-  return axios 
-      .post(url, JSONBody, {
-          headers: {
-              pinata_api_key: REACT_APP_PINATA_API_KEY,
-              pinata_secret_api_key: REACT_APP_PINATA_API_SECRET,
-          }
-      })
-      .then(function (response) {
-         return {
-             success: true,
-             pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
-         };
-      })
-      .catch(function (error) {
-          console.log(error)
-          return {
-              success: false,
-              message: error.message,
-          }
+  return axios
+    .post(url, JSONBody, {
+      headers: {
+        pinata_api_key: REACT_APP_PINATA_API_KEY,
+        pinata_secret_api_key: REACT_APP_PINATA_API_SECRET,
+      }
+    })
+    .then(function (response) {
+      return {
+        success: true,
+        pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
+      };
+    })
+    .catch(function (error) {
+      console.log(error)
+      return {
+        success: false,
+        message: error.message,
+      }
 
-  });
+    });
 };
 const CompanyInfo = () => {
+  const { id } = useParams();
+  console.log(id);
+  const [data, setData] = useState();
+  const dataFetch = async () => {
+    setData(await getOpportunitysOf());
+  }
+  dataFetch();
+  dataFetch();
+  console.log(data)
 
-  
   const [selectedFile, setSelectedFile] = useState();
-  const [tokenURI,setTokenURI]= useState("");
+  const [tokenURI, setTokenURI] = useState("");
 
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
   }
 
-  
 
-  async function mint_NFT(tokenURI,imageURI) {
+
+  async function mint_NFT(tokenURI, imageURI) {
     if (typeof window.ethereum !== 'undefined') {
       await requestAccount()
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -59,14 +68,13 @@ const CompanyInfo = () => {
       const transaction = await contract.mint(tokenURI);
       await transaction.wait();
       console.log(`${tokenURI} has minted sucessfully.`);
-      setTokenURI(imageURI)
     }
   }
 
   // On file upload (click the upload button)
-  async function onFileUpload () {
+  async function onFileUpload() {
     try {
-      console.log("Upload called"); 
+      console.log("Upload called");
       let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
       console.log(ipfsUploadRes);
       //make metadata
@@ -74,19 +82,19 @@ const CompanyInfo = () => {
       metadata.imageHash = ipfsUploadRes.res.IpfsHash;
       metadata.PinSize = ipfsUploadRes.res.PinSize;
       metadata.Timestamp = ipfsUploadRes.res.Timestamp;
-    
+
       //make pinata call
       const pinataResponse = await pinJSONToIPFS(metadata);
       if (!pinataResponse.success) {
-          return {
-              success: false,
-              status: "😢 Something went wrong while uploading your tokenURI.",
-          }
-      } 
-      const tokenURI = pinataResponse.pinataUrl;  
+        return {
+          success: false,
+          status: "😢 Something went wrong while uploading your tokenURI.",
+        }
+      }
+      const tokenURI = pinataResponse.pinataUrl;
       console.log(tokenURI);
-      mint_NFT(tokenURI,"https://gateway.pinata.cloud/ipfs/"+metadata.imageHash);
-      
+      mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
+
     } catch (error) {
       console.log(error);
     }
@@ -168,23 +176,23 @@ const CompanyInfo = () => {
           }}
         >
           <Box>
-        <Card
-          sx={{
-            mb: "5px",
-            maxWidth: 100,
-            py: "2px",
-            mx: "auto",
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "justify",
-          }}
-        >
-          <img
-            style={{ width: "88px", height: "77px" }}
-            src="./assets/supply-chain.png"
-            alt=""
-          />
-          </Card>
+            <Card
+              sx={{
+                mb: "5px",
+                maxWidth: 100,
+                py: "2px",
+                mx: "auto",
+                display: "flex",
+                flexDirection: "column",
+                textAlign: "justify",
+              }}
+            >
+              <img
+                style={{ width: "88px", height: "77px" }}
+                src="./assets/supply-chain.png"
+                alt=""
+              />
+            </Card>
           </Box>
           <Typography ml={2}>Supply Chain Finance</Typography>
         </Stack>
@@ -259,7 +267,7 @@ const CompanyInfo = () => {
             ABC Finance Private Limited
           </Typography>
           <Typography variant="body2">
-ABC is a  company operating in Southern India that provides invoice factoring services, which involves buying a business's unpaid invoices at a discount. ABC was founded in 20XX and has operations in southern states of Karnataka, Tamil Nadu, Andhra Pradesh, Telangana, and has since originated over $30 Mn in loans to over 10 millions borrowers. This opportunity will consist of tranches of a secured non convertible debenture with a maturity of 24 months backed by a portfolio of loans made to customers.
+            ABC is a  company operating in Southern India that provides invoice factoring services, which involves buying a business's unpaid invoices at a discount. ABC was founded in 20XX and has operations in southern states of Karnataka, Tamil Nadu, Andhra Pradesh, Telangana, and has since originated over $30 Mn in loans to over 10 millions borrowers. This opportunity will consist of tranches of a secured non convertible debenture with a maturity of 24 months backed by a portfolio of loans made to customers.
           </Typography>
         </Card>
       </Box>
@@ -368,26 +376,26 @@ ABC is a  company operating in Southern India that provides invoice factoring se
             textAlign: "justify",
           }}
         >
-          { tokenURI === "" ?
-          <div style={{display:"flex" , flexDirection : "column"}}>
-          <Typography mb={1} variant="subtitle2">
-          Upload collateral document for converting to a unique NFT
-          </Typography>
-          <input type="file" style={{maxWidth:"500px"}} onChange={ (event) => setSelectedFile(event.target.files[0]) } class="custom-file-upload" />
-          <Button
-            sx={{ backgroundColor: "#7165E3" ,width:"300px",marginTop:"10px"}}
-            variant="contained"
-            size="large"
-            onClick={onFileUpload}
-          >
-            Mint
-          </Button> </div>
-          : <div><h4>View your minted NFT here : </h4><a href={tokenURI}>{tokenURI}</a></div>
+          {tokenURI === "" ?
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <Typography mb={1} variant="subtitle2">
+                Upload collateral document for converting to a unique NFT
+              </Typography>
+              <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target.files[0])} class="custom-file-upload" />
+              <Button
+                sx={{ backgroundColor: "#7165E3", width: "300px", marginTop: "10px" }}
+                variant="contained"
+                size="large"
+                onClick={onFileUpload}
+              >
+                Mint
+              </Button> </div>
+            : <div><h4>View your minted NFT here : </h4><a href={tokenURI}>{tokenURI}</a></div>
           }
         </Card>
       </Box>
     </>
   );
 };
- 
+
 export default CompanyInfo;

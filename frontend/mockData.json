@@ -1,0 +1,19 @@
+{
+    "posts": [
+        {
+            "capital_loss": "17",
+            "collateral_documents": {
+                "lastModified": 1656599949439,
+                "name": "assessmentee-com-test-score-2022-06-30-16-38-50.pdf",
+                "size": 10369,
+                "type": "application/pdf",
+                "webkitRelativePath": ""
+            },
+            "loan_amount": "5",
+            "loan_interest": "12",
+            "loan_purpose": "awd af",
+            "loan_tenure": "5",
+            "loan_type": "silver"
+        }
+    ]
+}

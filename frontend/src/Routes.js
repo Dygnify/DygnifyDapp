@@ -33,6 +33,9 @@ import Borrower from "./borrower/Borrower";
 import Drawdown from "./borrower/Drawdown";
 import LoadApp from "./home/LoadApp";
 import AuditorDashboard from "./auditor/AuditorDashboard";
+import LoanForm from "./pages/LoanForm/LoanForm";
+import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
+import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
 
 const Routes = () => {
   return (
@@ -47,6 +50,7 @@ const Routes = () => {
         <Route exact path="/sign" component={DashboardMain} />
         <Route exact path="/landing" component={LandingPage} />
         <Route exact path="/info" component={CompanyInfo} />
+        <Route exact path="/info/:id" component={CompanyInfo} />
         <Route exact path="/kyc" component={KYC} />
         <Route exact path="/wallet" component={Wallet} />
         <Route exact path="/dashboard" component={Dashboard} />
@@ -59,6 +63,13 @@ const Routes = () => {
         <Route exact path="/Drawdown" component={Drawdown} />
         <Route exact path="/LoadApp" component={LoadApp} />
         <Route exact path="/auditor" component={AuditorDashboard} />
+        <Route exact path="/loan-form" component={LoanForm} />
+        <Route exact path="/opportunities" component={OpportunityPage} />
+        <Route
+          exact
+          path="/opportunity-details/:id"
+          component={OpportunityDetails}
+        />
       </Switch>
     </BrowserRouter>
   );
