@@ -9,7 +9,6 @@ import ChooseLanguage from "./customer/onboarding/ChooseLanguage";
 import LoadingScreen from "./customer/onboarding/LoadingScreen";
 import LocationPermission from "./customer/onboarding/LocationPermission";
 import Overview from "./mock/components/overview/Overview";
-import Test from "./mock/Test";
 import SignIn from "./user/SignIn";
 import DashboardMain from "./user/DashboardMain";
 import Logout from "./user/Logout";
@@ -32,6 +31,10 @@ import BusinessOption from "./customer/onboarding/BusinessOption";
 import LoanForm from "./pages/LoanForm/LoanForm";
 import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
 import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
+import Test from "./pages/LoanForm/Test";
+
+// import InvestorDashboard from "./pages/Investor/InvestorDashboard";
+// import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
 
 const Routes = () => {
   return (
@@ -41,7 +44,7 @@ const Routes = () => {
         <Route exact path="/pool" component={Home} />
         <Route exact path="/borrow" component={Borrow} />
         <Route exact path="/token" component={Token} />
-        <Route exact path="/test" component={Test} />
+        {/* <Route exact path="/test" component={Test} /> */}
         <Route exact path="/overview" component={Overview} />
         <Route exact path="/sign" component={DashboardMain} />
         <Route exact path="/landing" component={LandingPage} />
@@ -56,8 +59,11 @@ const Routes = () => {
         <Route exact path="/mobile" component={Mobile} />
         <Route exact path="/VerifyNumber" component={VerifyNumber} />
         <Route exact path="/loan-form" component={LoanForm} />
+        <Route exact path="/test" component={Test} />
         <Route exact path='/opportunities' component={OpportunityPage} />
         <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
+        {/* <Route exact path='/loan-details/:id' component={ApprovedOpportunities} />
+        <Route exact path='/investor-dashboard' component={InvestorDashboard} /> */}
       </Switch>
     </BrowserRouter>
   );

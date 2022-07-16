@@ -1,6 +1,5 @@
 import { Button, FormControl, InputLabel, makeStyles, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
-import * as Yup from 'yup'
 import React from 'react';
 import InputText from './FormFields/InputText';
 import { loanDetailsValidationSchema } from './validations/validation';
@@ -36,6 +35,19 @@ const LoanDetails = ({ handleNext, formData }) => {
                 Enter Loan Details
             </Typography>
             <form onSubmit={formik.handleSubmit}>
+                <InputText
+                    className={classes.input}
+                    name='loan_name'
+                    label="Loan Name"
+                    value={formik.values.loan_name}
+                    error={
+                        formik.touched.loan_name && formik.errors.loan_name
+                            ? formik.errors.loan_name
+                            : null
+                    }
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
                 <FormControl
                     className={classes.input}
                     variant='outlined'
@@ -54,8 +66,8 @@ const LoanDetails = ({ handleNext, formData }) => {
                                 : null
                         }
                     >
-                        <MenuItem value='Term Loan'>Term Loan</MenuItem>
-                        <MenuItem value='Bullet Loan'>Bullet Loan</MenuItem>
+                        <MenuItem value='1'>Term Loan</MenuItem>
+                        <MenuItem value='0'>Bullet Loan</MenuItem>
                     </Select>
                 </FormControl>
                 {formik.touched.loan_type && formik.errors.loan_type ? (

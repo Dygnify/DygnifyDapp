@@ -2,11 +2,13 @@ import { ethers } from "ethers";
 import dygnifyStaking from "../../artifacts/contracts/DygnifyStaking.sol/DygnifyStaking.json";
 import dygnifyToken from "../../artifacts/contracts/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
-import opportunityOrigination from "../../artifacts/contracts/opportunityOrigination.sol/opportunityOrigination.json";
+import opportunityOrigination from "../../artifacts/contracts/OpportunityOrigination.sol/opportunityOrigination.json";
+import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
+
 
 const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-const opportunityOriginationAddress = "0x474FE9bCBe747a22ACee6e9A2E18d4EBaa552d94";
+const opportunityOriginationAddress = "0x22A8d966cf1AC463547AA56dc4b1B596a3612Af9";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -168,10 +170,11 @@ export const getEthAddress = async () => {
 };
 
 
-export async function createOpportunity(formData, document) {
+export async function createOpportunity(formData) {
   let borrower = await getEthAddress();
-  let { loan_type, loan_amount, loan_tenure, loan_interest, capital_loss, payment_frequency } = formData;
-  console.log(formData, document)
+  let { loan_type, loan_amount, loan_tenure, loan_interest, capital_loss, payment_frequency, loanInfoHash, collateralHash } = formData;
+  console.log('backend call', formData)
+
   if (typeof window.ethereum !== "undefined") {
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -184,12 +187,13 @@ export async function createOpportunity(formData, document) {
     );
     const transaction1 = await contract.createOpportunity(
       borrower,
+      loanInfoHash,
       loan_type,
       loan_amount,
       loan_tenure,
       loan_interest,
       payment_frequency,
-      document,
+      collateralHash,
       capital_loss
     );
     await transaction1.wait();
@@ -230,4 +234,35 @@ export async function getOpportunitysOf() {
   }
 
   return 0;
+}
+
+export async function getOpportunityAt(id) {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        opportunityOriginationAddress,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      let obj = {};
+      let tx = await contract.opportunityToId(id);
+      obj.borrower = tx.borrower.toString()
+      obj.opportunity_info = tx.opportunityInfo.toString()
+      obj.loan_type = tx.loanType.toString() // 0 or 1 need to be handled
+      obj.loan_amount = tx.loanAmount.toString()
+      obj.loan_tenure = tx.loanTenureInDays.toString()
+      obj.loan_interest = tx.loanInterest.toString()
+      obj.payment_frequency = tx.paymentFrequencyInDays.toString()
+      obj.collateral_document = tx.collateralDocument.toString()
+      obj.capital_loss = tx.capitalLoss.toString()
+      return obj;
+    }
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+
 }

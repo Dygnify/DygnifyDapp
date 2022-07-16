@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 
 export const loanDetailsValidationSchema = Yup.object().shape({
+    loan_name: Yup.string().required().label('Loan Name'),
     loan_type: Yup.mixed().required().label('Loan Type'),
     loan_purpose: Yup.string().required().label('Loan Purpose'),
     loan_amount: Yup.number().positive().required().label('Loan Amount'),
