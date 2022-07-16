@@ -26,9 +26,13 @@ import Welcome from "./customer/onboarding/Welcome";
 import Docs from "./customer/onboarding/Docs";
 import PanOption from "./customer/onboarding/PanOption";
 import PanProof from "./customer/onboarding/PanProof";
-import PanUpload from './customer/onboarding/panProofComponents/PanUpload'
+import PanUpload from "./customer/onboarding/panProofComponents/PanUpload";
 import BusinessProof from "./customer/onboarding/BusinessProof";
 import BusinessOption from "./customer/onboarding/BusinessOption";
+import Borrower from "./borrower/Borrower";
+import Drawdown from "./borrower/Drawdown";
+import LoadApp from "./home/LoadApp";
+import AuditorDashboard from "./auditor/AuditorDashboard";
 import LoanForm from "./pages/LoanForm/LoanForm";
 import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
 import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
@@ -55,9 +59,17 @@ const Routes = () => {
         <Route exact path="/pan" component={PanUpload} />
         <Route exact path="/mobile" component={Mobile} />
         <Route exact path="/VerifyNumber" component={VerifyNumber} />
+        <Route exact path="/Borrower" component={Borrower} />
+        <Route exact path="/Drawdown" component={Drawdown} />
+        <Route exact path="/LoadApp" component={LoadApp} />
+        <Route exact path="/auditor" component={AuditorDashboard} />
         <Route exact path="/loan-form" component={LoanForm} />
-        <Route exact path='/opportunities' component={OpportunityPage} />
-        <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
+        <Route exact path="/opportunities" component={OpportunityPage} />
+        <Route
+          exact
+          path="/opportunity-details/:id"
+          component={OpportunityDetails}
+        />
       </Switch>
     </BrowserRouter>
   );

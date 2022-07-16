@@ -29,6 +29,13 @@ async function main() {
   await dygnifyStaking.deployed();
 
   console.log("DygnifyStaking deployed to:", dygnifyStaking.address);
+
+  const OpportunityOrigination = await hre.ethers.getContractFactory("OpportunityOrigination");
+  const opportunityOrigination = await OpportunityOrigination.deploy();
+
+  await opportunityOrigination.deployed();
+
+  console.log("Opportunity Origination deployed to:", opportunityOrigination.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

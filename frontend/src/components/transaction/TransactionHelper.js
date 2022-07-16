@@ -6,7 +6,8 @@ import opportunityOrigination from "../../artifacts/contracts/opportunityOrigina
 
 const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-const opportunityOriginationAddress = "0x474FE9bCBe747a22ACee6e9A2E18d4EBaa552d94";
+const opportunityOriginationAddress =
+  "0x474FE9bCBe747a22ACee6e9A2E18d4EBaa552d94";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -16,13 +17,9 @@ export async function approve(amount) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
     const signer = provider.getSigner();
-    const contract2 = new ethers.Contract(
-      token,
-      dygnifyToken.abi,
-      signer
-    );
+    const contract2 = new ethers.Contract(token, dygnifyToken.abi, signer);
     const transaction = await contract2.approve(dygnifyStakingAddress, amount);
-    await transaction.wait()
+    await transaction.wait();
   }
 }
 
@@ -32,12 +29,11 @@ export async function allowance(ownerAddress) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
     const signer = provider.getSigner();
-    const contract2 = new ethers.Contract(
-      token,
-      dygnifyToken.abi,
-      signer
+    const contract2 = new ethers.Contract(token, dygnifyToken.abi, signer);
+    const transaction = await contract2.allowance(
+      ownerAddress,
+      dygnifyStakingAddress
     );
-    const transaction = await contract2.allowance(ownerAddress, dygnifyStakingAddress);
 
     return ethers.utils.formatEther(transaction);
   }
@@ -58,7 +54,6 @@ export async function stake(amount) {
     );
     const transaction1 = await contract.stake(amount);
     await transaction1.wait();
-
   }
 }
 
@@ -128,7 +123,7 @@ export async function getWalletBal() {
       const bal = await contract.balanceOf(await signer.getAddress());
       // console.log(ethers.utils.formatEther(bal));
       return ethers.utils.formatEther(bal);
-      console.log(ethers.utils.formatEther(bal))
+      console.log(ethers.utils.formatEther(bal));
     }
   } catch (error) {
     console.log(error);
@@ -167,11 +162,17 @@ export const getEthAddress = async () => {
   return await signer.getAddress();
 };
 
-
 export async function createOpportunity(formData, document) {
   let borrower = await getEthAddress();
-  let { loan_type, loan_amount, loan_tenure, loan_interest, capital_loss, payment_frequency } = formData;
-  console.log(formData, document)
+  let {
+    loan_type,
+    loan_amount,
+    loan_tenure,
+    loan_interest,
+    capital_loss,
+    payment_frequency,
+  } = formData;
+  console.log(formData, document);
   if (typeof window.ethereum !== "undefined") {
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -213,14 +214,15 @@ export async function getOpportunitysOf() {
       for (let i = 0; i < data.length; i++) {
         let obj = {};
         let tx = await contract.opportunityToId(data[i]);
-        obj.borrower = tx.borrower.toString()
-        obj.loan_type = tx.loanType.toString()
-        obj.loan_amount = tx.loanAmount.toString()
-        obj.loan_tenure = tx.loanTenure.toString()
-        obj.loan_interest = tx.loanInterest.toString()
-        obj.payment_frequency = tx.paymentFrequency.toString()
-        obj.collateral_document = tx.collateralDocument.toString()
-        obj.capital_loss = tx.capitalLoss.toString()
+        obj.oppurtunityStatus = tx.opportunityStatus.toString();
+        obj.borrower = tx.borrower.toString();
+        obj.loanType = tx.loanType.toString();
+        obj.loanAmount = tx.loanAmount.toString();
+        obj.loanTenure = tx.loanTenure.toString();
+        obj.loanInterest = tx.loanInterest.toString();
+        obj.paymentFrequency = tx.paymentFrequency.toString();
+        obj.collateralDocument = tx.collateralDocument.toString();
+        obj.capitalLoss = tx.capitalLoss.toString();
         opportunities.push(obj);
       }
       return opportunities;
