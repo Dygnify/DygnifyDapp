@@ -1,14 +1,14 @@
 import { ethers } from "ethers";
-import dygnifyStaking from "../../artifacts/contracts/DygnifyStaking.sol/DygnifyStaking.json";
-import dygnifyToken from "../../artifacts/contracts/DygnifyToken.sol/DygnifyToken.json";
+import dygnifyStaking from "../../artifacts/contracts/protocol/DygnifyStaking.sol/DygnifyStaking.json";
+import dygnifyToken from "../../artifacts/contracts/protocol/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
-import opportunityOrigination from "../../artifacts/contracts/OpportunityOrigination.sol/opportunityOrigination.json";
-import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
+import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
+
 
 
 const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-const opportunityOriginationAddress = "0x22A8d966cf1AC463547AA56dc4b1B596a3612Af9";
+const opportunityOriginationAddress = "0x608151Ca57E8Eba14363557dE48D46134B4f7e91";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -169,7 +169,7 @@ export const getEthAddress = async () => {
   return await signer.getAddress();
 };
 
-
+// to create opportunity
 export async function createOpportunity(formData) {
   let borrower = await getEthAddress();
   let { loan_type, loan_amount, loan_tenure, loan_interest, capital_loss, payment_frequency, loanInfoHash, collateralHash } = formData;
@@ -200,6 +200,8 @@ export async function createOpportunity(formData) {
   }
 }
 
+
+// to fetch created opportunities of specific borrower
 export async function getOpportunitysOf() {
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -218,11 +220,13 @@ export async function getOpportunitysOf() {
         let obj = {};
         let tx = await contract.opportunityToId(data[i]);
         obj.borrower = tx.borrower.toString()
+        obj.opportunity_id = tx.opportunityID.toString()
+        obj.loan_info = tx.opportunityInfo.toString()
         obj.loan_type = tx.loanType.toString()
         obj.loan_amount = tx.loanAmount.toString()
-        obj.loan_tenure = tx.loanTenure.toString()
+        obj.loan_tenure = tx.loanTenureInDays.toString()
         obj.loan_interest = tx.loanInterest.toString()
-        obj.payment_frequency = tx.paymentFrequency.toString()
+        obj.payment_frequency = tx.paymentFrequencyInDays.toString()
         obj.collateral_document = tx.collateralDocument.toString()
         obj.capital_loss = tx.capitalLoss.toString()
         opportunities.push(obj);
@@ -236,6 +240,7 @@ export async function getOpportunitysOf() {
   return 0;
 }
 
+// to fetch opportunity by id
 export async function getOpportunityAt(id) {
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -248,8 +253,11 @@ export async function getOpportunityAt(id) {
       );
 
       let obj = {};
+      console.log('check')
       let tx = await contract.opportunityToId(id);
+      console.log(tx)
       obj.borrower = tx.borrower.toString()
+      obj.opportunity_id = tx.opportunityID.toString()
       obj.opportunity_info = tx.opportunityInfo.toString()
       obj.loan_type = tx.loanType.toString() // 0 or 1 need to be handled
       obj.loan_amount = tx.loanAmount.toString()
@@ -264,5 +272,47 @@ export async function getOpportunityAt(id) {
     console.log(error);
     return 0;
   }
+}
 
+
+export async function getAllActiveOpportunities() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        opportunityOriginationAddress,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      const count = await contract.getTotalOpportunities();;
+      let opportunities = [];
+
+      for (let i = 0; i < count; i++) {
+        let id = await contract.opportunityIds(i);
+        let obj = {};
+        let tx = await contract.opportunityToId(id);
+        if (tx.opportunityStatus.toString() == "5") {
+          obj.borrower = tx.borrower.toString()
+          obj.opportunity_id = tx.opportunityID.toString()
+          obj.opportunity_info = tx.opportunityInfo.toString()
+          obj.loan_type = tx.loanType.toString() // 0 or 1 need to be handled
+          obj.loan_amount = tx.loanAmount.toString()
+          obj.loan_tenure = tx.loanTenureInDays.toString()
+          obj.loan_interest = tx.loanInterest.toString()
+          obj.payment_frequency = tx.paymentFrequencyInDays.toString()
+          obj.collateral_document = tx.collateralDocument.toString()
+          obj.capital_loss = tx.capitalLoss.toString()
+          opportunities.push(obj);
+        }
+      }
+      return opportunities;
+    }
+  }
+  catch (error) {
+    console.log(error);
+  }
+
+  return 0;
 }

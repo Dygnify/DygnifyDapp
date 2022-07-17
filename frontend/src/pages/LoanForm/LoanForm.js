@@ -1,5 +1,5 @@
 import { makeStyles, Step, StepLabel, Stepper, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import CollateralDocuments from './CollateralDocuments';
 import ConfirmSubmission from './ConfirmSubmission';
@@ -30,6 +30,17 @@ const useStyles = makeStyles({
 
 const LoanForm = () => {
     const classes = useStyles();
+    const [company, setCompany] = useState({});
+
+    useEffect(() => {
+        const fetchJSON = async () => {
+            const response = await fetch("/company.json");
+            let json = await response.json();
+            setCompany(json);
+        };
+
+        fetchJSON();
+    }, []);
     const [formData, setFormData] = useState({
         loan_name: "",
         loan_type: "",
@@ -63,6 +74,8 @@ const LoanForm = () => {
             const metadata2 = {};
             metadata2.loanName = loan_info.loan_name
             metadata2.loanPurpose = loan_info.loan_purpose;
+            metadata2.company_name = company.company_name;
+            metadata2.company_details = company.company_details;
             const loanInfoURI = await pinataCall(metadata2);
 
             return [collateralURI, loanInfoURI]

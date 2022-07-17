@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import { ethers } from 'ethers';
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import NFTMinter from "../artifacts/contracts/NFT_minter.sol/NFTMinter.json";
+import NFTMinter from "../artifacts/contracts/protocol/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from '../services/axioscall';
 import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";

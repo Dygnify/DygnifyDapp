@@ -6,7 +6,7 @@ export const loanDetailsValidationSchema = Yup.object().shape({
     loan_purpose: Yup.string().required().label('Loan Purpose'),
     loan_amount: Yup.number().positive().required().label('Loan Amount'),
     loan_tenure: Yup.number().positive().integer().min(1).max(100).required().label('Loan Tenure'),
-    loan_interest: Yup.number().positive().min(0).max(100).required().label('Loan Interest'),
+    loan_interest: Yup.number().positive().min(1).max(100).required().label('Loan Interest'),
     payment_frequency: Yup.number().positive().min(1).required().label('Payment Frequency')
 })
 

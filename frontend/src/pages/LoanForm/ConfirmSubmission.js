@@ -35,7 +35,7 @@ const ConfirmSubmission = ({ handlePrev, finalSubmit, formData }) => {
                     variant='body1'
                     style={{ color: '#999', textAlign: 'center', margin: '1rem 0' }}
                 >
-                    Loan Type: {formData.loan_type}
+                    Loan Type: {formData?.loan_type === 1 ? 'Term Loan' : 'Bullet Loan'}
                 </Typography>
                 <Typography
                     variant='body1'
