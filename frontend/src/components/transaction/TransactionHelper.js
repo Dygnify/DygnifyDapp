@@ -4,8 +4,6 @@ import dygnifyToken from "../../artifacts/contracts/protocol/DygnifyToken.sol/Dy
 import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 
-const dygnifyStakingAddress = process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS;
-const token = process.env.REACT_APP_TOKEN;
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
 
