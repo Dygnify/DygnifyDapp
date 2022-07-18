@@ -29,6 +29,12 @@ const ConfirmSubmission = ({ handlePrev, finalSubmit, formData }) => {
                     variant='body1'
                     style={{ color: '#999', textAlign: 'center', margin: '1rem 0' }}
                 >
+                    Loan Type: {formData.loan_name}
+                </Typography>
+                <Typography
+                    variant='body1'
+                    style={{ color: '#999', textAlign: 'center', margin: '1rem 0' }}
+                >
                     Loan Type: {formData.loan_type}
                 </Typography>
                 <Typography
