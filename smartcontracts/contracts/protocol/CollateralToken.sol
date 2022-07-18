@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
@@ -21,7 +21,7 @@ contract CollateralToken is Initializable, ERC721Upgradeable, ERC721URIStorageUp
     CountersUpgradeable.Counter private _tokenIdCounter;
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
-    function _collateralToken_init(address config, address _minterRole) initializer public {
+    function _collateralToken_init(DygnifyConfig config, address _minterRole) initializer public {
         __ERC721_init("CollateralToken", "CT");
         __ERC721URIStorage_init();
         __Pausable_init();

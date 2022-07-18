@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.4;
+import "../protocol/DygnifyConfig.sol";
 
 interface IOpportunityPool {
 
     function initialize(
-        address _dygnifyConfig,
+        DygnifyConfig _dygnifyConfig,
         bytes32 _opportunityID,
         string memory _opportunityInfo,
         uint8 _loanType,

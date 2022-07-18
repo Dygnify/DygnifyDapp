@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
  * @notice Inheriting from OpenZeppelin's Pausable contract, this does small
  *  augmentations to make it work with a PAUSER_ROLE, leveraging the AccessControl contract.
  *  It is meant to be inherited.
- * @author Goldfinch
+ * @author Dygnify
  */
 
 contract PauserPausable is AccessControlUpgradeable, PausableUpgradeable {

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.4;
 
 import "./BaseUpgradeablePausable.sol";
 import "./DygnifyConfig.sol";
@@ -19,7 +19,7 @@ contract OpportunityOrigination is BaseUpgradeablePausable{
         Collateralized,
         Active,
         Drawndown,
-        Repayment
+        Repaid
     }
 
     enum LoanType{
@@ -55,7 +55,7 @@ contract OpportunityOrigination is BaseUpgradeablePausable{
         return opportunityIds.length;
     }
 
-    function _opportunityOrigination_init(address config) public initializer {
+    function _opportunityOrigination_init(DygnifyConfig config) public initializer {
         dygnifyConfig = DygnifyConfig(config);
         address owner = dygnifyConfig.dygnifyAdminAddress();
         _BaseUpgradeablePausable_init(owner);
@@ -90,7 +90,7 @@ contract OpportunityOrigination is BaseUpgradeablePausable{
         require(_capitalLoss > 0, "Capital Loss Must be greater than 0");
 
         bytes32 id = keccak256(abi.encodePacked(_collateralDocument));
-        require(isOpportunity[id] == false, "Opportunity ID already exist.");
+        require(isOpportunity[id] == false, "Same collatoral document is been used to create different opportunity.");
 
         Opportunity memory _opportunity;
         _opportunity.opportunityID = id;
@@ -130,8 +130,8 @@ contract OpportunityOrigination is BaseUpgradeablePausable{
         require(isOpportunity[_opportunityId] == true, "Opportunity ID doesn't exist");
         require(msg.sender == opportunityToId[_opportunityId].borrower, "Only borrower of the opportunity can mint the collateral." );
         require(opportunityToId[_opportunityId].opportunityStatus == OpportunityStatus.Approved ,"Opportunity is not approved");
-        collateralToken.safeMint(msg.sender, opportunityToId[_opportunityId].collateralDocument);
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus.Collateralized;
+        collateralToken.safeMint(msg.sender, opportunityToId[_opportunityId].collateralDocument);
     }
 
     function createOpportunityPool(bytes32 _opportunityId)public nonReentrant whenNotPaused returns(address pool){
@@ -142,7 +142,7 @@ contract OpportunityOrigination is BaseUpgradeablePausable{
         address poolImplAddress = dygnifyConfig.poolImplAddress();
         pool = deployMinimal(poolImplAddress);
         IOpportunityPool(pool).initialize(
-            address(dygnifyConfig),
+            dygnifyConfig,
             opportunityToId[_opportunityId].opportunityID,
             opportunityToId[_opportunityId].opportunityInfo,
             uint8(opportunityToId[_opportunityId].loanType),  

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity 0.8.4;
 
 import "./DygnifyConfig.sol";
 import "./ConfigOptions.sol";
@@ -8,7 +8,7 @@ import "./ConfigOptions.sol";
 /**
  * @title ConfigHelper
  * @notice A convenience library for getting easy access to other contracts and constants within the
- *  protocol, through the use of the GoldfinchConfig contract
+ *  protocol.
  * @author Dygnify
  */
 

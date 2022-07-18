@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./LPToken.sol";
@@ -24,7 +24,7 @@ contract OpportunityPool is BaseUpgradeablePausable{
     uint public capitalLoss; 
 
     function initialize(
-        address _dygnifyConfig,
+        DygnifyConfig _dygnifyConfig,
         bytes32 _opportunityID,
         string memory _opportunityInfo,
         uint8 _loanType,
@@ -35,7 +35,7 @@ contract OpportunityPool is BaseUpgradeablePausable{
         string memory _collateralDocument,
         uint _capitalLoss
     ) public initializer {
-        dygnifyConfig = DygnifyConfig(_dygnifyConfig);
+        dygnifyConfig = _dygnifyConfig;
         address owner = dygnifyConfig.dygnifyAdminAddress();
         require(owner != address(0), "Invalid Owner");
 
