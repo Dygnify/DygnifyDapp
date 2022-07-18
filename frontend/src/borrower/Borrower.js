@@ -1,7 +1,9 @@
-import { React, useState, useEffect, useHistory } from "react";
+import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityTable from "./OpportunityTable.js";
 import DrawdownCard from "./DrawdownCard.js";
+import { useHistory } from "react-router-dom";
+
 import OpportunityStatus from "./OpportunityStatus.js";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
 

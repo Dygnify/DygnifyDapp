@@ -1,8 +1,10 @@
 import { React, useState } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
+import { voteOpportunity } from "../components/transaction/TransactionHelper";
 
 const OpportunityStatus = ({
   opportunityName,
+  oppurtunityId,
   mDate,
   percentage,
   loanAmount,
@@ -58,32 +60,28 @@ const OpportunityStatus = ({
             <Typography mb={1} fontSize="14px" style={{ marginRight: "10px" }}>
               Maturity Date : {mDate}
             </Typography>
-            <Box
-              sx={{
-                backgroundColor: "White",
+
+            <button
+              style={{
+                margin: "2%",
                 width: "120px",
                 height: "35px",
-                border: `${
-                  opportunityStatus === "0"
-                    ? "1.5px solid red"
-                    : "1.5px solid green"
-                }`,
-                color: `${opportunityStatus === "0" ? "red" : "green"}`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                color: "orange",
+                fontSize: 15,
               }}
+              onClick={() => voteOpportunity(oppurtunityId, "3")}
             >
-              {/* {props.status === "Funded" ? `${props.percentage} Funded` : props.status}  */}
-              {"Unsure"}
-            </Box>
+              Unsure
+            </button>
             <button
               style={{
                 margin: "2%",
                 width: "120px",
                 height: "35px",
                 color: "green",
+                fontSize: 15,
               }}
+              onClick={() => voteOpportunity(oppurtunityId, "2")}
             >
               Approve
             </button>
@@ -92,7 +90,9 @@ const OpportunityStatus = ({
                 width: "120px",
                 height: "35px",
                 color: "red",
+                fontSize: 15,
               }}
+              onClick={() => voteOpportunity(oppurtunityId, "1")}
             >
               Reject
             </button>

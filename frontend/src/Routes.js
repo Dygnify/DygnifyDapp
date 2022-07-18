@@ -35,6 +35,7 @@ import AuditorDashboard from "./auditor/AuditorDashboard";
 import LoanForm from "./pages/LoanForm/LoanForm";
 import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
 import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
+import OpportunityDetailsAuditor from "./auditor/OpportunityDetailsAuditor";
 import Test from "./pages/LoanForm/Test";
 import InvestorDashboard from "./pages/Investor/InvestorDashboard";
 import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
@@ -66,11 +67,30 @@ const Routes = () => {
         <Route exact path="/LoadApp" component={LoadApp} />
         <Route exact path="/auditor" component={AuditorDashboard} />
         <Route exact path="/loan-form" component={LoanForm} />
+        <Route exact path="/opportunities" component={OpportunityPage} />
+        <Route
+          exact
+          path="/opportunity-details/:id"
+          component={OpportunityDetails}
+        />
+        <Route
+          exact
+          path="/opportunity-details-auditor/:id"
+          component={OpportunityDetailsAuditor}
+        />
         <Route exact path="/test" component={Test} />
-        <Route exact path='/opportunities' component={OpportunityPage} />
-        <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
-        <Route exact path='/loan-details/:id' component={ApprovedOpportunities} />
-        <Route exact path='/investor-dashboard' component={InvestorDashboard} />
+        <Route exact path="/opportunities" component={OpportunityPage} />
+        <Route
+          exact
+          path="/opportunity-details/:id"
+          component={OpportunityDetails}
+        />
+        <Route
+          exact
+          path="/loan-details/:id"
+          component={ApprovedOpportunities}
+        />
+        <Route exact path="/investor-dashboard" component={InvestorDashboard} />
       </Switch>
     </BrowserRouter>
   );
