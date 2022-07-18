@@ -61,6 +61,7 @@ export const pinJSONToIPFS = (JSONBody) => {
 
 export const pinataCall = async (metadata) => {
   const pinataResponse = await pinJSONToIPFS(metadata);
+  console.log(pinataResponse)
   if (!pinataResponse.success) {
     return {
       success: false,
@@ -75,10 +76,13 @@ export const ExtractIPFSdataFromHash = (hash) => {
   let str = "https://gateway.pinata.cloud/ipfs/" + hash;
   // str = str?.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
   useEffect(() => {
-    const dataFetch = async () => {
-      await fetch(str)
-        .then(res => res.json())
-        .then(data => setCheck(data))
+    async function dataFetch() {
+      try {
+        const response = await axios.get(str);
+        setCheck(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     dataFetch();
   }, [str]);

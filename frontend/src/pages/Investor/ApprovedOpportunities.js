@@ -1,16 +1,25 @@
 import { React, useState } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getOpportunityAt } from "../../components/transaction/TransactionHelper";
 import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
 
 
-
-const OpportunityDetails = () => {
+const ApprovedOpportunities = () => {
     const { id } = useParams({});
-    console.log(id)
     const [target, setTarget] = useState({});
+    const [company, setCompany] = useState({});
+
+    useEffect(() => {
+        const fetchJSON = async () => {
+            const response = await fetch("/company.json");
+            let json = await response.json();
+            setCompany(json);
+        };
+
+        fetchJSON();
+    }, []);
 
     useEffect(() => {
         const dataFetch = async () => {
@@ -22,6 +31,7 @@ const OpportunityDetails = () => {
 
     console.log(target)
     const hash = target?.opportunity_info;
+    console.log(hash)
     const info = ExtractIPFSdataFromHash(hash);
     console.log(info)
 
@@ -77,7 +87,6 @@ const OpportunityDetails = () => {
                     </Button>
                 </div>
             </Box>
-
             <Box>
                 <Card
                     sx={{
@@ -98,7 +107,7 @@ const OpportunityDetails = () => {
                     </div>
                     <Divider orientation="vertical" variant="middle" flexItem />
                     <div>
-                        <Typography variant="subtitle2">{target?.loan_tenure / 30} months</Typography>
+                        <Typography variant="subtitle2">{(target?.loan_tenure / 30).toFixed(2)} months</Typography>
                         <Typography variant="overline">Loan Tenure</Typography>
                     </div>
                     <Divider orientation="vertical" variant="middle" flexItem />{" "}
@@ -161,7 +170,6 @@ const OpportunityDetails = () => {
                         mb: "20px",
                         maxWidth: 1100,
                         py: "20px",
-                        mx: "30px",
                         mx: "auto",
                         display: "flex",
                         flexDirection: "column",
@@ -169,13 +177,14 @@ const OpportunityDetails = () => {
                     }}
                 >
                     <Typography px='20px' variant="h6">
-                        {info?.company_name}
+                        {company?.company_name}
                     </Typography>
                     <Typography px='20px' variant="body2">
-                        {info?.company_details}
+                        {company?.company_details}
                     </Typography>
                 </Card>
             </Box>
+
             {/* <Stack
                 sx={{
                     maxWidth: 1100,
@@ -277,7 +286,7 @@ const OpportunityDetails = () => {
                         }}
                     >
                         <Typography>Loan Tenure</Typography>
-                        <Typography>{target?.loan_tenure / 30} months</Typography>
+                        <Typography>{(target?.loan_tenure / 30).toFixed(2)} months</Typography>
                     </Stack>
                     <Stack
                         sx={{
@@ -298,6 +307,21 @@ const OpportunityDetails = () => {
                         <Typography>{target?.capital_loss ? target?.capital_loss : 0} %</Typography>
                     </Stack>
                 </Card>
+            </Box>
+            <Box
+                my='1rem'
+                maxWidth='1100px'
+                mx='auto'
+                display='flex'
+                justifyContent='center'
+            >
+                <Button
+                    sx={{ backgroundColor: "#ffffff", color: "#000000", padding: '10px 100px', borderRadius: '40px' }}
+                    variant="contained"
+                >
+                    <Link>Invest</Link>
+                </Button>
+
             </Box>
 
             {/* <Stack
@@ -347,4 +371,4 @@ const OpportunityDetails = () => {
     );
 };
 
-export default OpportunityDetails;
+export default ApprovedOpportunities;
