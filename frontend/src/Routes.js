@@ -36,14 +36,8 @@ import LoanForm from "./pages/LoanForm/LoanForm";
 import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
 import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
 import Test from "./pages/LoanForm/Test";
-<<<<<<< HEAD
 import InvestorDashboard from "./pages/Investor/InvestorDashboard";
 import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
-=======
-
-// import InvestorDashboard from "./pages/Investor/InvestorDashboard";
-// import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
 
 const Routes = () => {
   return (
@@ -75,13 +69,8 @@ const Routes = () => {
         <Route exact path="/test" component={Test} />
         <Route exact path='/opportunities' component={OpportunityPage} />
         <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
-<<<<<<< HEAD
         <Route exact path='/loan-details/:id' component={ApprovedOpportunities} />
         <Route exact path='/investor-dashboard' component={InvestorDashboard} />
-=======
-        {/* <Route exact path='/loan-details/:id' component={ApprovedOpportunities} />
-        <Route exact path='/investor-dashboard' component={InvestorDashboard} /> */}
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
       </Switch>
     </BrowserRouter>
   );

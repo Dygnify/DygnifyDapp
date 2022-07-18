@@ -2,23 +2,13 @@ import { ethers } from "ethers";
 import dygnifyStaking from "../../artifacts/contracts/protocol/DygnifyStaking.sol/DygnifyStaking.json";
 import dygnifyToken from "../../artifacts/contracts/protocol/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
-<<<<<<< HEAD
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 
-=======
-import opportunityOrigination from "../../artifacts/contracts/OpportunityOrigination.sol/opportunityOrigination.json";
-import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
 
 
 const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-<<<<<<< HEAD
 const opportunityOriginationAddress = "0x608151Ca57E8Eba14363557dE48D46134B4f7e91";
-=======
-const opportunityOriginationAddress =
-  "0x474FE9bCBe747a22ACee6e9A2E18d4EBaa552d94";
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -173,11 +163,7 @@ export const getEthAddress = async () => {
   return await signer.getAddress();
 };
 
-<<<<<<< HEAD
 // to create opportunity
-=======
-
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
 export async function createOpportunity(formData) {
   let borrower = await getEthAddress();
   let { loan_type, loan_amount, loan_tenure, loan_interest, capital_loss, payment_frequency, loanInfoHash, collateralHash } = formData;
@@ -227,7 +213,6 @@ export async function getOpportunitysOf() {
       for (let i = 0; i < data.length; i++) {
         let obj = {};
         let tx = await contract.opportunityToId(data[i]);
-<<<<<<< HEAD
         obj.borrower = tx.borrower.toString()
         obj.opportunity_id = tx.opportunityID.toString()
         obj.loan_info = tx.opportunityInfo.toString()
@@ -238,17 +223,6 @@ export async function getOpportunitysOf() {
         obj.payment_frequency = tx.paymentFrequencyInDays.toString()
         obj.collateral_document = tx.collateralDocument.toString()
         obj.capital_loss = tx.capitalLoss.toString()
-=======
-        obj.oppurtunityStatus = tx.opportunityStatus.toString();
-        obj.borrower = tx.borrower.toString();
-        obj.loanType = tx.loanType.toString();
-        obj.loanAmount = tx.loanAmount.toString();
-        obj.loanTenure = tx.loanTenure.toString();
-        obj.loanInterest = tx.loanInterest.toString();
-        obj.paymentFrequency = tx.paymentFrequency.toString();
-        obj.collateralDocument = tx.collateralDocument.toString();
-        obj.capitalLoss = tx.capitalLoss.toString();
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
         opportunities.push(obj);
       }
       return opportunities;
@@ -260,10 +234,7 @@ export async function getOpportunitysOf() {
   return 0;
 }
 
-<<<<<<< HEAD
 // to fetch opportunity by id
-=======
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
 export async function getOpportunityAt(id) {
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -276,16 +247,11 @@ export async function getOpportunityAt(id) {
       );
 
       let obj = {};
-<<<<<<< HEAD
       console.log('check')
       let tx = await contract.opportunityToId(id);
       console.log(tx)
       obj.borrower = tx.borrower.toString()
       obj.opportunity_id = tx.opportunityID.toString()
-=======
-      let tx = await contract.opportunityToId(id);
-      obj.borrower = tx.borrower.toString()
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
       obj.opportunity_info = tx.opportunityInfo.toString()
       obj.loan_type = tx.loanType.toString() // 0 or 1 need to be handled
       obj.loan_amount = tx.loanAmount.toString()
@@ -300,7 +266,6 @@ export async function getOpportunityAt(id) {
     console.log(error);
     return 0;
   }
-<<<<<<< HEAD
 }
 
 
@@ -345,7 +310,3 @@ export async function getAllActiveOpportunities() {
 
   return 0;
 }
-=======
-
-}
->>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
