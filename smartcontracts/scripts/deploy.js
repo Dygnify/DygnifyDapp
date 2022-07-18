@@ -30,12 +30,39 @@ async function main() {
 
   console.log("DygnifyStaking deployed to:", dygnifyStaking.address);
 
+  const LPToken = await hre.ethers.getContractFactory("LPToken");
+  const lpToken = await LPToken.deploy();
+
+  await lpToken.deployed();
+
+  console.log("LPToken deployed to:", lpToken.address);
+
+  const DygnifyConfig = await hre.ethers.getContractFactory("DygnifyConfig");
+  const dygnifyConfig = await DygnifyConfig.deploy();
+
+  await dygnifyConfig.deployed();
+  console.log("DygnifyConfig deployed to:", dygnifyConfig.address);
+
   const OpportunityOrigination = await hre.ethers.getContractFactory("OpportunityOrigination");
   const opportunityOrigination = await OpportunityOrigination.deploy();
 
   await opportunityOrigination.deployed();
 
   console.log("Opportunity Origination deployed to:", opportunityOrigination.address);
+
+  const CollateralToken = await hre.ethers.getContractFactory("CollateralToken");
+  const collateralToken = await CollateralToken.deploy();
+
+  await collateralToken.deployed();
+
+  console.log("collateralToken deployed to:", collateralToken.address);
+
+  const OpportunityPool = await hre.ethers.getContractFactory("OpportunityPool");
+  const opportunityPool = await OpportunityPool.deploy();
+
+  await opportunityPool.deployed();
+
+  console.log("OpportunityPool deployed to:", opportunityPool.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
