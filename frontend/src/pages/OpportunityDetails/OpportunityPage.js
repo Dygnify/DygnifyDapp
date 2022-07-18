@@ -13,7 +13,9 @@ const OpportunityPage = () => {
             setData(temp)
         }
         dataFetch();
-    }, [data])
+    }, [])
+
+    console.log(data)
     return (
         <div style={{ textAlign: 'center' }}>
             <h2>This is Borrower Dashboard</h2><br />

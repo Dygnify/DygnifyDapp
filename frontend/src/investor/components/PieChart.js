@@ -88,7 +88,7 @@ const renderActiveShape = (props) => {
         textAnchor: textAnchor,
         fill: "#999",
       },
-      `${value} {process.env.REACT_APP_TOKEN_NAME}`
+      `${value} ${process.env.REACT_APP_TOKEN_NAME}`
     )
   );
 };
@@ -102,7 +102,7 @@ const PieGraph = () => {
   );
   return React.createElement(
     PieChart,
-    { width: 450, height: 300 },
+    { width: 550, height: 300 },
     React.createElement(Pie, {
       activeIndex: activeIndex,
       activeShape: renderActiveShape,

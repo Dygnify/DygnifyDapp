@@ -1,12 +1,13 @@
 import { ethers } from "ethers";
-import dygnifyStaking from "../../artifacts/contracts/DygnifyStaking.sol/DygnifyStaking.json";
-import dygnifyToken from "../../artifacts/contracts/DygnifyToken.sol/DygnifyToken.json";
+import dygnifyStaking from "../../artifacts/contracts/protocol/DygnifyStaking.sol/DygnifyStaking.json";
+import dygnifyToken from "../../artifacts/contracts/protocol/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 
 const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-const opportunityOriginationAddress = process.env.ORIGINATION_ADDRESS;
+const opportunityOriginationAddress =
+  process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -16,8 +17,15 @@ export async function approve(amount) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
     const signer = provider.getSigner();
-    const contract2 = new ethers.Contract(token, dygnifyToken.abi, signer);
-    const transaction = await contract2.approve(dygnifyStakingAddress, amount);
+    const contract2 = new ethers.Contract(
+      process.env.REACT_APP_TOKEN,
+      dygnifyToken.abi,
+      signer
+    );
+    const transaction = await contract2.approve(
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+      amount
+    );
     await transaction.wait();
   }
 }
@@ -28,10 +36,14 @@ export async function allowance(ownerAddress) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
     const signer = provider.getSigner();
-    const contract2 = new ethers.Contract(token, dygnifyToken.abi, signer);
+    const contract2 = new ethers.Contract(
+      process.env.REACT_APP_TOKEN,
+      dygnifyToken.abi,
+      signer
+    );
     const transaction = await contract2.allowance(
       ownerAddress,
-      dygnifyStakingAddress
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS
     );
 
     return ethers.utils.formatEther(transaction);
@@ -47,7 +59,7 @@ export async function stake(amount) {
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      dygnifyStakingAddress,
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
       dygnifyStaking.abi,
       signer
     );
@@ -64,7 +76,7 @@ export async function unstake(amount) {
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      dygnifyStakingAddress,
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
       dygnifyStaking.abi,
       signer
     );
@@ -80,7 +92,7 @@ export async function withdrawYield() {
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      dygnifyStakingAddress,
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
       dygnifyStaking.abi,
       signer
     );
@@ -97,7 +109,7 @@ export async function getTotalYield() {
       console.log({ provider });
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        dygnifyStakingAddress,
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
         dygnifyStaking.abi,
         signer
       );
@@ -117,7 +129,11 @@ export async function getWalletBal() {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       // console.log({ provider });
-      const contract = new ethers.Contract(token, dygnifyToken.abi, provider);
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_TOKEN,
+        dygnifyToken.abi,
+        provider
+      );
       const signer = provider.getSigner();
       const bal = await contract.balanceOf(await signer.getAddress());
       // console.log(ethers.utils.formatEther(bal));
@@ -138,7 +154,7 @@ export async function getWithdrawBal() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        dygnifyStakingAddress,
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
         dygnifyStaking.abi,
         provider
       );
@@ -161,7 +177,8 @@ export const getEthAddress = async () => {
   return await signer.getAddress();
 };
 
-export async function createOpportunity(formData, document) {
+// to create opportunity
+export async function createOpportunity(formData) {
   let borrower = await getEthAddress();
   let {
     loan_type,
@@ -170,39 +187,44 @@ export async function createOpportunity(formData, document) {
     loan_interest,
     capital_loss,
     payment_frequency,
+    loanInfoHash,
+    collateralHash,
   } = formData;
-  console.log(formData, document);
+  console.log("backend call", formData);
+
   if (typeof window.ethereum !== "undefined") {
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      opportunityOriginationAddress,
+      process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
       opportunityOrigination.abi,
       signer
     );
     const transaction1 = await contract.createOpportunity(
       borrower,
+      loanInfoHash,
       loan_type,
       loan_amount,
       loan_tenure,
       loan_interest,
       payment_frequency,
-      document,
+      collateralHash,
       capital_loss
     );
     await transaction1.wait();
   }
 }
 
+// to fetch created opportunities of specific borrower
 export async function getOpportunitysOf() {
   try {
     if (typeof window.ethereum !== "undefined") {
       // await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        opportunityOriginationAddress,
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
         opportunityOrigination.abi,
         provider
       );
@@ -213,15 +235,16 @@ export async function getOpportunitysOf() {
       for (let i = 0; i < data.length; i++) {
         let obj = {};
         let tx = await contract.opportunityToId(data[i]);
-        obj.oppurtunityStatus = tx.opportunityStatus.toString();
         obj.borrower = tx.borrower.toString();
-        obj.loanType = tx.loanType.toString();
-        obj.loanAmount = tx.loanAmount.toString();
-        obj.loanTenure = tx.loanTenure.toString();
-        obj.loanInterest = tx.loanInterest.toString();
-        obj.paymentFrequency = tx.paymentFrequency.toString();
-        obj.collateralDocument = tx.collateralDocument.toString();
-        obj.capitalLoss = tx.capitalLoss.toString();
+        obj.opportunity_id = tx.opportunityID.toString();
+        obj.loan_info = tx.opportunityInfo.toString();
+        obj.loan_type = tx.loanType.toString();
+        obj.loan_amount = tx.loanAmount.toString();
+        obj.loan_tenure = tx.loanTenureInDays.toString();
+        obj.loan_interest = tx.loanInterest.toString();
+        obj.payment_frequency = tx.paymentFrequencyInDays.toString();
+        obj.collateral_document = tx.collateralDocument.toString();
+        obj.capital_loss = tx.capitalLoss.toString();
         opportunities.push(obj);
       }
       return opportunities;
@@ -233,13 +256,15 @@ export async function getOpportunitysOf() {
   return 0;
 }
 
-export async function getAllUnderReviewOpportunities() {
+//export async function getAllUnderReviewOpportunities() {
+// to fetch opportunity by id
+export async function getOpportunityAt(id) {
   try {
     if (typeof window.ethereum !== "undefined") {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        opportunityOriginationAddress,
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
         opportunityOrigination.abi,
         provider
       );
@@ -300,29 +325,37 @@ export async function getOpportunityAt(id) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        opportunityOriginationAddress,
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
         opportunityOrigination.abi,
         provider
       );
 
-      let obj = {};
-      console.log("check");
-      let tx = await contract.opportunityToId(id);
-      console.log(tx);
-      obj.borrower = tx.borrower.toString();
-      obj.opportunity_id = tx.opportunityID.toString();
-      obj.opportunity_info = tx.opportunityInfo.toString();
-      obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
-      obj.loan_amount = tx.loanAmount.toString();
-      obj.loan_tenure = tx.loanTenureInDays.toString();
-      obj.loan_interest = tx.loanInterest.toString();
-      obj.payment_frequency = tx.paymentFrequencyInDays.toString();
-      obj.collateral_document = tx.collateralDocument.toString();
-      obj.capital_loss = tx.capitalLoss.toString();
-      return obj;
+      const count = await contract.getTotalOpportunities();
+      let opportunities = [];
+
+      for (let i = 0; i < count; i++) {
+        let id = await contract.opportunityIds(i);
+        let obj = {};
+        let tx = await contract.opportunityToId(id);
+        if (tx.opportunityStatus.toString() == "5") {
+          obj.borrower = tx.borrower.toString();
+          obj.opportunity_id = tx.opportunityID.toString();
+          obj.opportunity_info = tx.opportunityInfo.toString();
+          obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
+          obj.loan_amount = tx.loanAmount.toString();
+          obj.loan_tenure = tx.loanTenureInDays.toString();
+          obj.loan_interest = tx.loanInterest.toString();
+          obj.payment_frequency = tx.paymentFrequencyInDays.toString();
+          obj.collateral_document = tx.collateralDocument.toString();
+          obj.capital_loss = tx.capitalLoss.toString();
+          opportunities.push(obj);
+        }
+      }
+      return opportunities;
     }
   } catch (error) {
     console.log(error);
-    return 0;
   }
+
+  return 0;
 }

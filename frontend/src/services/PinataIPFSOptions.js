@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const axios = require("axios");
 
@@ -46,8 +46,7 @@ export const pinJSONToIPFS = (JSONBody) => {
     .then(function (response) {
       return {
         success: true,
-        pinataUrl:
-          "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash,
+        pinataUrl: response.data.IpfsHash,
       };
     })
     .catch(function (error) {
@@ -57,6 +56,18 @@ export const pinJSONToIPFS = (JSONBody) => {
         message: error.message,
       };
     });
+};
+
+export const pinataCall = async (metadata) => {
+  const pinataResponse = await pinJSONToIPFS(metadata);
+  console.log(pinataResponse);
+  if (!pinataResponse.success) {
+    return {
+      success: false,
+      status: "😢 Something went wrong while uploading your tokenURI.",
+    };
+  }
+  return pinataResponse.pinataUrl;
 };
 
 export const ExtractIPFSdataFromHash = (hash) => {

@@ -1,5 +1,5 @@
 import { makeStyles, Step, StepLabel, Stepper, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import CollateralDocuments from './CollateralDocuments';
 import ConfirmSubmission from './ConfirmSubmission';
@@ -7,14 +7,11 @@ import LoanDetails from './LoanDetails';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingIcon from '@mui/icons-material/Pending';
 import { createOpportunity } from '../../components/transaction/TransactionHelper';
-import { requestAccount } from '../../components/navbar/NavBarHelper';
-import { ethers } from 'ethers';
-import NFTMinter from "../../artifacts/contracts/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from '../../services/axioscall';
-import { pinJSONToIPFS, uploadFileToIPFS } from '../../services/PinataIPFSOptions';
+import { pinataCall, uploadFileToIPFS } from '../../services/PinataIPFSOptions';
 import { Button } from '@mui/material';
 import { useHistory } from 'react-router-dom';
-const axios = require('axios');
+
 
 
 const useStyles = makeStyles({
@@ -33,7 +30,19 @@ const useStyles = makeStyles({
 
 const LoanForm = () => {
     const classes = useStyles();
+    const [company, setCompany] = useState({});
+
+    useEffect(() => {
+        const fetchJSON = async () => {
+            const response = await fetch("/company.json");
+            let json = await response.json();
+            setCompany(json);
+        };
+
+        fetchJSON();
+    }, []);
     const [formData, setFormData] = useState({
+        loan_name: "",
         loan_type: "",
         loan_amount: "",
         loan_purpose: "",
@@ -45,31 +54,31 @@ const LoanForm = () => {
     const [processed, setProcessed] = useState(false);
     const path = useHistory();
 
-    async function onFileUpload(selectedFile, loan_purpose) {
+
+    // stroing bigger data in IPFS
+    async function onFileUpload(selectedFile, loan_info) {
+        console.log(loan_info)
         try {
             console.log("Upload called");
             let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
             console.log(ipfsUploadRes);
-            // make metadata
-            const metadata = new Object();
+
+            // make metadata for collateral document
+            const metadata = {};
             metadata.imageHash = ipfsUploadRes.res.IpfsHash;
             metadata.PinSize = ipfsUploadRes.res.PinSize;
             metadata.Timestamp = ipfsUploadRes.res.Timestamp;
-            metadata.LoanPurpose = loan_purpose;
+            const collateralURI = await pinataCall(metadata);
 
-            //make pinata call
-            const pinataResponse = await pinJSONToIPFS(metadata);
-            if (!pinataResponse.success) {
-                return {
-                    success: false,
-                    status: "😢 Something went wrong while uploading your tokenURI.",
-                }
-            }
-            const tokenURI = pinataResponse.hash;
-            console.log('check check', tokenURI);
-            // const uri = await mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
-            // return uri;
-            return tokenURI;
+            // make metadata for loan info
+            const metadata2 = {};
+            metadata2.loanName = loan_info.loan_name
+            metadata2.loanPurpose = loan_info.loan_purpose;
+            metadata2.company_name = company.company_name;
+            metadata2.company_details = company.company_details;
+            const loanInfoURI = await pinataCall(metadata2);
+
+            return [collateralURI, loanInfoURI]
         } catch (error) {
             console.log(error);
         }
@@ -80,19 +89,20 @@ const LoanForm = () => {
 
     const finalSubmit = async (data) => {
 
-        let { loan_type, loan_amount, loan_purpose, loan_tenure, loan_interest, capital_loss, payment_frequency, ...rest } = data;
+        let { loan_name, loan_type, loan_amount, loan_purpose, loan_tenure, loan_interest, capital_loss, payment_frequency, ...rest } = data;
         loan_tenure = loan_tenure * 30;
         const collateral_document = rest.collateral_document;
-        const loanDetails = { loan_type, loan_amount, loan_purpose, loan_tenure, loan_interest, payment_frequency, capital_loss }
+        let loanDetails = { loan_type, loan_amount, loan_tenure, loan_interest, payment_frequency, capital_loss }
         console.log(collateral_document);
+        const loan_info = { loan_name, loan_purpose }
         console.log(loanDetails);
+
         setActiveStep(prevActiveStep => prevActiveStep + 1);
-        const document = await onFileUpload(collateral_document, loan_purpose);
-
-        console.log('called', document)
-        await createOpportunity(loanDetails, document);
+        const [collateralHash, loanInfoHash] = await onFileUpload(collateral_document, loan_info);
+        loanDetails = { ...loanDetails, collateralHash, loanInfoHash }
+        // sending data in backend to create opportunity with hash code
+        await createOpportunity(loanDetails);
         setProcessed(true);
-
     }
 
     const handleNext = (newData, value) => {
@@ -129,6 +139,7 @@ const LoanForm = () => {
                 return "Unknown Step";
         }
     }
+
 
     return (
         <div className={classes.root}>
