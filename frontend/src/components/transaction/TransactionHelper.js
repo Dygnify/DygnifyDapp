@@ -5,11 +5,6 @@ import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 
 
-
-// const process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
-// const process.env.REACT_APP_TOKEN = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-// const process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS = "0x608151Ca57E8Eba14363557dE48D46134B4f7e91";
-
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
     console.log("Amount must be greater than 0");
