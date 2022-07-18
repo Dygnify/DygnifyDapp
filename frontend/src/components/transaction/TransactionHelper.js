@@ -6,9 +6,9 @@ import opportunityOrigination from "../../artifacts/contracts/protocol/Opportuni
 
 
 
-const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
-const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-const opportunityOriginationAddress = "0x608151Ca57E8Eba14363557dE48D46134B4f7e91";
+// const process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
+// const process.env.REACT_APP_TOKEN = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
+// const process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS = "0x608151Ca57E8Eba14363557dE48D46134B4f7e91";
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -18,8 +18,8 @@ export async function approve(amount) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
     const signer = provider.getSigner();
-    const contract2 = new ethers.Contract(token, dygnifyToken.abi, signer);
-    const transaction = await contract2.approve(dygnifyStakingAddress, amount);
+    const contract2 = new ethers.Contract(process.env.REACT_APP_TOKEN, dygnifyToken.abi, signer);
+    const transaction = await contract2.approve(process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS, amount);
     await transaction.wait();
   }
 }
@@ -30,10 +30,10 @@ export async function allowance(ownerAddress) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log({ provider });
     const signer = provider.getSigner();
-    const contract2 = new ethers.Contract(token, dygnifyToken.abi, signer);
+    const contract2 = new ethers.Contract(process.env.REACT_APP_TOKEN, dygnifyToken.abi, signer);
     const transaction = await contract2.allowance(
       ownerAddress,
-      dygnifyStakingAddress
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS
     );
 
     return ethers.utils.formatEther(transaction);
@@ -49,7 +49,7 @@ export async function stake(amount) {
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      dygnifyStakingAddress,
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
       dygnifyStaking.abi,
       signer
     );
@@ -66,7 +66,7 @@ export async function unstake(amount) {
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      dygnifyStakingAddress,
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
       dygnifyStaking.abi,
       signer
     );
@@ -82,7 +82,7 @@ export async function withdrawYield() {
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      dygnifyStakingAddress,
+      process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
       dygnifyStaking.abi,
       signer
     );
@@ -99,7 +99,7 @@ export async function getTotalYield() {
       console.log({ provider });
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        dygnifyStakingAddress,
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
         dygnifyStaking.abi,
         signer
       );
@@ -119,7 +119,7 @@ export async function getWalletBal() {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       // console.log({ provider });
-      const contract = new ethers.Contract(token, dygnifyToken.abi, provider);
+      const contract = new ethers.Contract(process.env.REACT_APP_TOKEN, dygnifyToken.abi, provider);
       const signer = provider.getSigner();
       const bal = await contract.balanceOf(await signer.getAddress());
       // console.log(ethers.utils.formatEther(bal));
@@ -140,7 +140,7 @@ export async function getWithdrawBal() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        dygnifyStakingAddress,
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
         dygnifyStaking.abi,
         provider
       );
@@ -175,7 +175,7 @@ export async function createOpportunity(formData) {
     console.log({ provider });
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      opportunityOriginationAddress,
+      process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
       opportunityOrigination.abi,
       signer
     );
@@ -202,7 +202,7 @@ export async function getOpportunitysOf() {
       // await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        opportunityOriginationAddress,
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
         opportunityOrigination.abi,
         provider
       );
@@ -241,7 +241,7 @@ export async function getOpportunityAt(id) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        opportunityOriginationAddress,
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
         opportunityOrigination.abi,
         provider
       );
@@ -275,7 +275,7 @@ export async function getAllActiveOpportunities() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        opportunityOriginationAddress,
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
         opportunityOrigination.abi,
         provider
       );
