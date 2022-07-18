@@ -6,8 +6,7 @@ import opportunityOrigination from "../../artifacts/contracts/protocol/Opportuni
 
 const dygnifyStakingAddress = "0xCF1709F792c209Bf8fF1294aD9deaF0dfE44e9F6";
 const token = "0x9C80225f50E1be2fa8b1f612616d03Bc9a491107";
-const opportunityOriginationAddress =
-  "0x608151Ca57E8Eba14363557dE48D46134B4f7e91";
+const opportunityOriginationAddress = process.env.ORIGINATION_ADDRESS;
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -276,18 +275,22 @@ export async function getAllUnderReviewOpportunities() {
 }
 
 export async function voteOpportunity(id, vote) {
-  if (typeof window.ethereum !== "undefined") {
-    await requestAccount();
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    console.log({ provider });
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      opportunityOriginationAddress,
-      opportunityOrigination.abi,
-      signer
-    );
-    const transaction1 = await contract.voteOpportunity(id, vote);
-    await transaction1.wait();
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        opportunityOriginationAddress,
+        opportunityOrigination.abi,
+        signer
+      );
+      const transaction1 = await contract.voteOpportunity(id, vote);
+      await transaction1.wait();
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
