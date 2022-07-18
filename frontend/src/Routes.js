@@ -25,15 +25,25 @@ import Welcome from "./customer/onboarding/Welcome";
 import Docs from "./customer/onboarding/Docs";
 import PanOption from "./customer/onboarding/PanOption";
 import PanProof from "./customer/onboarding/PanProof";
-import PanUpload from './customer/onboarding/panProofComponents/PanUpload'
+import PanUpload from "./customer/onboarding/panProofComponents/PanUpload";
 import BusinessProof from "./customer/onboarding/BusinessProof";
 import BusinessOption from "./customer/onboarding/BusinessOption";
+import Borrower from "./borrower/Borrower";
+import Drawdown from "./borrower/Drawdown";
+import LoadApp from "./home/LoadApp";
+import AuditorDashboard from "./auditor/AuditorDashboard";
 import LoanForm from "./pages/LoanForm/LoanForm";
 import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
 import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
 import Test from "./pages/LoanForm/Test";
+<<<<<<< HEAD
 import InvestorDashboard from "./pages/Investor/InvestorDashboard";
 import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
+=======
+
+// import InvestorDashboard from "./pages/Investor/InvestorDashboard";
+// import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
+>>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
 
 const Routes = () => {
   return (
@@ -57,12 +67,21 @@ const Routes = () => {
         <Route exact path="/pan" component={PanUpload} />
         <Route exact path="/mobile" component={Mobile} />
         <Route exact path="/VerifyNumber" component={VerifyNumber} />
+        <Route exact path="/Borrower" component={Borrower} />
+        <Route exact path="/Drawdown" component={Drawdown} />
+        <Route exact path="/LoadApp" component={LoadApp} />
+        <Route exact path="/auditor" component={AuditorDashboard} />
         <Route exact path="/loan-form" component={LoanForm} />
         <Route exact path="/test" component={Test} />
         <Route exact path='/opportunities' component={OpportunityPage} />
         <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
+<<<<<<< HEAD
         <Route exact path='/loan-details/:id' component={ApprovedOpportunities} />
         <Route exact path='/investor-dashboard' component={InvestorDashboard} />
+=======
+        {/* <Route exact path='/loan-details/:id' component={ApprovedOpportunities} />
+        <Route exact path='/investor-dashboard' component={InvestorDashboard} /> */}
+>>>>>>> 8ac9bf7b3a781cf867e26da28cf27794987b3e51
       </Switch>
     </BrowserRouter>
   );

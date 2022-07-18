@@ -87,6 +87,5 @@ export const ExtractIPFSdataFromHash = (hash) => {
     dataFetch();
   }, [str]);
 
-
   return check;
 }
