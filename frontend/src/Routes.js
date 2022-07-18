@@ -36,6 +36,7 @@ import AuditorDashboard from "./auditor/AuditorDashboard";
 import LoanForm from "./pages/LoanForm/LoanForm";
 import OpportunityDetails from "./pages/OpportunityDetails/OpportunityDetails";
 import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
+import OpportunityDetailsAuditor from "./auditor/OpportunityDetailsAuditor";
 
 const Routes = () => {
   return (
@@ -69,6 +70,11 @@ const Routes = () => {
           exact
           path="/opportunity-details/:id"
           component={OpportunityDetails}
+        />
+        <Route
+          exact
+          path="/opportunity-details-auditor/:id"
+          component={OpportunityDetailsAuditor}
         />
       </Switch>
     </BrowserRouter>

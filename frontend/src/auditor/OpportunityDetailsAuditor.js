@@ -2,8 +2,11 @@ import { React, useState } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { getOpportunityAt } from "../../components/transaction/TransactionHelper";
-import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
+import {
+  getOpportunityAt,
+  voteOpportunity,
+} from "../components/transaction/TransactionHelper";
+import { ExtractIPFSdataFromHash } from "../services/PinataIPFSOptions";
 
 const ApprovedOpportunities = () => {
   const { id } = useParams({});
@@ -28,11 +31,9 @@ const ApprovedOpportunities = () => {
     dataFetch();
   }, [id]);
 
-  console.log(target);
   const hash = target?.opportunity_info;
-  console.log(hash);
+
   const info = ExtractIPFSdataFromHash(hash);
-  console.log(info);
 
   return (
     <>
@@ -192,32 +193,6 @@ const ApprovedOpportunities = () => {
         </Card>
       </Box>
 
-      {/* <Stack
-                sx={{
-                    maxWidth: 1100,
-                    py: "10px",
-                    px: "30px",
-                    mx: "auto",
-                    color: "#ffffff",
-                }}
-            >
-                <Typography variant="h6">Loan Purpose</Typography>
-            </Stack>
-            <Box>
-                <Card
-                    sx={{
-                        mb: "20px",
-                        maxWidth: 1100,
-                        py: "20px",
-                        mx: "auto",
-                        textAlign: 'center'
-                    }}
-                >
-                    <Typography variant="body2">
-                        {loanPurpose}
-                    </Typography>
-                </Card>
-            </Box> */}
       <Stack
         sx={{
           mt: "10px",
@@ -334,58 +309,50 @@ const ApprovedOpportunities = () => {
           sx={{
             backgroundColor: "#ffffff",
             color: "#000000",
-            padding: "10px 100px",
+            padding: "10px 50px",
             borderRadius: "40px",
           }}
           variant="contained"
+          onClick={() => {
+            alert("Unsure Clicked");
+            voteOpportunity(id, "3");
+          }}
         >
-          <Link>Invest</Link>
+          <Link>Unsure</Link>
+        </Button>
+        <Button
+          sx={{
+            backgroundColor: "#ffffff",
+            color: "#000000",
+            padding: "10px 50px",
+            borderRadius: "40px",
+            marginLeft: "10px",
+            marginRight: "10px",
+          }}
+          variant="contained"
+          onClick={() => {
+            alert("Approve Clicked");
+            voteOpportunity(id, "2");
+          }}
+        >
+          <Link>Approve</Link>
+        </Button>
+        <Button
+          sx={{
+            backgroundColor: "#ffffff",
+            color: "#000000",
+            padding: "10px 50px",
+            borderRadius: "40px",
+          }}
+          variant="contained"
+          onClick={() => {
+            alert("Reject Clicked");
+            voteOpportunity(id, "1");
+          }}
+        >
+          <Link>Reject</Link>
         </Button>
       </Box>
-
-      {/* <Stack
-                sx={{
-                    maxWidth: 1100,
-                    py: "10px",
-                    px: "30px",
-                    mx: "auto",
-                    color: "#ffffff",
-                }}
-            >
-                <Typography variant="h6">Collateral</Typography>
-            </Stack>
-            <Box>
-                <Card
-                    sx={{
-                        mb: "20px",
-                        maxWidth: 1100,
-                        py: "20px",
-                        px: "30px",
-                        mx: "30px",
-                        mx: "auto",
-                        display: "flex",
-                        flexDirection: "column",
-                        textAlign: "justify",
-                    }}
-                >
-                    {tokenURI === "" ?
-                        <div style={{ display: "flex", flexDirection: "column" }}>
-                            <Typography mb={1} variant="subtitle2">
-                                Upload collateral document for converting to a unique NFT
-                            </Typography>
-                            <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target?.files[0])} class="custom-file-upload" />
-                            <Button
-                                sx={{ backgroundColor: "#7165E3", width: "300px", marginTop: "10px" }}
-                                variant="contained"
-                                size="large"
-                                onClick={onFileUpload}
-                            >
-                                Mint
-                            </Button> </div>
-                        : <div><h4>View your minted NFT here : </h4><a href={tokenURI}>{tokenURI}</a></div>
-                    }
-                </Card>
-            </Box> */}
     </>
   );
 };

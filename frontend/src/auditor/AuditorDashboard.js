@@ -1,7 +1,8 @@
-import { React, useState, useEffect, useHistory } from "react";
+import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityStatus from "./OpportunityStatus";
-import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
+import { getAllUnderReviewOpportunities } from "../components/transaction/TransactionHelper";
+import { useHistory } from "react-router-dom";
 
 const AuditorDashboard = () => {
   const [opportunity, setOpportunity] = useState([
@@ -18,21 +19,21 @@ const AuditorDashboard = () => {
       loanType: "bullet",
     },
   ]);
-  //const path = useHistory();
+  const path = useHistory();
 
-  //   useEffect(() => {
-  //     try {
-  //       const fetchData = async () => {
-  //         console.log("******************");
-  //         let opportunities = await getOpportunitysOf();
-  //         setOpportunity(opportunities);
-  //         console.log(opportunities);
-  //       };
-  //       fetchData();
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }, []);
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        console.log("******************");
+        let opportunities = await getAllUnderReviewOpportunities();
+        setOpportunity(opportunities);
+        console.log(opportunities);
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -96,12 +97,14 @@ const AuditorDashboard = () => {
             <div
               onClick={() => {
                 console.log("clicked");
-                //path.push(`/opportunity-details/${id}`)
+                path.push(`/opportunity-details-auditor/${data.opportunityID}`);
               }}
+              style={{ cursor: "pointer" }}
               key={i}
             >
               <OpportunityStatus
                 opportunityName="Opportunity 1"
+                oppurtunityId={data.opportunityID}
                 loanAmount={data.loanAmount}
                 loanInterest={data.loanInterest}
                 loanType={data.loanType}
