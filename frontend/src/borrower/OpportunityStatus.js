@@ -10,6 +10,7 @@ const OpportunityStatus = ({
   loanType,
   loanTenure,
   opportunityStatus,
+  paymentFrequency
 }) => {
   return (
     <>
@@ -49,25 +50,21 @@ const OpportunityStatus = ({
                 {opportunityName}
               </Typography>
               <Typography mb={1} fontSize="14px">
-                Product : Term Loan
+                Product : {loanType === '0' ? 'Term Loan' : 'Bullet Loan'}
               </Typography>
             </div>
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            <Typography mb={1} fontSize="14px" style={{ marginRight: "10px" }}>
-              Maturity Date : {mDate}
-            </Typography>
             <Box
               sx={{
                 backgroundColor: "White",
                 width: "180px",
                 height: "45px",
-                border: `${
-                  opportunityStatus === "0"
-                    ? "1.5px solid red"
-                    : "1.5px solid green"
-                }`,
+                border: `${opportunityStatus === "0"
+                  ? "1.5px solid red"
+                  : "1.5px solid green"
+                  }`,
                 color: `${opportunityStatus === "0" ? "red" : "green"}`,
                 display: "flex",
                 alignItems: "center",
@@ -93,21 +90,17 @@ const OpportunityStatus = ({
             }}
           >
             <div style={{ width: "20%" }}>
-              <Typography variant="subtitle1">{loanInterest}%</Typography>
+              <Typography variant="subtitle1">{loanInterest} %</Typography>
               <Typography variant="overline">Interest Rate </Typography>
             </div>
             <div style={{ width: "25%" }}>
-              <Typography variant="subtitle1">Monthly</Typography>
+              <Typography variant="subtitle1">{paymentFrequency} days</Typography>
               <Typography variant="overline">
                 Interest Repayment Frequency{" "}
               </Typography>
             </div>
             <div style={{ width: "20%" }}>
-              <Typography variant="subtitle1">{loanType}</Typography>
-              <Typography variant="overline">Principal Repayment</Typography>
-            </div>
-            <div style={{ width: "20%" }}>
-              <Typography variant="subtitle1">{loanTenure}</Typography>
+              <Typography variant="subtitle1">{loanTenure / 30} months</Typography>
               <Typography variant="overline">Tenure</Typography>
             </div>
             <div style={{ width: "20%" }}>

@@ -1,14 +1,17 @@
-import { React, useState, useEffect, useHistory } from "react";
+import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityTable from "./OpportunityTable.js";
 import DrawdownCard from "./DrawdownCard.js";
 import OpportunityStatus from "./OpportunityStatus.js";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
+import { useHistory } from "react-router-dom";
+import RepaymentCard from "./RepaymentCard.js";
 
 const Borrower = () => {
   const [opportunity, setOpportunity] = useState();
-  //const path = useHistory();
-
+  const path = useHistory();
+  const [data, setData] = useState([]);
+  const [repayment, setRepayment] = useState([]);
   const [userInfo, setUserInfo] = useState({
     companyName: "Hector Ltd",
     name: "Jane Hector",
@@ -16,6 +19,19 @@ const Borrower = () => {
     totalLoan: "84,00,000",
     amountReadyToWithdraw: "48,00,000",
   });
+
+
+  useEffect(() => {
+    fetch('/drawdown.json')
+      .then(res => res.json())
+      .then(data => setData(data))
+  }, [])
+
+  useEffect(() => {
+    fetch('/repayment.json')
+      .then(res => res.json())
+      .then(data => setRepayment(data))
+  }, [])
 
   useEffect(() => {
     try {
@@ -118,7 +134,7 @@ const Borrower = () => {
           sx={{ backgroundColor: "#843bc5" }}
           variant="contained"
           size="large"
-          //onClick={()=> path.push(`/loan-form`)}
+          onClick={() => path.push(`/loan-form`)}
         >
           Create New Loan request
         </Button>
@@ -187,14 +203,14 @@ const Borrower = () => {
           </Typography>
         </Card>
       </Box>
+      {repayment ? <RepaymentCard key={repayment.id} data={repayment}></RepaymentCard> : null}
+      {
+        data.map(item => <DrawdownCard key={data.id} data={item} />)
+      }
 
-      {/* {opportunity? opportunity.map((data,i)=>{return(<OpportunityTable loanAmount={data.loanAmount} />)}) :null}
-
-      <DrawdownCard /> */}
       <br />
 
       {/*add a if statement for data*/}
-
       {opportunity ? (
         opportunity.map((data, i) => {
           return (
@@ -207,13 +223,14 @@ const Borrower = () => {
             >
               <OpportunityStatus
                 opportunityName="Opportunity 1"
-                loanAmount={data.loanAmount}
-                loanInterest={data.loanInterest}
-                loanType={data.loanType}
-                loanTenure={data.loanTenure}
+                loanAmount={data.loan_amount}
+                loanInterest={data.loan_interest}
+                loanType={data.loan_type}
+                loanTenure={data.loan_tenure}
+                paymentFrequency={data.payment_frequency}
                 //opportunityStatus={data.oppurtunityStatus}
                 opportunityStatus="0"
-                mDate="12/05/2022"
+              // mDate="12/05/2022"
               />
             </div>
           );

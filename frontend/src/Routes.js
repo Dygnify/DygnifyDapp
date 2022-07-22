@@ -38,6 +38,11 @@ import OpportunityPage from "./pages/OpportunityDetails/OpportunityPage";
 import Test from "./pages/LoanForm/Test";
 import InvestorDashboard from "./pages/Investor/InvestorDashboard";
 import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
+import Repayment from "./borrower/Repayment";
+import Withdrawal from "./pages/Investor/Withdrawal";
+import Transaction from "./components/transaction/Transaction";
+import TransactionHistory from "./components/transactionHistory/TransactionHistory";
+import ToolTest from "./tools/ToolTest";
 
 const Routes = () => {
   return (
@@ -62,7 +67,9 @@ const Routes = () => {
         <Route exact path="/mobile" component={Mobile} />
         <Route exact path="/VerifyNumber" component={VerifyNumber} />
         <Route exact path="/Borrower" component={Borrower} />
-        <Route exact path="/Drawdown" component={Drawdown} />
+        <Route exact path="/drawdown/:id" component={Drawdown} />
+        <Route exact path="/repayment/:id" component={Repayment} />
+        <Route exact path="/withdrawal/:id" component={Withdrawal} />
         <Route exact path="/LoadApp" component={LoadApp} />
         <Route exact path="/auditor" component={AuditorDashboard} />
         <Route exact path="/loan-form" component={LoanForm} />
@@ -71,6 +78,9 @@ const Routes = () => {
         <Route exact path='/opportunity-details/:id' component={OpportunityDetails} />
         <Route exact path='/loan-details/:id' component={ApprovedOpportunities} />
         <Route exact path='/investor-dashboard' component={InvestorDashboard} />
+        <Route exact path='/transaction' component={Transaction} />
+        <Route exact path='/transaction-history' component={TransactionHistory} />
+        <Route exact path='/toolTest' component={ToolTest} />
       </Switch>
     </BrowserRouter>
   );

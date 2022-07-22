@@ -2,8 +2,10 @@ import React from "react";
 import { Typography, Container } from "@material-ui/core";
 import "./TransactionHistory.css";
 import { getDate } from "./TransactionHelper";
+import { getTransctionHistory } from "./TransactionGetter";
 
 const TransactionHistory = () => {
+  console.log(getTransctionHistory())
   return (
     <>
       <Container maxWidth="lg">

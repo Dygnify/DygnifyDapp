@@ -9,10 +9,10 @@ const getEthAddress = async () => {
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     return await signer.getAddress();
-  };
+};
 
-export async function getTransctionHistory( ) {
-    let userAddress =await getEthAddress();
+export async function getTransctionHistory() {
+    let userAddress = await getEthAddress();
     const url = new URL(`https://api-testnet.polygonscan.com/api?module=account&action=tokentx&contractaddress=${dygnifyStakingAddress}&address=${userAddress}&startblock=0&endblock=99999999&offset=5&sort=desc&apikey=${process.env.REACT_APP_POLYGONSCAN_APIKEY}`);
     const response = await fetch(url);
     const res = await response.json();
@@ -23,7 +23,7 @@ export async function getTransctionHistory( ) {
     date.setUTCSeconds(utcSeconds);
     console.log(ethers.utils.formatEther(data[0].value));
     let tx = [];
-    for(let i = 0; i<5 ; i++){
+    for (let i = 0; i < 5; i++) {
         let obj = {};
         let utcSeconds = data[i].timeStamp;
         let dateTime = new Date(0); // The 0 there is the key, which sets the date to the epoch
@@ -32,11 +32,11 @@ export async function getTransctionHistory( ) {
         date = date.replace(" GMT+0530 (India Standard Time)", "");
         date = date.substring(4);
         let activity;
-        if(data[i].from === "0x0000000000000000000000000000000000000000")activity = "Deposit";
+        if (data[i].from === "0x0000000000000000000000000000000000000000") activity = "Deposit";
         else activity = "Withdraw";
         obj.date = date;
         obj.txHash = data[i].hash;
-        obj.subHash= data[i].hash.replace(data[i].hash.substring(5,61), "......")
+        obj.subHash = data[i].hash.replace(data[i].hash.substring(5, 61), "......")
         obj.amount = ethers.utils.formatEther(data[i].value);
         obj.activity = activity;
         tx.push(obj)
