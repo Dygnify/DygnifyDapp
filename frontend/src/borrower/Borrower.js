@@ -1,11 +1,13 @@
 import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityTable from "./OpportunityTable.js";
-import DrawdownCard from "./DrawdownCard.js";
+// import DrawdownCard from "./DrawdownCard.js";
 import OpportunityStatus from "./OpportunityStatus.js";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
 import { useHistory } from "react-router-dom";
-import RepaymentCard from "./RepaymentCard.js";
+// import RepaymentCard from "./RepaymentCard.js";
+import DrawdownCard from "../tools/Card/DrawdownCard.js";
+import RepaymentCard from "../tools/Card/RepaymentCard.js";
 
 const Borrower = () => {
   const [opportunity, setOpportunity] = useState();
@@ -203,7 +205,10 @@ const Borrower = () => {
           </Typography>
         </Card>
       </Box>
-      {repayment ? <RepaymentCard key={repayment.id} data={repayment}></RepaymentCard> : null}
+      {/* {repayment ? <RepaymentCard key={repayment.id} data={repayment}></RepaymentCard> : null} */}
+      {
+        repayment.map(item => <RepaymentCard key={data.id} data={item} />)
+      }
       {
         data.map(item => <DrawdownCard key={data.id} data={item} />)
       }
