@@ -13,7 +13,6 @@ const BorrowerDashboard = () => {
             <div className="drawer drawer-mobile">
                 <input id="dashboard-sidebar" type="checkbox" className="drawer-toggle" />
                 <div className="mt-6 drawer-content text-white">
-
                     <div className='px-5'>
                         <div style={{ display: 'flex' }} className='items-center justify-between mb-14'>
                             <h2 className='text-left first-line:text-3xl font-bold text-white'>Borrower Dashboard</h2>
