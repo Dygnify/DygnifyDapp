@@ -4,21 +4,13 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getOpportunityAt } from "../../components/transaction/TransactionHelper";
 import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
+import { retrieveFiles } from "../../services/web3storageIPFS";
 
 const ApprovedOpportunities = () => {
   const { id } = useParams({});
   const [target, setTarget] = useState({});
-  const [company, setCompany] = useState({});
-
-  useEffect(() => {
-    const fetchJSON = async () => {
-      const response = await fetch("/company.json");
-      let json = await response.json();
-      setCompany(json);
-    };
-
-    fetchJSON();
-  }, []);
+  const [cid, setCid] = useState('');
+  const [loanInfo, setLoanInfo] = useState({});
 
   useEffect(() => {
     const dataFetch = async () => {
@@ -28,11 +20,23 @@ const ApprovedOpportunities = () => {
     dataFetch();
   }, [id]);
 
-  console.log(target);
   const hash = target?.opportunity_info;
-  console.log(hash);
-  const info = ExtractIPFSdataFromHash(hash);
-  console.log(info);
+  useEffect(() => {
+    const dataFetch = async () => {
+      await retrieveFiles(hash)
+        .then(data => setCid(data[0].cid))
+    };
+    dataFetch();
+  }, [hash, cid]);
+
+  useEffect(() => {
+    const dataFetch = async () => {
+      await fetch(`https://${cid}.ipfs.dweb.link/`)
+        .then(res => res.json())
+        .then(data => setLoanInfo(data))
+    };
+    dataFetch();
+  }, [cid, loanInfo]);
 
   return (
     <>
@@ -153,10 +157,10 @@ const ApprovedOpportunities = () => {
           }}
         >
           <Typography px="20px" variant="h6">
-            Title: {info?.loanName}
+            Title: {loanInfo?.loanName}
           </Typography>
           <Typography px="20px" variant="body2">
-            Purpose: {info?.loanPurpose}
+            Purpose: {loanInfo?.loanPurpose}
           </Typography>
         </Card>
       </Box>
@@ -184,10 +188,10 @@ const ApprovedOpportunities = () => {
           }}
         >
           <Typography px="20px" variant="h6">
-            {company?.company_name}
+            {loanInfo?.company_name}
           </Typography>
           <Typography px="20px" variant="body2">
-            {company?.company_details}
+            {loanInfo?.company_details}
           </Typography>
         </Card>
       </Box>

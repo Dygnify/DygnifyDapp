@@ -61,7 +61,7 @@ const LoanForm = () => {
 
             let collateralHash = await storeFiles(collateral_documents);
 
-            
+
 
             // make metadata for loan info
             const metadata = {};
@@ -71,7 +71,7 @@ const LoanForm = () => {
             metadata.company_details = company.company_details;
             let loanInfoFile = makeFileObjects(metadata, `${collateralHash}.json`);
             let loanInfoHash = await storeFiles(loanInfoFile);
-            
+
             return [collateralHash, loanInfoHash]
         } catch (error) {
             console.log(error);
@@ -91,7 +91,7 @@ const LoanForm = () => {
         const loan_info = { loan_name, loan_purpose }
         console.log(loanDetails);
 
-        setActiveStep(prevActiveStep => prevActiveStep + 1);
+        // setActiveStep(prevActiveStep => prevActiveStep + 1);
         const [collateralHash, loanInfoHash] = await onFileUpload(collateral_documents, loan_info);
         loanDetails = { ...loanDetails, collateralHash, loanInfoHash }
         // sending data in backend to create opportunity with hash code
