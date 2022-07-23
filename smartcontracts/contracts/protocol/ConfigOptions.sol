@@ -9,6 +9,15 @@ library ConfigOptions {
     USDCToken,
     SeniorPool,
     PoolImplAddress,
-    CollateralToken
+    CollateralToken,
+    OpportunityOrigination
+  }
+
+  enum Numbers {
+    LeverageRatio,
+    BackerFee,
+    DygnifyFee,
+    overDueFee,
+    JuniorSubpoolFee
   }
 }

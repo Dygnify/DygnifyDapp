@@ -172,4 +172,18 @@ contract OpportunityOrigination is BaseUpgradeablePausable{
         }
         return proxy;
     }
+
+    function markDrawDown(bytes32 id)public  {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        require(opportunityToId[id].opportunityStatus == OpportunityStatus.Active, "Opportunity pool is not active");
+        require(msg.sender == opportunityToId[id].opportunityPoolAddress, "Only Opportunity Pool can mark it as drawdown");
+        require(opportunityToId[id].opportunityPoolAddress == address(0), "Opportunity Pool is not created yet");
+        opportunityToId[id].opportunityStatus = OpportunityStatus.Drawndown;
+    }
+
+    function isDrawdown(bytes32 id)public view returns(bool){
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        if(uint8(opportunityToId[id].opportunityStatus) >= uint8(OpportunityStatus.Drawndown) )return true;
+        else return false;
+    }
 }

@@ -33,4 +33,24 @@ library ConfigHelper {
   function collateralTokenAddress(DygnifyConfig config) internal view returns (address) {
     return config.getAddress(uint256(ConfigOptions.Addresses.CollateralToken));
   }
+
+  function getLeverageRatio(DygnifyConfig config) internal view returns (uint256) {
+    return config.getNumber(uint256(ConfigOptions.Numbers.LeverageRatio));
+  }
+
+  function getOverDueFee(DygnifyConfig config) internal view returns (uint256) {
+    return config.getNumber(uint256(ConfigOptions.Numbers.overDueFee));
+  }
+
+  function getOpportunityOrigination(DygnifyConfig config) internal view returns (address) {
+    return config.getAddress(uint256(ConfigOptions.Addresses.OpportunityOrigination));
+  }
+
+  function getDygnifyFee(DygnifyConfig config) internal view returns (uint256) {
+    return config.getNumber(uint256(ConfigOptions.Numbers.DygnifyFee));
+  }
+
+  function getJuniorSubpoolFee(DygnifyConfig config) internal view returns (uint256) {
+    return config.getNumber(uint256(ConfigOptions.Numbers.JuniorSubpoolFee));
+  }
 }
