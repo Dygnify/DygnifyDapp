@@ -136,7 +136,6 @@ export async function getWalletBal() {
       const bal = await contract.balanceOf(await signer.getAddress());
       // console.log(ethers.utils.formatEther(bal));
       return ethers.utils.formatEther(bal);
-      console.log(ethers.utils.formatEther(bal));
     }
   } catch (error) {
     console.log(error);
@@ -274,6 +273,8 @@ export async function voteOpportunity(id, vote) {
   }
 }
 
+
+// to fetch opportunity by id
 export async function getOpportunityAt(id) {
   try {
     if (typeof window.ethereum !== "undefined") {
