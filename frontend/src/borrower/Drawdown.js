@@ -1,7 +1,7 @@
-import {React,useState} from "react";
+import { React, useEffect, useState } from "react";
 import { ethers } from 'ethers';
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
 import { border } from "@mui/system";
 import Table from '@material-ui/core/Table';
@@ -12,10 +12,23 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 const Drawdown = () => {
+  const { id } = useParams();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchJSON = async () => {
+      const response = await fetch("/drawdown.json");
+      let json = await response.json();
+      setData(json);
+    };
 
+    fetchJSON();
+  }, []);
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
   }
+  console.log(data)
+  const target = data.find(item => item.id == id)
+  console.log(target)
 
   return (
     <>
@@ -66,23 +79,23 @@ const Drawdown = () => {
           </Button>
         </div>
       </Box>
-      
+
       <Box
         sx={{
           mb: "30px",
           maxWidth: 400,
           mx: "auto",
-          marginTop : "40px",
-          backgroundColor : "White",
-          width : "400px",
-          height : "300px",
-          display : "flex",
+          marginTop: "40px",
+          backgroundColor: "White",
+          width: "400px",
+          height: "200px",
+          display: "flex",
           flexDirection: "column",
-          alignItems : "center",
-          padding : "10px"
+          alignItems: "center",
+          padding: "10px"
         }}
       >
-        <Typography variant="h6">Opportunity Name</Typography>
+        <Typography variant="h6">{target?.opportunity_name}</Typography>
         <Card
           sx={{
             my: "20px",
@@ -95,66 +108,40 @@ const Drawdown = () => {
             textAlign: "center",
           }}
         >
-        <Paper >
-          <Table >
-            
-            <TableBody>
+          <Paper >
+            <Table >
+              <TableBody>
                 <TableRow >
                   <TableCell align="Left" component="th" scope="row" width="220px">
-                  Interest/Principal Due
+                    Drawdown Amount
                   </TableCell>
                   <TableCell width="220px" align="center">-</TableCell>
-                  <TableCell 
+                  <TableCell
                     width="220px"
-                    align="center" 
-                    >
-                      815 USDC
+                    align="center"
+                  >
+                    {target?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
                   </TableCell>
                 </TableRow>
 
-                <TableRow >
-                  <TableCell align="Left" component="th" scope="row" width="220px">
-                  Due Date
-                  </TableCell>
-                  <TableCell width="220px" align="center">-</TableCell>
-                  <TableCell 
-                    width="220px"
-                    align="center" 
-                    >
-                      __/__/____
-                  </TableCell>
-                </TableRow>
+              </TableBody>
 
-                <TableRow >
-                  <TableCell align="Left" component="th" scope="row" width="220px">
-                  Amount being paid
-                  </TableCell>
-                  <TableCell width="220px" align="center">-</TableCell>
-                  <TableCell 
-                    width="220px"
-                    align="center" 
-                    >
-                      xxx USDC
-                  </TableCell>
-                </TableRow>
-             
-            </TableBody>
-          </Table>
-        </Paper>
+            </Table>
+          </Paper>
         </Card>
         <Button
-            sx={{ backgroundColor: "#7165E3" }}
-            variant="contained"
-            size="large"
-            onClick={requestAccount}
-          >
-            Drawdown
-          </Button>
+          sx={{ backgroundColor: "#7165E3" }}
+          variant="contained"
+          size="large"
+          onClick={requestAccount}
+        >
+          Confirm Drawdown
+        </Button>
       </Box>
 
-      <br/><br/><br/>
+      <br /><br /><br />
     </>
   );
 };
- 
+
 export default Drawdown;
