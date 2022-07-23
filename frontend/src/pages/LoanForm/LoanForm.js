@@ -10,7 +10,7 @@ import { createOpportunity } from '../../components/transaction/TransactionHelpe
 import axiosHttpService from '../../services/axioscall';
 import { pinataCall, uploadFileToIPFS } from '../../services/PinataIPFSOptions';
 import { Button } from '@mui/material';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useNavigate } from 'react-router-dom';
 
 
 
@@ -52,7 +52,7 @@ const LoanForm = () => {
     });
 
     const [processed, setProcessed] = useState(false);
-    const path = useHistory();
+    const path = useNavigate();
 
 
     // stroing bigger data in IPFS
@@ -170,7 +170,7 @@ const LoanForm = () => {
                                     <br />
                                     Loan Request Submitted Successfully
                                     <br />
-                                    <Button onClick={() => path.push('/opportunities')} variant="outlined">Back to Dashboard</Button>
+                                    <Button onClick={() => path('/opportunities')} variant="outlined">Back to Dashboard</Button>
                                 </Typography>
 
                             </>

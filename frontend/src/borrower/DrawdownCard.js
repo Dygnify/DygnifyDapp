@@ -1,13 +1,13 @@
 import { React, useEffect, useState } from "react";
 import { ethers } from 'ethers';
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useNavigate } from "react-router-dom";
 import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
 import { border } from "@mui/system";
 
 const DrawdownCard = ({ data }) => {
 
-  const path = useHistory();
+  const path = useNavigate();
   return (
     <>
       <Box
@@ -107,7 +107,7 @@ const DrawdownCard = ({ data }) => {
           sx={{ backgroundColor: "#7165E3", width: "200px", marginTop: '30px' }}
           variant="contained"
           size="large"
-          onClick={() => path.push(`/drawdown/${data.id}`)}
+          onClick={() => path(`/drawdown/${data.id}`)}
         >
           Drawdown
         </Button>

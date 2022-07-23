@@ -1,8 +1,8 @@
 import React from 'react';
 
-const GradientButton = ({ children }) => {
+const GradientButton = ({ onClick, children, className }) => {
     return (
-        <button style={{ borderRadius: '100px', padding: '12px 24px', color: 'white' }} className="btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none">{children}</button>
+        <button onClick={onClick} style={{ borderRadius: '100px', padding: '12px 24px', color: 'white' }} className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none ${className}`}>{children}</button>
     );
 };
 

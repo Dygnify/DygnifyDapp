@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import { useHistory } from 'react-router-dom';
+import { useHistory, useNavigate } from 'react-router-dom';
 const RepaymentItem = ({ data }) => {
-    const path = useHistory();
+    const path = useNavigate();
     return (
         <Box>
             <Card
@@ -30,7 +30,7 @@ const RepaymentItem = ({ data }) => {
                     <Typography variant="h6">
                         {data?.repayment_amount} {process.env.REACT_APP_TOKEN_NAME}
                     </Typography>
-                    <Button onClick={() => path.push(`/repayment/${data?.id}`)} sx={{ backgroundColor: "#7165E3" }} variant='contained'>Pay Now</Button>
+                    <Button onClick={() => path(`/repayment/${data?.id}`)} sx={{ backgroundColor: "#7165E3" }} variant='contained'>Pay Now</Button>
                 </div>
             </Card>
         </Box>

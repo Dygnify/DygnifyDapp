@@ -4,14 +4,14 @@ import OpportunityTable from "./OpportunityTable.js";
 // import DrawdownCard from "./DrawdownCard.js";
 import OpportunityStatus from "./OpportunityStatus.js";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import RepaymentCard from "./RepaymentCard.js";
 import DrawdownCard from "../tools/Card/DrawdownCard.js";
 import RepaymentCard from "../tools/Card/RepaymentCard.js";
 
 const Borrower = () => {
   const [opportunity, setOpportunity] = useState();
-  const path = useHistory();
+  const path = useNavigate();
   const [data, setData] = useState([]);
   const [repayment, setRepayment] = useState([]);
   const [userInfo, setUserInfo] = useState({
@@ -222,7 +222,7 @@ const Borrower = () => {
             <div
               onClick={() => {
                 console.log("clicked");
-                //path.push(`/opportunity-details/${id}`)
+                //path(`/opportunity-details/${id}`)
               }}
               key={i}
             >
