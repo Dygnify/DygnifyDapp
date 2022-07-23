@@ -19,8 +19,26 @@ const Borrower = () => {
     amountReadyToWithdraw: "48,00,000",
   });
 
+  const loadBlockpassWidget = () => {
+    console.log("#############");
+    const blockpass = new window.BlockpassKYCConnect(
+      "kyc_aml_c7be4", // service client_id from the admin console
+      {
+        refId: "1", // assign the local user_id of the connected user
+      }
+    );
+
+    blockpass.startKYCConnect();
+
+    blockpass.on("KYCConnectSuccess", () => {
+      //add code that will trigger when data have been sent.
+    });
+  };
+
   useEffect(() => {
     try {
+      loadBlockpassWidget();
+      console.log("******************");
       const fetchData = async () => {
         console.log("******************");
         let opportunities = await getOpportunitysOf();
@@ -28,6 +46,8 @@ const Borrower = () => {
         console.log(opportunities);
       };
       fetchData();
+
+      //loadBlockpassWidget();
     } catch (error) {
       console.log(error);
     }
@@ -84,6 +104,9 @@ const Borrower = () => {
           >
             Connect Wallet
           </Button>
+          <button style={{ height: 50, width: 50 }} id="blockpass-kyc-connect">
+            KYC
+          </button>
         </div>
       </Box>
 
