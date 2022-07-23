@@ -45,7 +45,7 @@ const CollateralDocuments = ({ handleNext, handlePrev, formData }) => {
                         label="Collateral Document"
                         onBlur={formik.handleBlur}
                         onChange={(e) => {
-                            formik.setFieldValue('collateral_document', e.target.files[0])
+                            formik.setFieldValue('collateral_document', e.target.files)
                         }}
                     />
                     {formik.touched.collateral_document && formik.errors.collateral_document ? (
