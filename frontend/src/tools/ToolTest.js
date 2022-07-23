@@ -2,6 +2,7 @@ import React from 'react';
 import GradientButton from './Button/GradientButton';
 import PrimaryButton from './Button/PrimaryButton';
 import DrawdownCard from './Card/DrawdownCard';
+import OpportunityCardCollapsible from './Card/OpportunityCardCollapsible';
 import RepaymentCard from './Card/RepaymentCard';
 
 const ToolTest = ({ children }) => {
@@ -11,6 +12,7 @@ const ToolTest = ({ children }) => {
             <GradientButton>Borrow Request</GradientButton>
             <DrawdownCard></DrawdownCard>
             <RepaymentCard></RepaymentCard>
+            <OpportunityCardCollapsible></OpportunityCardCollapsible>
         </div >
     );
 };
