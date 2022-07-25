@@ -23,7 +23,7 @@ contract AuthorizeUser is BaseUpgradeablePausable, IAuthorizeUser {
     }
 
     function addToauthorizedUserList(address _user)
-        public
+        external
         override
         onlyAuthorizeUserRole
     {
@@ -33,7 +33,7 @@ contract AuthorizeUser is BaseUpgradeablePausable, IAuthorizeUser {
     }
 
     function removeFromauthorizedUserList(address _user)
-        public
+        external
         override
         onlyAuthorizeUserRole
     {

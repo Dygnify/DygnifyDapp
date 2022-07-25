@@ -3,21 +3,21 @@
 pragma solidity 0.8.4;
 
 library ConfigOptions {
-  enum Addresses {
-    DygnifyAdmin,
-    LPToken,
-    USDCToken,
-    SeniorPool,
-    PoolImplAddress,
-    CollateralToken,
-    OpportunityOrigination
-  }
+    enum Addresses {
+        DygnifyAdmin,
+        LPToken,
+        USDCToken,
+        SeniorPool,
+        PoolImplAddress,
+        CollateralToken,
+        OpportunityOrigination
+    }
 
-  enum Numbers {
-    LeverageRatio,
-    BackerFee,
-    DygnifyFee,
-    overDueFee,
-    JuniorSubpoolFee
-  }
+    enum Numbers {
+        LeverageRatio,
+        BackerFee,
+        DygnifyFee,
+        overDueFee,
+        JuniorSubpoolFee
+    }
 }
