@@ -1,9 +1,11 @@
-import React from 'react';
-import { useHistory, useNavigate } from 'react-router-dom';
-import PrimaryButton from '../Button/PrimaryButton';
+import React, { useState } from 'react';
+import RepaymentModal from '../Modal/RepaymentModal';
 
 const RepaymentCard = ({ data }) => {
-    const path = useNavigate();
+    const [selected, setSelected] = useState(null)
+    const handleRepayment = () => {
+        setSelected(null)
+    }
     return (
         <div style={{ boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)` }} class="card text-white w-1/3" >
             <div style={{
@@ -25,8 +27,11 @@ const RepaymentCard = ({ data }) => {
                     </div>
                 </div>
                 <div class="justify-center w-full mt-6">
-                    <PrimaryButton data={{ id: data?.id }} width='w-full' onClick={() => path(`/repayment/${data?.id}`)}>Make Repayment Now</PrimaryButton>
+                    <label htmlFor="repayment-modal" style={{ borderRadius: '100px', padding: '12px 24px', color: 'white' }} className={`btn btn-secondary w-full hover:bg-blue-500 capitalize font-medium border-none`} onClick={() => setSelected(data)}>Make Repayment</label>
                 </div>
+                {
+                    selected && <RepaymentModal key={data?.id} data={selected} handleRepayment={handleRepayment}></RepaymentModal>
+                }
             </div>
         </div >
     );

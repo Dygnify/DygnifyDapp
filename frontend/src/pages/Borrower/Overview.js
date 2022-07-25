@@ -14,13 +14,13 @@ const Overview = () => {
         fetch('/drawdown.json')
             .then(res => res.json())
             .then(data => setData(data))
-    }, [])
+    }, [data])
 
     useEffect(() => {
         fetch('/repayment.json')
             .then(res => res.json())
             .then(data => setRepayment(data))
-    }, [])
+    }, [repayment])
 
     return (
         <div>

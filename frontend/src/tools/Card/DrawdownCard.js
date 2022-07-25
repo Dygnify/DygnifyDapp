@@ -29,7 +29,7 @@ const DrawdownCard = ({ data }) => {
                     </div>
                 </div>
                 <div class="justify-center w-full mt-6">
-                    <label htmlFor="drawdown-modal" style={{ borderRadius: '100px', padding: '12px 24px', color: 'white' }} className={`btn btn-secondary btn-wide hover:bg-blue-500 capitalize font-medium border-none`} onClick={() => setSelected(data)}>Drawdown Funds</label>
+                    <label htmlFor="drawdown-modal" style={{ borderRadius: '100px', padding: '12px 24px', color: 'white' }} className={`btn btn-secondary w-full hover:bg-blue-500 capitalize font-medium border-none`} onClick={() => setSelected(data)}>Drawdown Funds</label>
                 </div>
                 {
                     selected && <DrawdownModal key={data?.id} data={data} handleDrawdown={handleDrawdown}></DrawdownModal>
