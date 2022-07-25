@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory, useNavigate } from 'react-router-dom';
 import PrimaryButton from '../Button/PrimaryButton';
+import DrawdownModal from '../Modal/DrawdownModal';
 
 const DrawdownCard = ({ data }) => {
-    const path = useNavigate();
+    const [selected, setSelected] = useState(null)
+    const handleDrawdown = () => {
+        setSelected(null)
+    }
     return (
         <div style={{ boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)` }} class="card text-white w-1/3" >
             <div style={{
@@ -25,8 +29,11 @@ const DrawdownCard = ({ data }) => {
                     </div>
                 </div>
                 <div class="justify-center w-full mt-6">
-                    <PrimaryButton data={{ id: data?.id }} width='w-full' onClick={() => path(`/drawdown/${data?.id}`)}>Drawdown Funds</PrimaryButton>
+                    <label htmlFor="drawdown-modal" style={{ borderRadius: '100px', padding: '12px 24px', color: 'white' }} className={`btn btn-secondary btn-wide hover:bg-blue-500 capitalize font-medium border-none`} onClick={() => setSelected(data)}>Drawdown Funds</label>
                 </div>
+                {
+                    selected && <DrawdownModal key={data?.id} data={data} handleDrawdown={handleDrawdown}></DrawdownModal>
+                }
             </div>
         </div >
     );
