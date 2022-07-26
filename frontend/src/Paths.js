@@ -40,12 +40,11 @@ import InvestorDashboard from "./pages/Investor/InvestorDashboard";
 import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
 import Repayment from "./borrower/Repayment";
 import Withdrawal from "./pages/Investor/Withdrawal";
-import Transaction from "./components/transaction/Transaction";
-import TransactionHistory from "./components/transactionHistory/TransactionHistory";
 import ToolTest from "./tools/ToolTest";
 import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
 import Overview from "./pages/Borrower/Overview";
 import BorrowList from "./pages/Borrower/BorrowList";
+import Transaction from "./pages/Borrower/Transaction";
 
 const Paths = () => {
     return (
@@ -80,12 +79,11 @@ const Paths = () => {
                 <Route path='/opportunity-details/:id' element={<OpportunityDetails />} />
                 <Route path='/loan-details/:id' element={<ApprovedOpportunities />} />
                 <Route path='/investor-dashboard' element={<InvestorDashboard />} />
-                <Route path='/transaction' element={<Transaction />} />
-                <Route path='/transaction-history' element={<TransactionHistory />} />
                 <Route path='/toolTest' element={<ToolTest />} />
                 <Route path='/borrower_dashboard' element={<BorrowerDashboard />}>
                     <Route index element={<Overview></Overview>}></Route>
                     <Route path="borrow_list" element={<BorrowList></BorrowList>}></Route>
+                    <Route path="transaction" element={<Transaction></Transaction>}></Route>
                 </Route>
             </Routes>
         </BrowserRouter>

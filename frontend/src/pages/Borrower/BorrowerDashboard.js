@@ -27,7 +27,7 @@ const BorrowerDashboard = () => {
                     <ul className="menu p-4 overflow-y-auto w-60  text-white">
                         <li><Link to='/borrower_dashboard'>Overview</Link></li>
                         <li><Link to='/borrower_dashboard/borrow_list'>Borrow</Link></li>
-                        <li><Link to='/borrower_dashboard'>Transactions</Link></li>
+                        <li><Link to='/borrower_dashboard/transaction'>Transactions</Link></li>
                         <li><Link to='/borrower_dashboard'>Profile</Link></li>
                     </ul>
                 </div>

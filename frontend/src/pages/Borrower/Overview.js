@@ -2,12 +2,14 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import DrawdownCard from '../../tools/Card/DrawdownCard';
+import DueDateCard from '../../tools/Card/DueDateCard';
 import RepaymentCard from '../../tools/Card/RepaymentCard';
 
 const Overview = () => {
 
     const [data, setData] = useState([]);
     const [repayment, setRepayment] = useState([]);
+    const [dueList, setDueList] = useState([]);
 
 
     useEffect(() => {
@@ -21,6 +23,12 @@ const Overview = () => {
             .then(res => res.json())
             .then(data => setRepayment(data))
     }, [repayment])
+
+    useEffect(() => {
+        fetch('/dueList.json')
+            .then(res => res.json())
+            .then(data => setDueList(data))
+    }, [dueList])
 
     return (
         <div>
@@ -59,10 +67,26 @@ const Overview = () => {
                     }
                 </div>
             </div>
-
+            <div className='mb-16'>
+                <h2 className='mb-2 text-xl'>Upcoming Due Dates</h2>
+                <div className="collapse mb-3">
+                    <input type="checkbox" class="peer" />
+                    <div style={{ display: 'flex', borderTop: '1px solid #20232A', borderBottom: '1px solid #20232A' }} class="collapse-title text-md font-light justify-around w-full">
+                        <p className='w-1/4 text-center'>Pool Name</p>
+                        <p className='w-1/4 text-center'>Capital Borrowed</p>
+                        <p className='w-1/4 text-center'>Amount Due</p>
+                        <p className='w-1/4 text-center'>Due Date</p>
+                    </div>
+                </div>
+                <div>
+                    {
+                        dueList.map(item => <DueDateCard key={dueList.id} data={item} />)
+                    }
+                </div>
+            </div>
 
         </div>
     );
 };
 
-export default Overview; <h2>Overview</h2>
+export default Overview;

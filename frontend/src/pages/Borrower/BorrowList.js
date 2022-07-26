@@ -32,7 +32,7 @@ const BorrowList = () => {
                 <h2 className='mb-2 text-xl'>Drawdown Funds</h2>
                 <div style={{ display: 'flex' }} className=' gap-4'>
                     {
-                        data.map(item => <DrawdownCard key={data.id} data={item} />)
+                        data.map(item => <DrawdownCard key={data?.id} data={item} />)
                     }
                 </div>
             </div>

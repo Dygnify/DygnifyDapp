@@ -1,7 +1,6 @@
 import React from 'react';
 
 const OpportunityCardCollapsible = ({ data }) => {
-    console.log(data)
     return (
         <div style={{ backgroundColor: '#20232A', borderRadius: '12px' }} className="collapse collapse-arrow  mb-2">
             <input type="checkbox" class="peer" />
