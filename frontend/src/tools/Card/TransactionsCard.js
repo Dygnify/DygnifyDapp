@@ -3,7 +3,7 @@ import React from 'react';
 const TransactionsCard = ({ data }) => {
     return (
         <div style={{ backgroundColor: '#20232A', borderRadius: '12px' }} className=" mb-2">
-            <div style={{ display: 'flex' }} class="collapse-title text-md font-light justify-around w-full">
+            <div style={{ display: 'flex' }} className="collapse-title text-md font-light justify-around w-full">
                 <p className='w-1/6 text-center'>{data?.opportunity_name}</p>
                 <p className='w-1/6 text-center'>{data?.date}</p>
                 <p className='w-1/6 text-center'>{data?.type}</p>

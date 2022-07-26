@@ -3,14 +3,14 @@ import React from 'react';
 const OpportunityCardCollapsible = ({ data }) => {
     return (
         <div style={{ backgroundColor: '#20232A', borderRadius: '12px' }} className="collapse collapse-arrow  mb-2">
-            <input type="checkbox" class="peer" />
-            <div style={{ display: 'flex' }} class="collapse-title text-md font-light justify-around w-full">
+            <input type="checkbox" className="peer" />
+            <div style={{ display: 'flex' }} className="collapse-title text-md font-light justify-around w-full">
                 <p className='w-1/4 text-center'>Pool Name</p>
                 <p className='w-1/4 text-center'>{data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}</p>
                 <p className='w-1/4 text-center'>{data?.loan_interest} %</p>
                 <p className='w-1/4 text-center'>Under Review</p>
             </div>
-            <div class="collapse-content">
+            <div className="collapse-content">
                 <div style={{ display: 'flex' }} className='justify-around py-10 w-full'>
                     <div style={{ borderRight: '1px solid #292C33', display: 'flex' }} className='w-1/2 text-center flex-col justify-center items-center'>
                         <p>Chart</p>

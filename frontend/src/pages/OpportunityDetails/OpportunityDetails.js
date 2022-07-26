@@ -330,7 +330,7 @@ const OpportunityDetails = () => {
                             <Typography mb={1} variant="subtitle2">
                                 Upload collateral document for converting to a unique NFT
                             </Typography>
-                            <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target?.files[0])} class="custom-file-upload" />
+                            <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target?.files[0])} className="custom-file-upload" />
                             <Button
                                 sx={{ backgroundColor: "#7165E3", width: "300px", marginTop: "10px" }}
                                 variant="contained"

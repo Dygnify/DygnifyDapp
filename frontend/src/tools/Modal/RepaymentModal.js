@@ -8,7 +8,7 @@ const RepaymentModal = ({ data, handleRepayment }) => {
             <input type="checkbox" id="repayment-modal" className="modal-toggle" />
             <div style={{ backdropFilter: 'brightness(40%) blur(8px)' }} className="modal">
                 <div style={{ backgroundColor: '#20232A', borderRadius: '16px' }} className="modal-box w-1/3 max-w-5xl p-0">
-                    <label for="repayment-modal" class="btn btn-ghost absolute right-2 top-2 pb-2" onClick={() => handleRepayment()}>✕</label>
+                    <label for="repayment-modal" className="btn btn-ghost absolute right-2 top-2 pb-2" onClick={() => handleRepayment()}>✕</label>
                     <h3 style={{ borderBottom: '2px solid #292C33' }} className="font-bold text-lg py-3 px-4">Repayment</h3>
                     <div style={{ display: 'flex' }} className='justify-center my-6'>
                         <img style={{ borderRadius: '50%' }} className='p-4 bg-secondary opacity-80' src="/images/wallet_white.png" alt="" />

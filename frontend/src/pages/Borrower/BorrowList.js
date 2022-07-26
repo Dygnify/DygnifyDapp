@@ -39,8 +39,8 @@ const BorrowList = () => {
             <div className='mb-16'>
                 <h2 className='mb-2 text-xl'>Borrow Request</h2>
                 <div className="collapse mb-3">
-                    <input type="checkbox" class="peer" />
-                    <div style={{ display: 'flex', borderTop: '1px solid #20232A', borderBottom: '1px solid #20232A' }} class="collapse-title text-md font-light justify-around w-full">
+                    <input type="checkbox" className="peer" />
+                    <div style={{ display: 'flex', borderTop: '1px solid #20232A', borderBottom: '1px solid #20232A' }} className="collapse-title text-md font-light justify-around w-full">
                         <p className='w-1/4 text-center'>Pool Name</p>
                         <p className='w-1/4 text-center'>Capital Requested</p>
                         <p className='w-1/4 text-center'>Interest Rate</p>
