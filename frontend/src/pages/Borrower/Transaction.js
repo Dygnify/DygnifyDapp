@@ -13,7 +13,7 @@ const Transaction = () => {
             <h2 className='text-2xl mb-6'>Transaction History</h2>
             <div className="collapse mb-3">
                 <input type="checkbox" class="peer" />
-                <div style={{ display: 'flex', borderTop: '1px solid #20232A', borderBottom: '1px solid #20232A' }} class="collapse-title text-md font-light justify-around w-full">
+                <div style={{ display: 'flex', borderTop: '1px solid #20232A', borderBottom: '1px solid #20232A' }} class="collapse-title text-md font-normal justify-around w-full">
                     <p className='w-1/6 text-center'>Pool</p>
                     <p className='w-1/6 text-center'>Date</p>
                     <p className='w-1/6 text-center'>Transaction Type</p>
