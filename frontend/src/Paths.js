@@ -45,6 +45,8 @@ import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
 import Overview from "./pages/Borrower/Overview";
 import BorrowList from "./pages/Borrower/BorrowList";
 import Transaction from "./pages/Borrower/Transaction";
+import BorrowerProfile from "./pages/Borrower/BorrowerProfile";
+import EditBorrowerProfile from "./pages/Borrower/EditBorrowerProfile";
 
 const Paths = () => {
     return (
@@ -84,6 +86,8 @@ const Paths = () => {
                     <Route index element={<Overview></Overview>}></Route>
                     <Route path="borrow_list" element={<BorrowList></BorrowList>}></Route>
                     <Route path="transaction" element={<Transaction></Transaction>}></Route>
+                    <Route path="borrower_profile" element={<BorrowerProfile></BorrowerProfile>}></Route>
+                    <Route path="edit_profile" element={<EditBorrowerProfile></EditBorrowerProfile>}></Route>
                 </Route>
             </Routes>
         </BrowserRouter>
