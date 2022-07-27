@@ -23,7 +23,7 @@ const OpportunityCardCollapsible = ({ data }) => {
                             </div>
                             <div>
                                 <p className='font-light text-sm'>Payment Frequency</p>
-                                <p className='font-medium text-lg'>{data?.payment_frequency} %</p>
+                                <p className='font-medium text-lg'>{data?.payment_frequency} days</p>
                             </div>
                         </div>
                         <div style={{ display: 'flex' }} className='flex-col'>
