@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { ethers } from 'ethers'
+import { useState } from "react";
+import { ethers } from "ethers";
 import dygToken from "../artifacts/contracts/protocol/DygnifyToken.sol/DygnifyToken.json";
 import NFTMinter from "../artifacts/contracts/protocol/NFT_minter.sol/NFTMinter.json";
-import axiosHttpService from '../services/axioscall';
-import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
-import { amlCheck } from '../services/OFACAxiosOptions';
-import axios from 'axios';
+import axiosHttpService from "../services/axioscall";
+import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
+import { amlCheck } from "../services/OFACAxiosOptions";
+import axios from "axios";
 
-const tokenAddress = "0x1546A8e7389B47d2Cf1bacE7C0ad3e0A91CAae94"
-const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37"
+const tokenAddress = "0x1546A8e7389B47d2Cf1bacE7C0ad3e0A91CAae94";
+const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 
 //metadata to ipfs
 const pinJSONToIPFS = async (JSONBody) => {
@@ -19,21 +19,21 @@ const pinJSONToIPFS = async (JSONBody) => {
       headers: {
         pinata_api_key: process.env.REACT_APP_PINATA_API_KEY,
         pinata_secret_api_key: process.env.REACT_APP_PINATA_API_SECRET,
-      }
+      },
     })
     .then(function (response) {
       return {
         success: true,
-        pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
+        pinataUrl:
+          "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash,
       };
     })
     .catch(function (error) {
-      console.log(error)
+      console.log(error);
       return {
         success: false,
         message: error.message,
-      }
-
+      };
     });
 };
 
@@ -45,22 +45,28 @@ function Token() {
   const [nameForAMLCheck, setNameForAMLCheck] = useState("");
 
   async function requestAccount() {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
   async function getBalance() {
-    if (typeof window.ethereum !== 'undefined') {
-      const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    if (typeof window.ethereum !== "undefined") {
+      const [account] = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(tokenAddress, dygToken.abi, provider)
+      const contract = new ethers.Contract(
+        tokenAddress,
+        dygToken.abi,
+        provider
+      );
       const balance = await contract.balanceOf(account);
       console.log("Balance: ", balance.toString());
     }
   }
 
   async function sendCoins() {
-    if (typeof window.ethereum !== 'undefined') {
-      await requestAccount()
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(tokenAddress, dygToken.abi, signer);
@@ -71,8 +77,8 @@ function Token() {
   }
 
   async function approveSendCoins() {
-    if (typeof window.ethereum !== 'undefined') {
-      await requestAccount()
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(tokenAddress, dygToken.abi, signer);
@@ -83,8 +89,8 @@ function Token() {
   }
 
   async function mint_NFT(tokenURI) {
-    if (typeof window.ethereum !== 'undefined') {
-      await requestAccount()
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(NFT_minter, NFTMinter.abi, signer);
@@ -99,7 +105,9 @@ function Token() {
   async function onFileUpload() {
     try {
       console.log("Upload called");
-      let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
+      let ipfsUploadRes = await axiosHttpService(
+        uploadFileToIPFS(selectedFile)
+      );
       console.log(ipfsUploadRes);
       //make metadata
       const metadata = new Object();
@@ -113,15 +121,15 @@ function Token() {
         return {
           success: false,
           status: "😢 Something went wrong while uploading your tokenURI.",
-        }
+        };
       }
       const tokenURI = pinataResponse.pinataUrl;
-      console.log(tokenURI)
-      setTokenURI(tokenURI)
+      console.log(tokenURI);
+      setTokenURI(tokenURI);
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   async function onCheckAML(name) {
     try {
@@ -134,8 +142,11 @@ function Token() {
       console.log("Body" + amlCheckRes.res);
       console.log("Error " + amlCheckRes.res["error"]);
       if (amlCheckRes.code === 200 && amlCheckRes.res["error"] === false) {
-        if (amlCheckRes.res["matches"][name][0] &&
-          amlCheckRes.res["matches"][name][0]["score"] >= process.env.REACT_APP_OFAC_MIN_SCORE) {
+        if (
+          amlCheckRes.res["matches"][name][0] &&
+          amlCheckRes.res["matches"][name][0]["score"] >=
+            process.env.REACT_APP_OFAC_MIN_SCORE
+        ) {
           return true;
         } else {
           return false;
@@ -152,12 +163,14 @@ function Token() {
   async function onFileUpload() {
     try {
       console.log("Upload called");
-      let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
+      let ipfsUploadRes = await axiosHttpService(
+        uploadFileToIPFS(selectedFile)
+      );
       console.log(ipfsUploadRes);
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
     <div>
@@ -165,23 +178,34 @@ function Token() {
         <br />
         <button onClick={getBalance}>Get Balance</button>
         <button onClick={sendCoins}>Send Coins</button>
-        <input onChange={e => setUserAccount(e.target.value)} placeholder="Account ID" />
-        <input onChange={e => setAmount(e.target.value)} placeholder="Amount" />
+        <input
+          onChange={(e) => setUserAccount(e.target.value)}
+          placeholder="Account ID"
+        />
+        <input
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Amount"
+        />
         <button onClick={approveSendCoins}>Approve</button>
-        <input type="file" onChange={(event) => setSelectedFile(event.target.files[0])} />
-        <button onClick={onFileUpload}>
-          Upload
-        </button>
-        <h5 style={{ textAlign: "center" }}>{tokenURI === "" ? <h5 >Upload your NFT before minting</h5> : tokenURI}</h5>
-        <input type="text" onChange={(event) => setTokenURI(event.target.value)} />
-        <button onClick={() => mint_NFT(tokenURI)}>
-          Mint
-        </button>
+        <input
+          type="file"
+          onChange={(event) => setSelectedFile(event.target.files[0])}
+        />
+        <button onClick={onFileUpload}>Upload</button>
+        <h5 style={{ textAlign: "center" }}>
+          {tokenURI === "" ? <h5>Upload your NFT before minting</h5> : tokenURI}
+        </h5>
+        <input
+          type="text"
+          onChange={(event) => setTokenURI(event.target.value)}
+        />
+        <button onClick={() => mint_NFT(tokenURI)}>Mint</button>
         <br />
-        <input type="text" onChange={(event) => setNameForAMLCheck(event.target.value)} />
-        <button onClick={() => onCheckAML(nameForAMLCheck)}>
-          Check
-        </button>
+        <input
+          type="text"
+          onChange={(event) => setNameForAMLCheck(event.target.value)}
+        />
+        <button onClick={() => onCheckAML(nameForAMLCheck)}>Check</button>
       </header>
     </div>
   );

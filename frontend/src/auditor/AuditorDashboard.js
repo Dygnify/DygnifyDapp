@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityStatus from "./OpportunityStatus";
 import { getAllUnderReviewOpportunities } from "../components/transaction/TransactionHelper";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AuditorDashboard = () => {
   const [opportunity, setOpportunity] = useState([
@@ -19,7 +19,7 @@ const AuditorDashboard = () => {
       loanType: "bullet",
     },
   ]);
-  const path = useHistory();
+  const path = useNavigate();
 
   useEffect(() => {
     try {
@@ -91,7 +91,7 @@ const AuditorDashboard = () => {
 
       <h1 style={{ color: "white", margin: "3%" }}>Auditor Dashboard</h1>
 
-      {opportunity ? (
+      {
         opportunity.map((data, i) => {
           return (
             <div
@@ -116,13 +116,14 @@ const AuditorDashboard = () => {
             </div>
           );
         })
-      ) : (
-        <h2
-          style={{ justifyContent: "center", color: "red", marginLeft: "35%" }}
-        >
-          No Opportunity Created Yet.
-        </h2>
-      )}
+        // : (
+        //   <h2
+        //     style={{ justifyContent: "center", color: "red", marginLeft: "35%" }}
+        //   >
+        //     No Opportunity Created Yet.
+        //   </h2>
+        // )
+      }
 
       <br />
       <br />

@@ -11,7 +11,8 @@ module.exports = {
           primary: "#6047FF",
           secondary: "#5375FE",
           accent: "#37cdbe",
-          neutral: "#3d4451",
+          neutral: "#ffffff",
+
           "base-100": "#ffffff",
         },
       },
@@ -20,4 +21,4 @@ module.exports = {
     ],
   },
   plugins: [require("daisyui")],
-}
+};

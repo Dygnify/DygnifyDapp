@@ -48,48 +48,51 @@ import Overview from "./pages/Borrower/Overview";
 import BorrowList from "./pages/Borrower/BorrowList";
 
 const Paths = () => {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/pool" element={<Home />} />
-                <Route path="/borrow" element={<Borrow />} />
-                <Route path="/token" element={<Token />} />
-                <Route path="/overview" element={<Overview />} />
-                <Route path="/sign" element={<DashboardMain />} />
-                <Route path="/landing" element={<LandingPage />} />
-                <Route path="/info" element={<CompanyInfo />} />
-                <Route path="/info/:id" element={<CompanyInfo />} />
-                <Route path="/kyc" element={<KYC />} />
-                <Route path="/wallet" element={<Wallet />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/disbursement" element={<Disbursement />} />
-                <Route path="/sale" element={<PanProof />} />
-                <Route path="/pan" element={<PanUpload />} />
-                <Route path="/mobile" element={<Mobile />} />
-                <Route path="/VerifyNumber" element={<VerifyNumber />} />
-                <Route path="/Borrower" element={<Borrower />} />
-                <Route path="/drawdown/:id" element={<Drawdown />} />
-                <Route path="/repayment/:id" element={<Repayment />} />
-                <Route path="/withdrawal/:id" element={<Withdrawal />} />
-                <Route path="/LoadApp" element={<LoadApp />} />
-                <Route path="/auditor" element={<AuditorDashboard />} />
-                <Route path="/loan-form" element={<LoanForm />} />
-                <Route path="/test" element={<Test />} />
-                <Route path='/opportunities' element={<OpportunityPage />} />
-                <Route path='/opportunity-details/:id' element={<OpportunityDetails />} />
-                <Route path='/loan-details/:id' element={<ApprovedOpportunities />} />
-                <Route path='/investor-dashboard' element={<InvestorDashboard />} />
-                <Route path='/transaction' element={<Transaction />} />
-                <Route path='/transaction-history' element={<TransactionHistory />} />
-                <Route path='/toolTest' element={<ToolTest />} />
-                <Route path='/borrower_dashboard' element={<BorrowerDashboard />}>
-                    <Route index element={<Overview></Overview>}></Route>
-                    <Route path="borrow_list" element={<BorrowList></BorrowList>}></Route>
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/pool" element={<Home />} />
+        <Route path="/borrow" element={<Borrow />} />
+        <Route path="/token" element={<Token />} />
+        <Route path="/overview" element={<Overview />} />
+        <Route path="/sign" element={<DashboardMain />} />
+        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/info" element={<CompanyInfo />} />
+        <Route path="/info/:id" element={<CompanyInfo />} />
+        <Route path="/kyc" element={<KYC />} />
+        <Route path="/wallet" element={<Wallet />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/disbursement" element={<Disbursement />} />
+        <Route path="/sale" element={<PanProof />} />
+        <Route path="/pan" element={<PanUpload />} />
+        <Route path="/mobile" element={<Mobile />} />
+        <Route path="/VerifyNumber" element={<VerifyNumber />} />
+        <Route path="/Borrower" element={<Borrower />} />
+        <Route path="/drawdown/:id" element={<Drawdown />} />
+        <Route path="/repayment/:id" element={<Repayment />} />
+        <Route path="/withdrawal/:id" element={<Withdrawal />} />
+        <Route path="/LoadApp" element={<LoadApp />} />
+        <Route path="/auditor" element={<AuditorDashboard />} />
+        <Route path="/loan-form" element={<LoanForm />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/opportunities" element={<OpportunityPage />} />
+        <Route
+          path="/opportunity-details/:id"
+          element={<OpportunityDetails />}
+        />
+        <Route path="/loan-details/:id" element={<ApprovedOpportunities />} />
+        <Route path="/investor-dashboard" element={<InvestorDashboard />} />
+        <Route path="/transaction" element={<Transaction />} />
+        <Route path="/transaction-history" element={<TransactionHistory />} />
+        <Route path="/toolTest" element={<ToolTest />} />
+        <Route path="/borrower_dashboard" element={<BorrowerDashboard />}>
+          <Route index element={<Overview></Overview>}></Route>
+          <Route path="borrow_list" element={<BorrowList></BorrowList>}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default Paths;

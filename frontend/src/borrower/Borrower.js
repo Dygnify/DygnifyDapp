@@ -1,8 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityTable from "./OpportunityTable.js";
-import DrawdownCard from "./DrawdownCard.js";
-import { useHistory } from "react-router-dom";
 
 // import DrawdownCard from "./DrawdownCard.js";
 import OpportunityStatus from "./OpportunityStatus.js";
@@ -42,16 +40,16 @@ const Borrower = () => {
   };
 
   useEffect(() => {
-    fetch('/drawdown.json')
-      .then(res => res.json())
-      .then(data => setData(data))
-  }, [])
+    fetch("/drawdown.json")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
 
   useEffect(() => {
-    fetch('/repayment.json')
-      .then(res => res.json())
-      .then(data => setRepayment(data))
-  }, [])
+    fetch("/repayment.json")
+      .then((res) => res.json())
+      .then((data) => setRepayment(data));
+  }, []);
 
   useEffect(() => {
     try {
@@ -231,12 +229,12 @@ const Borrower = () => {
         </Card>
       </Box>
       {/* {repayment ? <RepaymentCard key={repayment.id} data={repayment}></RepaymentCard> : null} */}
-      {
-        repayment.map(item => <RepaymentCard key={data.id} data={item} />)
-      }
-      {
-        data.map(item => <DrawdownCard key={data.id} data={item} />)
-      }
+      {repayment.map((item) => (
+        <RepaymentCard key={data.id} data={item} />
+      ))}
+      {data.map((item) => (
+        <DrawdownCard key={data.id} data={item} />
+      ))}
 
       <br />
 
@@ -260,7 +258,7 @@ const Borrower = () => {
                 paymentFrequency={data.payment_frequency}
                 //opportunityStatus={data.oppurtunityStatus}
                 opportunityStatus="0"
-              // mDate="12/05/2022"
+                // mDate="12/05/2022"
               />
             </div>
           );
