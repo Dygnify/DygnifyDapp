@@ -8,7 +8,7 @@ import VerifyNumber from "./customer/onboarding/VerifyNumber";
 import ChooseLanguage from "./customer/onboarding/ChooseLanguage";
 import LoadingScreen from "./customer/onboarding/LoadingScreen";
 import LocationPermission from "./customer/onboarding/LocationPermission";
-// import Overview from "./mock/components/overview/Overview";
+
 import SignIn from "./user/SignIn";
 import DashboardMain from "./user/DashboardMain";
 import Logout from "./user/Logout";
