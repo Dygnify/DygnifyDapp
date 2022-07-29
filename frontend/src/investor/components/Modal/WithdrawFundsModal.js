@@ -1,7 +1,14 @@
 import React from "react";
-import GradientButton from "../Button/GradientButton";
+import GradientButton from "../../../tools/Button/GradientButton";
+import PrimaryButton from "../../../tools/Button/PrimaryButton";
 
-const DrawdownModal = ({ data, handleDrawdown }) => {
+const WithdrawFundsModal = () => {
+  const data = {
+    poolName: "New Pool",
+    amountInvested: "200K USDC",
+    estimatedApy: "24%",
+    availableForWithdrawal: "248K USDC",
+  };
   return (
     <div>
       <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
@@ -16,7 +23,7 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
           <label
             for="drawdown-modal"
             className="btn btn-ghost absolute right-2 top-2 pb-2"
-            onClick={() => handleDrawdown()}
+            // onClick={() => handleDrawdown()}
           >
             ✕
           </label>
@@ -24,7 +31,7 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
             style={{ borderBottom: "2px solid #292C33" }}
             className="font-bold text-lg py-3 px-4"
           >
-            Drawdown
+            Withdraw Funds
           </h3>
           <div style={{ display: "flex" }} className="justify-center my-6">
             <img
@@ -43,46 +50,93 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
                 Total Balance
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
+                $100,000,000.00 {process.env.REACT_APP_TOKEN_NAME}
               </p>
             </div>
             <small
               style={{ display: "flex", color: "#777E91" }}
               className="justify-end"
             >
-              ${data?.loan_amount}
+              $50,000.00
             </small>
           </div>
           <div className="text-sm py-3 px-4">
-            <div style={{ display: "flex" }} className="mb-2">
+            <div style={{ display: "flex" }} className="mb-1">
               <p style={{ display: "flex" }} className="justify-start">
                 Pool Name
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.opportunity_name}
+                {data?.poolName}
               </p>
             </div>
-            <div style={{ display: "flex" }} className="mb-2">
+            <div style={{ display: "flex" }} className="mb-1">
               <p style={{ display: "flex" }} className="justify-start">
-                Interest Rate
+                Amount Invested
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.loan_interest}%
+                {data?.amountInvested}%
               </p>
             </div>
-            <div style={{ display: "flex" }} className="mb-2">
+            <div style={{ display: "flex" }} className="mb-1">
               <p style={{ display: "flex" }} className="justify-start">
-                Available for drawdown
+                Estimated APY
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                ${data?.loan_amount}
+                {data?.estimatedApy}
+              </p>
+            </div>
+            <div style={{ display: "flex" }} className="mb-0">
+              <p style={{ display: "flex" }} className="justify-start">
+                Available for withdrawal
+              </p>
+              <p style={{ display: "flex" }} className="justify-end">
+                {data?.availableForWithdrawal}
               </p>
             </div>
           </div>
+
+          <div
+            class="flex justify-center"
+            style={{ display: "flex", marginTop: -6 }}
+          >
+            <div class="mb-3">
+              <label
+                for="exampleNumber0"
+                class="form-label inline-block mb-0  text-white rounded-box"
+                style={{ fontSize: 14 }}
+              >
+                Enter Amount
+              </label>
+              <input
+                type="number"
+                class="
+        form-control
+        block
+        w-96
+        h-57
+        px-3
+        py-1.5
+        text-base
+        font-normal
+        text-white
+        bg-base-100 bg-clip-padding
+        border border-solid border-[#3A3C43] 
+        rounded
+        transition
+        ease-in-out
+        m-0
+        focus:text-white focus:bg-base-100 focus:border-base-300 focus:outline-none
+      "
+                id="exampleNumber0"
+                placeholder="0.0"
+              />
+            </div>
+          </div>
+
           <div className="modal-action mx-4 mt-2 mb-4">
-            <GradientButton className="w-full" onClick={handleDrawdown}>
-              Drawdown Funds
-            </GradientButton>
+            <PrimaryButton width="w-full" disable={true}>
+              Withdraw Funds
+            </PrimaryButton>
           </div>
         </div>
       </div>
@@ -90,4 +144,4 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
   );
 };
 
-export default DrawdownModal;
+export default WithdrawFundsModal;
