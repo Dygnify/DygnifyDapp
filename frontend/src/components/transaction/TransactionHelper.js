@@ -304,3 +304,42 @@ export async function getAllActiveOpportunities() {
 
   return 0;
 }
+
+
+export async function getFundedOpportunities() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      // await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      let borrower = await getEthAddress();
+      const data = await contract.getOpportunityOf(borrower);
+      let opportunities = [];
+      for (let i = 0; i < data.length; i++) {
+        let obj = {};
+        let tx = await contract.opportunityToId(data[i]);
+        obj.borrower = tx.borrower.toString()
+        obj.opportunity_id = tx.opportunityID.toString()
+        obj.loan_info = tx.opportunityInfo.toString()
+        obj.loan_type = tx.loanType.toString()
+        obj.loan_amount = tx.loanAmount.toString()
+        obj.loan_tenure = tx.loanTenureInDays.toString()
+        obj.loan_interest = tx.loanInterest.toString()
+        obj.payment_frequency = tx.paymentFrequencyInDays.toString()
+        obj.collateral_document = tx.collateralDocument.toString()
+        obj.capital_loss = tx.capitalLoss.toString()
+        opportunities.push(obj);
+      }
+      return opportunities;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
+}

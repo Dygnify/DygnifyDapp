@@ -6,7 +6,6 @@ const Stepper = ({ steps, currentStep }) => {
 
     const updateStep = (stepNumber, steps) => {
         const newSteps = [...steps];
-        console.log(newSteps);
         let count = 0;
         while (count < newSteps.length) {
             //current step
@@ -15,7 +14,7 @@ const Stepper = ({ steps, currentStep }) => {
                     ...newSteps[count],
                     highlighted: true,
                     selected: true,
-                    completed: true,
+                    completed: false,
                 };
                 count++;
             }

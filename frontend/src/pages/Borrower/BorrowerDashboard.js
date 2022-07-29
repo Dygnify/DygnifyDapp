@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import GradientButton from '../../tools/Button/GradientButton';
 
 const BorrowerDashboard = () => {
     return (
@@ -16,7 +15,6 @@ const BorrowerDashboard = () => {
                         <Outlet></Outlet>
                     </div>
                 </div>
-
                 <div style={{ borderRight: '1px solid #20232A' }} className="drawer-side">
                     <label htmlFor="dashboard-sidebar" className="drawer-overlay"></label>
                     <ul className="menu p-4 overflow-y-auto w-60  text-white">
@@ -27,7 +25,6 @@ const BorrowerDashboard = () => {
                     </ul>
                 </div>
             </div>
-
         </div >
 
     );
