@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import DrawdownCard from '../../tools/Card/DrawdownCard';
 import DueDateCard from '../../tools/Card/DueDateCard';
 import RepaymentCard from '../../tools/Card/RepaymentCard';
+import LoanFormModal from '../../tools/Modal/LoanFormModal';
 import DashboardHeader from './DashboardHeader';
 
 const Overview = () => {
@@ -11,6 +12,10 @@ const Overview = () => {
     const [data, setData] = useState([]);
     const [repayment, setRepayment] = useState([]);
     const [dueList, setDueList] = useState([]);
+    const [selected, setSelected] = useState(null);
+    const handleForm = () => {
+        setSelected(null)
+    }
 
 
     useEffect(() => {
@@ -33,7 +38,10 @@ const Overview = () => {
 
     return (
         <div>
-            <DashboardHeader></DashboardHeader>
+            <DashboardHeader setSelected={setSelected}></DashboardHeader>
+            {
+                selected && <LoanFormModal key={data?.id} data={data} handleForm={handleForm}></LoanFormModal>
+            }
             <div style={{ display: 'flex' }} className='w-full my-10'>
                 <div style={{ backgroundColor: '#191D23', boxShadow: '4px 4px 10px -32px rgba(0, 0, 0, 0.1)', borderRadius: '16px', display: 'flex' }} className='w-1/4 mr-4 px-4 py-4 justify-center flex-col'>
                     <h1 className='font-semibold text-5xl text-green-400'>$850K</h1>
