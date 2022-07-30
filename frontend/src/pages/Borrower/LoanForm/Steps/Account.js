@@ -63,15 +63,30 @@ export default function Account({ formData, handleNext }) {
                                 : null
                         }
                         className='w-1/2 mr-2' label='Loan Interest' placeholder='Enter Loan Interest'></TextField>
-                    <TextField name='loan_type'
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={
-                            formik.touched.loan_type && formik.errors.loan_type
-                                ? formik.errors.loan_type
-                                : null
-                        }
-                        className='w-1/2 ml-2' label='Loan Type' placeholder='Select Loan Type'></TextField>
+                    <div className='w-1/2 ml-2'>
+                        <label class="label">
+                            <span class="text-white">Loan Type</span>
+                        </label>
+                        <select className="input input-bordered w-full" style={{ backgroundColor: '#24272F', border: '2px solid #3A3C43', borderRadius: '8px' }}
+                            name='loan_type'
+                            defaultValue={formData.loan_type}
+                            value={formik.values.loan_type}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={
+                                formik.touched.loan_type && formik.errors.loan_type
+                                    ? formik.errors.loan_type
+                                    : null
+                            }>
+                            <option value='0'>Bullet Loan</option>
+                            <option value='1'>Term Loan</option>
+                        </select>
+                        {formik.touched.loan_type && formik.errors.loan_type ? (
+                            <p style={{ color: 'red' }}>
+                                <small>{formik.errors.loan_type}</small>
+                            </p>
+                        ) : null}
+                    </div>
                 </div>
                 <TextArea name='loan_purpose'
                     onChange={formik.handleChange}
@@ -82,7 +97,7 @@ export default function Account({ formData, handleNext }) {
                             : null
                     }
                     className='w-full' label='Loan Purpose' placeholder='Short Summary on Purpose of Loans'></TextArea>
-                <input className="btn btn-primary btn-wide" type="submit" value='next'></input>
+                <input className="btn btn-primary btn-wide" type="submit" value='Next'></input>
             </form>
         </div>
     );

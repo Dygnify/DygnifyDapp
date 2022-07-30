@@ -20,6 +20,8 @@ const SUPPORTED_FORMATS = [
 ];
 
 export const CollateralDetailsValidationSchema = Yup.object().shape({
+    collateral_document_name: Yup.string().required().label('Document Name'),
+    collateral_document_description: Yup.string().required().label('Document Description'),
     collateral_document: Yup
         .mixed()
         .required("A file is required")

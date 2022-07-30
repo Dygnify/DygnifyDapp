@@ -91,7 +91,7 @@ const LoanFormModal = ({ handleForm }) => {
         const loan_info = { loan_name, loan_purpose }
         console.log(loanDetails);
 
-        setCurrentStep(prevCurrentStep => prevCurrentStep + 1);
+        // setCurrentStep(prevCurrentStep => prevCurrentStep + 1);
         const [collateralHash, loanInfoHash] = await onFileUpload(collateral_document, loan_info);
         loanDetails = { ...loanDetails, collateralHash, loanInfoHash }
         // sending data in backend to create opportunity with hash code
@@ -100,7 +100,6 @@ const LoanFormModal = ({ handleForm }) => {
     }
 
     const handleNext = (newData, value) => {
-        console.log(newData)
         if (value === true) {
             let temp = { ...formData, ...newData }
             setFormData(temp)

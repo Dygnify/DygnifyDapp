@@ -55,9 +55,9 @@ const LoanForm = () => {
     const path = useNavigate();
 
 
-    // stroing bigger data in IPFS
+    // storing bigger data in IPFS
     async function onFileUpload(selectedFile, loan_info) {
-        console.log(loan_info)
+        console.log(selectedFile)
         try {
             console.log("Upload called");
             let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
