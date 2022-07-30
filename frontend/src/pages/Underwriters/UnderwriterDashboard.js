@@ -1,13 +1,9 @@
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { PieChart } from "recharts";
 
 import Header from "../Investor/components/Header";
 
-import PoolCard from "./components/Cards/PoolCard";
-import PieChartNew from "./components/PieChartNew";
-
-const InvestorDashboardNew = () => {
+const UnderwriterDashboard = () => {
   return (
     <div style={{ backgroundColor: "#14171F" }}>
       <Header />
@@ -30,16 +26,13 @@ const InvestorDashboardNew = () => {
           <label htmlFor="dashboard-sidebar" className="drawer-overlay"></label>
           <ul className="menu p-4 overflow-y-auto w-60  text-white">
             <li>
-              <Link to="/investor-dashboardN">Overview</Link>
+              <Link to="/underwriterDashboard">Borrow request</Link>
             </li>
             <li>
-              <Link to="/investor-dashboardN/invest">Invest</Link>
+              <Link to="/investor-dashboardN/invest">Approval history</Link>
             </li>
             <li>
-              <Link to="/investor-dashboardN/withdraw">Withdraw</Link>
-            </li>
-            <li>
-              <Link to="/investor-dashboardN/viewPool">Transaction</Link>
+              <Link to="/underwriterDashboard/poolDetail">View Pool</Link>
             </li>
           </ul>
         </div>
@@ -48,4 +41,4 @@ const InvestorDashboardNew = () => {
   );
 };
 
-export default InvestorDashboardNew;
+export default UnderwriterDashboard;

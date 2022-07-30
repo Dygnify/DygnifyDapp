@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import GradientButton from "../../../tools/Button/GradientButton";
-import PrimaryButton from "../../../tools/Button/PrimaryButton";
+
+import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 
 const ViewPoolCard = () => {
   const data = [{ loan_amount: 45000, opportunity_name: "Bullet" }];
@@ -46,7 +46,7 @@ const ViewPoolCard = () => {
       className="card-body card text-white w-1/3 flex-row items-center"
     >
       <img
-        src="./assets/Dygnify_Image.png"
+        src="/assets/Dygnify_Image.png"
         style={{ width: 150, height: 150 }}
       />
       <div style={{ marginLeft: 32, width: 400 }}>

@@ -48,6 +48,14 @@ import Overview from "./pages/Borrower/Overview";
 import BorrowList from "./pages/Borrower/BorrowList";
 import InvestorDashboardNew from "./pages/Investor/InvestorDashboardNew";
 
+import InvestorOverview from "./pages/Investor/InvestorOverview";
+import Invest from "./pages/Investor/Invest";
+import Withdraw from "./pages/Investor/Withdraw";
+import ViewPool from "./pages/Investor/ViewPool";
+import UnderwriterDashboard from "./pages/Underwriters/UnderwriterDashboard";
+import BorrowRequest from "./pages/Underwriters/BorrowRequest";
+import PoolDetails from "./pages/Underwriters/PoolDetails";
+
 const Paths = () => {
   return (
     <BrowserRouter>
@@ -84,7 +92,19 @@ const Paths = () => {
         />
         <Route path="/loan-details/:id" element={<ApprovedOpportunities />} />
         <Route path="/investor-dashboard" element={<InvestorDashboard />} />
-        <Route path="/investor-dashboardN" element={<InvestorDashboardNew />} />
+        <Route path="/investor-dashboardN" element={<InvestorDashboardNew />}>
+          <Route index element={<InvestorOverview></InvestorOverview>}></Route>
+          <Route path="invest" element={<Invest></Invest>} />
+          <Route path="withdraw" element={<Withdraw></Withdraw>} />
+          <Route path="viewPool" element={<ViewPool></ViewPool>} />
+        </Route>
+        <Route
+          path="/underwriterDashboard"
+          element={<UnderwriterDashboard></UnderwriterDashboard>}
+        >
+          <Route index element={<BorrowRequest></BorrowRequest>}></Route>
+          <Route path="poolDetail" element={<PoolDetails></PoolDetails>} />
+        </Route>
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/transaction-history" element={<TransactionHistory />} />
         <Route path="/toolTest" element={<ToolTest />} />
