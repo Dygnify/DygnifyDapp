@@ -15,7 +15,6 @@ library ConfigOptions {
 
     enum Numbers {
         LeverageRatio,
-        BackerFee,
         DygnifyFee,
         overDueFee,
         JuniorSubpoolFee

@@ -14,6 +14,8 @@ interface IOpportunityPool {
         uint256 depositedAmount;
         bool isPoolLocked;
         uint256 fundsLockedUntil;
+        uint256 yieldGenerated;
+        uint256 overdueGenerated;
     }
 
     function initialize(
@@ -31,3 +33,5 @@ interface IOpportunityPool {
 
     function deposit(uint8 _subpoolId, uint256 amount) external;
 }
+
+

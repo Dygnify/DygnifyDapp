@@ -10,8 +10,6 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "./OpportunityOrigination.sol";
 
-//locking senior pool and junior pool
-
 contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     DygnifyConfig public dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
@@ -35,8 +33,15 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public poolBalance;
     uint256 public repaymentStartTime;
     uint256 public repaymentCounter = 1;
+    uint256 public totalRepayments;
     uint256 public emiAmount;
+    uint256 public amountWithoutEMI;
     uint256 public dailyInterestRate;
+
+    uint256 public seniorYieldPerecentage;
+    uint256 public juniorYieldPerecentage; 
+    uint256 public seniorOverduePerecentage;
+    uint256 public juniorOverduePerecentage; 
 
     bool public isDrawdownsPaused;
 
@@ -90,6 +95,16 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         _setRoleAdmin(POOL_LOCKER_ROLE, ADMIN_ROLE);
         _setupRole(POOL_LOCKER_ROLE, owner);
 
+        opportunityID = _opportunityID;
+        opportunityInfo = _opportunityInfo;
+        loanType = _loanType;
+        loanAmount = _loanAmount;
+        loanTenureInDays = _loanTenureInDays;
+        loanInterest = _loanInterest;
+        paymentFrequencyInDays = _paymentFrequencyInDays;
+        collateralDocument = _collateralDocument;
+        capitalLoss = _capitalLoss;
+
         if (dygnifyConfig.getFlag(_opportunityID) == false) {
             // follow 4x leverage ratio
             seniorSubpoolDetails.isPoolLocked = true;
@@ -105,18 +120,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             seniorSubpoolDetails.totalDepositable = loanAmount;
         }
 
-        opportunityID = _opportunityID;
-        opportunityInfo = _opportunityInfo;
-        loanType = _loanType;
-        loanAmount = _loanAmount;
-        loanTenureInDays = _loanTenureInDays;
-        loanInterest = _loanInterest;
-        paymentFrequencyInDays = _paymentFrequencyInDays;
-        collateralDocument = _collateralDocument;
-        capitalLoss = _capitalLoss;
-
         uint256 total_Repayment = loanAmount.add(
-            loanAmount.mul(loanInterest.div(100)).div(10**18)
+            loanAmount.mul(loanInterest.div(100)).div(10**6)
         );
         emiAmount = total_Repayment.div(
             loanTenureInDays.div(paymentFrequencyInDays)
@@ -124,7 +129,21 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint256 effectiveInterest = loanInterest.add(
             dygnifyConfig.getOverDueFee()
         );
-        dailyInterestRate = effectiveInterest.div(loanTenureInDays).div(86400);
+        dailyInterestRate = effectiveInterest.div(loanTenureInDays);
+
+        amountWithoutEMI =  loanAmount
+            .div(loanTenureInDays
+            .div(paymentFrequencyInDays)
+            .mul(10**6))
+            .mul(10**6);
+        
+        totalRepayments = loanTenureInDays.div(paymentFrequencyInDays);
+        
+        (seniorYieldPerecentage, juniorYieldPerecentage) = getYieldPercentage();
+        
+        (seniorOverduePerecentage, juniorOverduePerecentage) = getOverDuePercentage();
+        bool success = usdcToken.approve(address(this), 2**256 - 1);
+        require(success, "Failed to approve USDC");
     }
 
     function deposit(uint8 _subpoolId, uint256 amount)
@@ -260,64 +279,213 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     }
 
     function repayment() public nonReentrant whenNotPaused onlyBorrower {
+        require(repaymentCounter <= totalRepayments, "Repayment Process is done");
         require(
             opportunityOrigination.isDrawdown(opportunityID) == true,
             "Funds in opportunity haven't drawdown yet."
         );
+        if(repaymentCounter == totalRepayments){
+            opportunityOrigination.markRepaid(opportunityID);
+        }
         uint256 amount = emiAmount;
         uint256 currentTime = block.timestamp;
         uint256 currentRepaymentDue = nextRepaymentTime();
         uint256 overDueFee;
         if (currentTime <= currentRepaymentDue) {} else {
-            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue);
+            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(86400);
             overDueFee = overDueSeconds
                 .mul(dailyInterestRate.div(100))
                 .mul(emiAmount)
-                .div(10**18);
-            amount = amount.add(overDueFee);
+                .div(10**6);
         }
-        uint256 amountWithoutEMI = loanTenureInDays
-            .div(paymentFrequencyInDays)
-            .mul(10**18);
 
         uint256 temp = amountWithoutEMI.div(
-            dygnifyConfig.getLeverageRatio() + 1
+            dygnifyConfig.getLeverageRatio().add(1)
         );
-        seniorSubpoolDetails.depositedAmount = temp.mul(
+
+        uint tempSenior = temp.mul(
             dygnifyConfig.getLeverageRatio()
         );
-        juniorSubpoolDetails.depositedAmount = temp;
+        seniorSubpoolDetails.depositedAmount = seniorSubpoolDetails.depositedAmount.add(tempSenior);
+        juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails.depositedAmount.add(temp);
 
-        //yield distribution (not finished yet)
-        uint256 yield = amount - amountWithoutEMI;
-        uint256 one = 10**18;
-        uint256 juniorYieldPerecetage = loanInterest
+        //yield distribution 
+
+        seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails.yieldGenerated
+            .add(
+                seniorYieldPerecentage.mul(tempSenior).div(10**6)
+            );
+
+        juniorSubpoolDetails.yieldGenerated =  juniorSubpoolDetails.yieldGenerated
+            .add(
+                juniorYieldPerecentage.mul(temp).div(10**6)
+            );
+
+        //overdue Amount distribution   
+
+        juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails.overdueGenerated.add(juniorOverduePerecentage.mul(overDueFee).div(10**6));
+        seniorSubpoolDetails.overdueGenerated = seniorSubpoolDetails.overdueGenerated.add(seniorOverduePerecentage.mul(overDueFee).div(10**6));
+        
+        amount = amount.add(overDueFee);
+        poolBalance = poolBalance.add(amount);
+        repaymentCounter = repaymentCounter.add(1);
+        
+        usdcToken.safeTransferFrom(msg.sender, address(this), amount);
+    }
+    
+
+    function withdrawAll(uint8 _subpoolId) 
+        public
+        nonReentrant
+        whenNotPaused 
+        returns(uint256) {
+        require(
+            _subpoolId <= uint8(Subpool.SeniorSubpool),
+            "SubpoolID : out of range"
+        );
+        uint256 amount;
+            
+        if (_subpoolId == uint8(Subpool.SeniorSubpool)) {
+            require(
+                seniorSubpoolDetails.isPoolLocked == false,
+                "Senior Subpool is locked"
+            );
+            require(
+                hasRole(SENIOR_POOL_ROLE, msg.sender),
+                "You must have Senior pool role in order to deposit in senior subpool"
+            );
+            require(
+                seniorSubpoolDetails.depositedAmount > 0,
+                "balance of senior subpool is zero currently"
+            );
+            require(
+                seniorSubpoolDetails.yieldGenerated > 0,
+                "yield generated of senior subpool is zero currently"
+            );
+            amount = seniorSubpoolDetails.depositedAmount
+                .add(seniorSubpoolDetails.yieldGenerated);
+            
+            if(seniorSubpoolDetails.overdueGenerated > 0){
+                amount = amount.add(seniorSubpoolDetails.overdueGenerated);
+                seniorSubpoolDetails.overdueGenerated = 0;
+            }
+            seniorSubpoolDetails.depositedAmount = 0;
+            seniorSubpoolDetails.yieldGenerated = 0;
+        } else if (_subpoolId == uint8(Subpool.JuniorSubpool)) {
+            require(
+                juniorSubpoolDetails.isPoolLocked == false,
+                "Junior Subpool is locked"
+            );
+            require(
+                isStaking[msg.sender] ==
+                    true &&
+                    stakingBalance[msg.sender] > 0,
+                "zero amount to deposit."
+            );
+            require(
+                stakingBalance[msg.sender] <= juniorSubpoolDetails.depositedAmount,
+                "currently junior subpool don't have Liquidity"
+            );
+            uint256 yieldGatherd = juniorYieldPerecentage.mul(stakingBalance[msg.sender]).div(10**6);
+            require(
+                yieldGatherd <= juniorSubpoolDetails.yieldGenerated,
+                "currently junior subpool don't have Liquidity"
+            );
+            juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
+                .depositedAmount
+                .sub(stakingBalance[msg.sender]);
+            juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
+                .yieldGenerated
+                .sub(yieldGatherd);
+
+            isStaking[msg.sender] = false;
+            stakingBalance[msg.sender] = 0;
+            amount = stakingBalance[msg.sender].add(yieldGatherd);
+
+            if(juniorSubpoolDetails.overdueGenerated > 0){
+                uint overdueGathered = (juniorOverduePerecentage.mul(stakingBalance[msg.sender])).div(10**6);
+                amount = amount.add(overdueGathered);
+                juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails.overdueGenerated.sub(overdueGathered);
+            }
+        }
+
+        poolBalance = poolBalance.sub(amount);
+        usdcToken.safeTransferFrom(address(this), msg.sender, amount);
+        return amount;
+    }
+
+    function getRepaymentAmount() public view returns(uint256) {
+        require(repaymentCounter <= totalRepayments, "Repayment Process is done");
+        require(
+            opportunityOrigination.isDrawdown(opportunityID) == true,
+            "Funds in opportunity haven't drawdown yet."
+        );
+
+        uint256 amount = emiAmount;
+        uint256 currentTime = block.timestamp;
+        uint256 currentRepaymentDue = nextRepaymentTime();
+        uint256 overDueFee;
+        if (currentTime <= currentRepaymentDue) {} else {
+            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(86400);
+            overDueFee = overDueSeconds
+                .mul(dailyInterestRate.div(100))
+                .mul(emiAmount)
+                .div(10**6);
+        }
+
+        amount = amount.add(overDueFee);
+        return amount;
+    }
+
+    function getYieldPercentage()public view returns (uint256, uint256) {
+        
+        uint256 one = 10**6;
+        uint256 _seniorYieldPerecentage = loanInterest
             .div(100)
             .mul(
                 one.sub(dygnifyConfig.getDygnifyFee()).sub(
                     dygnifyConfig.getJuniorSubpoolFee()
                 )
             )
-            .div(10**18);
-        uint256 seniorYieldPerecetage = loanInterest
+            .div(10**6);
+        uint256 _juniorYieldPerecentage = loanInterest
             .div(100)
             .mul(
                 one.sub(dygnifyConfig.getDygnifyFee()).add(
-                    dygnifyConfig.getJuniorSubpoolFee().mul(4)
+                    dygnifyConfig.getJuniorSubpoolFee()
+                    .mul(dygnifyConfig.getLeverageRatio())
                 )
             )
-            .div(10**18);
+            .div(10**6);
+        return (_seniorYieldPerecentage, _juniorYieldPerecentage);
+    }
 
-        poolBalance = poolBalance.add(amount);
-        repaymentCounter = repaymentCounter.add(1);
-        usdcToken.safeTransferFrom(address(this), msg.sender, amount);
+    function getOverDuePercentage()public view returns (uint256, uint256) {
+        
+        uint256 yield = emiAmount - amountWithoutEMI;
+
+        uint256 juniorInvestment = amountWithoutEMI.div(dygnifyConfig.getLeverageRatio() + 1);
+        uint256 seniorInvestment = juniorInvestment.mul(dygnifyConfig.getLeverageRatio());
+
+        uint256 _seniorOverDuePerecentage = (seniorInvestment.mul(seniorYieldPerecentage)).div(yield); 
+        uint256 _juniorOverDuePerecentage = (juniorInvestment.mul(juniorYieldPerecentage)).div(yield);
+        return (_seniorOverDuePerecentage, _juniorOverDuePerecentage);
     }
 
     function nextRepaymentTime() public view returns (uint256) {
+        require(repaymentCounter <= totalRepayments, "Repayment Process is done");
         uint256 nextRepaymentDue = repaymentStartTime.add(
             repaymentCounter.mul(1 days * paymentFrequencyInDays)
         );
         return nextRepaymentDue;
+    }
+
+    function getSeniorTotalDepositable() external view returns (uint256){
+        return seniorSubpoolDetails.totalDepositable;
+    }
+
+    function getSeniorProfit() external view returns (uint256){
+        return seniorSubpoolDetails.yieldGenerated + seniorSubpoolDetails.overdueGenerated;
     }
 
     modifier onlyBorrower() {

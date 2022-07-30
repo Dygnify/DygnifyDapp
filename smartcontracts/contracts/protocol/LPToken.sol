@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract LPToken is Initializable, AccessControlUpgradeable, ERC20Upgradeable  {
     bytes32 public constant OWNER = keccak256("OWNER");
+    uint256 public totalShares;
 
     function initialize(address _stakingContract) external initializer {
         __ERC20_init("DygnifyX","DX");
@@ -16,11 +17,13 @@ contract LPToken is Initializable, AccessControlUpgradeable, ERC20Upgradeable  {
 
     function mint(address _to, uint256 amount)public {
         require(hasRole(OWNER, msg.sender), "Caller is not a Owner");
+        totalShares = totalShares + amount;
         _mint(_to,amount);
     }
 
     function burn(address _to, uint256 amount)public {
         require(hasRole(OWNER, msg.sender), "Caller is not a Owner");
+        totalShares = totalShares - amount;
         _burn(_to,amount);
     }
 }

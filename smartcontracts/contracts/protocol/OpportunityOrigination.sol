@@ -253,7 +253,7 @@ contract OpportunityOrigination is
             "Only Opportunity Pool can mark it as drawdown"
         );
         require(
-            opportunityToId[id].opportunityPoolAddress == address(0),
+            opportunityToId[id].opportunityPoolAddress != address(0),
             "Opportunity Pool is not created yet"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.Drawndown;
@@ -266,5 +266,48 @@ contract OpportunityOrigination is
             uint8(OpportunityStatus.Drawndown)
         ) return true;
         else return false;
+    }
+
+    function markRepaid(bytes32 id) external override {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        require(
+            opportunityToId[id].opportunityStatus == OpportunityStatus.Drawndown,
+            "Opportunity pool is haven't drawdown yet."
+        );
+        require(
+            msg.sender == opportunityToId[id].opportunityPoolAddress,
+            "Only Opportunity Pool can mark it as repaid"
+        );
+        require(
+            opportunityToId[id].opportunityPoolAddress != address(0),
+            "Opportunity Pool is not created yet"
+        );
+        opportunityToId[id].opportunityStatus = OpportunityStatus.Repaid;
+    }
+
+    function isRepaid(bytes32 id) public view returns (bool) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        if (
+            uint8(opportunityToId[id].opportunityStatus) ==
+            uint8(OpportunityStatus.Repaid)
+        ) return true;
+        else return false;
+    }
+
+    function isActive(bytes32 id) external view returns (bool) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        if (
+            uint8(opportunityToId[id].opportunityStatus) ==
+            uint8(OpportunityStatus.Active)
+        ) return true;
+        else return false;
+    }
+
+    function getOpportunityPoolAddress(bytes32 id) external view returns (address) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        require(uint8(opportunityToId[id].opportunityStatus) == uint8(OpportunityStatus.Active), "Opportunity must be active");
+        address poolAddress = opportunityToId[id].opportunityPoolAddress;
+        require(poolAddress != address(0), "Opportunity pool address haven't created yet" );
+        return poolAddress;
     }
 }

@@ -64,4 +64,6 @@ interface IOpportunityOrigination {
         returns (address pool);
 
     function markDrawDown(bytes32 id) external;
+
+    function markRepaid(bytes32 id) external;
 }
