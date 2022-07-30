@@ -13,4 +13,7 @@ import WithdrawCard from "./investor/components/Cards/WithdrawCard";
 import DrawdownModal from "./tools/Modal/DrawdownModal";
 import InvestModal from "./investor/components/Modal/InvestModal";
 
-ReactDOM.render(<DrawdownCard />, document.getElementById("root"));
+import InvestorDashboardNew from "./pages/Investor/InvestorDashboardNew";
+import BorrowChart from "./components/charts/BorrowChart";
+
+ReactDOM.render(<Paths />, document.getElementById("root"));

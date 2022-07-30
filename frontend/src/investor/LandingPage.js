@@ -3,49 +3,12 @@ import { Box, Button, Typography, Stack, Link } from "@mui/material";
 import Company from "./components/Company";
 import LockedValueChart from "./components/LockedValueChart";
 import GradientButton from "../tools/Button/GradientButton";
+import Header from "./components/Header";
 
 const LandingPage = () => {
   return (
     <div className="bg-[#000000]">
-      <Box
-        sx={{
-          height: "90px",
-          backgroundColor: "#000000",
-          borderEndEndRadius: "12px",
-          borderEndStartRadius: "12px",
-          px: "40px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div>
-          <img
-            style={{ width: "150px", height: "80px", objectFit: "contain" }}
-            src="./assets/logo.png"
-            alt="company logo"
-          />
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            textAlign: "center",
-          }}
-        >
-          <div>
-            <Typography variant="body2">Switch to</Typography>
-            <Button
-              size="small"
-              sx={{ backgroundColor: "#E5E5E5", borderRadius: "120px" }}
-            >
-              {process.env.REACT_APP_TOKEN_NAME}
-            </Button>
-          </div>
-          <GradientButton>Connect Wallet</GradientButton>
-        </div>
-      </Box>
+      <Header />
 
       <div className="flex-col items-center" style={{ display: "flex" }}>
         <h1

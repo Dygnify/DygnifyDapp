@@ -46,6 +46,7 @@ import ToolTest from "./tools/ToolTest";
 import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
 import Overview from "./pages/Borrower/Overview";
 import BorrowList from "./pages/Borrower/BorrowList";
+import InvestorDashboardNew from "./pages/Investor/InvestorDashboardNew";
 
 const Paths = () => {
   return (
@@ -83,6 +84,7 @@ const Paths = () => {
         />
         <Route path="/loan-details/:id" element={<ApprovedOpportunities />} />
         <Route path="/investor-dashboard" element={<InvestorDashboard />} />
+        <Route path="/investor-dashboardN" element={<InvestorDashboardNew />} />
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/transaction-history" element={<TransactionHistory />} />
         <Route path="/toolTest" element={<ToolTest />} />

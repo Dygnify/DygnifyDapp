@@ -73,12 +73,12 @@ const DrawdownCard = ({ data }) => {
           //   data={data}
           //   handleDrawdown={handleDrawdown}
           // />
-          // <WithdrawFundsModal
-          //   key={data?.id}
-          //   data={data}
-          //   handleDrawdown={handleDrawdown}
-          // />
-          <ProcessingFundsModal />
+          <WithdrawFundsModal
+            key={data?.id}
+            data={data}
+            handleDrawdown={handleDrawdown}
+          />
+          // <ProcessingFundsModal />
         )}
       </div>
     </div>

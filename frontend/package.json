@@ -20,6 +20,7 @@
     "material-ui-phone-number": "^3.0.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
+    "react-google-charts": "^4.0.0",
     "react-loading-overlay": "^1.0.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
