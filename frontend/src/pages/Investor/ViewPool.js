@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import GradientButton from "../../tools/Button/GradientButton";
+import DueDateCard from "./components/Cards/DueDateCard";
 
 const ViewPool = () => {
   const OP = {
     estimatedAPY: "24%",
   };
+  const [dueList, setDueList] = useState([]);
 
   const info = [
     {
@@ -14,6 +16,13 @@ const ViewPool = () => {
     { label: "Payment Tenure", value: "4 Years" },
     { label: "Drawdown Cap", value: "$100,000" },
   ];
+
+  useEffect(() => {
+    fetch("/dueList.json")
+      .then((res) => res.json())
+      .then((data) => setDueList(data));
+  }, [dueList]);
+
   return (
     <div>
       <div
@@ -216,7 +225,15 @@ const ViewPool = () => {
         </div>
       </div>
 
-      <div>Recent Activity</div>
+      <div style={{ marginTop: "50px", fontSize: 19, marginBottom: "20px" }}>
+        Recent Activity
+      </div>
+
+      <div>
+        {dueList.map((item) => (
+          <DueDateCard key={dueList.id} data={item} />
+        ))}
+      </div>
 
       <div style={{ display: "flex" }} className="flex-col w-1/2">
         <div
@@ -254,6 +271,11 @@ const ViewPool = () => {
           exercitation incididunt aliquip deserunt reprehenderit...view more{" "}
         </div>
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

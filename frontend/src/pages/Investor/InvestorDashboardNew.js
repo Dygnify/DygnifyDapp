@@ -39,7 +39,15 @@ const InvestorDashboardNew = () => {
               <Link to="/investor-dashboardN/withdraw">Withdraw</Link>
             </li>
             <li>
-              <Link to="/investor-dashboardN/viewPool">Transaction</Link>
+              <Link to="/investor-dashboardN/transaction">Transaction</Link>
+            </li>
+            <li>
+              <Link to="/investor-dashboardN/viewPool">View Pools</Link>
+            </li>
+            <li>
+              <Link to="/investor-dashboardN/viewSeniorPool">
+                View Senior Pools
+              </Link>
             </li>
           </ul>
         </div>

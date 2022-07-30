@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import TransactionsCard from "../Underwriters/Components/TransactionsCard";
+import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
 
-const ApprovalHistory = () => {
+const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   useEffect(() => {
-    fetch("/transactionStatus.json")
+    fetch("/transactions.json")
       .then((res) => res.json())
       .then((data) => setTransactions(data));
   }, [transactions]);
@@ -21,10 +21,12 @@ const ApprovalHistory = () => {
           }}
           className="collapse-title text-md font-normal justify-around w-full"
         >
-          <p className="w-1/6 text-center">Pool Name</p>
-          <p className="w-1/6 text-center">Company Name</p>
-          <p className="w-1/6 text-center">Created On</p>
-          <p className="w-1/6 text-center">Decision</p>
+          <p className="w-1/6 text-center">Pool</p>
+          <p className="w-1/6 text-center">Date</p>
+          <p className="w-1/6 text-center">Transaction Type</p>
+          <p className="w-1/6 text-center">Amount</p>
+          <p className="w-1/6 text-center">Status</p>
+          <p className="w-1/6 text-center">View on Explorer</p>
         </div>
       </div>
       <div>
@@ -36,4 +38,4 @@ const ApprovalHistory = () => {
   );
 };
 
-export default ApprovalHistory;
+export default Transactions;

@@ -29,7 +29,9 @@ const UnderwriterDashboard = () => {
               <Link to="/underwriterDashboard">Borrow request</Link>
             </li>
             <li>
-              <Link to="/investor-dashboardN/invest">Approval history</Link>
+              <Link to="/underwriterDashboard/approvalHistory">
+                Approval history
+              </Link>
             </li>
             <li>
               <Link to="/underwriterDashboard/poolDetail">View Pool</Link>

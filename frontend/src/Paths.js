@@ -55,6 +55,9 @@ import ViewPool from "./pages/Investor/ViewPool";
 import UnderwriterDashboard from "./pages/Underwriters/UnderwriterDashboard";
 import BorrowRequest from "./pages/Underwriters/BorrowRequest";
 import PoolDetails from "./pages/Underwriters/PoolDetails";
+import ApprovalHistory from "./pages/Underwriters/ApprovalHistory";
+import Transactions from "./pages/Investor/Transactions";
+import ViewSeniorPool from "./pages/Investor/ViewSeniorPool";
 
 const Paths = () => {
   return (
@@ -96,7 +99,12 @@ const Paths = () => {
           <Route index element={<InvestorOverview></InvestorOverview>}></Route>
           <Route path="invest" element={<Invest></Invest>} />
           <Route path="withdraw" element={<Withdraw></Withdraw>} />
+          <Route path="transaction" element={<Transactions></Transactions>} />
           <Route path="viewPool" element={<ViewPool></ViewPool>} />
+          <Route
+            path="viewSeniorPool"
+            element={<ViewSeniorPool></ViewSeniorPool>}
+          />
         </Route>
         <Route
           path="/underwriterDashboard"
@@ -104,6 +112,10 @@ const Paths = () => {
         >
           <Route index element={<BorrowRequest></BorrowRequest>}></Route>
           <Route path="poolDetail" element={<PoolDetails></PoolDetails>} />
+          <Route
+            path="approvalHistory"
+            element={<ApprovalHistory></ApprovalHistory>}
+          />
         </Route>
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/transaction-history" element={<TransactionHistory />} />
