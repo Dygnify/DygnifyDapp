@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getOpportunityAt } from "../../components/transaction/TransactionHelper";
 import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
+import { retrieveFiles } from "../../services/web3storageIPFS";
 
 
 const ApprovedOpportunities = () => {
@@ -32,7 +33,7 @@ const ApprovedOpportunities = () => {
     console.log(target)
     const hash = target?.opportunity_info;
     console.log(hash)
-    const info = ExtractIPFSdataFromHash(hash);
+    const info = retrieveFiles(hash);
     console.log(info)
 
     return (

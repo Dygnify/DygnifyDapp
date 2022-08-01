@@ -24,11 +24,6 @@ export const CollateralDetailsValidationSchema = Yup.object().shape({
     collateral_document_description: Yup.string().required().label('Document Description'),
     collateral_document: Yup
         .mixed()
-        .required("A file is required")
-        .test(
-            "fileFormat",
-            "Unsupported Format, Supported Formats: jpg/jpeg/png/gif/pdf/doc/docx",
-            value => value && SUPPORTED_FORMATS.includes(value.type)
-        ),
+        .required("A file is required"),
     capital_loss: Yup.number().positive().min(0).max(100).label('First loss capital')
 })

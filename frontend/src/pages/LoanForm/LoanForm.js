@@ -1,17 +1,14 @@
 import { makeStyles, Step, StepLabel, Stepper, Typography } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CollateralDocuments from './CollateralDocuments';
 import ConfirmSubmission from './ConfirmSubmission';
 import LoanDetails from './LoanDetails';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingIcon from '@mui/icons-material/Pending';
 import { createOpportunity } from '../../components/transaction/TransactionHelper';
-import axiosHttpService from '../../services/axioscall';
-import { pinataCall, uploadFileToIPFS } from '../../services/PinataIPFSOptions';
 import { Button } from '@mui/material';
-import { useHistory, useNavigate } from 'react-router-dom';
-
+import { storeFiles, makeFileObjects } from '../../services/web3storageIPFS';
 
 
 const useStyles = makeStyles({
@@ -55,30 +52,26 @@ const LoanForm = () => {
     const path = useNavigate();
 
 
-    // storing bigger data in IPFS
-    async function onFileUpload(selectedFile, loan_info) {
-        console.log(selectedFile)
+    // stroing bigger data in IPFS
+    async function onFileUpload(collateral_documents, loan_info) {
+        console.log(loan_info)
         try {
             console.log("Upload called");
-            let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
-            console.log(ipfsUploadRes);
 
-            // make metadata for collateral document
-            const metadata = {};
-            metadata.imageHash = ipfsUploadRes.res.IpfsHash;
-            metadata.PinSize = ipfsUploadRes.res.PinSize;
-            metadata.Timestamp = ipfsUploadRes.res.Timestamp;
-            const collateralURI = await pinataCall(metadata);
+            let collateralHash = await storeFiles(collateral_documents);
+
+
 
             // make metadata for loan info
-            const metadata2 = {};
-            metadata2.loanName = loan_info.loan_name
-            metadata2.loanPurpose = loan_info.loan_purpose;
-            metadata2.company_name = company.company_name;
-            metadata2.company_details = company.company_details;
-            const loanInfoURI = await pinataCall(metadata2);
+            const metadata = {};
+            metadata.loanName = loan_info.loan_name
+            metadata.loanPurpose = loan_info.loan_purpose;
+            metadata.company_name = company.company_name;
+            metadata.company_details = company.company_details;
+            let loanInfoFile = makeFileObjects(metadata, `${collateralHash}.json`);
+            let loanInfoHash = await storeFiles(loanInfoFile);
 
-            return [collateralURI, loanInfoURI]
+            return [collateralHash, loanInfoHash]
         } catch (error) {
             console.log(error);
         }
@@ -91,14 +84,14 @@ const LoanForm = () => {
 
         let { loan_name, loan_type, loan_amount, loan_purpose, loan_tenure, loan_interest, capital_loss, payment_frequency, ...rest } = data;
         loan_tenure = loan_tenure * 30;
-        const collateral_document = rest.collateral_document;
+        const collateral_documents = rest.collateral_document;
         let loanDetails = { loan_type, loan_amount, loan_tenure, loan_interest, payment_frequency, capital_loss }
-        console.log(collateral_document);
+        console.log(collateral_documents);
         const loan_info = { loan_name, loan_purpose }
         console.log(loanDetails);
 
-        setActiveStep(prevActiveStep => prevActiveStep + 1);
-        const [collateralHash, loanInfoHash] = await onFileUpload(collateral_document, loan_info);
+        // setActiveStep(prevActiveStep => prevActiveStep + 1);
+        const [collateralHash, loanInfoHash] = await onFileUpload(collateral_documents, loan_info);
         loanDetails = { ...loanDetails, collateralHash, loanInfoHash }
         // sending data in backend to create opportunity with hash code
         await createOpportunity(loanDetails);

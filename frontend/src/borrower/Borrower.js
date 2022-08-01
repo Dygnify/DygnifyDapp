@@ -1,12 +1,9 @@
 import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
-import OpportunityTable from "./OpportunityTable.js";
-// import DrawdownCard from "./DrawdownCard.js";
+import DrawdownCard from "./DrawdownCard.js";
 import OpportunityStatus from "./OpportunityStatus.js";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
 import { useNavigate } from "react-router-dom";
-// import RepaymentCard from "./RepaymentCard.js";
-import DrawdownCard from "../tools/Card/DrawdownCard.js";
 import RepaymentCard from "../tools/Card/RepaymentCard.js";
 
 const Borrower = () => {
