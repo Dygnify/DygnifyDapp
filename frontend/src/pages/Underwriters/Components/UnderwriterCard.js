@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import PrimaryButton from "../../../../tools/Button/PrimaryButton";
+import PrimaryButton from "../../../tools/Button/PrimaryButton";
 
-const WithdrawCard = () => {
+const UnderwriterCard = () => {
   const data = {
     poolSize: "$500,000.00",
-    capitalInvested: "$450,000.00",
-    estimatedApy: "24%",
+    capitalInvested: "24%",
+    estimatedApy: "24/07/2022",
     availableForWithdrawl: "$580,000",
   };
 
@@ -58,7 +58,7 @@ const WithdrawCard = () => {
             style={{ display: "flex", fontSize: 16 }}
             className="justify-start"
           >
-            Capital Invested
+            Interest Rate
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
             {data.capitalInvested}
@@ -69,30 +69,19 @@ const WithdrawCard = () => {
             style={{ display: "flex", fontSize: 16 }}
             className="justify-start"
           >
-            Estimated APY
+            Created On
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
             {data.estimatedApy}
           </p>
         </div>
-        <div style={{ display: "flex" }} className="mb-1">
-          <p
-            style={{ display: "flex", fontSize: 16 }}
-            className="justify-start"
-          >
-            Available for Withdrawal
-          </p>
-          <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.availableForWithdrawl}
-          </p>
-        </div>
 
         <div style={{ marginTop: 28 }}>
-          <PrimaryButton disable={false}>Withdraw Funds</PrimaryButton>
+          <PrimaryButton disable={false}>View Details</PrimaryButton>
         </div>
       </div>
     </div>
   );
 };
 
-export default WithdrawCard;
+export default UnderwriterCard;

@@ -1,8 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Link } from "@mui/material";
 import GradientButton from "../../../tools/Button/GradientButton";
+import { isConnected } from "../../../components/navbar/NavBarHelper";
+import PrimaryButton from "../../../tools/Button/PrimaryButton";
 
 const Header = () => {
+  const [status, setStatus] = useState(false);
+
+  async function requestAccount() {
+    const result = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    console.log(result);
+    //put a regex here to read result and set Status
+    //store the wallet address in contexts
+  }
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      const getStatus = await isConnected();
+      console.log(getStatus);
+      if (getStatus) return setStatus(true);
+      setStatus(false);
+      console.log(isConnected());
+    };
+    fetchStatus();
+  }, []);
+
   return (
     <div
       style={{
@@ -25,7 +49,11 @@ const Header = () => {
         />
       </div>
 
-      <GradientButton>Connect Wallet</GradientButton>
+      {!status ? (
+        <GradientButton onClick={requestAccount}>Connect Wallet</GradientButton>
+      ) : (
+        <PrimaryButton>Connected</PrimaryButton>
+      )}
     </div>
   );
 };

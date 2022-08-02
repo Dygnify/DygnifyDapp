@@ -47,7 +47,7 @@ const Withdraw = () => {
         <h2 style={{ fontSize: 24 }} className=" mb-5">
           Senior pools
         </h2>
-        <div style={{ display: "flex" }} className="gap-4">
+        <div style={{ display: "flex" }} className="gap-4 w-1/2">
           {repayment.map((item) => (
             <WithdrawCard />
           ))}

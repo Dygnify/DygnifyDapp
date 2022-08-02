@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import InvestModal from "../Investor/components/Modal/InvestModal";
 import GradientButton from "../../tools/Button/GradientButton";
 import DueDateCard from "./components/Cards/DueDateCard";
 
@@ -7,6 +8,11 @@ const ViewPool = () => {
     estimatedAPY: "24%",
   };
   const [dueList, setDueList] = useState([]);
+
+  const [selected, setSelected] = useState(null);
+  const handleDrawdown = () => {
+    setSelected(null);
+  };
 
   const info = [
     {
@@ -145,7 +151,13 @@ const ViewPool = () => {
               <h2 style={{ fontSize: 28 }}>30 Days</h2>
             </div>
 
-            <GradientButton className={"w-full mt-20"}>Invest</GradientButton>
+            <GradientButton
+              className={"w-full mt-20"}
+              onClick={() => setSelected(true)}
+            >
+              Invest
+            </GradientButton>
+            {selected && <InvestModal handleDrawdown={handleDrawdown} />}
           </div>
         </div>
       </div>

@@ -4,8 +4,11 @@ import Company from "./components/Company";
 import LockedValueChart from "./components/LockedValueChart";
 import GradientButton from "../tools/Button/GradientButton";
 import Header from "./components/Header";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const path = useNavigate();
+
   return (
     <div className="bg-[#000000]">
       <Header />
@@ -80,7 +83,9 @@ const LandingPage = () => {
             Invest USDC in real-world-assets and earn attractive, risk adjusted
             returns.
           </h6>
-          <GradientButton>Invest</GradientButton>
+          <GradientButton onClick={() => path("/investor-dashboardN")}>
+            Invest
+          </GradientButton>
         </div>
         <div
           className="w-1/2 flex-col justify-center items-center"
@@ -104,6 +109,9 @@ const LandingPage = () => {
           <GradientButton>Borrow</GradientButton>
         </div>
       </div>
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

@@ -95,6 +95,7 @@ const Paths = () => {
         />
         <Route path="/loan-details/:id" element={<ApprovedOpportunities />} />
         <Route path="/investor-dashboard" element={<InvestorDashboard />} />
+
         <Route path="/investor-dashboardN" element={<InvestorDashboardNew />}>
           <Route index element={<InvestorOverview></InvestorOverview>}></Route>
           <Route path="invest" element={<Invest></Invest>} />
@@ -106,6 +107,7 @@ const Paths = () => {
             element={<ViewSeniorPool></ViewSeniorPool>}
           />
         </Route>
+
         <Route
           path="/underwriterDashboard"
           element={<UnderwriterDashboard></UnderwriterDashboard>}

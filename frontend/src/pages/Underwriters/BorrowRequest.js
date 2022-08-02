@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 import ViewPoolCard from "../Investor/components/Cards/ViewPoolCard";
+import UnderwriterCard from "./Components/UnderwriterCard";
 
 const BorrowRequest = () => {
   const [data, setData] = useState([]);
@@ -37,9 +38,9 @@ const BorrowRequest = () => {
       </div>
 
       <div className="mb-16 ">
-        <div style={{ display: "flex" }} className="gap-4">
+        <div style={{ display: "flex" }} className="gap-4 w-1/2">
           {repayment.map((item) => (
-            <ViewPoolCard />
+            <UnderwriterCard />
           ))}
         </div>
       </div>

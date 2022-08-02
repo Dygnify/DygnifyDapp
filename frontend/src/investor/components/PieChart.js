@@ -46,17 +46,17 @@ const renderActiveShape = (props) => {
       outerRadius: outerRadius,
       startAngle: startAngle,
       endAngle: endAngle,
-      fill: fill,
-    }),
-    React.createElement(Sector, {
-      cx: cx,
-      cy: cy,
-      startAngle: startAngle,
-      endAngle: endAngle,
-      innerRadius: outerRadius + 6,
-      outerRadius: outerRadius + 10,
-      fill: fill,
+      fill: "#5375FE",
     })
+    // React.createElement(Sector, {
+    //   cx: cx,
+    //   cy: cy,
+    //   startAngle: startAngle,
+    //   endAngle: endAngle,
+    //   innerRadius: outerRadius + 6,
+    //   outerRadius: outerRadius + 10,
+    //   fill: fill,
+    // })
     // React.createElement("path", {
     //   d: `M${sx},${sy}L${mx},${my}L${ex},${ey}`,
     //   stroke: fill,
@@ -111,7 +111,7 @@ const PieGraph = () => {
       cy: 150,
       innerRadius: 60,
       outerRadius: 80,
-      fill: "#8884d8",
+      fill: "#F790F9",
       dataKey: "value",
       onMouseEnter: onPieEnter,
     })

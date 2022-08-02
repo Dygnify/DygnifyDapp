@@ -1,5 +1,5 @@
 import React from "react";
-import GradientButton from "../../../tools/Button/GradientButton";
+import GradientButton from "../../../../tools/Button/GradientButton";
 
 const InvestModal = () => {
   const data = {

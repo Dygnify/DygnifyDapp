@@ -78,7 +78,6 @@ const DrawdownCard = ({ data }) => {
             data={data}
             handleDrawdown={handleDrawdown}
           />
-          // <ProcessingFundsModal />
         )}
       </div>
     </div>

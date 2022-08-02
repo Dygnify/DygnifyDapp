@@ -26,7 +26,7 @@ const TransactionsCard = ({ data }) => {
               }}
               className="btn btn-xs btn-success"
             >
-              Completed
+              Approved
             </button>
           </p>
         )}
@@ -42,7 +42,7 @@ const TransactionsCard = ({ data }) => {
               }}
               className="btn btn-xs btn-error"
             >
-              Not Completed
+              Rejected
             </button>
           </p>
         )}
@@ -53,12 +53,12 @@ const TransactionsCard = ({ data }) => {
                 borderRadius: "35px",
                 padding: "5px 8px",
                 background:
-                  "linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)",
+                  "linear-gradient(276.08deg, rgba(255, 255, 255, 0.04) 2.02%, rgba(255, 255, 255, 0.4) 2.03%, #FFFFFF 99.33%)",
                 border: "none",
               }}
               className="btn btn-xs btn-warning"
             >
-              Processing
+              Unsure
             </button>
           </p>
         )}

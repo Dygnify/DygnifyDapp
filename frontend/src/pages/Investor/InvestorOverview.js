@@ -7,10 +7,15 @@ import PoolCard from "./components/Cards/PoolCard";
 import PieGraph from "../../investor/components/PieChart";
 import GradientButton from "../../tools/Button/GradientButton";
 import BorrowChart from "../../components/charts/BorrowChart";
+import { getAllWithdrawableOpportunities } from "../../components/transaction/TransactionHelper";
+import { useNavigate } from "react-router-dom";
 
 const InvestorOverview = () => {
   const [data, setData] = useState([]);
   const [repayment, setRepayment] = useState([]);
+  const [poolDetail, setPoolDetail] = useState([]);
+
+  const path = useNavigate();
 
   useEffect(() => {
     fetch("/drawdown.json")
@@ -22,6 +27,22 @@ const InvestorOverview = () => {
     fetch("/repayment.json")
       .then((res) => res.json())
       .then((data) => setRepayment(data));
+  }, []);
+
+  useEffect(() => {
+    try {
+      console.log("******************");
+      const fetchData = async () => {
+        console.log("******************");
+        const opportunities = await getAllWithdrawableOpportunities();
+
+        console.log(opportunities);
+        setPoolDetail(opportunities);
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
@@ -37,7 +58,12 @@ const InvestorOverview = () => {
           >
             Investor Dashboard
           </h2>
-          <GradientButton className={"w-40"}>+ Invest</GradientButton>
+          <GradientButton
+            onClick={() => path("/investor-dashboardN/invest")}
+            className={"w-40"}
+          >
+            + Invest
+          </GradientButton>
         </div>
       </div>
 
@@ -78,26 +104,34 @@ const InvestorOverview = () => {
       <div style={{ fontSize: 23 }} className="mt-5 mb-3">
         Your Investments
       </div>
-      <div className="mb-16 ">
-        <h2 style={{ fontSize: 24 }} className=" mb-5">
-          Senior Pool
-        </h2>
-        <div style={{ display: "flex" }} className="gap-4">
-          {repayment.map((item) => (
-            <PoolCard />
-          ))}
+      {poolDetail.length === 0 ? (
+        <div style={{ justifySelf: "center" }}>
+          No investment stats available. Explore opportunities here.
         </div>
-      </div>
-      <div className="mb-16">
-        <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
-          Junior Pool
-        </h2>
-        <div style={{ display: "flex" }} className=" gap-4">
-          {data.map((item) => (
-            <PoolCard />
-          ))}
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="mb-16 ">
+            <h2 style={{ fontSize: 24 }} className=" mb-5">
+              Senior Pool
+            </h2>
+            <div style={{ display: "flex" }} className="gap-4">
+              {repayment.map((item) => (
+                <PoolCard />
+              ))}
+            </div>
+          </div>
+          <div className="mb-16">
+            <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
+              Junior Pool
+            </h2>
+            <div style={{ display: "flex" }} className=" gap-4">
+              {data.map((item) => (
+                <PoolCard />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

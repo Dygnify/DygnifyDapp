@@ -3,6 +3,7 @@ import dygnifyStaking from "../../artifacts/contracts/protocol/DygnifyStaking.so
 import dygnifyToken from "../../artifacts/contracts/protocol/DygnifyToken.sol/DygnifyToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
+import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
@@ -387,6 +388,64 @@ export async function getAllUnderReviewOpportunities() {
           obj.collateralDocument = tx.collateralDocument.toString();
           obj.capitalLoss = tx.capitalLoss.toString();
           opportunities.push(obj);
+        }
+      }
+      return opportunities;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
+}
+
+export async function getAllWithdrawableOpportunities() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      console.log(
+        "***********",
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS
+      );
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      const count = await contract.getTotalOpportunities();
+      let opportunities = [];
+
+      for (let i = 0; i < count; i++) {
+        let id = await contract.opportunityIds(i);
+        let obj = {};
+        let tx = await contract.opportunityToId(id);
+
+        if (tx.opportunityStatus.toString() == "7") {
+          let poolAddress = tx.opportunityPoolAddress.toString();
+          console.log(poolAddress);
+          const poolContract = new ethers.Contract(
+            poolAddress,
+            opportunityPool.abi,
+            provider
+          );
+          let poolBal = await poolContract.poolBalance();
+          if (poolBal.toString() != "0") {
+            let juniorPooldata = await poolContract.juniorSubpoolDetails();
+
+            obj.borrower = tx.borrower.toString();
+            obj.opportunity_id = tx.opportunityID.toString();
+            obj.opportunity_info = tx.opportunityInfo.toString();
+            obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
+            obj.loan_amount = tx.loanAmount.toString();
+            obj.loan_tenure = tx.loanTenureInDays.toString();
+            obj.loan_interest = tx.loanInterest.toString();
+            obj.payment_frequency = tx.paymentFrequencyInDays.toString();
+            obj.collateral_document = tx.collateralDocument.toString();
+            obj.capital_loss = tx.capitalLoss.toString();
+            opportunities.push(obj);
+          }
         }
       }
       return opportunities;

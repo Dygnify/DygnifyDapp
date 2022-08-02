@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PieChart } from "recharts";
+import axiosHttpService from "../../services/axioscall";
 
 import Header from "../Investor/components/Header";
 
 import PoolCard from "./components/Cards/PoolCard";
 import PieChartNew from "./components/PieChartNew";
+import { kycOptions } from "../../services/KYC/blockpass";
 
 const InvestorDashboardNew = () => {
+  // useEffect(() => {
+  //   const fetchStatus = async () => {
+  //     let result = await axiosHttpService(kycOptions("r1657293169018"));
+  //     console.log(result.res.status);
+  //   };
+  //   fetchStatus();
+  // }, []);
+
   return (
     <div style={{ backgroundColor: "#14171F" }}>
       <Header />
