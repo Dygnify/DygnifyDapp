@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import GradientButton from "../../tools/Button/GradientButton";
 
 const PoolDetails = () => {
   const OP = {
     estimatedAPY: "24%",
   };
+  const [expand, setExpand] = useState(false);
 
   const info = [
     {
@@ -97,7 +98,30 @@ const PoolDetails = () => {
             laborum.Voluptate exercitation incididunt aliquip deserunt
             reprehenderit elit laborum. Voluptate exercitation incididunt
             aliquip deserunt reprehenderit elit laborum.Voluptate exercitation
-            incididunt aliquip deserunt reprehenderit...view more{" "}
+            incididunt aliquip deserunt reprehenderit...
+            <a
+              style={{ fontWeight: 600, cursor: "pointer" }}
+              onClick={() => setExpand(true)}
+            >
+              {expand ? null : "view more"}
+            </a>
+            {expand ? (
+              <div>
+                Laborum magna nulla duis ullamco cillum dolor. Voluptate
+                exercitation incididunt aliquip deserunt reprehenderit elit
+                laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla
+                duis ullamco cillum dolor. Voluptate exercitation incididunt
+                aliquip deserunt reprehenderit elit laborum. Nulla Lorem mollit
+                cupidatat irure. Laborum magna nulla duis ullamco cillum dolor.
+                Voluptate
+              </div>
+            ) : null}
+            <a
+              style={{ fontWeight: 600, cursor: "pointer" }}
+              onClick={() => setExpand(false)}
+            >
+              {expand ? "view less" : null}
+            </a>
           </div>
         </div>
       </div>

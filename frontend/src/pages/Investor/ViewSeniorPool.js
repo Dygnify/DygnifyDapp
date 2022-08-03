@@ -8,6 +8,7 @@ const ViewSeniorPool = () => {
   };
 
   const [dueList, setDueList] = useState([]);
+  const [expand, setExpand] = useState(false);
 
   const info = [
     {
@@ -42,7 +43,7 @@ const ViewSeniorPool = () => {
             <div style={{ fontSize: 19 }} className="mb-0">
               Pool Overview
             </div>
-            <div
+            {/* <div
               style={{
                 width: 119,
                 height: 36,
@@ -53,7 +54,7 @@ const ViewSeniorPool = () => {
               className="rounded-box items-center justify-center ml-20"
             >
               View details
-            </div>
+            </div> */}
           </div>
           <div>
             Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
@@ -69,7 +70,30 @@ const ViewSeniorPool = () => {
             laborum.Voluptate exercitation incididunt aliquip deserunt
             reprehenderit elit laborum. Voluptate exercitation incididunt
             aliquip deserunt reprehenderit elit laborum.Voluptate exercitation
-            incididunt aliquip deserunt reprehenderit...view more{" "}
+            incididunt aliquip deserunt reprehenderit...
+            <a
+              style={{ fontWeight: 600, cursor: "pointer" }}
+              onClick={() => setExpand(true)}
+            >
+              {expand ? null : "view more"}
+            </a>
+            {expand ? (
+              <div>
+                Laborum magna nulla duis ullamco cillum dolor. Voluptate
+                exercitation incididunt aliquip deserunt reprehenderit elit
+                laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla
+                duis ullamco cillum dolor. Voluptate exercitation incididunt
+                aliquip deserunt reprehenderit elit laborum. Nulla Lorem mollit
+                cupidatat irure. Laborum magna nulla duis ullamco cillum dolor.
+                Voluptate
+              </div>
+            ) : null}
+            <a
+              style={{ fontWeight: 600, cursor: "pointer" }}
+              onClick={() => setExpand(false)}
+            >
+              {expand ? "view less" : null}
+            </a>
           </div>
         </div>
         <div className="w-1/2">

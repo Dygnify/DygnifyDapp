@@ -26,7 +26,9 @@ export const requestAccount = async (metaMask) => {
 
 export const isConnected = async () => {
   let connectionStatus = await window.ethereum.isConnected();
+  console.log(connectionStatus);
   let chainId = window.ethereum.networkVersion;
+  console.log(chainId);
   if (chainId == "0x13881" && connectionStatus == true) {
     return connectionStatus;
   } else {

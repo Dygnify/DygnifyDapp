@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import PrimaryButton from "../../../tools/Button/PrimaryButton";
 
-const UnderwriterCard = () => {
+const UnderwriterCard = ({ onClick }) => {
   const data = {
     poolSize: "$500,000.00",
     capitalInvested: "24%",
@@ -77,7 +77,9 @@ const UnderwriterCard = () => {
         </div>
 
         <div style={{ marginTop: 28 }}>
-          <PrimaryButton disable={false}>View Details</PrimaryButton>
+          <PrimaryButton disable={false} onClick={onClick}>
+            View Details
+          </PrimaryButton>
         </div>
       </div>
     </div>

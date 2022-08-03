@@ -9,10 +9,12 @@ import GradientButton from "../../tools/Button/GradientButton";
 import BorrowChart from "../../components/charts/BorrowChart";
 import ViewPoolCard from "./components/Cards/ViewPoolCard";
 import WithdrawCard from "./components/Cards/WithdrawCard";
+import { getAllWithdrawableOpportunities } from "../../components/transaction/TransactionHelper";
 
 const Withdraw = () => {
   const [data, setData] = useState([]);
   const [repayment, setRepayment] = useState([]);
+  const [poolDetail, setPoolDetail] = useState([]);
 
   useEffect(() => {
     fetch("/drawdown.json")
@@ -24,6 +26,20 @@ const Withdraw = () => {
     fetch("/repayment.json")
       .then((res) => res.json())
       .then((data) => setRepayment(data));
+  }, []);
+
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const opportunities = await getAllWithdrawableOpportunities();
+        setPoolDetail(opportunities);
+        //setPoolDetail([{ hello: "1" }]);
+        console.log(opportunities);
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
@@ -43,26 +59,36 @@ const Withdraw = () => {
         </div>
       </div>
 
-      <div className="mb-16 ">
-        <h2 style={{ fontSize: 24 }} className=" mb-5">
-          Senior pools
-        </h2>
-        <div style={{ display: "flex" }} className="gap-4 w-1/2">
-          {repayment.map((item) => (
-            <WithdrawCard />
-          ))}
+      {poolDetail.length === 0 ? (
+        <div style={{ display: "flex" }} className="justify-center">
+          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+            No stats are available. Explore opportunities here.
+          </div>
         </div>
-      </div>
-      <div className="mb-16">
-        <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
-          Junior pools
-        </h2>
-        <div style={{ display: "flex" }} className=" gap-4">
-          {data.map((item) => (
-            <WithdrawCard />
-          ))}
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="mb-16 ">
+            <h2 style={{ fontSize: 24 }} className=" mb-5">
+              Senior pools
+            </h2>
+            <div style={{ display: "flex" }} className="gap-4 w-1/2">
+              {repayment.map((item) => (
+                <WithdrawCard />
+              ))}
+            </div>
+          </div>
+          <div className="mb-16">
+            <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
+              Junior pools
+            </h2>
+            <div style={{ display: "flex" }} className=" gap-4">
+              {data.map((item) => (
+                <WithdrawCard />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

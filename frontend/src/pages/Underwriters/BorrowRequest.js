@@ -1,11 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import ViewPoolCard from "../Investor/components/Cards/ViewPoolCard";
 import UnderwriterCard from "./Components/UnderwriterCard";
 
 const BorrowRequest = () => {
+  const path = useNavigate();
   const [data, setData] = useState([]);
   const [repayment, setRepayment] = useState([]);
 
@@ -40,7 +42,9 @@ const BorrowRequest = () => {
       <div className="mb-16 ">
         <div style={{ display: "flex" }} className="gap-4 w-1/2">
           {repayment.map((item) => (
-            <UnderwriterCard />
+            <UnderwriterCard
+              onClick={() => path("/underwriterDashboard/poolDetail")}
+            />
           ))}
         </div>
       </div>

@@ -3,8 +3,10 @@ import { Box, Button, Typography, Stack, Link } from "@mui/material";
 import Company from "./components/Company";
 import LockedValueChart from "./components/LockedValueChart";
 import GradientButton from "../tools/Button/GradientButton";
-import Header from "./components/Header";
+import Header from "../pages/Investor/components/Header";
 import { useNavigate } from "react-router-dom";
+import Gradient from "./components/Gradient";
+import GradientDark from "./components/GradientDark";
 
 const LandingPage = () => {
   const path = useNavigate();
@@ -14,6 +16,9 @@ const LandingPage = () => {
       <Header />
 
       <div className="flex-col items-center" style={{ display: "flex" }}>
+        <div style={{ position: "absolute", overflow: "hidden" }}>
+          <GradientDark />
+        </div>
         <h1
           style={{
             fontSize: 50,
@@ -21,6 +26,7 @@ const LandingPage = () => {
             fontSize: 68,
             marginBottom: -18,
             color: "white",
+            marginTop: 50,
           }}
         >
           Democratising Credit Flow
@@ -109,6 +115,10 @@ const LandingPage = () => {
           <GradientButton>Borrow</GradientButton>
         </div>
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
       <br />
       <br />
       <br />

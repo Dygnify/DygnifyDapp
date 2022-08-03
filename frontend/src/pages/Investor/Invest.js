@@ -8,8 +8,10 @@ import PieGraph from "../../investor/components/PieChart";
 import GradientButton from "../../tools/Button/GradientButton";
 import BorrowChart from "../../components/charts/BorrowChart";
 import ViewPoolCard from "./components/Cards/ViewPoolCard";
+import { useNavigate } from "react-router-dom";
 
 const Invest = () => {
+  const path = useNavigate();
   const [data, setData] = useState([]);
   const [repayment, setRepayment] = useState([]);
 
@@ -47,7 +49,9 @@ const Invest = () => {
         </h2>
         <div style={{ display: "flex" }} className="gap-4 w-1/2">
           {repayment.map((item) => (
-            <ViewPoolCard />
+            <ViewPoolCard
+              onClick={() => path("/investor-dashboardN/viewSeniorPool")}
+            />
           ))}
         </div>
       </div>
@@ -57,7 +61,10 @@ const Invest = () => {
         </h2>
         <div style={{ display: "flex" }} className=" gap-4">
           {data.map((item) => (
-            <ViewPoolCard />
+            <ViewPoolCard
+              //send data params
+              onClick={() => path("/investor-dashboardN/viewPool")}
+            />
           ))}
         </div>
       </div>

@@ -8,10 +8,27 @@ const ViewPool = () => {
     estimatedAPY: "24%",
   };
   const [dueList, setDueList] = useState([]);
+  const [expand, setExpand] = useState(false);
 
   const [selected, setSelected] = useState(null);
   const handleDrawdown = () => {
     setSelected(null);
+  };
+
+  const loadBlockpassWidget = () => {
+    console.log("#############");
+    const blockpass = new window.BlockpassKYCConnect(
+      "kyc_aml_c7be4", // service client_id from the admin console
+      {
+        refId: "1", // assign the local user_id of the connected user
+      }
+    );
+
+    blockpass.startKYCConnect();
+
+    blockpass.on("KYCConnectSuccess", () => {
+      //add code that will trigger when data have been sent.
+    });
   };
 
   const info = [
@@ -24,6 +41,7 @@ const ViewPool = () => {
   ];
 
   useEffect(() => {
+    loadBlockpassWidget();
     fetch("/dueList.json")
       .then((res) => res.json())
       .then((data) => setDueList(data));
@@ -31,6 +49,7 @@ const ViewPool = () => {
 
   return (
     <div>
+      {selected ? <InvestModal handleDrawdown={handleDrawdown} /> : null}
       <div
         className="flex-row justify-between items-center"
         style={{ display: "flex" }}
@@ -77,18 +96,6 @@ const ViewPool = () => {
             <div style={{ fontSize: 19 }} className="mb-0">
               Deals Overview
             </div>
-            <div
-              style={{
-                width: 119,
-                height: 36,
-                background: "#292C33",
-                display: "flex",
-                fontSize: 14,
-              }}
-              className="rounded-box items-center justify-center ml-20"
-            >
-              View details
-            </div>
           </div>
           <div>
             Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
@@ -104,7 +111,30 @@ const ViewPool = () => {
             laborum.Voluptate exercitation incididunt aliquip deserunt
             reprehenderit elit laborum. Voluptate exercitation incididunt
             aliquip deserunt reprehenderit elit laborum.Voluptate exercitation
-            incididunt aliquip deserunt reprehenderit...view more{" "}
+            incididunt aliquip deserunt reprehenderit...
+            <a
+              style={{ fontWeight: 600, cursor: "pointer" }}
+              onClick={() => setExpand(true)}
+            >
+              {expand ? null : "view more"}
+            </a>
+            {expand ? (
+              <div>
+                Laborum magna nulla duis ullamco cillum dolor. Voluptate
+                exercitation incididunt aliquip deserunt reprehenderit elit
+                laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla
+                duis ullamco cillum dolor. Voluptate exercitation incididunt
+                aliquip deserunt reprehenderit elit laborum. Nulla Lorem mollit
+                cupidatat irure. Laborum magna nulla duis ullamco cillum dolor.
+                Voluptate
+              </div>
+            ) : null}
+            <a
+              style={{ fontWeight: 600, cursor: "pointer" }}
+              onClick={() => setExpand(false)}
+            >
+              {expand ? "view less" : null}
+            </a>
           </div>
         </div>
         <div className="w-1/2">
@@ -152,12 +182,24 @@ const ViewPool = () => {
             </div>
 
             <GradientButton
+              id="blockpass-kyc-connect"
               className={"w-full mt-20"}
-              onClick={() => setSelected(true)}
+              onClick={() => {
+                setSelected(true);
+                console.log(selected);
+              }}
             >
-              Invest
+              Invest KYC
             </GradientButton>
-            {selected && <InvestModal handleDrawdown={handleDrawdown} />}
+            <GradientButton
+              className={"w-full mt-20"}
+              onClick={() => {
+                setSelected(true);
+                console.log(selected);
+              }}
+            >
+              Invest modal
+            </GradientButton>
           </div>
         </div>
       </div>

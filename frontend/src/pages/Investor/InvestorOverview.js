@@ -31,13 +31,10 @@ const InvestorOverview = () => {
 
   useEffect(() => {
     try {
-      console.log("******************");
       const fetchData = async () => {
-        console.log("******************");
         const opportunities = await getAllWithdrawableOpportunities();
-
-        console.log(opportunities);
         setPoolDetail(opportunities);
+        //setPoolDetail([{ hello: "1" }]);
       };
       fetchData();
     } catch (error) {
@@ -54,7 +51,7 @@ const InvestorOverview = () => {
         >
           <h2
             className="text-left font-bold text-white"
-            style={{ fontSize: 28 }}
+            style={{ fontSize: 28, marginLeft: -20 }}
           >
             Investor Dashboard
           </h2>
@@ -86,12 +83,15 @@ const InvestorOverview = () => {
               Total Amount Invested
             </div>
             <div style={{ fontSize: 28, color: "white" }} className="mb-10">
-              345K USDC
+              {poolDetail.length === 0 ? "- -" : "345K USDC"}
             </div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#777E91" }}>
               Total Yield Earned
             </div>
-            <div style={{ fontSize: 28, color: "white" }}>35K USDC</div>
+
+            <div style={{ fontSize: 28, color: "white" }}>
+              {poolDetail.length === 0 ? "- -" : "34K USDC"}
+            </div>
           </div>
         </div>
         <div
@@ -105,12 +105,14 @@ const InvestorOverview = () => {
         Your Investments
       </div>
       {poolDetail.length === 0 ? (
-        <div style={{ justifySelf: "center" }}>
-          No investment stats available. Explore opportunities here.
+        <div style={{ display: "flex" }} className="justify-center">
+          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+            No investments stats available. Explore opportunities here.
+          </div>
         </div>
       ) : (
         <>
-          <div className="mb-16 ">
+          <div className="mb-16 w-1/2 ">
             <h2 style={{ fontSize: 24 }} className=" mb-5">
               Senior Pool
             </h2>

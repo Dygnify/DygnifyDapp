@@ -7,23 +7,24 @@ import PrimaryButton from "../../../tools/Button/PrimaryButton";
 const Header = () => {
   const [status, setStatus] = useState(false);
 
+  const fetchStatus = async () => {
+    const getStatus = await isConnected();
+    console.log(getStatus);
+    if (getStatus) return setStatus(true);
+    setStatus(false);
+  };
+
   async function requestAccount() {
     const result = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
+    fetchStatus();
     console.log(result);
     //put a regex here to read result and set Status
     //store the wallet address in contexts
   }
 
   useEffect(() => {
-    const fetchStatus = async () => {
-      const getStatus = await isConnected();
-      console.log(getStatus);
-      if (getStatus) return setStatus(true);
-      setStatus(false);
-      console.log(isConnected());
-    };
     fetchStatus();
   }, []);
 
@@ -31,7 +32,7 @@ const Header = () => {
     <div
       style={{
         height: "76px",
-        backgroundColor: "#20232A",
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
         borderEndEndRadius: "12px",
         borderEndStartRadius: "12px",
         display: "flex",

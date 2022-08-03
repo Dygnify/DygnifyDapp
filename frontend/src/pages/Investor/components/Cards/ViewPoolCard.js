@@ -2,8 +2,10 @@ import React, { useState } from "react";
 
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 
-const ViewPoolCard = () => {
-  const data = [{ loan_amount: 45000, opportunity_name: "Bullet" }];
+const ViewPoolCard = ({ onClick }) => {
+  const data = [
+    { loan_amount: 45000, opportunity_name: "Bullet", caption: "Open" },
+  ];
 
   const StatusButton = ({ label, id }) => {
     return (
@@ -83,10 +85,10 @@ const ViewPoolCard = () => {
             Status
           </p>
 
-          <StatusButton label={"Full"} id={2} />
+          <StatusButton label="Open" id={1} />
         </div>
         <div style={{ marginTop: 32 }}>
-          <PrimaryButton>View Pool </PrimaryButton>
+          <PrimaryButton onClick={onClick}>View Pool </PrimaryButton>
         </div>
       </div>
     </div>

@@ -33,9 +33,6 @@ const UnderwriterDashboard = () => {
                 Approval history
               </Link>
             </li>
-            <li>
-              <Link to="/underwriterDashboard/poolDetail">View Pool</Link>
-            </li>
           </ul>
         </div>
       </div>
