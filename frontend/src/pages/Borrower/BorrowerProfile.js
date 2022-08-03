@@ -37,7 +37,7 @@ const BorrowerProfile = () => {
         // load the empty profile page
       }
     });
-  }, [borrowerJson]);
+  }, []);
 
   const fetchBorrowerLogo = (imgcid) => {
     if (imgcid) {
@@ -74,7 +74,7 @@ const BorrowerProfile = () => {
           setWebsite(profileData.website);
         }
         if (profileData.email) {
-          setEmail(profileData.email);
+          setEmail("mailto:" + profileData.email);
         }
         if (profileData.twitter) {
           setTwitter(profileData.twitter);
@@ -118,7 +118,19 @@ const BorrowerProfile = () => {
     }
 
     if (url) {
+      let protocol = "https://";
+      let position = url.search(protocol);
+      // if there is no "https://" in the url then it is not opened correctly
+      if (position === -1) {
+        url = protocol + url;
+      }
       window.open(url, "_blank");
+    }
+  };
+
+  const redirectForEmail = () => {
+    if (email) {
+      window.location.href = email;
     }
   };
 
@@ -181,6 +193,7 @@ const BorrowerProfile = () => {
             <button
               style={{ borderRadius: "100px", padding: "8px 16px" }}
               className="ml-3 btn btn-sm btn-outline text-white"
+              onClick={redirectForEmail}
             >
               Email
             </button>
