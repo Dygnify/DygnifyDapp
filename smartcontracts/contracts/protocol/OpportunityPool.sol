@@ -120,6 +120,9 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             seniorSubpoolDetails.totalDepositable = loanAmount;
         }
 
+        uint256 loanTenureInSec = loanTenureInDays * (1 days);
+        juniorSubpoolDetails.fundsLockedUntil =  block.timestamp + loanTenureInSec;
+
         uint256 total_Repayment = loanAmount.add(
             loanAmount.mul(loanInterest.div(100)).div(10**6)
         );
@@ -232,6 +235,10 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 .sub(amount);
         } else if (_subpoolId == uint8(Subpool.JuniorSubpool)) {
             require(
+                juniorSubpoolDetails.fundsLockedUntil <= block.timestamp,
+                "funds are lock until Loan Tenure"
+            );
+            require(
                 juniorSubpoolDetails.isPoolLocked == false,
                 "Junior Subpool is locked"
             );
@@ -333,7 +340,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         usdcToken.safeTransferFrom(msg.sender, address(this), amount);
     }
     
-
+    // this function will withdraw all the available amount of executor including yield and overdue profit
     function withdrawAll(uint8 _subpoolId) 
         public
         nonReentrant

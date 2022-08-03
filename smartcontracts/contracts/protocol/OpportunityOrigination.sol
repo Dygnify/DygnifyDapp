@@ -21,6 +21,8 @@ contract OpportunityOrigination is
     // opportunityID => selected 9 auditors
     mapping(bytes32 => address[9]) underwritersOf;
 
+    mapping(address => bytes32[]) underwriterToOpportunity;
+
     // storing all the opportunities in an array.
     bytes32[] public opportunityIds;
 
@@ -151,6 +153,7 @@ contract OpportunityOrigination is
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus(
             _status
         );
+        underwriterToOpportunity[msg.sender].push(_opportunityId);
     }
 
     function mintCollateral(bytes32 _opportunityId)
@@ -310,4 +313,17 @@ contract OpportunityOrigination is
         require(poolAddress != address(0), "Opportunity pool address haven't created yet" );
         return poolAddress;
     }
+
+    function getAlltheOpportunitiesOf(address borrower)external view returns (bytes32[] memory ) {
+        require(borrower != address(0), "Invalid Borrower sddress");
+        bytes32[] memory opportunities = opportunityOf[borrower];
+        return opportunities;
+    }
+
+    function getUnderWritersOpportunities(address _underwriter)external view returns (bytes32[] memory ) {
+        require(_underwriter != address(0), "Invalid underwriter sddress");
+        bytes32[] memory opportunities = underwriterToOpportunity[_underwriter];
+        return opportunities;
+    }
+
 }
