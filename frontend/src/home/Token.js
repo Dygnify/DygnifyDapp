@@ -6,6 +6,7 @@ import axiosHttpService from "../services/axioscall";
 import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
 import { amlCheck } from "../services/OFACAxiosOptions";
 import axios from "axios";
+import { Web3Storage, getFilesFromPath } from "web3.storage";
 
 const tokenAddress = "0x1546A8e7389B47d2Cf1bacE7C0ad3e0A91CAae94";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
@@ -101,31 +102,27 @@ function Token() {
     }
   }
 
+  //web3.storage
+  function makeStorageClient() {
+    return new Web3Storage({ token: process.env.REACT_APP_WEB3STORAGE_APIKEY });
+  }
+
+  async function storeFiles(files) {
+    try {
+      const client = makeStorageClient();
+      const cid = await client.put(files);
+      console.log("stored files with cid:", cid);
+      return cid;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // On file upload (click the upload button)
   async function onFileUpload() {
     try {
       console.log("Upload called");
-      let ipfsUploadRes = await axiosHttpService(
-        uploadFileToIPFS(selectedFile)
-      );
-      console.log(ipfsUploadRes);
-      //make metadata
-      const metadata = new Object();
-      metadata.imageHash = ipfsUploadRes.res.IpfsHash;
-      metadata.PinSize = ipfsUploadRes.res.PinSize;
-      metadata.Timestamp = ipfsUploadRes.res.Timestamp;
-
-      //make pinata call
-      const pinataResponse = await pinJSONToIPFS(metadata);
-      if (!pinataResponse.success) {
-        return {
-          success: false,
-          status: "😢 Something went wrong while uploading your tokenURI.",
-        };
-      }
-      const tokenURI = pinataResponse.pinataUrl;
-      console.log(tokenURI);
-      setTokenURI(tokenURI);
+      await storeFiles(selectedFile);
     } catch (error) {
       console.log(error);
     }
@@ -159,19 +156,6 @@ function Token() {
     }
   }
 
-  // On file upload (click the upload button)
-  async function onFileUpload() {
-    try {
-      console.log("Upload called");
-      let ipfsUploadRes = await axiosHttpService(
-        uploadFileToIPFS(selectedFile)
-      );
-      console.log(ipfsUploadRes);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   return (
     <div>
       <header>
@@ -189,7 +173,8 @@ function Token() {
         <button onClick={approveSendCoins}>Approve</button>
         <input
           type="file"
-          onChange={(event) => setSelectedFile(event.target.files[0])}
+          multiple
+          onChange={(event) => setSelectedFile(event.target.files)}
         />
         <button onClick={onFileUpload}>Upload</button>
         <h5 style={{ textAlign: "center" }}>

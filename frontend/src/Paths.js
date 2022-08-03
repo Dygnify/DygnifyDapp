@@ -40,8 +40,6 @@ import InvestorDashboard from "./pages/Investor/InvestorDashboard";
 import ApprovedOpportunities from "./pages/Investor/ApprovedOpportunities";
 import Repayment from "./borrower/Repayment";
 import Withdrawal from "./pages/Investor/Withdrawal";
-import Transaction from "./components/transaction/Transaction";
-import TransactionHistory from "./components/transactionHistory/TransactionHistory";
 import ToolTest from "./tools/ToolTest";
 import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
 import Overview from "./pages/Borrower/Overview";
@@ -58,6 +56,9 @@ import PoolDetails from "./pages/Underwriters/PoolDetails";
 import ApprovalHistory from "./pages/Underwriters/ApprovalHistory";
 import Transactions from "./pages/Investor/Transactions";
 import ViewSeniorPool from "./pages/Investor/ViewSeniorPool";
+import Transaction from "./pages/Borrower/Transaction";
+import BorrowerProfile from "./pages/Borrower/BorrowerProfile";
+import EditBorrowerProfile from "./pages/Borrower/EditBorrowerProfile";
 
 const Paths = () => {
   return (
@@ -120,11 +121,25 @@ const Paths = () => {
           />
         </Route>
         <Route path="/transaction" element={<Transaction />} />
-        <Route path="/transaction-history" element={<TransactionHistory />} />
+        {/* <Route path="/transaction-history" element={<TransactionHistory />} /> */}
         <Route path="/toolTest" element={<ToolTest />} />
+
         <Route path="/borrower_dashboard" element={<BorrowerDashboard />}>
           <Route index element={<Overview></Overview>}></Route>
+
           <Route path="borrow_list" element={<BorrowList></BorrowList>}></Route>
+          <Route
+            path="transaction"
+            element={<Transaction></Transaction>}
+          ></Route>
+          <Route
+            path="borrower_profile"
+            element={<BorrowerProfile></BorrowerProfile>}
+          ></Route>
+          <Route
+            path="edit_profile"
+            element={<EditBorrowerProfile></EditBorrowerProfile>}
+          ></Route>
         </Route>
       </Routes>
     </BrowserRouter>

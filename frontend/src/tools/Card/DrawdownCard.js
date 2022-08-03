@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import InvestModal from "../../investor/components/Modal/InvestModal";
-import ProcessingFundsModal from "../../investor/components/Modal/ProcessingFundsModal";
-import WithdrawFundsModal from "../../investor/components/Modal/WithdrawFundsModal";
 import DrawdownModal from "../Modal/DrawdownModal";
 
 const DrawdownCard = ({ data }) => {
@@ -49,7 +46,7 @@ const DrawdownCard = ({ data }) => {
           </div>
         </div>
         <div className="justify-center w-full mt-6">
-          <label
+          <button
             htmlFor="drawdown-modal"
             style={{
               borderRadius: "100px",
@@ -57,27 +54,17 @@ const DrawdownCard = ({ data }) => {
               color: "white",
             }}
             className={`btn btn-secondary w-full hover:bg-blue-500 capitalize font-medium border-none`}
-            onClick={() => setSelected(true)}
+            onClick={() => setSelected(data)}
           >
             Drawdown Funds
-          </label>
+          </button>
         </div>
         {selected && (
-          // <DrawdownModal
-          //   key={data?.id}
-          //   data={data}
-          //   handleDrawdown={handleDrawdown}
-          // ></DrawdownModal>
-          // <InvestModal
-          //   key={data?.id}
-          //   data={data}
-          //   handleDrawdown={handleDrawdown}
-          // />
-          <WithdrawFundsModal
+          <DrawdownModal
             key={data?.id}
             data={data}
             handleDrawdown={handleDrawdown}
-          />
+          ></DrawdownModal>
         )}
       </div>
     </div>

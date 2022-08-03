@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getOpportunityAt } from "../../components/transaction/TransactionHelper";
 import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
+import { retrieveFiles } from "../../services/web3storageIPFS";
 
 
 const ApprovedOpportunities = () => {
@@ -32,7 +33,7 @@ const ApprovedOpportunities = () => {
     console.log(target)
     const hash = target?.opportunity_info;
     console.log(hash)
-    const info = ExtractIPFSdataFromHash(hash);
+    const info = retrieveFiles(hash);
     console.log(info)
 
     return (
@@ -354,7 +355,7 @@ const ApprovedOpportunities = () => {
                             <Typography mb={1} variant="subtitle2">
                                 Upload collateral document for converting to a unique NFT
                             </Typography>
-                            <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target?.files[0])} class="custom-file-upload" />
+                            <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target?.files[0])} className="custom-file-upload" />
                             <Button
                                 sx={{ backgroundColor: "#7165E3", width: "300px", marginTop: "10px" }}
                                 variant="contained"

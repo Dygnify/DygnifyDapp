@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PrimaryButton from "../Button/PrimaryButton";
 import RepaymentModal from "../Modal/RepaymentModal";
 
 const RepaymentCard = ({ data }) => {
@@ -58,6 +59,12 @@ const RepaymentCard = ({ data }) => {
           >
             Make Repayment
           </label>
+          {/* <PrimaryButton
+            htmlFor={"repayment-modal"}
+            onClick={() => setSelected(data)}
+          >
+            Make Repayments
+          </PrimaryButton> */}
         </div>
         {selected && (
           <RepaymentModal

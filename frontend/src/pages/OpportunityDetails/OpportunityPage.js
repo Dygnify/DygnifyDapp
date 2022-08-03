@@ -13,7 +13,7 @@ const OpportunityPage = () => {
             setData(temp)
         }
         dataFetch();
-    }, [])
+    }, [data])
 
     console.log(data)
     return (
