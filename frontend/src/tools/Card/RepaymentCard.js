@@ -49,22 +49,17 @@ const RepaymentCard = ({ data }) => {
         <div className="justify-center w-full mt-6">
           <label
             htmlFor="repayment-modal"
+            color="none"
             style={{
               borderRadius: "100px",
               padding: "12px 24px",
               color: "white",
             }}
-            className={`btn btn-secondary w-full hover:bg-blue-500 capitalize font-medium border-none`}
+            className={`btn btn-secondary w-full bg-blue-500 hover:bg-blue-500 capitalize font-medium border-none`}
             onClick={() => setSelected(data)}
           >
             Make Repayment
           </label>
-          {/* <PrimaryButton
-            htmlFor={"repayment-modal"}
-            onClick={() => setSelected(data)}
-          >
-            Make Repayments
-          </PrimaryButton> */}
         </div>
         {selected && (
           <RepaymentModal
