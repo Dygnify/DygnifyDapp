@@ -98,27 +98,18 @@ const Paths = () => {
         <Route path="/investor-dashboard" element={<InvestorDashboard />} />
 
         <Route path="/investor-dashboardN" element={<InvestorDashboardNew />}>
-          <Route index element={<InvestorOverview></InvestorOverview>}></Route>
-          <Route path="invest" element={<Invest></Invest>} />
-          <Route path="withdraw" element={<Withdraw></Withdraw>} />
-          <Route path="transaction" element={<Transactions></Transactions>} />
-          <Route path="viewPool" element={<ViewPool></ViewPool>} />
-          <Route
-            path="viewSeniorPool"
-            element={<ViewSeniorPool></ViewSeniorPool>}
-          />
+          <Route index element={<InvestorOverview />}></Route>
+          <Route path="invest" element={<Invest />} />
+          <Route path="withdraw" element={<Withdraw />} />
+          <Route path="transaction" element={<Transactions />} />
+          <Route path="viewPool" element={<ViewPool />} />
+          <Route path="viewSeniorPool" element={<ViewSeniorPool />} />
         </Route>
 
-        <Route
-          path="/underwriterDashboard"
-          element={<UnderwriterDashboard></UnderwriterDashboard>}
-        >
-          <Route index element={<BorrowRequest></BorrowRequest>}></Route>
-          <Route path="poolDetail" element={<PoolDetails></PoolDetails>} />
-          <Route
-            path="approvalHistory"
-            element={<ApprovalHistory></ApprovalHistory>}
-          />
+        <Route path="/underwriterDashboard" element={<UnderwriterDashboard />}>
+          <Route index element={<BorrowRequest />}></Route>
+          <Route path="poolDetail" element={<PoolDetails />} />
+          <Route path="approvalHistory" element={<ApprovalHistory />} />
         </Route>
         <Route path="/transaction" element={<Transaction />} />
         {/* <Route path="/transaction-history" element={<TransactionHistory />} /> */}
