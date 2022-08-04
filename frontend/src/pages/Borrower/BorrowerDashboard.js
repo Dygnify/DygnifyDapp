@@ -38,7 +38,7 @@ const BorrowerDashboard = () => {
               <Link to="/borrower_dashboard/transaction">Transactions</Link>
             </li>
             <li>
-              <Link to="/borrower_dashboard/transaction">
+              <Link to="/borrower_dashboard/underwriterQueries">
                 Underwriter queries
               </Link>
             </li>

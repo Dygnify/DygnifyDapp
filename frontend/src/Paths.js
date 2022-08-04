@@ -59,6 +59,8 @@ import ViewSeniorPool from "./pages/Investor/ViewSeniorPool";
 import Transaction from "./pages/Borrower/Transaction";
 import BorrowerProfile from "./pages/Borrower/BorrowerProfile";
 import EditBorrowerProfile from "./pages/Borrower/EditBorrowerProfile";
+import UnderwriterQueries from "./pages/Borrower/UnderwriterQueries";
+import QueriesPoolDetails from "./pages/Borrower/QueriesPoolDetails";
 
 const Paths = () => {
   return (
@@ -127,6 +129,12 @@ const Paths = () => {
             path="borrower_profile"
             element={<BorrowerProfile></BorrowerProfile>}
           ></Route>
+          <Route
+            path="underwriterQueries"
+            element={<UnderwriterQueries />}
+          ></Route>
+          <Route path="queriesPoolDetail" element={<QueriesPoolDetails />} />
+
           <Route
             path="edit_profile"
             element={<EditBorrowerProfile></EditBorrowerProfile>}
