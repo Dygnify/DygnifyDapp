@@ -11,7 +11,7 @@ const ProcessingFundsModal = () => {
     success: true,
   };
   return (
-    <div>
+    <>
       <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
       <div
         style={{ backdropFilter: "brightness(40%) blur(8px)" }}
@@ -141,7 +141,7 @@ const ProcessingFundsModal = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

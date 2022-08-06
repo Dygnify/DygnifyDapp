@@ -8,7 +8,7 @@ const InvestModal = () => {
     estimatedApy: "24%",
   };
   return (
-    <div>
+    <>
       <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
       <div
         style={{ backdropFilter: "brightness(40%) blur(8px)" }}
@@ -133,7 +133,7 @@ const InvestModal = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

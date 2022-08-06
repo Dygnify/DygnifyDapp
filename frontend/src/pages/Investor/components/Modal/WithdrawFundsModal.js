@@ -10,7 +10,7 @@ const WithdrawFundsModal = () => {
     availableForWithdrawal: "248K USDC",
   };
   return (
-    <div>
+    <>
       <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
       <div
         style={{ backdropFilter: "brightness(40%) blur(8px)" }}
@@ -140,7 +140,7 @@ const WithdrawFundsModal = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
