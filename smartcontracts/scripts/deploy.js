@@ -15,54 +15,105 @@ async function main() {
 
   // We get the contract to deploy
 
-  const DygnifyToken = await hre.ethers.getContractFactory("DygnifyToken");
-  const dygnifyToken = await DygnifyToken.deploy( process.env.DGNFY_TOKEN_TOTAL_SUPPLY );
+  const TestUSDCToken = await hre.ethers.getContractFactory("TestUSDCToken");
+  const testUSDCToken = await TestUSDCToken.deploy(
+    process.env.DGNFY_TOKEN_TOTAL_SUPPLY
+  );
 
-  await dygnifyToken.deployed();
+  await testUSDCToken.deployed();
 
-  console.log("DygnifyToken deployed to:", dygnifyToken.address);
+  console.log("TestUSDCToken deployed to:", testUSDCToken.address);
+  console.log("Balance : ", await testUSDCToken.totalSupply());
 
   // const usdtToken = "0x3813e82e6f7098b9583FC0F33a962D02018B6803";
-  const DygnifyStaking = await hre.ethers.getContractFactory("DygnifyStaking");
-  const dygnifyStaking = await DygnifyStaking.deploy(dygnifyToken.address,10);
+  //const DygnifyStaking = await hre.ethers.getContractFactory("DygnifyStaking");
+  //const dygnifyStaking = await DygnifyStaking.deploy(testUSDCToken.address, 10);
 
-  await dygnifyStaking.deployed();
+  //await dygnifyStaking.deployed();
 
-  console.log("DygnifyStaking deployed to:", dygnifyStaking.address);
+  //console.log("DygnifyStaking deployed to:", dygnifyStaking.address);
 
-  const LPToken = await hre.ethers.getContractFactory("LPToken");
-  const lpToken = await LPToken.deploy();
-
-  await lpToken.deployed();
-
-  console.log("LPToken deployed to:", lpToken.address);
-
+  // deply the config first as this will be used in most of the contracts
   const DygnifyConfig = await hre.ethers.getContractFactory("DygnifyConfig");
   const dygnifyConfig = await DygnifyConfig.deploy();
 
   await dygnifyConfig.deployed();
+  // Initialize the config
+  await dygnifyConfig.initialize();
   console.log("DygnifyConfig deployed to:", dygnifyConfig.address);
 
-  const OpportunityOrigination = await hre.ethers.getContractFactory("OpportunityOrigination");
+  // Senior pool deployment
+  const SeniorPool = await hre.ethers.getContractFactory("SeniorPool");
+  const seniorPool = await SeniorPool.deploy();
+
+  await seniorPool.deployed();
+  // initialize the senior pool
+  // 12 months is the lockin period
+  await seniorPool.initialize(dygnifyConfig.address, 12);
+  console.log("SeniorPool deployed to:", seniorPool.address);
+
+  // LP token deplyment
+  const LPToken = await hre.ethers.getContractFactory("LPToken");
+  const lpToken = await LPToken.deploy();
+
+  await lpToken.deployed();
+  // Initialize LP token
+  await lpToken.initialize(seniorPool.address);
+  console.log("LPToken deployed to:", lpToken.address);
+
+  // Deploy the borrower
+  const Borrower = await hre.ethers.getContractFactory("Borrower");
+  const borrower = await Borrower.deploy();
+
+  await borrower.deployed();
+  // Initialize Borrower
+  await borrower.initialize(dygnifyConfig.address);
+  console.log("Borrower deployed to:", borrower.address);
+
+  // Deploy Opportunity origination pool
+  const OpportunityOrigination = await hre.ethers.getContractFactory(
+    "OpportunityOrigination"
+  );
   const opportunityOrigination = await OpportunityOrigination.deploy();
 
   await opportunityOrigination.deployed();
 
-  console.log("Opportunity Origination deployed to:", opportunityOrigination.address);
+  // Initialize the Opportunity origination pool
+  await opportunityOrigination.initialize(dygnifyConfig.address);
+  console.log(
+    "Opportunity Origination deployed to:",
+    opportunityOrigination.address
+  );
 
-  const CollateralToken = await hre.ethers.getContractFactory("CollateralToken");
+  // deploy collateral token
+  const CollateralToken = await hre.ethers.getContractFactory(
+    "CollateralToken"
+  );
   const collateralToken = await CollateralToken.deploy();
 
   await collateralToken.deployed();
-
+  // Initialize the collateral token
+  await collateralToken.initialize(
+    dygnifyConfig.address,
+    opportunityOrigination.address
+  );
   console.log("collateralToken deployed to:", collateralToken.address);
 
-  const OpportunityPool = await hre.ethers.getContractFactory("OpportunityPool");
+  // Opportunity pool deployment
+  const OpportunityPool = await hre.ethers.getContractFactory(
+    "OpportunityPool"
+  );
   const opportunityPool = await OpportunityPool.deploy();
-
   await opportunityPool.deployed();
-
   console.log("OpportunityPool deployed to:", opportunityPool.address);
+
+  // Initialize the Dygnify config with all the addresses
+  await dygnifyConfig.setAddress(1, lpToken.address);
+  await dygnifyConfig.setAddress(2, testUSDCToken.address);
+  await dygnifyConfig.setAddress(3, seniorPool.address);
+  await dygnifyConfig.setAddress(4, opportunityPool.address);
+  await dygnifyConfig.setAddress(5, collateralToken.address);
+  await dygnifyConfig.setAddress(6, opportunityOrigination.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

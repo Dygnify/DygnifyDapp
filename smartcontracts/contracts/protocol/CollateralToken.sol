@@ -11,7 +11,15 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "./DygnifyConfig.sol";
 
-contract CollateralToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable {
+contract CollateralToken is
+    Initializable,
+    ERC721Upgradeable,
+    ERC721URIStorageUpgradeable,
+    PausableUpgradeable,
+    AccessControlUpgradeable,
+    ERC721BurnableUpgradeable,
+    UUPSUpgradeable
+{
     using CountersUpgradeable for CountersUpgradeable.Counter;
     DygnifyConfig public dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
@@ -21,16 +29,22 @@ contract CollateralToken is Initializable, ERC721Upgradeable, ERC721URIStorageUp
     CountersUpgradeable.Counter private _tokenIdCounter;
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
-    function _collateralToken_init(DygnifyConfig config, address _minterRole) initializer public {
+    function initialize(DygnifyConfig config, address _minterRole)
+        public
+        initializer
+    {
+        require(address(config) != address(0), "Invalid config address");
+
+        dygnifyConfig = DygnifyConfig(config);
+        address owner = dygnifyConfig.dygnifyAdminAddress();
+        require(owner != address(0), "Invalid Owner");
+
         __ERC721_init("CollateralToken", "CT");
         __ERC721URIStorage_init();
         __Pausable_init();
         __AccessControl_init();
         __ERC721Burnable_init();
         __UUPSUpgradeable_init();
-
-        dygnifyConfig = DygnifyConfig(config);
-        address owner = dygnifyConfig.dygnifyAdminAddress();
 
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
         _grantRole(PAUSER_ROLE, owner);
@@ -51,25 +65,28 @@ contract CollateralToken is Initializable, ERC721Upgradeable, ERC721URIStorageUp
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
+    function safeMint(address to, string memory uri)
+        public
+        onlyRole(MINTER_ROLE)
+    {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        whenNotPaused
-        override
-    {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override whenNotPaused {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
     function _authorizeUpgrade(address newImplementation)
         internal
-        onlyRole(UPGRADER_ROLE)
         override
+        onlyRole(UPGRADER_ROLE)
     {}
 
     // The following functions are overrides required by Solidity.

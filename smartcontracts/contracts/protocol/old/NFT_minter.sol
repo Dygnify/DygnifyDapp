@@ -10,9 +10,8 @@ contract NFTMinter is ERC721 {
     // mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
 
-    constructor() public ERC721("NftVerse", "NV") {}
+    constructor() ERC721("NftVerse", "NV") {}
 
-    
     //To map tokenID to tokenURI
     function _setTokenURI(uint256 tokenId, string memory _tokenURI)
         internal
@@ -33,7 +32,7 @@ contract NFTMinter is ERC721 {
         _setTokenURI(newItemId, tokenURI);
         return newItemId;
     }
- 
+
     //function that can return total NFT minted
     function totalSupply() public view returns (uint256) {
         return _tokenIds.current();

@@ -39,9 +39,9 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public dailyInterestRate;
 
     uint256 public seniorYieldPerecentage;
-    uint256 public juniorYieldPerecentage; 
+    uint256 public juniorYieldPerecentage;
     uint256 public seniorOverduePerecentage;
-    uint256 public juniorOverduePerecentage; 
+    uint256 public juniorOverduePerecentage;
 
     bool public isDrawdownsPaused;
 
@@ -80,6 +80,10 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         string memory _collateralDocument,
         uint256 _capitalLoss
     ) external override initializer {
+        require(
+            address(_dygnifyConfig) != address(0),
+            "Invalid config address"
+        );
         dygnifyConfig = _dygnifyConfig;
         address owner = dygnifyConfig.dygnifyAdminAddress();
         require(owner != address(0), "Invalid Owner");
@@ -121,7 +125,9 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         }
 
         uint256 loanTenureInSec = loanTenureInDays * (1 days);
-        juniorSubpoolDetails.fundsLockedUntil =  block.timestamp + loanTenureInSec;
+        juniorSubpoolDetails.fundsLockedUntil =
+            block.timestamp +
+            loanTenureInSec;
 
         uint256 total_Repayment = loanAmount.add(
             loanAmount.mul(loanInterest.div(100)).div(10**6)
@@ -134,17 +140,18 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         );
         dailyInterestRate = effectiveInterest.div(loanTenureInDays);
 
-        amountWithoutEMI =  loanAmount
-            .div(loanTenureInDays
-            .div(paymentFrequencyInDays)
-            .mul(10**6))
+        amountWithoutEMI = loanAmount
+            .div(loanTenureInDays.div(paymentFrequencyInDays).mul(10**6))
             .mul(10**6);
-        
+
         totalRepayments = loanTenureInDays.div(paymentFrequencyInDays);
-        
+
         (seniorYieldPerecentage, juniorYieldPerecentage) = getYieldPercentage();
-        
-        (seniorOverduePerecentage, juniorOverduePerecentage) = getOverDuePercentage();
+
+        (
+            seniorOverduePerecentage,
+            juniorOverduePerecentage
+        ) = getOverDuePercentage();
         bool success = usdcToken.approve(address(this), 2**256 - 1);
         require(success, "Failed to approve USDC");
     }
@@ -286,12 +293,15 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     }
 
     function repayment() public nonReentrant whenNotPaused onlyBorrower {
-        require(repaymentCounter <= totalRepayments, "Repayment Process is done");
+        require(
+            repaymentCounter <= totalRepayments,
+            "Repayment Process is done"
+        );
         require(
             opportunityOrigination.isDrawdown(opportunityID) == true,
             "Funds in opportunity haven't drawdown yet."
         );
-        if(repaymentCounter == totalRepayments){
+        if (repaymentCounter == totalRepayments) {
             opportunityOrigination.markRepaid(opportunityID);
         }
         uint256 amount = emiAmount;
@@ -299,7 +309,9 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint256 currentRepaymentDue = nextRepaymentTime();
         uint256 overDueFee;
         if (currentTime <= currentRepaymentDue) {} else {
-            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(86400);
+            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                86400
+            );
             overDueFee = overDueSeconds
                 .mul(dailyInterestRate.div(100))
                 .mul(emiAmount)
@@ -310,48 +322,53 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             dygnifyConfig.getLeverageRatio().add(1)
         );
 
-        uint tempSenior = temp.mul(
-            dygnifyConfig.getLeverageRatio()
-        );
-        seniorSubpoolDetails.depositedAmount = seniorSubpoolDetails.depositedAmount.add(tempSenior);
-        juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails.depositedAmount.add(temp);
+        uint256 tempSenior = temp.mul(dygnifyConfig.getLeverageRatio());
+        seniorSubpoolDetails.depositedAmount = seniorSubpoolDetails
+            .depositedAmount
+            .add(tempSenior);
+        juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
+            .depositedAmount
+            .add(temp);
 
-        //yield distribution 
+        //yield distribution
 
-        seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails.yieldGenerated
-            .add(
-                seniorYieldPerecentage.mul(tempSenior).div(10**6)
-            );
+        seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails
+            .yieldGenerated
+            .add(seniorYieldPerecentage.mul(tempSenior).div(10**6));
 
-        juniorSubpoolDetails.yieldGenerated =  juniorSubpoolDetails.yieldGenerated
-            .add(
-                juniorYieldPerecentage.mul(temp).div(10**6)
-            );
+        juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
+            .yieldGenerated
+            .add(juniorYieldPerecentage.mul(temp).div(10**6));
 
-        //overdue Amount distribution   
+        //overdue Amount distribution
 
-        juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails.overdueGenerated.add(juniorOverduePerecentage.mul(overDueFee).div(10**6));
-        seniorSubpoolDetails.overdueGenerated = seniorSubpoolDetails.overdueGenerated.add(seniorOverduePerecentage.mul(overDueFee).div(10**6));
-        
+        juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
+            .overdueGenerated
+            .add(juniorOverduePerecentage.mul(overDueFee).div(10**6));
+        seniorSubpoolDetails.overdueGenerated = seniorSubpoolDetails
+            .overdueGenerated
+            .add(seniorOverduePerecentage.mul(overDueFee).div(10**6));
+
         amount = amount.add(overDueFee);
         poolBalance = poolBalance.add(amount);
         repaymentCounter = repaymentCounter.add(1);
-        
+
         usdcToken.safeTransferFrom(msg.sender, address(this), amount);
     }
-    
+
     // this function will withdraw all the available amount of executor including yield and overdue profit
-    function withdrawAll(uint8 _subpoolId) 
+    function withdrawAll(uint8 _subpoolId)
         public
         nonReentrant
-        whenNotPaused 
-        returns(uint256) {
+        whenNotPaused
+        returns (uint256)
+    {
         require(
             _subpoolId <= uint8(Subpool.SeniorSubpool),
             "SubpoolID : out of range"
         );
         uint256 amount;
-            
+
         if (_subpoolId == uint8(Subpool.SeniorSubpool)) {
             require(
                 seniorSubpoolDetails.isPoolLocked == false,
@@ -369,10 +386,11 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 seniorSubpoolDetails.yieldGenerated > 0,
                 "yield generated of senior subpool is zero currently"
             );
-            amount = seniorSubpoolDetails.depositedAmount
-                .add(seniorSubpoolDetails.yieldGenerated);
-            
-            if(seniorSubpoolDetails.overdueGenerated > 0){
+            amount = seniorSubpoolDetails.depositedAmount.add(
+                seniorSubpoolDetails.yieldGenerated
+            );
+
+            if (seniorSubpoolDetails.overdueGenerated > 0) {
                 amount = amount.add(seniorSubpoolDetails.overdueGenerated);
                 seniorSubpoolDetails.overdueGenerated = 0;
             }
@@ -384,16 +402,17 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 "Junior Subpool is locked"
             );
             require(
-                isStaking[msg.sender] ==
-                    true &&
-                    stakingBalance[msg.sender] > 0,
+                isStaking[msg.sender] == true && stakingBalance[msg.sender] > 0,
                 "zero amount to deposit."
             );
             require(
-                stakingBalance[msg.sender] <= juniorSubpoolDetails.depositedAmount,
+                stakingBalance[msg.sender] <=
+                    juniorSubpoolDetails.depositedAmount,
                 "currently junior subpool don't have Liquidity"
             );
-            uint256 yieldGatherd = juniorYieldPerecentage.mul(stakingBalance[msg.sender]).div(10**6);
+            uint256 yieldGatherd = juniorYieldPerecentage
+                .mul(stakingBalance[msg.sender])
+                .div(10**6);
             require(
                 yieldGatherd <= juniorSubpoolDetails.yieldGenerated,
                 "currently junior subpool don't have Liquidity"
@@ -409,10 +428,14 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             stakingBalance[msg.sender] = 0;
             amount = stakingBalance[msg.sender].add(yieldGatherd);
 
-            if(juniorSubpoolDetails.overdueGenerated > 0){
-                uint overdueGathered = (juniorOverduePerecentage.mul(stakingBalance[msg.sender])).div(10**6);
+            if (juniorSubpoolDetails.overdueGenerated > 0) {
+                uint256 overdueGathered = (
+                    juniorOverduePerecentage.mul(stakingBalance[msg.sender])
+                ).div(10**6);
                 amount = amount.add(overdueGathered);
-                juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails.overdueGenerated.sub(overdueGathered);
+                juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
+                    .overdueGenerated
+                    .sub(overdueGathered);
             }
         }
 
@@ -421,8 +444,11 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return amount;
     }
 
-    function getRepaymentAmount() public view returns(uint256) {
-        require(repaymentCounter <= totalRepayments, "Repayment Process is done");
+    function getRepaymentAmount() public view returns (uint256) {
+        require(
+            repaymentCounter <= totalRepayments,
+            "Repayment Process is done"
+        );
         require(
             opportunityOrigination.isDrawdown(opportunityID) == true,
             "Funds in opportunity haven't drawdown yet."
@@ -433,7 +459,9 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint256 currentRepaymentDue = nextRepaymentTime();
         uint256 overDueFee;
         if (currentTime <= currentRepaymentDue) {} else {
-            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(86400);
+            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                86400
+            );
             overDueFee = overDueSeconds
                 .mul(dailyInterestRate.div(100))
                 .mul(emiAmount)
@@ -444,8 +472,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return amount;
     }
 
-    function getYieldPercentage()public view returns (uint256, uint256) {
-        
+    function getYieldPercentage() public view returns (uint256, uint256) {
         uint256 one = 10**6;
         uint256 _seniorYieldPerecentage = loanInterest
             .div(100)
@@ -459,40 +486,53 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             .div(100)
             .mul(
                 one.sub(dygnifyConfig.getDygnifyFee()).add(
-                    dygnifyConfig.getJuniorSubpoolFee()
-                    .mul(dygnifyConfig.getLeverageRatio())
+                    dygnifyConfig.getJuniorSubpoolFee().mul(
+                        dygnifyConfig.getLeverageRatio()
+                    )
                 )
             )
             .div(10**6);
         return (_seniorYieldPerecentage, _juniorYieldPerecentage);
     }
 
-    function getOverDuePercentage()public view returns (uint256, uint256) {
-        
+    function getOverDuePercentage() public view returns (uint256, uint256) {
         uint256 yield = emiAmount - amountWithoutEMI;
 
-        uint256 juniorInvestment = amountWithoutEMI.div(dygnifyConfig.getLeverageRatio() + 1);
-        uint256 seniorInvestment = juniorInvestment.mul(dygnifyConfig.getLeverageRatio());
+        uint256 juniorInvestment = amountWithoutEMI.div(
+            dygnifyConfig.getLeverageRatio() + 1
+        );
+        uint256 seniorInvestment = juniorInvestment.mul(
+            dygnifyConfig.getLeverageRatio()
+        );
 
-        uint256 _seniorOverDuePerecentage = (seniorInvestment.mul(seniorYieldPerecentage)).div(yield); 
-        uint256 _juniorOverDuePerecentage = (juniorInvestment.mul(juniorYieldPerecentage)).div(yield);
+        uint256 _seniorOverDuePerecentage = (
+            seniorInvestment.mul(seniorYieldPerecentage)
+        ).div(yield);
+        uint256 _juniorOverDuePerecentage = (
+            juniorInvestment.mul(juniorYieldPerecentage)
+        ).div(yield);
         return (_seniorOverDuePerecentage, _juniorOverDuePerecentage);
     }
 
     function nextRepaymentTime() public view returns (uint256) {
-        require(repaymentCounter <= totalRepayments, "Repayment Process is done");
+        require(
+            repaymentCounter <= totalRepayments,
+            "Repayment Process is done"
+        );
         uint256 nextRepaymentDue = repaymentStartTime.add(
             repaymentCounter.mul(1 days * paymentFrequencyInDays)
         );
         return nextRepaymentDue;
     }
 
-    function getSeniorTotalDepositable() external view returns (uint256){
+    function getSeniorTotalDepositable() external view returns (uint256) {
         return seniorSubpoolDetails.totalDepositable;
     }
 
-    function getSeniorProfit() external view returns (uint256){
-        return seniorSubpoolDetails.yieldGenerated + seniorSubpoolDetails.overdueGenerated;
+    function getSeniorProfit() external view returns (uint256) {
+        return
+            seniorSubpoolDetails.yieldGenerated +
+            seniorSubpoolDetails.overdueGenerated;
     }
 
     modifier onlyBorrower() {

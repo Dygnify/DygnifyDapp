@@ -26,12 +26,11 @@ contract OpportunityOrigination is
     // storing all the opportunities in an array.
     bytes32[] public opportunityIds;
 
-    function _opportunityOrigination_init(DygnifyConfig config)
-        external
-        initializer
-    {
+    function initialize(DygnifyConfig config) external initializer {
+        require(address(config) != address(0), "Invalid config address");
         dygnifyConfig = DygnifyConfig(config);
         address owner = dygnifyConfig.dygnifyAdminAddress();
+        require(owner != address(0), "Invalid Owner");
         _BaseUpgradeablePausable_init(owner);
         collateralToken = CollateralToken(
             dygnifyConfig.collateralTokenAddress()
@@ -274,7 +273,8 @@ contract OpportunityOrigination is
     function markRepaid(bytes32 id) external override {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         require(
-            opportunityToId[id].opportunityStatus == OpportunityStatus.Drawndown,
+            opportunityToId[id].opportunityStatus ==
+                OpportunityStatus.Drawndown,
             "Opportunity pool is haven't drawdown yet."
         );
         require(
@@ -306,24 +306,42 @@ contract OpportunityOrigination is
         else return false;
     }
 
-    function getOpportunityPoolAddress(bytes32 id) external view returns (address) {
+    function getOpportunityPoolAddress(bytes32 id)
+        external
+        view
+        returns (address)
+    {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
-        require(uint8(opportunityToId[id].opportunityStatus) == uint8(OpportunityStatus.Active), "Opportunity must be active");
+        require(
+            uint8(opportunityToId[id].opportunityStatus) ==
+                uint8(OpportunityStatus.Active),
+            "Opportunity must be active"
+        );
         address poolAddress = opportunityToId[id].opportunityPoolAddress;
-        require(poolAddress != address(0), "Opportunity pool address haven't created yet" );
+        require(
+            poolAddress != address(0),
+            "Opportunity pool address haven't created yet"
+        );
         return poolAddress;
     }
 
-    function getAlltheOpportunitiesOf(address borrower)external view returns (bytes32[] memory ) {
+    function getAlltheOpportunitiesOf(address borrower)
+        external
+        view
+        returns (bytes32[] memory)
+    {
         require(borrower != address(0), "Invalid Borrower sddress");
         bytes32[] memory opportunities = opportunityOf[borrower];
         return opportunities;
     }
 
-    function getUnderWritersOpportunities(address _underwriter)external view returns (bytes32[] memory ) {
+    function getUnderWritersOpportunities(address _underwriter)
+        external
+        view
+        returns (bytes32[] memory)
+    {
         require(_underwriter != address(0), "Invalid underwriter sddress");
         bytes32[] memory opportunities = underwriterToOpportunity[_underwriter];
         return opportunities;
     }
-
 }
