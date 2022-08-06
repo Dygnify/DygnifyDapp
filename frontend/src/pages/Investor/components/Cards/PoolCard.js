@@ -1,7 +1,32 @@
 import React, { useState } from "react";
+import { getBinaryFileData } from "../../../../services/fileHelper";
+import { retrieveFiles } from "../../../../services/web3storageIPFS";
 
-const PoolCard = () => {
-  const data = [{ loan_amount: 45000, opportunity_name: "Bullet" }];
+const PoolCard = ({ data }) => {
+  const {
+    opportunityInfo,
+    loanAmount,
+    estimatedAPY,
+    capitalInvested,
+    yieldGenerated,
+  } = data;
+
+  const [companyName, setCompanyName] = useState();
+  const [poolName, setPoolName] = useState();
+
+  // fetch the opportunity details from IPFS
+  retrieveFiles(opportunityInfo, true).then((res) => {
+    if (res) {
+      let read = getBinaryFileData(res);
+      read.onloadend = function () {
+        let opJson = JSON.parse(read.result);
+        if (opJson) {
+          setCompanyName(opJson.loanName);
+          setPoolName(opJson.company_name);
+        }
+      };
+    }
+  });
 
   return (
     <div
@@ -22,13 +47,13 @@ const PoolCard = () => {
       <div style={{ marginLeft: 32, width: 400 }}>
         <div style={{ display: "flex", marginTop: -18 }} className="flex-col">
           <p className="card-title mb-0" style={{ fontSize: 23 }}>
-            Name of Pool
+            {poolName}
           </p>
           <p
             className="card-title mb-4 mt-0"
             style={{ fontSize: 16, fontWeight: 400 }}
           >
-            Name of Company
+            {companyName}
           </p>
         </div>
 
@@ -37,7 +62,7 @@ const PoolCard = () => {
             Pool Size
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            450000000 {process.env.REACT_APP_TOKEN_NAME}
+            {loanAmount} {process.env.REACT_APP_TOKEN_NAME}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -45,7 +70,7 @@ const PoolCard = () => {
             Capital Invested
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            22/7/2022
+            {capitalInvested}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -53,7 +78,7 @@ const PoolCard = () => {
             Estimated APY
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            24%
+            {estimatedAPY}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -61,7 +86,7 @@ const PoolCard = () => {
             Yield Generated
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            $24000
+            {yieldGenerated}
           </p>
         </div>
       </div>

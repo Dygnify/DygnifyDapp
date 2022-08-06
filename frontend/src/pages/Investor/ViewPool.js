@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import InvestModal from "../Investor/components/Modal/InvestModal";
 import GradientButton from "../../tools/Button/GradientButton";
 import DueDateCard from "./components/Cards/DueDateCard";
+import {
+  getWalletBal,
+  getUserWalletAddress,
+} from "../../components/transaction/TransactionHelper";
 
 const ViewPool = () => {
+  const location = useLocation();
+  const poolData = location.data;
   const OP = {
     estimatedAPY: "24%",
   };
@@ -15,12 +22,12 @@ const ViewPool = () => {
     setSelected(null);
   };
 
-  const loadBlockpassWidget = () => {
+  const loadBlockpassWidget = (address) => {
     console.log("#############");
     const blockpass = new window.BlockpassKYCConnect(
-      "kyc_aml_c7be4", // service client_id from the admin console
+      process.env.REACT_APP_CLIENT_ID, // service client_id from the admin console
       {
-        refId: "1", // assign the local user_id of the connected user
+        refId: address, // assign the local user_id of the connected user
       }
     );
 
@@ -41,7 +48,7 @@ const ViewPool = () => {
   ];
 
   useEffect(() => {
-    loadBlockpassWidget();
+    getUserWalletAddress().then((address) => loadBlockpassWidget(address));
     fetch("/dueList.json")
       .then((res) => res.json())
       .then((data) => setDueList(data));

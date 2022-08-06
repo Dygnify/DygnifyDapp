@@ -1,13 +1,30 @@
 import React, { useState } from "react";
 
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
+import { getBinaryFileData } from "../../../../services/fileHelper";
+import { retrieveFiles } from "../../../../services/web3storageIPFS";
 
-const ViewPoolCard = ({ onClick }) => {
-  const data = [
-    { loan_amount: 45000, opportunity_name: "Bullet", caption: "Open" },
-  ];
+const ViewPoolCard = ({ onClick, data }) => {
+  const { opportunityInfo, loanAmount, loanInterest, isFull } = data;
 
-  const StatusButton = ({ label, id }) => {
+  const [companyName, setCompanyName] = useState();
+  const [poolName, setPoolName] = useState(data.companyName);
+
+  // fetch the opportunity details from IPFS
+  retrieveFiles(opportunityInfo, true).then((res) => {
+    if (res) {
+      let read = getBinaryFileData(res);
+      read.onloadend = function () {
+        let opJson = JSON.parse(read.result);
+        if (opJson) {
+          setCompanyName(opJson.loanName);
+          setPoolName(opJson.company_name);
+        }
+      };
+    }
+  });
+
+  const StatusButton = ({ label, isFullStatus }) => {
     return (
       <div
         className="rounded-box  text-[#000000] items-center justify-center"
@@ -18,16 +35,10 @@ const ViewPoolCard = ({ onClick }) => {
           height: 29,
           display: "flex",
           background: `${
-            id === 1
-              ? "#109B81"
-              : id === 2
-              ? "linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)"
-              : id === 3
-              ? "linear-gradient(276.08deg, rgba(255, 255, 255, 0.04) 2.02%, rgba(255, 255, 255, 0.4) 2.03%, #FFFFFF 99.33%)"
-              : "#000000"
+            isFullStatus === false
+              ? "#109B81" // greeen
+              : "linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)" // yellow
           }`,
-          //background: `linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)`,
-          //background: `linear-gradient(276.08deg, rgba(255, 255, 255, 0.04) 2.02%, rgba(255, 255, 255, 0.4) 2.03%, #FFFFFF 99.33%)`,
         }}
       >
         <div>{label}</div>
@@ -54,13 +65,13 @@ const ViewPoolCard = ({ onClick }) => {
       <div style={{ marginLeft: 32, width: 400 }}>
         <div style={{ display: "flex", marginTop: -18 }} className="flex-col">
           <p className="card-title mb-0" style={{ fontSize: 23 }}>
-            Name of Pool
+            {poolName}
           </p>
           <p
             className="card-title mb-4 mt-0"
             style={{ fontSize: 16, fontWeight: 400 }}
           >
-            Name of Company
+            {companyName}
           </p>
         </div>
 
@@ -69,7 +80,7 @@ const ViewPoolCard = ({ onClick }) => {
             Pool Balance
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            450000000 {process.env.REACT_APP_TOKEN_NAME}
+            {loanAmount} {process.env.REACT_APP_TOKEN_NAME}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -77,7 +88,7 @@ const ViewPoolCard = ({ onClick }) => {
             Estimated APY
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            24%
+            {loanInterest}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -85,7 +96,7 @@ const ViewPoolCard = ({ onClick }) => {
             Status
           </p>
 
-          <StatusButton label="Open" id={1} />
+          <StatusButton label="Open" isFullStatus={isFull} />
         </div>
         <div style={{ marginTop: 32 }}>
           <PrimaryButton onClick={onClick}>View Pool </PrimaryButton>
