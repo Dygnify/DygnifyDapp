@@ -359,8 +359,49 @@ export async function getAllUnderReviewOpportunities() {
           obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
           obj.collateralDocument = tx.collateralDocument.toString();
           obj.capitalLoss = tx.capitalLoss.toString();
+          obj.createdOn = tx.createdOn.toString();
           opportunities.push(obj);
         }
+      }
+      return opportunities;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
+}
+
+export async function getApprovalHistory() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+      const underWriter = await getEthAddress();
+      const opportunities = await contract.getUnderWritersOpportunities(underWriter);
+      let count = opportunities.length;
+
+      for (let i = 0; i < count; i++) {
+        let obj = {};
+        let tx = await contract.opportunityToId(opportunities[i]);
+        obj.borrower = tx.borrower.toString();
+        obj.opportunityID = tx.opportunityID.toString();
+        obj.opportunityInfo = tx.opportunityInfo.toString();
+        obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
+        obj.loanAmount = tx.loanAmount.toString();
+        obj.loanTenure = tx.loanTenureInDays.toString();
+        obj.loanInterest = tx.loanInterest.toString();
+        obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
+        obj.collateralDocument = tx.collateralDocument.toString();
+        obj.capitalLoss = tx.capitalLoss.toString();
+        obj.createdOn = tx.createdOn.toString();
+        obj.status = tx.opportunityStatus.toString();
+        opportunities.push(obj);
       }
       return opportunities;
     }
@@ -489,3 +530,6 @@ export async function getAllWithdrawableOpportunities() {
 
   return [];
 }
+
+
+

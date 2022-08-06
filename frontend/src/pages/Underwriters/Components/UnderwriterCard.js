@@ -2,13 +2,7 @@ import React, { useState } from "react";
 
 import PrimaryButton from "../../../tools/Button/PrimaryButton";
 
-const UnderwriterCard = ({ onClick }) => {
-  const data = {
-    poolSize: "$500,000.00",
-    capitalInvested: "24%",
-    estimatedApy: "24/07/2022",
-    availableForWithdrawl: "$580,000",
-  };
+const UnderwriterCard = ({ onClick, data }) => {
 
   return (
     <div
@@ -50,7 +44,7 @@ const UnderwriterCard = ({ onClick }) => {
             Pool Size
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.poolSize} {process.env.REACT_APP_TOKEN_NAME}
+            {data.loanAmount} {process.env.REACT_APP_TOKEN_NAME}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -61,7 +55,7 @@ const UnderwriterCard = ({ onClick }) => {
             Interest Rate
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.capitalInvested}
+            {data.loanInterest}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -72,7 +66,7 @@ const UnderwriterCard = ({ onClick }) => {
             Created On
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.estimatedApy}
+            {data.createdOn}
           </p>
         </div>
 
