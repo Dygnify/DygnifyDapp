@@ -15,7 +15,7 @@ export const requestAccount = async (metaMask) => {
     }
     await provider.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: "80001" }], // chainId must be in hexadecimal numbers
+      params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
     });
     await provider.request({
       method: "eth_requestAccounts",
