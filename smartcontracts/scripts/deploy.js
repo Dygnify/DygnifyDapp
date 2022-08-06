@@ -118,6 +118,9 @@ async function main() {
 
   // Set all numbers
   await dygnifyConfig.setNumber(0, 4);
+  await dygnifyConfig.setNumber(1, 100000);
+  await dygnifyConfig.setNumber(2, 5000000);
+  await dygnifyConfig.setNumber(3, 200000);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
