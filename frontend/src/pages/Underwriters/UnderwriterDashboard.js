@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 
-import Header from "../Investor/components/Header";
+import Header from "../Layout/Header";
 
 const UnderwriterDashboard = () => {
   return (

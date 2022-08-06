@@ -1,16 +1,11 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
+import Header from "../Layout/Header";
 
 const BorrowerDashboard = () => {
   return (
     <div style={{ backgroundColor: "#14171F" }}>
-      <div
-        style={{ display: "flex", borderBottom: "1px solid #20232A" }}
-        className="justify-between px-5 py-3"
-      >
-        <img src="/images/logo.png" alt="" />
-        {/* <GradientButton className='btn-outline'>Connected</GradientButton> */}
-      </div>
+      <Header />
       <div className="drawer drawer-mobile">
         <input
           id="dashboard-sidebar"

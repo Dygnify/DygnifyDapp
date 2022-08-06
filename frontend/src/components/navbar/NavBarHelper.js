@@ -15,7 +15,7 @@ export const requestAccount = async (metaMask) => {
     }
     await provider.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
+      params: [{ chainId: "80001" }], // chainId must be in hexadecimal numbers
     });
     await provider.request({
       method: "eth_requestAccounts",
@@ -29,7 +29,7 @@ export const isConnected = async () => {
   console.log(connectionStatus);
   let chainId = window.ethereum.networkVersion;
   console.log(chainId);
-  if (chainId == "0x13881" && connectionStatus == true) {
+  if (chainId == "80001" && connectionStatus == true) {
     return connectionStatus;
   } else {
     return false;

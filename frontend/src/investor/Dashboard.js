@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import PieGraph from "./components/PieChart";
 import Graph from "../mock/components/Graph";
-import { getTransctionHistory } from "../components/transactionHistory/TransactionGetter";
+import { getTransactionHistory } from "../components/transactionHistory/TransactionGetter";
 import { useState, useEffect } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,14 +20,14 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
 async function getHis() {
-  await getTransctionHistory();
+  await getTransactionHistory();
 }
 
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
 
   useEffect(async () => {
-    let data = await getTransctionHistory();
+    let data = await getTransactionHistory();
     setHistory(data);
     console.log(data);
   }, []);

@@ -11,7 +11,7 @@ const getEthAddress = async () => {
   return await signer.getAddress();
 };
 
-export async function getTransctionHistory() {
+export async function getTransactionHistory() {
   let userAddress = await getEthAddress();
   const url = new URL(
     `https://api-testnet.polygonscan.com/api?module=account&action=tokentx&contractaddress=${dygnifyStakingAddress}&address=${userAddress}&startblock=0&endblock=99999999&offset=5&sort=desc&apikey=${process.env.REACT_APP_POLYGONSCAN_APIKEY}`

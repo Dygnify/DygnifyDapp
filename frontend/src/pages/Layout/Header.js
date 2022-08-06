@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Link } from "@mui/material";
-import GradientButton from "../../../tools/Button/GradientButton";
-import { isConnected } from "../../../components/navbar/NavBarHelper";
-import PrimaryButton from "../../../tools/Button/PrimaryButton";
+import GradientButton from "../../tools/Button/GradientButton";
+import { isConnected } from "../../components/navbar/NavBarHelper";
+import PrimaryButton from "../../tools/Button/PrimaryButton";
 
 const Header = () => {
   const [status, setStatus] = useState(false);
@@ -15,6 +15,7 @@ const Header = () => {
   };
 
   async function requestAccount() {
+    console.log("kkl");
     const result = await window.ethereum.request({
       method: "eth_requestAccounts",
     });

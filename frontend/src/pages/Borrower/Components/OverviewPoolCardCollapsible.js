@@ -1,6 +1,6 @@
 import React from "react";
 
-const OpportunityCardCollapsible = ({ data }) => {
+const OverviewPoolCardCollapsible = ({ data }) => {
   return (
     <div
       style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
@@ -11,12 +11,22 @@ const OpportunityCardCollapsible = ({ data }) => {
         style={{ display: "flex" }}
         className="collapse-title text-md font-light justify-around w-full"
       >
-        <p className="w-1/4 text-center">Pool Name</p>
+        <p className="w-1/4 text-center">{data?.opportunity_name}</p>
         <p className="w-1/4 text-center">
           {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
         </p>
-        <p className="w-1/4 text-center">{data?.repayment_date} %</p>
-        <p className="w-1/4 text-center">Under Review</p>
+        <p className="w-1/4 text-center">
+          {data?.principal_amount + data?.interest_amount}{" "}
+          {process.env.REACT_APP_TOKEN_NAME}{" "}
+          <sup
+            style={{ backgroundColor: "#323A46", borderRadius: "50%" }}
+            className="ml-1 tooltip p-2"
+            data-tip={`Principle - ${data?.principal_amount} ${process.env.REACT_APP_TOKEN_NAME}, Interest - ${data?.interest_amount} ${process.env.REACT_APP_TOKEN_NAME}`}
+          >
+            <button>i</button>
+          </sup>
+        </p>
+        <p className="w-1/4 text-center">{data?.repayment_date}</p>
       </div>
       <div className="collapse-content">
         <div
@@ -35,11 +45,11 @@ const OpportunityCardCollapsible = ({ data }) => {
           >
             <div style={{ display: "flex" }} className="flex-col">
               <div className="mb-10">
-                <p className="font-light text-sm">Interest Rate</p>
+                <p className="font-light text-sm">Interest rate</p>
                 <p className="font-medium text-lg">{data?.loan_interest} %</p>
               </div>
               <div>
-                <p className="font-light text-sm">Payment Frequency</p>
+                <p className="font-light text-sm">Payment frequency</p>
                 <p className="font-medium text-lg">
                   {data?.payment_frequency} days
                 </p>
@@ -47,16 +57,14 @@ const OpportunityCardCollapsible = ({ data }) => {
             </div>
             <div style={{ display: "flex" }} className="flex-col">
               <div className="mb-10">
-                <p className="font-light text-sm">Loan Tenure</p>
+                <p className="font-light text-sm">Payment tenure</p>
                 <p className="font-medium text-lg">
                   {data?.loan_tenure / 30} months
                 </p>
               </div>
               <div>
-                <p className="font-light text-sm">Loan Type</p>
-                <p className="font-medium text-lg">
-                  {data?.loan_type === 0 ? "Term Loan" : "Bullet Loan"}
-                </p>
+                <p className="font-light text-sm">Contract address</p>
+                <p className="font-medium text-lg">0xd45a4sdfcasd</p>
               </div>
             </div>
           </div>
@@ -66,4 +74,4 @@ const OpportunityCardCollapsible = ({ data }) => {
   );
 };
 
-export default OpportunityCardCollapsible;
+export default OverviewPoolCardCollapsible;

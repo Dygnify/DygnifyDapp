@@ -43,7 +43,7 @@ const Withdraw = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="px-5">
         <div
           style={{ display: "flex" }}
@@ -89,7 +89,7 @@ const Withdraw = () => {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 };
 

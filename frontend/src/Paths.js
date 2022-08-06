@@ -100,7 +100,7 @@ const Paths = () => {
         <Route path="/investor-dashboard" element={<InvestorDashboard />} />
 
         <Route path="/investor-dashboardN" element={<InvestorDashboardNew />}>
-          <Route index element={<InvestorOverview />}></Route>
+          <Route index element={<InvestorOverview />} />
           <Route path="invest" element={<Invest />} />
           <Route path="withdraw" element={<Withdraw />} />
           <Route path="transaction" element={<Transactions />} />
@@ -109,7 +109,7 @@ const Paths = () => {
         </Route>
 
         <Route path="/underwriterDashboard" element={<UnderwriterDashboard />}>
-          <Route index element={<BorrowRequest />}></Route>
+          <Route index element={<BorrowRequest />} />
           <Route path="poolDetail" element={<PoolDetails />} />
           <Route path="approvalHistory" element={<ApprovalHistory />} />
         </Route>
@@ -118,27 +118,15 @@ const Paths = () => {
         <Route path="/toolTest" element={<ToolTest />} />
 
         <Route path="/borrower_dashboard" element={<BorrowerDashboard />}>
-          <Route index element={<Overview></Overview>}></Route>
+          <Route index element={<Overview />}></Route>
 
-          <Route path="borrow_list" element={<BorrowList></BorrowList>}></Route>
-          <Route
-            path="transaction"
-            element={<Transaction></Transaction>}
-          ></Route>
-          <Route
-            path="borrower_profile"
-            element={<BorrowerProfile></BorrowerProfile>}
-          ></Route>
-          <Route
-            path="underwriterQueries"
-            element={<UnderwriterQueries />}
-          ></Route>
+          <Route path="borrow_list" element={<BorrowList />} />
+          <Route path="transaction" element={<Transaction />} />
+          <Route path="borrower_profile" element={<BorrowerProfile />} />
+          <Route path="underwriterQueries" element={<UnderwriterQueries />} />
           <Route path="queriesPoolDetail" element={<QueriesPoolDetails />} />
 
-          <Route
-            path="edit_profile"
-            element={<EditBorrowerProfile></EditBorrowerProfile>}
-          ></Route>
+          <Route path="edit_profile" element={<EditBorrowerProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>

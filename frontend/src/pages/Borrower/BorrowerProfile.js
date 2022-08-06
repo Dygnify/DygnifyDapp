@@ -135,7 +135,7 @@ const BorrowerProfile = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="mb-16 ">
         <h2 className="mb-6 text-2xl font-medium">Borrower Profile</h2>
         <div
@@ -166,6 +166,14 @@ const BorrowerProfile = () => {
             Edit Profile
           </button>
         </div>
+
+        <div className="w-full">
+          <div className="w-1/2">
+            <strong>Completer your KYC</strong>
+            <div></div>
+          </div>
+        </div>
+
         <div
           style={{ display: "flex" }}
           className="w-full justify-between mb-6"
@@ -230,7 +238,7 @@ const BorrowerProfile = () => {
           <DocumentCard></DocumentCard>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ethers } from "ethers";
-import dygToken from "../artifacts/contracts/protocol/DygnifyToken.sol/DygnifyToken.json";
-import NFTMinter from "../artifacts/contracts/protocol/NFT_minter.sol/NFTMinter.json";
+import dygToken from "../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json";
+import NFTMinter from "../artifacts/contracts/protocol/old/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from "../services/axioscall";
 import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
 import { amlCheck } from "../services/OFACAxiosOptions";

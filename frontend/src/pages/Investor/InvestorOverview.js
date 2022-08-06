@@ -43,7 +43,7 @@ const InvestorOverview = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="px-5">
         <div
           style={{ display: "flex" }}
@@ -134,7 +134,7 @@ const InvestorOverview = () => {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 };
 

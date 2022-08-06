@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
-import { getTransctionHistory } from "../../components/transactionHistory/TransactionGetter";
+import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -8,7 +8,7 @@ const Transactions = () => {
   const [history, setHistory] = useState([]);
 
   useEffect(async () => {
-    let data = await getTransctionHistory();
+    let data = await getTransactionHistory();
     setTransactions(data);
     console.log(data);
   }, []);

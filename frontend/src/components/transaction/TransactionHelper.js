@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import dygnifyStaking from "../../artifacts/contracts/protocol/DygnifyStaking.sol/DygnifyStaking.json";
-import dygnifyToken from "../../artifacts/contracts/protocol/DygnifyToken.sol/DygnifyToken.json";
+import dygnifyStaking from "../../artifacts/contracts/protocol/old/DygnifyStaking.sol/DygnifyStaking.json";
+import dygnifyToken from "../../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json";
 import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";

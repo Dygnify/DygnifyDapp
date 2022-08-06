@@ -3,7 +3,7 @@ import { Box, Button, Typography, Stack, Link } from "@mui/material";
 import Company from "./components/Company";
 import LockedValueChart from "./components/LockedValueChart";
 import GradientButton from "../tools/Button/GradientButton";
-import Header from "../pages/Investor/components/Header";
+import Header from "../pages/Layout/Header";
 import { useNavigate } from "react-router-dom";
 import Gradient from "./components/Gradient";
 import GradientDark from "./components/GradientDark";
