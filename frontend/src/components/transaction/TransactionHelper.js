@@ -215,6 +215,29 @@ export async function createOpportunity(formData) {
   }
 }
 
+function getOpportunity(opportunity) {
+  if (!opportunity) {
+    return undefined;
+  }
+
+  // Create the opportunity object
+  let obj = {};
+  obj.id = opportunity.opportunityID.toString();
+  obj.borrower = opportunity.borrower.toString();
+  obj.opportunityInfo = opportunity.opportunityInfo.toString();
+  obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
+  obj.loanAmount = opportunity.loanAmount.toString();
+  obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
+  obj.loanInterest = opportunity.loanInterest.toString();
+  obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
+  obj.collateralDocument = opportunity.collateralDocument.toString();
+  obj.capitalLoss = opportunity.capitalLoss.toString();
+  obj.status = opportunity.opportunityStatus.toString();
+  obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
+  obj.createdOn = new Date(parseInt(opportunity.createdOn.toString()));
+
+  return obj;
+}
 // to fetch created opportunities of specific borrower
 export async function getOpportunitysOf() {
   try {
@@ -364,19 +387,9 @@ export async function getAllActiveOpportunities() {
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        let obj = {};
-        let tx = await contract.opportunityToId(id);
-        if (tx.opportunityStatus.toString() == "5") {
-          obj.borrower = tx.borrower.toString();
-          obj.opportunity_id = tx.opportunityID.toString();
-          obj.opportunity_info = tx.opportunityInfo.toString();
-          obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
-          obj.loan_amount = tx.loanAmount.toString();
-          obj.loan_tenure = tx.loanTenureInDays.toString();
-          obj.loan_interest = tx.loanInterest.toString();
-          obj.payment_frequency = tx.paymentFrequencyInDays.toString();
-          obj.collateral_document = tx.collateralDocument.toString();
-          obj.capital_loss = tx.capitalLoss.toString();
+        let opportunity = await contract.opportunityToId(id);
+        if (opportunity.opportunityStatus.toString() == "5") {
+          let obj = getOpportunity(opportunity);
           opportunities.push(obj);
         }
       }
@@ -447,7 +460,7 @@ export async function getAllWithdrawableOpportunities() {
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        let obj = {};
+
         let tx = await contract.opportunityToId(id);
 
         if (tx.opportunityStatus.toString() == "7") {
@@ -461,18 +474,10 @@ export async function getAllWithdrawableOpportunities() {
           let poolBal = await poolContract.poolBalance();
           if (poolBal.toString() != "0") {
             let juniorPooldata = await poolContract.juniorSubpoolDetails();
-
-            obj.borrower = tx.borrower.toString();
-            obj.opportunity_id = tx.opportunityID.toString();
-            obj.opportunity_info = tx.opportunityInfo.toString();
-            obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
-            obj.loan_amount = tx.loanAmount.toString();
-            obj.loan_tenure = tx.loanTenureInDays.toString();
-            obj.loan_interest = tx.loanInterest.toString();
-            obj.payment_frequency = tx.paymentFrequencyInDays.toString();
-            obj.collateral_document = tx.collateralDocument.toString();
-            obj.capital_loss = tx.capitalLoss.toString();
-            opportunities.push(obj);
+            let obj = getOpportunity(tx);
+            if (obj) {
+              opportunities.push(obj);
+            }
           }
         }
       }
@@ -482,5 +487,5 @@ export async function getAllWithdrawableOpportunities() {
     console.log(error);
   }
 
-  return 0;
+  return [];
 }
