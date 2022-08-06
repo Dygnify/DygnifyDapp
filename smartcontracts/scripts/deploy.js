@@ -107,13 +107,17 @@ async function main() {
   await opportunityPool.deployed();
   console.log("OpportunityPool deployed to:", opportunityPool.address);
 
-  // Initialize the Dygnify config with all the addresses
+  // Initialize the Dygnify config
+  // Set all the addresses
   await dygnifyConfig.setAddress(1, lpToken.address);
   await dygnifyConfig.setAddress(2, testUSDCToken.address);
   await dygnifyConfig.setAddress(3, seniorPool.address);
   await dygnifyConfig.setAddress(4, opportunityPool.address);
   await dygnifyConfig.setAddress(5, collateralToken.address);
   await dygnifyConfig.setAddress(6, opportunityOrigination.address);
+
+  // Set all numbers
+  await dygnifyConfig.setNumber(0, 4);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

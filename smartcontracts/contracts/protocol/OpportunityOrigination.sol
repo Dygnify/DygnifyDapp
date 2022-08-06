@@ -97,6 +97,7 @@ contract OpportunityOrigination is
         _opportunity.paymentFrequencyInDays = _paymentFrequencyInDays;
         _opportunity.collateralDocument = _collateralDocument;
         _opportunity.capitalLoss = _capitalLoss;
+        _opportunity.createdOn = block.timestamp;
 
         opportunityToId[id] = _opportunity;
         opportunityOf[_borrower].push(id);

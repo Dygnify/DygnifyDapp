@@ -31,6 +31,7 @@ interface IOpportunityOrigination {
         uint256 capitalLoss;
         OpportunityStatus opportunityStatus;
         address opportunityPoolAddress;
+        uint256 createdOn;
     }
 
     function getTotalOpportunities() external view returns (uint256);
