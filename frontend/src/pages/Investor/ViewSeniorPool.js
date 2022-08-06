@@ -26,7 +26,7 @@ const ViewSeniorPool = () => {
   }, [dueList]);
 
   return (
-    <div>
+    <>
       <div style={{ fontSize: 28 }} className="mb-0">
         Senior Pool
       </div>
@@ -138,7 +138,7 @@ const ViewSeniorPool = () => {
       <br />
       <br />
       <br />
-    </div>
+    </>
   );
 };
 
