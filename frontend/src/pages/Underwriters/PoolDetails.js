@@ -7,6 +7,8 @@ const PoolDetails = () => {
   };
   const [expand, setExpand] = useState(false);
 
+  const status = { approve: true, unsure: false, reject: false };
+
   const info = [
     {
       label: "Opening Date",
@@ -30,32 +32,42 @@ const PoolDetails = () => {
           </small>
         </div>
         <div className="mr-10">
-          <button
-            style={{
-              borderRadius: "100px",
-              padding: "3px 16px",
-              borderColor: "#10B981",
-            }}
-            className="ml-3 btn btn-xs btn-outline text-[#10B981] text-xs capitalize"
-          >
-            Approve
-          </button>
-          <button
-            style={{
-              borderRadius: "100px",
-              padding: "3px 16px",
-              borderColor: "#EF4444",
-            }}
-            className="ml-3 btn btn-xs btn-outline text-[#EF4444] text-xs capitalize"
-          >
-            Reject
-          </button>
-          <button
-            style={{ borderRadius: "100px", padding: "3px 16px" }}
-            className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
-          >
-            Unsure
-          </button>
+          {status.approve ||
+          !(status.approve || status.reject || status.unsure) ? (
+            <button
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                borderColor: "#10B981",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-[#10B981] text-xs capitalize"
+            >
+              {status.approve ? "Approved" : "Approve"}
+            </button>
+          ) : null}
+
+          {status.reject ||
+          !(status.approve || status.reject || status.unsure) ? (
+            <button
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                borderColor: "#EF4444",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-[#EF4444] text-xs capitalize"
+            >
+              {status.reject ? "Rejected" : "Reject"}
+            </button>
+          ) : null}
+          {status.unsure ||
+          !(status.approve || status.reject || status.unsure) ? (
+            <button
+              style={{ borderRadius: "100px", padding: "3px 16px" }}
+              className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
+            >
+              Unsure
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -70,18 +82,6 @@ const PoolDetails = () => {
           >
             <div style={{ fontSize: 19 }} className="mb-0">
               Deals Overview
-            </div>
-            <div
-              style={{
-                width: 119,
-                height: 36,
-                background: "#292C33",
-                display: "flex",
-                fontSize: 14,
-              }}
-              className="rounded-box items-center justify-center ml-20"
-            >
-              View details
             </div>
           </div>
           <div style={{ color: "#D0D5DD" }}>

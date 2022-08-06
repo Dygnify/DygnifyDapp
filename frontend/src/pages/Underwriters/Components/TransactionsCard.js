@@ -16,7 +16,7 @@ const TransactionsCard = ({ data }) => {
 
         {data?.status === "Completed" && (
           <p className="w-1/6 text-center">
-            <button
+            <div
               style={{
                 borderRadius: "35px",
                 padding: "5px 8px",
@@ -27,12 +27,12 @@ const TransactionsCard = ({ data }) => {
               className="btn btn-xs btn-success"
             >
               Approved
-            </button>
+            </div>
           </p>
         )}
         {data?.status === "Not Completed" && (
           <p className="w-1/6 text-center">
-            <button
+            <div
               style={{
                 borderRadius: "35px",
                 padding: "5px 8px",
@@ -43,12 +43,12 @@ const TransactionsCard = ({ data }) => {
               className="btn btn-xs btn-error"
             >
               Rejected
-            </button>
+            </div>
           </p>
         )}
         {data?.status === "Processing" && (
           <p className="w-1/6 text-center">
-            <button
+            <div
               style={{
                 borderRadius: "35px",
                 padding: "5px 8px",
@@ -59,7 +59,7 @@ const TransactionsCard = ({ data }) => {
               className="btn btn-xs btn-warning"
             >
               Unsure
-            </button>
+            </div>
           </p>
         )}
       </div>
