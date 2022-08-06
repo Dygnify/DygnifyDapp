@@ -1,40 +1,69 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import DrawdownCard from "../../tools/Card/DrawdownCard";
-import RepaymentCard from "../../tools/Card/RepaymentCard";
+import { useState, useEffect } from "react";
 import PoolCard from "./components/Cards/PoolCard";
 import PieGraph from "../../investor/components/PieChart";
 import GradientButton from "../../tools/Button/GradientButton";
 import BorrowChart from "../../components/charts/BorrowChart";
-import { getAllWithdrawableOpportunities } from "../../components/transaction/TransactionHelper";
+import {
+  getAllWithdrawableOpportunities,
+  getUserSeniorPoolInvestment,
+  getWalletBal,
+} from "../../components/transaction/TransactionHelper";
 import { useNavigate } from "react-router-dom";
 
 const InvestorOverview = () => {
-  const [data, setData] = useState([]);
-  const [repayment, setRepayment] = useState([]);
-  const [poolDetail, setPoolDetail] = useState([]);
+  const [totalInvestment, setTotalInvestment] = useState(0);
+  const [totalYield, setTotalYield] = useState(0);
+  const [seniorPool, setSeniorPool] = useState([]);
+  const [juniorPool, setJuniorPool] = useState([]);
 
   const path = useNavigate();
 
-  useEffect(() => {
-    fetch("/drawdown.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  function updateSummery(investment, interest) {
+    setTotalInvestment((prev) => prev + investment);
+
+    setTotalYield((prev) => prev + investment * interest);
+  }
 
   useEffect(() => {
-    fetch("/repayment.json")
-      .then((res) => res.json())
-      .then((data) => setRepayment(data));
+    try {
+      const fetchData = async () => {
+        const data = await getUserSeniorPoolInvestment();
+        if (data) {
+          let seniorInvestmentData = {};
+          seniorInvestmentData.capitalInvested =
+            data.stakingAmt + data.withdrawableAmt;
+          seniorInvestmentData.loanAmount = await getWalletBal(
+            process.env.REACT_APP_SENIORPOOL
+          );
+          seniorInvestmentData.loanInterest = 10;
+          setSeniorPool(seniorInvestmentData);
+          updateSummery(
+            seniorInvestmentData.capitalInvested,
+            seniorInvestmentData.capitalInvested *
+              seniorInvestmentData.loanInterest
+          );
+        }
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
     try {
       const fetchData = async () => {
-        const opportunities = await getAllWithdrawableOpportunities();
-        setPoolDetail(opportunities);
-        //setPoolDetail([{ hello: "1" }]);
+        const junorPools = await getAllWithdrawableOpportunities();
+        if (juniorPool && juniorPool.length) {
+          setJuniorPool(junorPools);
+          let investment = 0;
+          let yieldAccumulated = 0;
+          juniorPool.forEach((pool) => {
+            investment += pool.capitalInvested;
+            yieldAccumulated += pool.yieldGenerated;
+          });
+          updateSummery(investment, yieldAccumulated);
+        }
       };
       fetchData();
     } catch (error) {
@@ -83,14 +112,14 @@ const InvestorOverview = () => {
               Total Amount Invested
             </div>
             <div style={{ fontSize: 28, color: "white" }} className="mb-10">
-              {poolDetail.length === 0 ? "- -" : "345K USDC"}
+              {totalInvestment === 0 ? "- -" : totalInvestment}
             </div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#777E91" }}>
               Total Yield Earned
             </div>
 
             <div style={{ fontSize: 28, color: "white" }}>
-              {poolDetail.length === 0 ? "- -" : "34K USDC"}
+              {totalYield === 0 ? "- -" : totalYield}
             </div>
           </div>
         </div>
@@ -104,35 +133,44 @@ const InvestorOverview = () => {
       <div style={{ fontSize: 23 }} className="mt-5 mb-3">
         Your Investments
       </div>
-      {poolDetail.length === 0 ? (
+      <h2 style={{ fontSize: 24 }} className=" mb-5">
+        Senior Pool
+      </h2>
+      {seniorPool.length === 0 ? (
         <div style={{ display: "flex" }} className="justify-center">
           <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
-            No investments stats available. Explore opportunities here.
+            No senior pool investments stats available. Explore opportunities
+            here.
           </div>
         </div>
       ) : (
-        <>
-          <div className="mb-16 w-1/2 ">
-            <h2 style={{ fontSize: 24 }} className=" mb-5">
-              Senior Pool
-            </h2>
-            <div style={{ display: "flex" }} className="gap-4">
-              {repayment.map((item) => (
-                <PoolCard />
-              ))}
-            </div>
+        <div className="mb-16 w-1/2 ">
+          <div style={{ display: "flex" }} className="gap-4">
+            {seniorPool.map((seniorPoolData) => (
+              <PoolCard key={seniorPoolData.id} data={seniorPoolData} />
+            ))}
           </div>
-          <div className="mb-16">
-            <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
-              Junior Pool
-            </h2>
-            <div style={{ display: "flex" }} className=" gap-4">
-              {data.map((item) => (
-                <PoolCard />
-              ))}
-            </div>
+        </div>
+      )}
+
+      <h2 style={{ fontSize: 24 }} className=" mb-5">
+        Junior Pool
+      </h2>
+      {juniorPool.length === 0 ? (
+        <div style={{ display: "flex" }} className="justify-center">
+          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+            No junior pool investments stats available. Explore opportunities
+            here.
           </div>
-        </>
+        </div>
+      ) : (
+        <div className="mb-16">
+          <div style={{ display: "flex" }} className=" gap-4">
+            {juniorPool.map((juniorPoolData) => (
+              <PoolCard key={juniorPoolData.id} data={juniorPoolData} />
+            ))}
+          </div>
+        </div>
       )}
     </>
   );

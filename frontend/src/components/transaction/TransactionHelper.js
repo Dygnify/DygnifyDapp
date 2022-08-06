@@ -4,9 +4,25 @@ import dygnifyToken from "../../artifacts/contracts/protocol/old/TestUSDCToken.s
 import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
+import seniorPool from "../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
+
+export async function getUserWalletAddress() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      return address;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return undefined;
+}
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -122,7 +138,7 @@ export async function getTotalYield() {
   return 0;
 }
 
-export async function getWalletBal() {
+export async function getWalletBal(address) {
   try {
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
@@ -134,8 +150,9 @@ export async function getWalletBal() {
         provider
       );
       const signer = provider.getSigner();
-      const bal = await contract.balanceOf(await signer.getAddress());
-      // console.log(ethers.utils.formatEther(bal));
+      const bal = await contract.balanceOf(
+        address ? address : await signer.getAddress()
+      );
       return ethers.utils.formatEther(bal);
     }
   } catch (error) {
@@ -167,6 +184,7 @@ export async function getWithdrawBal() {
 
   return 0;
 }
+
 export const getEthAddress = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   // Prompt user for account connections
@@ -389,7 +407,17 @@ export async function getAllActiveOpportunities() {
         let id = await contract.opportunityIds(i);
         let opportunity = await contract.opportunityToId(id);
         if (opportunity.opportunityStatus.toString() == "5") {
+          // get pool for opportunity
+          let poolAddress = opportunity.opportunityPoolAddress.toString();
+          console.log(poolAddress);
+          const poolContract = new ethers.Contract(
+            poolAddress,
+            opportunityPool.abi,
+            provider
+          );
+          let poolBal = await poolContract.poolBalance();
           let obj = getOpportunity(opportunity);
+          obj.isFull = poolBal >= obj.loanAmount;
           opportunities.push(obj);
         }
       }
@@ -399,7 +427,7 @@ export async function getAllActiveOpportunities() {
     console.log(error);
   }
 
-  return 0;
+  return undefined;
 }
 
 export async function getFundedOpportunities() {
@@ -473,8 +501,15 @@ export async function getAllWithdrawableOpportunities() {
           );
           let poolBal = await poolContract.poolBalance();
           if (poolBal.toString() != "0") {
-            let juniorPooldata = await poolContract.juniorSubpoolDetails();
+            const signer = provider.getSigner();
+            const userStakingAmt = await poolContract.stakingBalance(
+              await signer.getAddress()
+            );
+            const estimatedAPY = await poolContract.juniorYieldPerecentage();
             let obj = getOpportunity(tx);
+            obj.capitalInvested = userStakingAmt;
+            obj.estimatedAPY = estimatedAPY;
+            obj.yieldGenerated = userStakingAmt * estimatedAPY;
             if (obj) {
               opportunities.push(obj);
             }
@@ -488,4 +523,25 @@ export async function getAllWithdrawableOpportunities() {
   }
 
   return [];
+}
+
+export async function getUserSeniorPoolInvestment() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        seniorPool.abi,
+        provider
+      );
+
+      return await contract.getUserInvestment();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return undefined;
 }
