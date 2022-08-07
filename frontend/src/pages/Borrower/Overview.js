@@ -9,6 +9,7 @@ import {
   getOpportunitiesWithDues,
   getDrawdownOpportunities,
 } from "../../components/transaction/TransactionHelper";
+import DoughnutChart from "../Components/DoughnutChart";
 
 const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
@@ -82,18 +83,31 @@ const Overview = () => {
         <div
           style={{
             backgroundColor: "#191D23",
-            boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)",
+            //boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)",
             borderRadius: "16px",
+            padding: 50,
+            height: 300,
+            display: "flex",
           }}
-          className="w-1/2 px-4 py-6"
+          className="flex-col w-1/2 items-center justify-center"
         >
-          <h2
-            className="text-xl font-semibold text-gray-500"
-            style={{ height: 30 }}
-          >
-            Amount Distribution
-          </h2>
-          <PieGraph />
+          <div>
+            <DoughnutChart
+              data={[92, 8]}
+              color={["#5375FE", "#ffffff"]}
+              width={400}
+              labels={[
+                "Elevation Capital 300USDC",
+                "Elevation Capital 300USDC",
+              ]}
+              borderWidth={[1, 8]}
+              legendStyle={{
+                display: true,
+                position: "left",
+                labels: { usePointStyle: true, padding: 15, color: "white" },
+              }}
+            />
+          </div>
         </div>
         <div
           style={{ boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)" }}

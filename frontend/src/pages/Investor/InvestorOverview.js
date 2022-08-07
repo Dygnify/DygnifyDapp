@@ -9,6 +9,7 @@ import {
   getWalletBal,
 } from "../../components/transaction/TransactionHelper";
 import { useNavigate } from "react-router-dom";
+import DoughnutChart from "../Components/DoughnutChart";
 
 const InvestorOverview = () => {
   const [totalInvestment, setTotalInvestment] = useState(0);
@@ -95,17 +96,35 @@ const InvestorOverview = () => {
 
       <div className="flex-row items-center" style={{ display: "flex" }}>
         <div
-          className="flex-row rounded-box justify-around bg-[#191D23]  "
-          style={{ display: "flex", height: 278, width: 584 }}
+          className="flex-row rounded-box justify-between items-center bg-[#191D23]  "
+          style={{
+            display: "flex",
+            height: 278,
+            width: 584,
+            paddingLeft: 46,
+            paddingRight: 46,
+          }}
         >
           <div
-            style={{ display: "flex", marginLeft: -80, marginTop: -10 }}
+            style={{ display: "flex", marginRight: 60 }}
             className="justify-start"
           >
-            <PieGraph />
+            <DoughnutChart
+              data={[80, 20]}
+              color={["#5375FE", "#F790F9"]}
+              labels={["Amount invested", "Yield earned"]}
+              legendStyle={{ display: false }}
+            />
           </div>
+          {/* Change this total implementation */}
+
+          <div style={{ position: "absolute", marginLeft: 62 }}>
+            <div style={{ color: "#A0ABBB" }}>Total Value</div>
+            <div>380K USDC</div>
+          </div>
+
           <div
-            style={{ display: "flex", color: "red", marginLeft: -200 }}
+            style={{ display: "flex", color: "red" }}
             className="flex-col justify-center"
           >
             <div style={{ fontSize: 14, fontWeight: 400, color: "#777E91" }}>

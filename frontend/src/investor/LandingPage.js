@@ -12,7 +12,7 @@ const LandingPage = () => {
   const path = useNavigate();
 
   return (
-    <div className="bg-[#000000]">
+    <div className="bg-[#000000] w-full">
       <Header />
 
       <div className="flex-col items-center" style={{ display: "flex" }}>

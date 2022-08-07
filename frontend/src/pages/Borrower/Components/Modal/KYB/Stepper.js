@@ -86,7 +86,7 @@ const Stepper = ({ steps, currentStep }) => {
             {index + 1}
           </div>
           <div
-            className={`absolute top-0 w-32 text-center mt-16 text-xs font-medium uppercase ${
+            className={`absolute top-0 w-32 text-center mt-16 text-xs font-medium  ${
               step.highlighted ? "text-white" : "text-gray-400"
             }`}
           >
