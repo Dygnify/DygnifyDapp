@@ -96,23 +96,19 @@ const Overview = () => {
             <DoughnutChart
               data={[92, 8]}
               color={["#5375FE", "#ffffff"]}
-              width={400}
+              width={200}
               labels={[
                 "Elevation Capital 300USDC",
                 "Elevation Capital 300USDC",
               ]}
               borderWidth={[1, 8]}
-              legendStyle={{
-                display: true,
-                position: "left",
-                labels: { usePointStyle: true, padding: 15, color: "white" },
-              }}
+              legendStyle={{ display: false }}
             />
           </div>
         </div>
         <div
           style={{ boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)" }}
-          className="w-1/4 ml-4 "
+          className="w-1/4 ml-4"
         >
           <div
             style={{ backgroundColor: "#191D23", borderRadius: "16px" }}

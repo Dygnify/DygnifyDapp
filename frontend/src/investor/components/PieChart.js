@@ -37,7 +37,7 @@ const renderActiveShape = (props) => {
     React.createElement(
       "text",
       { x: cx, y: cy, dy: 8, textAnchor: "middle", fill: fill },
-      payload.name
+      <div style={{ fontSize: 14 }}>Amount Invested</div>
     ),
     React.createElement(Sector, {
       cx: cx,
@@ -47,49 +47,50 @@ const renderActiveShape = (props) => {
       startAngle: startAngle,
       endAngle: endAngle,
       fill: "#5375FE",
-    })
-    // React.createElement(Sector, {
-    //   cx: cx,
-    //   cy: cy,
-    //   startAngle: startAngle,
-    //   endAngle: endAngle,
-    //   innerRadius: outerRadius + 6,
-    //   outerRadius: outerRadius + 10,
-    //   fill: fill,
-    // })
-    // React.createElement("path", {
-    //   d: `M${sx},${sy}L${mx},${my}L${ex},${ey}`,
-    //   stroke: fill,
-    //   fill: "none",
-    // }),
-    // React.createElement("circle", {
-    //   cx: ex,
-    //   cy: ey,
-    //   r: 2,
-    //   fill: fill,
-    //   stroke: "none",
-    // })
-    // React.createElement(
-    //   "text",
-    //   {
-    //     x: ex + (cos >= 0 ? 1 : -1) * 12,
-    //     y: ey,
-    //     textAnchor: textAnchor,
-    //     fill: "#333",
-    //   },
-    //   `${payload.name}`
-    // ),
-    // React.createElement(
-    //   "text",
-    //   {
-    //     x: ex + (cos >= 0 ? 1 : -1) * 12,
-    //     y: ey,
-    //     dy: 18,
-    //     textAnchor: textAnchor,
-    //     fill: "#999",
-    //   },
-    //   `${value} ${process.env.REACT_APP_TOKEN_NAME}`
-    // )
+    }),
+
+    React.createElement(Sector, {
+      cx: cx,
+      cy: cy,
+      startAngle: startAngle,
+      endAngle: endAngle,
+      innerRadius: outerRadius + 6,
+      outerRadius: outerRadius + 10,
+      fill: fill,
+    }),
+    React.createElement("path", {
+      d: `M${sx},${sy}L${mx},${my}L${ex},${ey}`,
+      stroke: fill,
+      fill: "none",
+    }),
+    React.createElement("circle", {
+      cx: ex,
+      cy: ey,
+      r: 2,
+      fill: fill,
+      stroke: "none",
+    }),
+    React.createElement(
+      "text",
+      {
+        x: ex + (cos >= 0 ? 1 : -1) * 12,
+        y: ey,
+        textAnchor: textAnchor,
+        fill: "#333",
+      },
+      `${"Amount Invested"}`
+    ),
+    React.createElement(
+      "text",
+      {
+        x: ex + (cos >= 0 ? 1 : -1) * 12,
+        y: ey,
+        dy: 18,
+        textAnchor: textAnchor,
+        fill: "#999",
+      },
+      `${value} ${process.env.REACT_APP_TOKEN_NAME}`
+    )
   );
 };
 const PieGraph = () => {

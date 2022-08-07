@@ -157,7 +157,7 @@ const InvestorOverview = () => {
       </h2>
       {seniorPool.length === 0 ? (
         <div style={{ display: "flex" }} className="justify-center">
-          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+          <div style={{ color: "#64748B", fontSize: 18, margin: "20px 0" }}>
             No senior pool investments stats available. Explore opportunities
             here.
           </div>
@@ -177,7 +177,7 @@ const InvestorOverview = () => {
       </h2>
       {juniorPool.length === 0 ? (
         <div style={{ display: "flex" }} className="justify-center">
-          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+          <div style={{ color: "#64748B", fontSize: 18, margin: "20px 0 " }}>
             No junior pool investments stats available. Explore opportunities
             here.
           </div>
@@ -191,6 +191,8 @@ const InvestorOverview = () => {
           </div>
         </div>
       )}
+      <br />
+      <br />
     </>
   );
 };

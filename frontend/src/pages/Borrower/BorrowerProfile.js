@@ -6,7 +6,6 @@ import {
   getBinaryFileData,
   getDataURLFromFile,
 } from "../../services/fileHelper";
-import ArrowRight from "./Components/SVG/ArrowRight";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
 
 const BorrowerProfile = () => {
@@ -29,7 +28,6 @@ const BorrowerProfile = () => {
   };
 
   const loadBlockpassWidget = () => {
-    console.log("#############");
     const blockpass = new window.BlockpassKYCConnect(
       "kyc_aml_c7be4", // service client_id from the admin console
       {
@@ -211,7 +209,6 @@ const BorrowerProfile = () => {
               cursor: "pointer",
             }}
             id="blockpass-kyc-connect"
-            onClick={() => console.log("cljoj")}
           >
             <div style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}>
               Completer your KYC
