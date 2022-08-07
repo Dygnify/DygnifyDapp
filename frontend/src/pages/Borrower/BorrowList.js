@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getOpportunitysOf } from "../../components/transaction/TransactionHelper";
+import {
+  getDrawdownOpportunities,
+  getOpportunitysOf,
+} from "../../components/transaction/TransactionHelper";
 import DrawdownCard from "../../tools/Card/DrawdownCard";
 import OpportunityCardCollapsible from "../../tools/Card/OpportunityCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
@@ -9,9 +12,13 @@ const BorrowList = () => {
   const [opportunities, setOpportunities] = useState([]);
 
   useEffect(() => {
-    fetch("/drawdown.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
+    const fetchData = async () => {
+      let op = await getDrawdownOpportunities();
+      if (op && op.length) {
+        setData(op);
+      }
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {

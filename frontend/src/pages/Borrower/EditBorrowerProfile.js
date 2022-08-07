@@ -6,6 +6,7 @@ import TextArea from "../../tools/Inputs/TextArea";
 import TextField from "../../tools/Inputs/TextField";
 import FileUploader from "../Components/FileUploader";
 import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
+import { updateBorrowerDetails } from "../../components/transaction/TransactionHelper";
 
 const EditBorrowerProfile = () => {
   const companyName = useRef();
@@ -128,8 +129,8 @@ const EditBorrowerProfile = () => {
       console.log(borrowerJsonData);
       let file = makeFileObjects(borrowerJsonData, Math.random());
       let borrowerDataCID = await storeFiles(file);
-      console.log(borrowerDataCID);
-      // Need to save this CID in the blockchain
+      // Save this CID in the blockchain
+      await updateBorrowerDetails(borrowerDataCID);
     } catch (error) {
       console.log(error);
     }

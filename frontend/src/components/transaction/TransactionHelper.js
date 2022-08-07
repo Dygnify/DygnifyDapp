@@ -582,9 +582,32 @@ export async function getUserSeniorPoolInvestment() {
   return undefined;
 }
 
-export async function getBorrowerDetails(borrowerAddress) {
+export async function getBorrowerDetails() {
   try {
-    if (typeof window.ethereum !== "undefined" && borrowerAddress) {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        borrowerContract.abi,
+        provider
+      );
+      let borrower = await getEthAddress();
+      if (borrower) {
+        return await contract.borrowerProfile(borrower);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return undefined;
+}
+
+export async function updateBorrowerDetails(cid) {
+  try {
+    if (typeof window.ethereum !== "undefined" && cid) {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
@@ -594,7 +617,7 @@ export async function getBorrowerDetails(borrowerAddress) {
         provider
       );
 
-      return await contract.borrowerProfile(borrowerAddress);
+      return await contract.updateBorrowerProfile(cid);
     }
   } catch (error) {
     console.log(error);
