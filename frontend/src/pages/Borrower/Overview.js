@@ -86,13 +86,56 @@ const Overview = () => {
             backgroundColor: "#191D23",
             //boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)",
             borderRadius: "16px",
-            padding: 50,
+            padding: 10,
             height: 300,
             display: "flex",
           }}
-          className="flex-col w-1/2 items-center justify-center"
+          className="flex-row w-1/2 items-center justify-between"
         >
-          <div>
+          <div
+            style={{ display: "flex", color: "red" }}
+            className="flex-col justify-center"
+          >
+            <div style={{ display: "flex" }} className="flex-row items-center">
+              <div
+                style={{
+                  height: 8,
+                  width: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#5375FE",
+                  margin: 5,
+                }}
+              />
+              <div style={{ fontSize: 14, fontWeight: 400, color: "#777E91" }}>
+                Total Outstanding
+              </div>
+            </div>
+            <div
+              style={{ fontSize: 28, color: "white", marginLeft: 20 }}
+              className="mb-10"
+            >
+              380K
+            </div>
+
+            <div style={{ display: "flex" }} className="flex-row items-center">
+              <div
+                style={{
+                  height: 8,
+                  width: 10,
+                  borderRadius: 5,
+                  backgroundColor: "white",
+                  margin: 5,
+                }}
+              />
+              <div style={{ fontSize: 14, fontWeight: 400, color: "#777E91" }}>
+                Total Repaid
+              </div>
+            </div>
+            <div style={{ fontSize: 28, color: "white", marginLeft: 20 }}>
+              365K
+            </div>
+          </div>
+          <div style={{ marginRight: 20 }}>
             <DoughnutChart
               data={[92, 8]}
               color={["#5375FE", "#ffffff"]}
@@ -111,7 +154,11 @@ const Overview = () => {
           className="w-1/4 ml-4"
         >
           <div
-            style={{ backgroundColor: "#191D23", borderRadius: "16px" }}
+            style={{
+              backgroundColor: "#191D23",
+              borderRadius: "16px",
+              height: 140,
+            }}
             className="mb-4 px-4 py-4"
           >
             <h3 className="font-semibold text-3xl text-purple-100">
@@ -122,7 +169,11 @@ const Overview = () => {
             </p>
           </div>
           <div
-            style={{ backgroundColor: "#191D23", borderRadius: "16px" }}
+            style={{
+              backgroundColor: "#191D23",
+              borderRadius: "16px",
+              height: 140,
+            }}
             className="px-4 py-4"
           >
             <h3 className="font-semibold text-3xl text-purple-100">

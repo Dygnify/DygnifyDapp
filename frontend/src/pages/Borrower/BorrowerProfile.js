@@ -8,6 +8,11 @@ import {
 } from "../../services/fileHelper";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
 import { getBorrowerDetails } from "../../components/transaction/TransactionHelper";
+import Twitter from "../SVGIcons/Twitter";
+import LinkedIn from "../SVGIcons/LinkedIn";
+import Email from "../SVGIcons/Email";
+import Website from "../SVGIcons/Website";
+import Edits from "../SVGIcons/Edits";
 
 const BorrowerProfile = () => {
   const navigate = useNavigate();
@@ -184,15 +189,25 @@ const BorrowerProfile = () => {
               <p className="text-xs">{companyRepName}</p>
             </div>
           </div>
-          <button
-            onClick={() =>
-              navigate("/borrower_dashboard/edit_profile", borrowerJson)
-            }
-            style={{ borderRadius: "100px", padding: "8px 16px" }}
-            className="btn btn-sm btn-outline text-white"
+          <div
+            style={{ display: "flex" }}
+            className="flex-row justify-center items-center"
           >
-            Edit Profile
-          </button>
+            <button
+              onClick={() =>
+                navigate("/borrower_dashboard/edit_profile", borrowerJson)
+              }
+              style={{
+                borderRadius: "100px",
+                padding: "8px 16px",
+                display: "flex",
+              }}
+              className="btn btn-sm btn-outline text-white "
+            >
+              <Edits />
+              <div style={{ marginLeft: 2 }}>Edit Profile</div>
+            </button>
+          </div>
         </div>
 
         <div
@@ -257,34 +272,55 @@ const BorrowerProfile = () => {
           <div style={{ display: "flex" }} className="w-1/2 justify-end">
             <button
               id="twitter"
-              style={{ borderRadius: "100px", padding: "8px 16px" }}
+              style={{
+                borderRadius: "100px",
+                padding: "8px 16px",
+                border: "1px solid #64748B",
+              }}
               className="ml-3 btn btn-sm btn-outline text-white"
               onClick={redirectToURl}
             >
-              Twitter
+              <Twitter />
+              <div style={{ marginLeft: 2 }}>twitter</div>
             </button>
             <button
               id="linkedin"
-              style={{ borderRadius: "100px", padding: "8px 16px" }}
+              style={{
+                borderRadius: "100px",
+                padding: "8px 16px",
+                border: "1px solid #64748B",
+              }}
               className="ml-3 btn btn-sm btn-outline text-white"
               onClick={redirectToURl}
             >
-              LinkedIn
+              <LinkedIn />
+              <div style={{ marginLeft: 2 }}>LinkedIn</div>
             </button>
             <button
-              style={{ borderRadius: "100px", padding: "8px 16px" }}
-              className="ml-3 btn btn-sm btn-outline text-white"
-              onClick={redirectForEmail}
-            >
-              Email
-            </button>
-            <button
-              id="website"
-              style={{ borderRadius: "100px", padding: "8px 16px" }}
+              id="linkedin"
+              style={{
+                borderRadius: "100px",
+                padding: "8px 16px",
+                border: "1px solid #64748B",
+              }}
               className="ml-3 btn btn-sm btn-outline text-white"
               onClick={redirectToURl}
             >
-              Website
+              <Email />
+              <div style={{ marginLeft: 2 }}>Email</div>
+            </button>
+            <button
+              id="linkedin"
+              style={{
+                borderRadius: "100px",
+                padding: "8px 16px",
+                border: "1px solid #64748B",
+              }}
+              className="ml-3 btn btn-sm btn-outline text-white"
+              onClick={redirectToURl}
+            >
+              <Website />
+              <div style={{ marginLeft: 2 }}>Website</div>
             </button>
           </div>
         </div>
