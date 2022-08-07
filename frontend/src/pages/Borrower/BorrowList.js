@@ -66,7 +66,7 @@ const BorrowList = () => {
           {opportunities
             ? opportunities.map((item) => (
                 <OpportunityCardCollapsible
-                  key={opportunities.id}
+                  key={item.id}
                   data={item}
                 />
               ))

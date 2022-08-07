@@ -21,8 +21,8 @@ const PoolCard = ({ data }) => {
       read.onloadend = function () {
         let opJson = JSON.parse(read.result);
         if (opJson) {
-          setCompanyName(opJson.loanName);
-          setPoolName(opJson.company_name);
+          setCompanyName(opJson.company_name);
+          setPoolName(opJson.loanName);
         }
       };
     }
