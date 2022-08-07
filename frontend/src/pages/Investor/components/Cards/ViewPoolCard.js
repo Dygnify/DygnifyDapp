@@ -8,7 +8,7 @@ const ViewPoolCard = ({ onClick, data }) => {
   const { opportunityInfo, loanAmount, loanInterest, isFull } = data;
 
   const [companyName, setCompanyName] = useState();
-  const [poolName, setPoolName] = useState(data.companyName);
+  const [poolName, setPoolName] = useState(data.poolName);
 
   // fetch the opportunity details from IPFS
   retrieveFiles(opportunityInfo, true).then((res) => {

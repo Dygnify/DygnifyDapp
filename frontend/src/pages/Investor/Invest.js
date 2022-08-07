@@ -5,6 +5,8 @@ import {
   getAllActiveOpportunities,
   getWalletBal,
 } from "../../components/transaction/TransactionHelper";
+import { retrieveFiles } from "../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../services/fileHelper";
 
 const Invest = () => {
   const path = useNavigate();
@@ -26,18 +28,27 @@ const Invest = () => {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      let seniorInvestmentData = {};
-      seniorInvestmentData.companyName = "Senior Pool";
-      seniorInvestmentData.loanAmount = await getWalletBal(
-        process.env.REACT_APP_SENIORPOOL
-      );
-      seniorInvestmentData.loanInterest = 10;
-      seniorInvestmentData.isFull = false;
-      setSeniorPool(seniorInvestmentData);
-    };
-    fetchData();
-  }, [seniorPool]);
+    // fetch data from IPFS
+    retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = async function () {
+          let spJson = JSON.parse(read.result);
+          if (spJson) {
+            let seniorInvestmentData = {};
+            seniorInvestmentData.poolName = spJson.poolName;
+            seniorInvestmentData.loanAmount = await getWalletBal(
+              process.env.REACT_APP_SENIORPOOL
+            );
+            seniorInvestmentData.loanInterest = spJson.estimatedAPY;
+            seniorInvestmentData.poolDescription = spJson.poolDescription;
+            seniorInvestmentData.isFull = false;
+            setSeniorPool(seniorInvestmentData);
+          }
+        };
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -63,7 +74,9 @@ const Invest = () => {
           {seniorPool ? (
             <ViewPoolCard
               onClick={() =>
-                path("/investor-dashboardN/viewSeniorPool", seniorPool)
+                path("/investor-dashboardN/viewSeniorPool", {
+                  state: seniorPool,
+                })
               }
               data={seniorPool}
             />

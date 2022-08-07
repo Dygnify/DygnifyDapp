@@ -4,21 +4,15 @@ import GradientButton from "../../tools/Button/GradientButton";
 import DueDateCard from "../Investor/components/Cards/DueDateCard";
 
 const ViewSeniorPool = () => {
-  const OP = {
-    estimatedAPY: "24%",
-  };
-
+  const location = useLocation();
+  const defaultPoolName = "Senior Pool";
+  const defaultAPY = "10";
+  const defaultPoolAmount = 0;
   const [dueList, setDueList] = useState([]);
-  const [expand, setExpand] = useState(false);
-
-  const info = [
-    {
-      label: "Interest Rate",
-      value: "10.00%",
-    },
-    { label: "Payment Tenure", value: "4 Years" },
-    { label: "Drawdown Cap", value: "$100,000" },
-  ];
+  const [poolName, setPoolName] = useState(defaultPoolName);
+  const [poolDescription, setPoolDescription] = useState();
+  const [estimatedAPY, setEstimatedAPY] = useState(defaultAPY);
+  const [poolAmount, setPoolAmount] = useState(defaultPoolAmount);
 
   useEffect(() => {
     fetch("/dueList.json")
@@ -26,10 +20,29 @@ const ViewSeniorPool = () => {
       .then((data) => setDueList(data));
   }, [dueList]);
 
+  useEffect(() => {
+    if (location.state) {
+      setPoolName(
+        location.state.poolName ? location.state.poolName : defaultPoolName
+      );
+      setPoolDescription(
+        location.state.poolDescription ? location.state.poolDescription : ""
+      );
+      setEstimatedAPY(
+        location.state.estimatedAPY ? location.state.estimatedAPY : defaultAPY
+      );
+      setPoolAmount(
+        location.state.loanAmount
+          ? location.state.loanAmount
+          : defaultPoolAmount
+      );
+    }
+  }, [poolName, estimatedAPY, poolAmount]);
+
   return (
     <>
       <div style={{ fontSize: 28 }} className="mb-0">
-        Senior Pool
+        {poolName}
       </div>
 
       <div
@@ -44,58 +57,8 @@ const ViewSeniorPool = () => {
             <div style={{ fontSize: 19 }} className="mb-0">
               Pool Overview
             </div>
-            {/* <div
-              style={{
-                width: 119,
-                height: 36,
-                background: "#292C33",
-                display: "flex",
-                fontSize: 14,
-              }}
-              className="rounded-box items-center justify-center ml-20"
-            >
-              View details
-            </div> */}
           </div>
-          <div>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum. Nulla Lorem mollit cupidatat irure.
-            Laborum magna nulla duis ullamco cillum dolor. Voluptate
-            exercitation incididunt aliquip deserunt reprehenderit elit
-            laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-            ullamco cillum dolor. Voluptate exercitation incididunt aliquip
-            deserunt reprehenderit elit laborum. Nulla Lorem mollit cupidatat
-            irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate
-            exercitation incididunt aliquip deserunt reprehenderit elit
-            laborum.Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum. Voluptate exercitation incididunt
-            aliquip deserunt reprehenderit elit laborum.Voluptate exercitation
-            incididunt aliquip deserunt reprehenderit...
-            <a
-              style={{ fontWeight: 600, cursor: "pointer" }}
-              onClick={() => setExpand(true)}
-            >
-              {expand ? null : "view more"}
-            </a>
-            {expand ? (
-              <div>
-                Laborum magna nulla duis ullamco cillum dolor. Voluptate
-                exercitation incididunt aliquip deserunt reprehenderit elit
-                laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla
-                duis ullamco cillum dolor. Voluptate exercitation incididunt
-                aliquip deserunt reprehenderit elit laborum. Nulla Lorem mollit
-                cupidatat irure. Laborum magna nulla duis ullamco cillum dolor.
-                Voluptate
-              </div>
-            ) : null}
-            <a
-              style={{ fontWeight: 600, cursor: "pointer" }}
-              onClick={() => setExpand(false)}
-            >
-              {expand ? "view less" : null}
-            </a>
-          </div>
+          <div>{poolDescription}</div>
         </div>
         <div className="w-1/2">
           <div
@@ -109,14 +72,14 @@ const ViewSeniorPool = () => {
               className="flex-row justify-between pb-2"
             >
               <h2 style={{ fontSize: 19 }}>Estimated APY.</h2>
-              <h2 style={{ fontSize: 28 }}>24%</h2>
+              <h2 style={{ fontSize: 28 }}>{estimatedAPY}%</h2>
             </div>
             <div
               style={{ display: "flex" }}
               className="flex-row justify-between pb-2"
             >
               <h2 style={{ fontSize: 19 }}>Total Pool Balance</h2>
-              <h2 style={{ fontSize: 28 }}>$10,000,000</h2>
+              <h2 style={{ fontSize: 28 }}>{poolAmount}</h2>
             </div>
 
             <GradientButton className={"w-full mt-20"}>Invest</GradientButton>
