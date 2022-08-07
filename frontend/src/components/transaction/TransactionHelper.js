@@ -235,6 +235,7 @@ export async function createOpportunity(formData) {
       capitalLoss
     );
     await transaction1.wait();
+    console.log("successfully created*******");
   }
 }
 

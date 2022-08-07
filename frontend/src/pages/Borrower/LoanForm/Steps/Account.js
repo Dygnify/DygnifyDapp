@@ -114,6 +114,7 @@ export default function Account({ formData, handleNext }) {
                 <option value="0">Bullet Loan</option>
                 <option value="1">Term Loan</option>
               </select>
+
               {formik.touched.loan_type && formik.errors.loan_type ? (
                 <p style={{ color: "red" }}>
                   <small>{formik.errors.loan_type}</small>

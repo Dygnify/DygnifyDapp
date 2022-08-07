@@ -95,7 +95,7 @@ const LoanForm = () => {
     loan_tenure = loan_tenure * 30;
     const collateral_documents = rest.collateral_document;
     let loanDetails = {
-      loan_type,
+      loan_type: "0",
       loan_amount,
       loan_tenure,
       loan_interest,

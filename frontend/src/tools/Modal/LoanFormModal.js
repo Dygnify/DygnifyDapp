@@ -7,8 +7,10 @@ import StepperControl from "../../pages/Borrower/LoanForm/StepperControl";
 import Account from "../../pages/Borrower/LoanForm/Steps/Account";
 import Details from "../../pages/Borrower/LoanForm/Steps/Details";
 import Final from "../../pages/Borrower/LoanForm/Steps/Final";
+import { loanDetailsValidationSchema } from "../../pages/LoanForm/validations/validation";
 import axiosHttpService from "../../services/axioscall";
 import { pinataCall, uploadFileToIPFS } from "../../services/PinataIPFSOptions";
+import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
 
 const LoanFormModal = ({ handleForm }) => {
   const [processed, setProcessed] = useState(false);
@@ -61,30 +63,22 @@ const LoanFormModal = ({ handleForm }) => {
     }
   };
   async function onFileUpload(selectedFile, loan_info) {
-    console.log(loan_info);
     try {
+      console.log(loan_info);
       console.log("Upload called");
-      let ipfsUploadRes = await axiosHttpService(
-        uploadFileToIPFS(selectedFile)
-      );
-      console.log(ipfsUploadRes);
 
-      // make metadata for collateral document
-      const metadata = {};
-      metadata.imageHash = ipfsUploadRes.res.IpfsHash;
-      metadata.PinSize = ipfsUploadRes.res.PinSize;
-      metadata.Timestamp = ipfsUploadRes.res.Timestamp;
-      const collateralURI = await pinataCall(metadata);
+      let collateralHash = await storeFiles(selectedFile);
 
       // make metadata for loan info
-      const metadata2 = {};
-      metadata2.loanName = loan_info.loan_name;
-      metadata2.loanPurpose = loan_info.loan_purpose;
-      metadata2.company_name = company.company_name;
-      metadata2.company_details = company.company_details;
-      const loanInfoURI = await pinataCall(metadata2);
+      const metadata = {};
+      metadata.loanName = loan_info.loan_name;
+      metadata.loanPurpose = loan_info.loan_purpose;
+      metadata.company_name = company.company_name;
+      metadata.company_details = company.company_details;
+      let loanInfoFile = makeFileObjects(metadata, `${collateralHash}.json`);
+      let loanInfoHash = await storeFiles(loanInfoFile);
 
-      return [collateralURI, loanInfoURI];
+      return [collateralHash, loanInfoHash];
     } catch (error) {
       console.log(error);
     }
@@ -114,7 +108,7 @@ const LoanFormModal = ({ handleForm }) => {
     };
     console.log(collateral_document);
     const loan_info = { loan_name, loan_purpose };
-    console.log(loanDetails);
+    //console.log(loanDetails);
 
     // setCurrentStep(prevCurrentStep => prevCurrentStep + 1);
     const [collateralHash, loanInfoHash] = await onFileUpload(
@@ -123,6 +117,8 @@ const LoanFormModal = ({ handleForm }) => {
     );
     loanDetails = { ...loanDetails, collateralHash, loanInfoHash };
     // sending data in backend to create opportunity with hash code
+    console.log("submitsss", loanDetails);
+
     await createOpportunity(loanDetails);
     setProcessed(true);
   };
