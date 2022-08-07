@@ -4,27 +4,24 @@ import { createOpportunity } from "../../../../../components/transaction/Transac
 
 import Stepper from "./Stepper";
 import StepperControl from "./StepperControl";
-import Account from "./Steps/Account";
-import Details from "./Steps/Details";
-import Final from "./Steps/Final";
 import axiosHttpService from "../../../../../services/axioscall";
 import {
   pinataCall,
   uploadFileToIPFS,
 } from "../../../../../services/PinataIPFSOptions";
+import Identity from "./Steps/Identity";
+import Incorporation from "./Steps/Incorporation";
+import LicenseFinal from "./Steps/LicenseFinal";
 
 const KYBModal = ({ handleForm }) => {
   const [processed, setProcessed] = useState(false);
   const path = useNavigate();
 
   const [formData, setFormData] = useState({
-    loan_name: "",
-    loan_type: "",
-    loan_amount: "",
-    loan_purpose: "",
-    loan_tenure: "",
-    loan_interest: "",
-    payment_frequency: "",
+    identityDocName: "",
+    identityDoc: "",
+    addressDocName: "",
+    addressDoc: "",
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [company, setCompany] = useState({});
@@ -48,10 +45,10 @@ const KYBModal = ({ handleForm }) => {
   const displayStep = (step) => {
     switch (step) {
       case 1:
-        return <Account handleNext={handleNext} formData={formData} />;
+        return <Identity handleNext={handleNext} formData={formData} />;
       case 2:
         return (
-          <Details
+          <Incorporation
             handleNext={handleNext}
             handlePrev={handlePrev}
             formData={formData}
@@ -59,7 +56,7 @@ const KYBModal = ({ handleForm }) => {
         );
       case 3:
         return (
-          <Final
+          <LicenseFinal
             handlePrev={handlePrev}
             finalSubmit={finalSubmit}
             formData={formData}
@@ -100,39 +97,40 @@ const KYBModal = ({ handleForm }) => {
   }
 
   const finalSubmit = async (data) => {
-    let {
-      loan_name,
-      loan_type,
-      loan_amount,
-      loan_purpose,
-      loan_tenure,
-      loan_interest,
-      capital_loss,
-      payment_frequency,
-      ...rest
-    } = data;
-    loan_tenure = loan_tenure * 30;
-    const collateral_document = rest.collateral_document;
-    let loanDetails = {
-      loan_type,
-      loan_amount,
-      loan_tenure,
-      loan_interest,
-      payment_frequency,
-      capital_loss,
-    };
-    console.log(collateral_document);
-    const loan_info = { loan_name, loan_purpose };
-    console.log(loanDetails);
+    console.log("finalSubmit", data);
+    // let {
+    //   loan_name,
+    //   loan_type,
+    //   loan_amount,
+    //   loan_purpose,
+    //   loan_tenure,
+    //   loan_interest,
+    //   capital_loss,
+    //   payment_frequency,
+    //   ...rest
+    // } = data;
+    // loan_tenure = loan_tenure * 30;
+    // const collateral_document = rest.collateral_document;
+    // let loanDetails = {
+    //   loan_type,
+    //   loan_amount,
+    //   loan_tenure,
+    //   loan_interest,
+    //   payment_frequency,
+    //   capital_loss,
+    // };
+    // console.log(collateral_document);
+    // const loan_info = { loan_name, loan_purpose };
+    // console.log(loanDetails);
 
-    // setCurrentStep(prevCurrentStep => prevCurrentStep + 1);
-    const [collateralHash, loanInfoHash] = await onFileUpload(
-      collateral_document,
-      loan_info
-    );
-    loanDetails = { ...loanDetails, collateralHash, loanInfoHash };
-    // sending data in backend to create opportunity with hash code
-    await createOpportunity(loanDetails);
+    // // setCurrentStep(prevCurrentStep => prevCurrentStep + 1);
+    // const [collateralHash, loanInfoHash] = await onFileUpload(
+    //   collateral_document,
+    //   loan_info
+    // );
+    // loanDetails = { ...loanDetails, collateralHash, loanInfoHash };
+    // // sending data in backend to create opportunity with hash code
+    // await createOpportunity(loanDetails);
     setProcessed(true);
   };
 
@@ -152,7 +150,7 @@ const KYBModal = ({ handleForm }) => {
 
   return (
     <div>
-      <input type="checkbox" id="loanForm-modal" class="modal-toggle" />
+      <input type="checkbox" id="kybModal" class="modal-toggle" />
       <div
         class="modal"
         style={{ backdropFilter: "brightness(40%) blur(8px)" }}
@@ -172,7 +170,7 @@ const KYBModal = ({ handleForm }) => {
             style={{ borderBottom: "2px solid #292C33" }}
             className="font-bold text-lg py-3 px-4"
           >
-            Create Borrow Request
+            KYB
           </h3>
           <div className="mx-auto pb-2 ">
             {/* Stepper */}
