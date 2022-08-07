@@ -240,9 +240,11 @@ export async function createOpportunity(formData) {
 }
 
 function convertDate(inputFormat) {
-  function pad(s) { return (s < 10) ? '0' + s : s; }
-  var d = new Date(inputFormat)
-  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
+  function pad(s) {
+    return s < 10 ? "0" + s : s;
+  }
+  var d = new Date(inputFormat);
+  return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join("/");
 }
 
 function getOpportunity(opportunity) {
@@ -256,15 +258,21 @@ function getOpportunity(opportunity) {
   obj.borrower = opportunity.borrower.toString();
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  obj.opportunityAmount = ethers.utils.formatUnits(opportunity.loanAmount, decimals).toString();
+  obj.opportunityAmount = ethers.utils
+    .formatUnits(opportunity.loanAmount, decimals)
+    .toString();
   obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
-  obj.loanInterest = ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString();
+  obj.loanInterest = ethers.utils
+    .formatUnits(opportunity.loanInterest, decimals)
+    .toString();
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = opportunity.capitalLoss.toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn.toString())));
+  obj.createdOn = convertDate(
+    new Date(parseInt(opportunity.createdOn.toString()))
+  );
 
   return obj;
 }
@@ -361,25 +369,14 @@ export async function getAllUnderReviewOpportunities() {
         provider
       );
 
-      const count = await contract.getTotalOpportunities();
+      const count = await contract.getUnderWritersOpportunities();
       let opportunities = [];
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        let obj = {};
         let tx = await contract.opportunityToId(id);
         if (tx.opportunityStatus.toString() == "0") {
-          obj.borrower = tx.borrower.toString();
-          obj.opportunityID = tx.opportunityID.toString();
-          obj.opportunityInfo = tx.opportunityInfo.toString();
-          obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
-          obj.loanAmount = tx.loanAmount.toString();
-          obj.loanTenure = tx.loanTenureInDays.toString();
-          obj.loanInterest = tx.loanInterest.toString();
-          obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
-          obj.collateralDocument = tx.collateralDocument.toString();
-          obj.capitalLoss = tx.capitalLoss.toString();
-          obj.createdOn = tx.createdOn.toString();
+          let obj = getOpportunity(tx);
           opportunities.push(obj);
         }
       }
