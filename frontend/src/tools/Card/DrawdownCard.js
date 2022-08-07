@@ -25,7 +25,7 @@ const DrawdownCard = ({ data }) => {
               Capital Borrowed
             </p>
             <p style={{ display: "flex" }} className="justify-end">
-              {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
+              {data?.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
           <div style={{ display: "flex" }} className="mb-2">
@@ -41,7 +41,7 @@ const DrawdownCard = ({ data }) => {
               Available for drawdown
             </p>
             <p style={{ display: "flex" }} className="justify-end">
-              ${data?.loan_amount}
+              {data?.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
         </div>

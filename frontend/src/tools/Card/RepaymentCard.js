@@ -26,7 +26,7 @@ const RepaymentCard = ({ data }) => {
               Capital Borrowed
             </p>
             <p style={{ display: "flex" }} className="justify-end">
-              {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
+              {data?.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
           <div style={{ display: "flex" }} className="mb-2">
@@ -34,7 +34,7 @@ const RepaymentCard = ({ data }) => {
               Due Amount
             </p>
             <p style={{ display: "flex" }} className="justify-end">
-              {data?.repayment_amount} {process.env.REACT_APP_TOKEN_NAME}
+              {data?.repaymentAmount} {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
           <div style={{ display: "flex" }} className="mb-2">
@@ -42,7 +42,7 @@ const RepaymentCard = ({ data }) => {
               Due Date
             </p>
             <p style={{ display: "flex" }} className="justify-end">
-              {data?.repayment_date}
+              {data?.nextDueDate}
             </p>
           </div>
         </div>

@@ -17,9 +17,8 @@ const BorrowList = () => {
   useEffect(() => {
     try {
       const fetchData = async () => {
-        let opportunities = await getOpportunitysOf();
-        setOpportunities(opportunities);
-        console.log(opportunities);
+        let opportunityList = await getOpportunitysOf();
+        setOpportunities(opportunityList);
       };
       fetchData();
     } catch (error) {

@@ -1,48 +1,68 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PieGraph from "../../investor/components/PieChart";
 import DrawdownCard from "../../tools/Card/DrawdownCard";
 import DueDateCard from "../../tools/Card/DueDateCard";
 import RepaymentCard from "../../tools/Card/RepaymentCard";
 import LoanFormModal from "../../tools/Modal/LoanFormModal";
-import OverviewPoolCardCollapsible from "./Components/OverviewPoolCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
+import {
+  getOpportunitiesWithDues,
+  getDrawdownOpportunities,
+} from "../../components/transaction/TransactionHelper";
 
 const Overview = () => {
-  const [data, setData] = useState([]);
-  const [repayment, setRepayment] = useState([]);
-  const [dueList, setDueList] = useState([]);
+  const [drawdownList, setDrawdownList] = useState([]);
+  const [repaymentList, setRepaymentList] = useState([]);
+  const [nextDueDate, setNextDueDate] = useState();
+  const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
   const handleForm = () => {
     setSelected(null);
   };
 
   useEffect(() => {
-    fetch("/drawdown.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, [data]);
+    const fetchData = async () => {
+      let opportunities = await getDrawdownOpportunities();
+      if (opportunities && opportunities.length) {
+        setDrawdownList(opportunities);
+      }
+    };
+    fetchData();
+  }, [drawdownList]);
 
-  useEffect(() => {
-    fetch("/repayment.json")
-      .then((res) => res.json())
-      .then((data) => setRepayment(data));
-  }, [repayment]);
+  function sortByProperty(property) {
+    return function (a, b) {
+      if (a[property] < b[property]) return 1;
+      else if (a[property] > b[property]) return -1;
 
+      return 0;
+    };
+  }
+
+  // get all upcoming reapayments
   useEffect(() => {
-    fetch("/dueList.json")
-      .then((res) => res.json())
-      .then((data) => setDueList(data));
-  }, [dueList]);
+    const fetchData = async () => {
+      let opportunities = await getOpportunitiesWithDues();
+      if (opportunities && opportunities.length) {
+        //sort the list based on date
+        opportunities.sort(sortByProperty("epochDueDate"));
+        setRepaymentList(opportunities);
+
+        // set next due date and amount
+        setNextDueAmount(opportunities[0].repaymentAmount);
+        setNextDueAmount(opportunities[0].nextDueDate);
+      }
+    };
+    fetchData();
+  }, [repaymentList]);
 
   return (
     <div>
       <DashboardHeader setSelected={setSelected}></DashboardHeader>
       {selected && (
         <LoanFormModal
-          key={data?.id}
-          data={data}
+          key={drawdownList?.id}
+          data={drawdownList}
           handleForm={handleForm}
         ></LoanFormModal>
       )}
@@ -83,7 +103,9 @@ const Overview = () => {
             style={{ backgroundColor: "#191D23", borderRadius: "16px" }}
             className="mb-4 px-4 py-4"
           >
-            <h3 className="font-semibold text-3xl text-purple-100">$400K</h3>
+            <h3 className="font-semibold text-3xl text-purple-100">
+              {nextDueAmount ? nextDueAmount : "--"}
+            </h3>
             <p className="text-base font-semibold text-gray-500">
               Next Due Amount
             </p>
@@ -93,7 +115,7 @@ const Overview = () => {
             className="px-4 py-4"
           >
             <h3 className="font-semibold text-3xl text-purple-100">
-              28 July 2022
+              {nextDueDate ? nextDueDate : "--"}
             </h3>
             <p className="text-base font-semibold text-gray-500">
               Next Due Date
@@ -104,16 +126,16 @@ const Overview = () => {
       <div className="mb-16 text-xl">
         <h2 className="mb-2">Repayment Notification</h2>
         <div style={{ display: "flex" }} className="gap-4">
-          {repayment.map((item) => (
-            <RepaymentCard key={data.id} data={item} />
+          {repaymentList.map((item) => (
+            <RepaymentCard key={item.id} data={item} />
           ))}
         </div>
       </div>
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
         <div style={{ display: "flex" }} className=" gap-4">
-          {data.map((item) => (
-            <DrawdownCard key={data.id} data={item} />
+          {drawdownList.map((item) => (
+            <DrawdownCard key={item.id} data={item} />
           ))}
         </div>
       </div>
@@ -136,8 +158,8 @@ const Overview = () => {
           </div>
         </div>
         <div>
-          {dueList.map((item) => (
-            <DueDateCard key={dueList.id} data={item} />
+          {repaymentList.map((item) => (
+            <DueDateCard key={item.id} data={item} />
           ))}
         </div>
       </div>
