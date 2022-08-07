@@ -10,10 +10,7 @@ import {
 
 const ViewPool = () => {
   const location = useLocation();
-  const poolData = location.data;
-  const OP = {
-    estimatedAPY: "24%",
-  };
+  const poolData = location.state;
   const [dueList, setDueList] = useState([]);
   const [expand, setExpand] = useState(false);
 

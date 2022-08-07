@@ -1,14 +1,33 @@
 import React, { useState } from "react";
-
+import { getBinaryFileData } from "../../../../services/fileHelper";
+import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 
-const WithdrawCard = () => {
-  const data = {
-    poolSize: "$500,000.00",
-    capitalInvested: "$450,000.00",
-    estimatedApy: "24%",
-    availableForWithdrawl: "$580,000",
-  };
+const WithdrawCard = ({ data }) => {
+  const {
+    opportunityInfo,
+    opportunityAmount,
+    estimatedAPY,
+    capitalInvested,
+    withdrawableAmt,
+  } = data;
+
+  const [companyName, setCompanyName] = useState();
+  const [poolName, setPoolName] = useState();
+
+  // fetch the opportunity details from IPFS
+  retrieveFiles(opportunityInfo, true).then((res) => {
+    if (res) {
+      let read = getBinaryFileData(res);
+      read.onloadend = function () {
+        let opJson = JSON.parse(read.result);
+        if (opJson) {
+          setCompanyName(opJson.loanName);
+          setPoolName(opJson.company_name);
+        }
+      };
+    }
+  });
 
   return (
     <div
@@ -29,13 +48,13 @@ const WithdrawCard = () => {
       <div style={{ marginLeft: 32, width: 400 }}>
         <div style={{ display: "flex", marginTop: -10 }} className="flex-col">
           <p className="card-title mb-0" style={{ fontSize: 23 }}>
-            Name of Pool
+            {poolName}
           </p>
           <p
             className="card-title mb-4 mt-0"
             style={{ fontSize: 16, fontWeight: 400 }}
           >
-            Name of Company
+            {companyName}
           </p>
         </div>
 
@@ -50,7 +69,7 @@ const WithdrawCard = () => {
             Pool Size
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.poolSize} {process.env.REACT_APP_TOKEN_NAME}
+            {opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -61,7 +80,7 @@ const WithdrawCard = () => {
             Capital Invested
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.capitalInvested}
+            {capitalInvested}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -72,7 +91,7 @@ const WithdrawCard = () => {
             Estimated APY
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.estimatedApy}
+            {estimatedAPY}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
@@ -83,7 +102,7 @@ const WithdrawCard = () => {
             Available for Withdrawal
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.availableForWithdrawl}
+            {withdrawableAmt}
           </p>
         </div>
 

@@ -33,7 +33,7 @@ const InvestorOverview = () => {
           let seniorInvestmentData = {};
           seniorInvestmentData.capitalInvested =
             data.stakingAmt + data.withdrawableAmt;
-          seniorInvestmentData.loanAmount = await getWalletBal(
+          seniorInvestmentData.opportunityAmount = await getWalletBal(
             process.env.REACT_APP_SENIORPOOL
           );
           seniorInvestmentData.loanInterest = 10;
