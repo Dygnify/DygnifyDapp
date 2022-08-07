@@ -270,9 +270,13 @@ function getOpportunity(opportunity) {
   obj.capitalLoss = opportunity.capitalLoss.toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  obj.createdOn = convertDate(
-    new Date(parseInt(opportunity.createdOn.toString()))
-  );
+
+  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn)));
+  console.log(opportunity.createdOn.toString());
+  console.log(opportunity.createdOn.toBigInt());
+  let date = new Date(0); // The 0 there is the key, which sets the date to the epoch
+  date.setUTCSeconds(opportunity.createdOn);
+  console.log(date);
 
   return obj;
 }
