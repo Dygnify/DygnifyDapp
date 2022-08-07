@@ -98,8 +98,9 @@ const LoanFormModal = ({ handleForm }) => {
     } = data;
     loan_tenure = loan_tenure * 30;
     const collateral_document = rest.collateral_document;
+
     let loanDetails = {
-      loan_type,
+      loan_type: "0",
       loan_amount,
       loan_tenure,
       loan_interest,
@@ -110,7 +111,6 @@ const LoanFormModal = ({ handleForm }) => {
     const loan_info = { loan_name, loan_purpose };
     //console.log(loanDetails);
 
-    // setCurrentStep(prevCurrentStep => prevCurrentStep + 1);
     const [collateralHash, loanInfoHash] = await onFileUpload(
       collateral_document,
       loan_info
@@ -121,6 +121,7 @@ const LoanFormModal = ({ handleForm }) => {
 
     await createOpportunity(loanDetails);
     setProcessed(true);
+    setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
   };
 
   const handleNext = (newData, value) => {

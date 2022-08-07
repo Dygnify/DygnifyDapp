@@ -6,10 +6,16 @@ import {
 import DrawdownCard from "../../tools/Card/DrawdownCard";
 import OpportunityCardCollapsible from "../../tools/Card/OpportunityCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
+import LoanFormModal from "../../tools/Modal/LoanFormModal";
 
 const BorrowList = () => {
   const [data, setData] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
+  const [selected, setSelected] = useState(null);
+
+  const handleForm = () => {
+    setSelected(null);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +42,14 @@ const BorrowList = () => {
 
   return (
     <div>
-      <DashboardHeader />
+      <DashboardHeader setSelected={setSelected} />
+      {selected && (
+        <LoanFormModal
+          // key={drawdownList?.id}
+          // data={drawdownList}
+          handleForm={handleForm}
+        ></LoanFormModal>
+      )}
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
         <div style={{ display: "flex" }} className=" gap-4">
