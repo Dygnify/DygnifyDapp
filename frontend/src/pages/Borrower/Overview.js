@@ -48,7 +48,6 @@ const Overview = () => {
           data={data}
           handleForm={handleForm}
         ></LoanFormModal>
-        // <KYBModal data={data} handleForm={handleForm} key={data?.id} />
       )}
       <div style={{ display: "flex" }} className="w-full my-10">
         <div
