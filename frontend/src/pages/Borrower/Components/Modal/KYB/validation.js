@@ -46,3 +46,9 @@ export const CollateralDetailsValidationSchema = Yup.object().shape({
     .max(100)
     .label("First loss capital"),
 });
+
+export const BusinessIncorValidationSchema = Yup.object().shape({
+  incorpDocName: Yup.string().required().label("Document Name"),
+
+  incorpDoc: Yup.mixed().required("A file is required"),
+});

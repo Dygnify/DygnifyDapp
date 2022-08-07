@@ -5,23 +5,23 @@ import { useNavigate } from "react-router-dom";
 
 import ViewPoolCard from "../Investor/components/Cards/ViewPoolCard";
 import UnderwriterCard from "./Components/UnderwriterCard";
+import {getAllUnderReviewOpportunities} from "../../components/transaction/TransactionHelper"
 
 const BorrowRequest = () => {
   const path = useNavigate();
   const [data, setData] = useState([]);
   const [repayment, setRepayment] = useState([]);
 
-  useEffect(() => {
-    fetch("/drawdown.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
+
+  useEffect(async () => {
+    await getUnderReviewOpportunity();
   }, []);
 
-  useEffect(() => {
-    fetch("/repayment.json")
-      .then((res) => res.json())
-      .then((data) => setRepayment(data));
-  }, []);
+  async function getUnderReviewOpportunity(){
+    let list = await getAllUnderReviewOpportunities();
+    console.log(list);
+    setRepayment(list);
+  }
 
   return (
     <div>
@@ -39,15 +39,30 @@ const BorrowRequest = () => {
         </div>
       </div>
 
-      <div className="mb-16 ">
-        <div style={{ display: "flex" }} className="gap-4 w-1/2">
-          {repayment.map((item) => (
-            <UnderwriterCard
-              onClick={() => path("/underwriterDashboard/poolDetail")}
-            />
-          ))}
+      {repayment.length === 0 ? 
+      (
+        <div style={{ display: "flex" }} className="justify-center">
+          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+            No Borrow requests are present at the moment.
+          </div>
         </div>
-      </div>
+      ) 
+       :
+        (
+          <div className="mb-16 ">
+            <div style={{ display: "flex" }} className="gap-4 w-1/2">
+              {repayment.map((item) => (
+                <UnderwriterCard
+                  onClick={() => path("/underwriterDashboard/poolDetail", item)}
+                  data = {item}
+                  key = {item.id}
+                />
+              ))}
+            </div>
+          </div>
+        )
+      }
+      
     </div>
   );
 };

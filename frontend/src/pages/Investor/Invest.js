@@ -1,31 +1,43 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import DrawdownCard from "../../tools/Card/DrawdownCard";
-import RepaymentCard from "../../tools/Card/RepaymentCard";
-import PoolCard from "./components/Cards/PoolCard";
-import PieGraph from "../../investor/components/PieChart";
-import GradientButton from "../../tools/Button/GradientButton";
-import BorrowChart from "../../components/charts/BorrowChart";
+import React, { useState, useEffect } from "react";
 import ViewPoolCard from "./components/Cards/ViewPoolCard";
 import { useNavigate } from "react-router-dom";
+import {
+  getAllActiveOpportunities,
+  getWalletBal,
+} from "../../components/transaction/TransactionHelper";
 
 const Invest = () => {
   const path = useNavigate();
-  const [data, setData] = useState([]);
-  const [repayment, setRepayment] = useState([]);
+  const [juniorPools, setJuniorPools] = useState([]);
+  const [seniorPool, setSeniorPool] = useState();
 
   useEffect(() => {
-    fetch("/drawdown.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
+    try {
+      const fetchData = async () => {
+        const juniorPool = await getAllActiveOpportunities();
+        if (juniorPool && juniorPool.length) {
+          setJuniorPools(juniorPool);
+        }
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
-    fetch("/repayment.json")
-      .then((res) => res.json())
-      .then((data) => setRepayment(data));
-  }, []);
+    const fetchData = async () => {
+      let seniorInvestmentData = {};
+      seniorInvestmentData.companyName = "Senior Pool";
+      seniorInvestmentData.loanAmount = await getWalletBal(
+        process.env.REACT_APP_SENIORPOOL
+      );
+      seniorInvestmentData.loanInterest = 10;
+      seniorInvestmentData.isFull = false;
+      setSeniorPool(seniorInvestmentData);
+    };
+    fetchData();
+  }, [seniorPool]);
 
   return (
     <>
@@ -48,25 +60,40 @@ const Invest = () => {
           Senior pools
         </h2>
         <div style={{ display: "flex" }} className="gap-4 w-1/2">
-          {repayment.map((item) => (
+          {seniorPool ? (
             <ViewPoolCard
-              onClick={() => path("/investor-dashboardN/viewSeniorPool")}
+              onClick={() =>
+                path("/investor-dashboardN/viewSeniorPool", seniorPool)
+              }
+              data={seniorPool}
             />
-          ))}
+          ) : (
+            ""
+          )}
         </div>
       </div>
       <div className="mb-16">
         <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
           Junior pools
         </h2>
-        <div style={{ display: "flex" }} className=" gap-4">
-          {data.map((item) => (
-            <ViewPoolCard
-              //send data params
-              onClick={() => path("/investor-dashboardN/viewPool")}
-            />
-          ))}
-        </div>
+        {juniorPools.length === 0 ? (
+          <div style={{ display: "flex" }} className="justify-center">
+            <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+              No junior pool investments are available.
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex" }} className=" gap-4">
+            {juniorPools.map((item) => (
+              <ViewPoolCard
+                data={item}
+                key={item.id}
+                //send data params
+                onClick={() => path("/investor-dashboardN/viewPool", item)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

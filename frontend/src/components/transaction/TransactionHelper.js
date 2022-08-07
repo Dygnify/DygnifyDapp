@@ -4,9 +4,25 @@ import dygnifyToken from "../../artifacts/contracts/protocol/old/TestUSDCToken.s
 import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
+import seniorPool from "../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
+
+export async function getUserWalletAddress() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      return address;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return undefined;
+}
 
 export async function approve(amount) {
   if (amount <= 0 || amount <= "0") {
@@ -122,7 +138,7 @@ export async function getTotalYield() {
   return 0;
 }
 
-export async function getWalletBal() {
+export async function getWalletBal(address) {
   try {
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
@@ -134,8 +150,9 @@ export async function getWalletBal() {
         provider
       );
       const signer = provider.getSigner();
-      const bal = await contract.balanceOf(await signer.getAddress());
-      // console.log(ethers.utils.formatEther(bal));
+      const bal = await contract.balanceOf(
+        address ? address : await signer.getAddress()
+      );
       return ethers.utils.formatEther(bal);
     }
   } catch (error) {
@@ -167,6 +184,7 @@ export async function getWithdrawBal() {
 
   return 0;
 }
+
 export const getEthAddress = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   // Prompt user for account connections
@@ -215,6 +233,29 @@ export async function createOpportunity(formData) {
   }
 }
 
+function getOpportunity(opportunity) {
+  if (!opportunity) {
+    return undefined;
+  }
+
+  // Create the opportunity object
+  let obj = {};
+  obj.id = opportunity.opportunityID.toString();
+  obj.borrower = opportunity.borrower.toString();
+  obj.opportunityInfo = opportunity.opportunityInfo.toString();
+  obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
+  obj.loanAmount = opportunity.loanAmount.toString();
+  obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
+  obj.loanInterest = opportunity.loanInterest.toString();
+  obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
+  obj.collateralDocument = opportunity.collateralDocument.toString();
+  obj.capitalLoss = opportunity.capitalLoss.toString();
+  obj.status = opportunity.opportunityStatus.toString();
+  obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
+  obj.createdOn = new Date(parseInt(opportunity.createdOn.toString()));
+
+  return obj;
+}
 // to fetch created opportunities of specific borrower
 export async function getOpportunitysOf() {
   try {
@@ -336,8 +377,49 @@ export async function getAllUnderReviewOpportunities() {
           obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
           obj.collateralDocument = tx.collateralDocument.toString();
           obj.capitalLoss = tx.capitalLoss.toString();
+          obj.createdOn = tx.createdOn.toString();
           opportunities.push(obj);
         }
+      }
+      return opportunities;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
+}
+
+export async function getApprovalHistory() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+      const underWriter = await getEthAddress();
+      const opportunities = await contract.getUnderWritersOpportunities(underWriter);
+      let count = opportunities.length;
+
+      for (let i = 0; i < count; i++) {
+        let obj = {};
+        let tx = await contract.opportunityToId(opportunities[i]);
+        obj.borrower = tx.borrower.toString();
+        obj.opportunityID = tx.opportunityID.toString();
+        obj.opportunityInfo = tx.opportunityInfo.toString();
+        obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
+        obj.loanAmount = tx.loanAmount.toString();
+        obj.loanTenure = tx.loanTenureInDays.toString();
+        obj.loanInterest = tx.loanInterest.toString();
+        obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
+        obj.collateralDocument = tx.collateralDocument.toString();
+        obj.capitalLoss = tx.capitalLoss.toString();
+        obj.createdOn = tx.createdOn.toString();
+        obj.status = tx.opportunityStatus.toString();
+        opportunities.push(obj);
       }
       return opportunities;
     }
@@ -364,19 +446,19 @@ export async function getAllActiveOpportunities() {
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        let obj = {};
-        let tx = await contract.opportunityToId(id);
-        if (tx.opportunityStatus.toString() == "5") {
-          obj.borrower = tx.borrower.toString();
-          obj.opportunity_id = tx.opportunityID.toString();
-          obj.opportunity_info = tx.opportunityInfo.toString();
-          obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
-          obj.loan_amount = tx.loanAmount.toString();
-          obj.loan_tenure = tx.loanTenureInDays.toString();
-          obj.loan_interest = tx.loanInterest.toString();
-          obj.payment_frequency = tx.paymentFrequencyInDays.toString();
-          obj.collateral_document = tx.collateralDocument.toString();
-          obj.capital_loss = tx.capitalLoss.toString();
+        let opportunity = await contract.opportunityToId(id);
+        if (opportunity.opportunityStatus.toString() == "5") {
+          // get pool for opportunity
+          let poolAddress = opportunity.opportunityPoolAddress.toString();
+          console.log(poolAddress);
+          const poolContract = new ethers.Contract(
+            poolAddress,
+            opportunityPool.abi,
+            provider
+          );
+          let poolBal = await poolContract.poolBalance();
+          let obj = getOpportunity(opportunity);
+          obj.isFull = poolBal >= obj.loanAmount;
           opportunities.push(obj);
         }
       }
@@ -386,7 +468,7 @@ export async function getAllActiveOpportunities() {
     console.log(error);
   }
 
-  return 0;
+  return undefined;
 }
 
 export async function getFundedOpportunities() {
@@ -447,7 +529,7 @@ export async function getAllWithdrawableOpportunities() {
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        let obj = {};
+
         let tx = await contract.opportunityToId(id);
 
         if (tx.opportunityStatus.toString() == "7") {
@@ -460,19 +542,18 @@ export async function getAllWithdrawableOpportunities() {
           );
           let poolBal = await poolContract.poolBalance();
           if (poolBal.toString() != "0") {
-            let juniorPooldata = await poolContract.juniorSubpoolDetails();
-
-            obj.borrower = tx.borrower.toString();
-            obj.opportunity_id = tx.opportunityID.toString();
-            obj.opportunity_info = tx.opportunityInfo.toString();
-            obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
-            obj.loan_amount = tx.loanAmount.toString();
-            obj.loan_tenure = tx.loanTenureInDays.toString();
-            obj.loan_interest = tx.loanInterest.toString();
-            obj.payment_frequency = tx.paymentFrequencyInDays.toString();
-            obj.collateral_document = tx.collateralDocument.toString();
-            obj.capital_loss = tx.capitalLoss.toString();
-            opportunities.push(obj);
+            const signer = provider.getSigner();
+            const userStakingAmt = await poolContract.stakingBalance(
+              await signer.getAddress()
+            );
+            const estimatedAPY = await poolContract.juniorYieldPerecentage();
+            let obj = getOpportunity(tx);
+            obj.capitalInvested = userStakingAmt;
+            obj.estimatedAPY = estimatedAPY;
+            obj.yieldGenerated = userStakingAmt * estimatedAPY;
+            if (obj) {
+              opportunities.push(obj);
+            }
           }
         }
       }
@@ -482,5 +563,26 @@ export async function getAllWithdrawableOpportunities() {
     console.log(error);
   }
 
-  return 0;
+  return [];
+}
+
+export async function getUserSeniorPoolInvestment() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        seniorPool.abi,
+        provider
+      );
+
+      return await contract.getUserInvestment();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return undefined;
 }

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Link } from "@mui/material";
 import GradientButton from "../../tools/Button/GradientButton";
-import { isConnected } from "../../components/navbar/NavBarHelper";
+import {
+  requestAccount,
+  isConnected,
+} from "../../components/navbar/NavBarHelper";
 import PrimaryButton from "../../tools/Button/PrimaryButton";
 import WalletWhiteSmall from "../SVGIcons/WalletWhiteSmall";
 
@@ -15,13 +18,9 @@ const Header = () => {
     setStatus(false);
   };
 
-  async function requestAccount() {
-    console.log("kkl");
-    const result = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
+  async function hitRequestAccount() {
+    await requestAccount(true);
     fetchStatus();
-    console.log(result);
     //put a regex here to read result and set Status
     //store the wallet address in contexts
   }
@@ -54,30 +53,11 @@ const Header = () => {
         </div>
 
         {!status ? (
-          <GradientButton onClick={requestAccount}>
+          <GradientButton onClick={hitRequestAccount}>
             Connect Wallet
           </GradientButton>
         ) : (
-          <div
-            style={{
-              width: "170px",
-              height: "50px",
-              justifyContent: "center",
-              alignItems: "center",
-
-              borderRadius: "100px",
-              borderWidth: 2,
-              borderColor: "#9281FF",
-              display: "flex",
-              marginRight: -5,
-            }}
-            className="flex-row justify-center content-center items-center"
-          >
-            <WalletWhiteSmall />
-            <div style={{ fontSize: "16px", fontWeight: "600", marginLeft: 5 }}>
-              Connected
-            </div>
-          </div>
+          <PrimaryButton>Connected</PrimaryButton>
         )}
       </div>
     </>

@@ -1,6 +1,27 @@
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+import { getBinaryFileData } from "../../../services/fileHelper";
+import { retrieveFiles } from "../../../services/web3storageIPFS";
 
 const TransactionsCard = ({ data }) => {
+  const [companyName, setCompanyName] = useState();
+  const [poolName, setPoolName] = useState();
+
+  // fetch the opportunity details from IPFS
+  retrieveFiles(data?.opportunityInfo, true).then((res) => {
+    if (res) {
+      let read = getBinaryFileData(res);
+      read.onloadend = function () {
+        let opJson = JSON.parse(read.result);
+        if (opJson) {
+          setCompanyName(opJson.loanName);
+          setPoolName(opJson.company_name);
+        }
+      };
+    }
+  });
+
   return (
     <div
       style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
@@ -10,11 +31,11 @@ const TransactionsCard = ({ data }) => {
         style={{ display: "flex" }}
         className="collapse-title text-md font-light justify-around w-full"
       >
-        <p className="w-1/6 text-center">{data?.pool_name}</p>
-        <p className="w-1/6 text-center">{data?.companyName}</p>
+        <p className="w-1/6 text-center">{poolName}</p>
+        <p className="w-1/6 text-center">{companyName}</p>
         <p className="w-1/6 text-center">{data?.createdOn}</p>
 
-        {data?.status === "Completed" && (
+        {data?.status == "2" && (
           <p className="w-1/6 text-center">
             <div
               style={{
@@ -30,7 +51,7 @@ const TransactionsCard = ({ data }) => {
             </div>
           </p>
         )}
-        {data?.status === "Not Completed" && (
+        {data?.status == "1" && (
           <p className="w-1/6 text-center">
             <div
               style={{
@@ -46,7 +67,7 @@ const TransactionsCard = ({ data }) => {
             </div>
           </p>
         )}
-        {data?.status === "Processing" && (
+        {data?.status == "3" && (
           <p className="w-1/6 text-center">
             <div
               style={{

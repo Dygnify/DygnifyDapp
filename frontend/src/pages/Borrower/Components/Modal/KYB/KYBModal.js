@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createOpportunity } from "../../components/transaction/TransactionHelper";
-import { UseContextProvider } from "../../pages/Borrower/Contexts/StepperContext";
-import Stepper from "../../pages/Borrower/LoanForm/Stepper";
-import StepperControl from "../../pages/Borrower/LoanForm/StepperControl";
-import Account from "../../pages/Borrower/LoanForm/Steps/Account";
-import Details from "../../pages/Borrower/LoanForm/Steps/Details";
-import Final from "../../pages/Borrower/LoanForm/Steps/Final";
-import axiosHttpService from "../../services/axioscall";
-import { pinataCall, uploadFileToIPFS } from "../../services/PinataIPFSOptions";
+import { createOpportunity } from "../../../../../components/transaction/TransactionHelper";
+
+import Stepper from "./Stepper";
+import StepperControl from "./StepperControl";
+import Account from "./Steps/Account";
+import Details from "./Steps/Details";
+import Final from "./Steps/Final";
+import axiosHttpService from "../../../../../services/axioscall";
+import {
+  pinataCall,
+  uploadFileToIPFS,
+} from "../../../../../services/PinataIPFSOptions";
 
 const KYBModal = ({ handleForm }) => {
   const [processed, setProcessed] = useState(false);

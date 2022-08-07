@@ -1,8 +1,8 @@
 import { useFormik } from "formik";
-import GradientButton from "../../../../tools/Button/GradientButton";
-import TextArea from "../../../../tools/Inputs/TextArea";
-import TextField from "../../../../tools/Inputs/TextField";
-import { loanDetailsValidationSchema } from "../../../LoanForm/validations/validation";
+import GradientButton from "../../../../../../tools/Button/GradientButton";
+import TextArea from "../../../../../../tools/Inputs/TextArea";
+import TextField from "../../../../../../tools/Inputs/TextField";
+import { loanDetailsValidationSchema } from "../validation";
 
 export default function Account({ formData, handleNext }) {
   const formik = useFormik({

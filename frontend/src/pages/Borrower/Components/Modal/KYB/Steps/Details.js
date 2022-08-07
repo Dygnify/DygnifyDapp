@@ -1,47 +1,70 @@
 import { useFormik } from "formik";
-import GradientButton from "../../../../tools/Button/GradientButton";
-import FileFields from "../../../../tools/Inputs/FileFields";
-import InputGroup from "../../../../tools/Inputs/InputGroup";
-import TextArea from "../../../../tools/Inputs/TextArea";
-import TextField from "../../../../tools/Inputs/TextField";
-import FileUploader from "../../../Components/FileUploader";
-import { CollateralDetailsValidationSchema } from "../../../LoanForm/validations/validation";
+import GradientButton from "../../../../../../tools/Button/GradientButton";
+import TextField from "../../../../../../tools/Inputs/TextField";
+
+import FileUploader from "../../../../../Components/FileUploader";
+import { BusinessIncorValidationSchema } from "../validation";
 
 export default function Details({ handleNext, handlePrev, formData }) {
   const formik = useFormik({
     initialValues: {
-      incorporationDocument_name: "",
-      incorporationDocument: "",
+      incorpDocName: "",
+      incorpDoc: "",
     },
-    validationSchema: CollateralDetailsValidationSchema,
+    validationSchema: BusinessIncorValidationSchema,
     onSubmit: (values) => {
       console.log(values);
       handleNext(values, true);
     },
   });
+
   return (
-    <div className="bg-[#20232A]  w-full mb-2" style={{ borderRadius: "17px" }}>
+    <div
+      className="bg-[#20232A]  w-full mb-2 mt-2"
+      style={{ borderRadius: "17px" }}
+    >
+      <div style={{ marginBottom: 3 }}>Business incorporation proof</div>
       <form onSubmit={formik.handleSubmit}>
-        <div className="justify-between" style={{ display: "flex" }}>
+        <div
+          className="justify-between bg-[#292C33]"
+          style={{
+            display: "flex",
+            padding: "10px 10px",
+            paddingBottom: 15,
+            borderRadius: 16,
+          }}
+        >
+          <TextField
+            name="incorpDocName"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-1/2 mr-2"
+            label="Document Name"
+            placeholder="Enter Document Name"
+            error={
+              formik.touched.incorpDocName && formik.errors.incorpDocName
+                ? formik.errors.incorpDocName
+                : null
+            }
+          ></TextField>
           <FileUploader
-            name="collateral_document"
+            name="incorpDoc"
             handleFile={(file) => {
-              formik.setFieldValue("collateral_document", file);
+              formik.setFieldValue("incorpDoc", file);
             }}
             onBlur={formik.handleBlur}
             error={
-              formik.touched.collateral_document &&
-              formik.errors.collateral_document
-                ? formik.errors.collateral_document
+              formik.touched.incorpDoc && formik.errors.incorpDoc
+                ? formik.errors.incorpDoc
                 : null
             }
-            label="Upload Collateral Image"
+            label="Upload Document"
             className="w-1/2 ml-2"
           />
         </div>
 
         <div
-          style={{ display: "flex", marginTop: 20 }}
+          style={{ display: "flex", marginTop: 40 }}
           className="flex-row justify-around w-full "
         >
           <GradientButton onClick={handlePrev}>Back</GradientButton>

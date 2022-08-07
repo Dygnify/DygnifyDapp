@@ -9,6 +9,7 @@ import LoanFormModal from "../../tools/Modal/LoanFormModal";
 import OverviewPoolCardCollapsible from "./Components/OverviewPoolCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
 import DoughnutChart from "../Components/DoughnutChart";
+import KYBModal from "./Components/Modal/KYB/KYBModal";
 
 const Overview = () => {
   const [data, setData] = useState([]);
@@ -41,11 +42,12 @@ const Overview = () => {
     <div>
       <DashboardHeader setSelected={setSelected}></DashboardHeader>
       {selected && (
-        <LoanFormModal
-          key={data?.id}
-          data={data}
-          handleForm={handleForm}
-        ></LoanFormModal>
+        // <LoanFormModal
+        //   key={data?.id}
+        //   data={data}
+        //   handleForm={handleForm}
+        // ></LoanFormModal>
+        <KYBModal data={data} handleForm={handleForm} key={data?.id} />
       )}
       <div style={{ display: "flex" }} className="w-full my-10">
         <div
