@@ -5,6 +5,7 @@ import { requestAccount } from "../navbar/NavBarHelper";
 import opportunityOrigination from "../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import seniorPool from "../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
+import borrower from "../../artifacts/contracts/protocol/Borrower.sol/Borrower.json";
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
@@ -244,7 +245,7 @@ function getOpportunity(opportunity) {
   obj.borrower = opportunity.borrower.toString();
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  obj.loanAmount = opportunity.loanAmount.toString();
+  obj.opportunityAmount = opportunity.loanAmount.toString();
   obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
   obj.loanInterest = opportunity.loanInterest.toString();
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
@@ -401,7 +402,9 @@ export async function getApprovalHistory() {
         provider
       );
       const underWriter = await getEthAddress();
-      const opportunities = await contract.getUnderWritersOpportunities(underWriter);
+      const opportunities = await contract.getUnderWritersOpportunities(
+        underWriter
+      );
       let count = opportunities.length;
 
       for (let i = 0; i < count; i++) {
@@ -579,6 +582,27 @@ export async function getUserSeniorPoolInvestment() {
       );
 
       return await contract.getUserInvestment();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return undefined;
+}
+
+export async function getBorrowerDetails(borrowerAddress) {
+  try {
+    if (typeof window.ethereum !== "undefined" && borrowerAddress) {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        borrower.abi,
+        provider
+      );
+
+      return await contract.borrowerProfile(borrowerAddress);
     }
   } catch (error) {
     console.log(error);

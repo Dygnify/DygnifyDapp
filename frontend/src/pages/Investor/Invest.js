@@ -37,7 +37,7 @@ const Invest = () => {
           if (spJson) {
             let seniorInvestmentData = {};
             seniorInvestmentData.poolName = spJson.poolName;
-            seniorInvestmentData.loanAmount = await getWalletBal(
+            seniorInvestmentData.opportunityAmount = await getWalletBal(
               process.env.REACT_APP_SENIORPOOL
             );
             seniorInvestmentData.loanInterest = spJson.estimatedAPY;
@@ -102,7 +102,9 @@ const Invest = () => {
                 data={item}
                 key={item.id}
                 //send data params
-                onClick={() => path("/investor-dashboardN/viewPool", item)}
+                onClick={() =>
+                  path("/investor-dashboardN/viewPool", { state: item })
+                }
               />
             ))}
           </div>

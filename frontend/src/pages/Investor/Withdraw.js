@@ -1,40 +1,42 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import DrawdownCard from "../../tools/Card/DrawdownCard";
-import RepaymentCard from "../../tools/Card/RepaymentCard";
-import PoolCard from "./components/Cards/PoolCard";
-import PieGraph from "../../investor/components/PieChart";
+import React, { useState, useEffect } from "react";
 import GradientButton from "../../tools/Button/GradientButton";
-import BorrowChart from "../../components/charts/BorrowChart";
-import ViewPoolCard from "./components/Cards/ViewPoolCard";
 import WithdrawCard from "./components/Cards/WithdrawCard";
-import { getAllWithdrawableOpportunities } from "../../components/transaction/TransactionHelper";
+import {
+  getAllWithdrawableOpportunities,
+  getUserSeniorPoolInvestment,
+  getWalletBal,
+} from "../../components/transaction/TransactionHelper";
 
 const Withdraw = () => {
-  const [data, setData] = useState([]);
-  const [repayment, setRepayment] = useState([]);
-  const [poolDetail, setPoolDetail] = useState([]);
+  const [seniorPool, setSeniorPool] = useState([]);
+  const [juniorPools, setJuniorPools] = useState([]);
 
   useEffect(() => {
-    fetch("/drawdown.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
-
-  useEffect(() => {
-    fetch("/repayment.json")
-      .then((res) => res.json())
-      .then((data) => setRepayment(data));
+    try {
+      const fetchData = async () => {
+        const data = await getUserSeniorPoolInvestment();
+        if (data) {
+          let seniorInvestmentData = {};
+          seniorInvestmentData.capitalInvested =
+            data.stakingAmt + data.withdrawableAmt;
+          seniorInvestmentData.opportunityAmount = await getWalletBal(
+            process.env.REACT_APP_SENIORPOOL
+          );
+          seniorInvestmentData.withdrawableAmt = data.withdrawableAmt;
+          setSeniorPool(seniorInvestmentData);
+        }
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
     try {
       const fetchData = async () => {
         const opportunities = await getAllWithdrawableOpportunities();
-        setPoolDetail(opportunities);
-        //setPoolDetail([{ hello: "1" }]);
-        console.log(opportunities);
+        setJuniorPools(opportunities);
       };
       fetchData();
     } catch (error) {
@@ -58,36 +60,36 @@ const Withdraw = () => {
           <GradientButton className={"w-40"}>+ Invest</GradientButton>
         </div>
       </div>
+      {seniorPool.capitalInvested > 0 ? (
+        <div className="mb-16 ">
+          <h2 style={{ fontSize: 24 }} className=" mb-5">
+            Senior pools
+          </h2>
+          <div style={{ display: "flex" }} className="gap-4 w-1/2">
+            <WithdrawCard data={seniorPool} />
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
 
-      {poolDetail.length === 0 ? (
+      {juniorPools.length === 0 ? (
         <div style={{ display: "flex" }} className="justify-center">
           <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
             No stats are available. Explore opportunities here.
           </div>
         </div>
       ) : (
-        <>
-          <div className="mb-16 ">
-            <h2 style={{ fontSize: 24 }} className=" mb-5">
-              Senior pools
-            </h2>
-            <div style={{ display: "flex" }} className="gap-4 w-1/2">
-              {repayment.map((item) => (
-                <WithdrawCard />
-              ))}
-            </div>
+        <div className="mb-16">
+          <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
+            Junior pools
+          </h2>
+          <div style={{ display: "flex" }} className=" gap-4">
+            {juniorPools.map((item) => (
+              <WithdrawCard data={item} />
+            ))}
           </div>
-          <div className="mb-16">
-            <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
-              Junior pools
-            </h2>
-            <div style={{ display: "flex" }} className=" gap-4">
-              {data.map((item) => (
-                <WithdrawCard />
-              ))}
-            </div>
-          </div>
-        </>
+        </div>
       )}
     </>
   );

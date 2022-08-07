@@ -5,7 +5,7 @@ import { retrieveFiles } from "../../../../services/web3storageIPFS";
 const PoolCard = ({ data }) => {
   const {
     opportunityInfo,
-    loanAmount,
+    opportunityAmount,
     estimatedAPY,
     capitalInvested,
     yieldGenerated,
@@ -62,7 +62,7 @@ const PoolCard = ({ data }) => {
             Pool Size
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            {loanAmount} {process.env.REACT_APP_TOKEN_NAME}
+            {opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">

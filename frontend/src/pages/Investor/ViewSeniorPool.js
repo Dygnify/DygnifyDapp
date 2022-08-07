@@ -32,8 +32,8 @@ const ViewSeniorPool = () => {
         location.state.estimatedAPY ? location.state.estimatedAPY : defaultAPY
       );
       setPoolAmount(
-        location.state.loanAmount
-          ? location.state.loanAmount
+        location.state.opportunityAmount
+          ? location.state.opportunityAmount
           : defaultPoolAmount
       );
     }

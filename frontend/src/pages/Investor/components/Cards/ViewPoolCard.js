@@ -5,7 +5,7 @@ import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 
 const ViewPoolCard = ({ onClick, data }) => {
-  const { opportunityInfo, loanAmount, loanInterest, isFull } = data;
+  const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState(data.poolName);
@@ -80,7 +80,7 @@ const ViewPoolCard = ({ onClick, data }) => {
             Pool Balance
           </p>
           <p style={{ display: "flex" }} className="justify-end">
-            {loanAmount} {process.env.REACT_APP_TOKEN_NAME}
+            {opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
