@@ -9,8 +9,7 @@ import {getAllUnderReviewOpportunities} from "../../components/transaction/Trans
 
 const BorrowRequest = () => {
   const path = useNavigate();
-  const [data, setData] = useState([]);
-  const [repayment, setRepayment] = useState([]);
+  const [opportunities, setOpportunities] = useState([]);
 
 
   useEffect(async () => {
@@ -20,7 +19,9 @@ const BorrowRequest = () => {
   async function getUnderReviewOpportunity(){
     let list = await getAllUnderReviewOpportunities();
     console.log(list);
-    setRepayment(list);
+    if (list) {
+      setOpportunities(list); 
+    }
   }
 
   return (
@@ -39,7 +40,7 @@ const BorrowRequest = () => {
         </div>
       </div>
 
-      {repayment.length === 0 ? 
+      {opportunities.length === 0 ? 
       (
         <div style={{ display: "flex" }} className="justify-center">
           <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
@@ -51,7 +52,7 @@ const BorrowRequest = () => {
         (
           <div className="mb-16 ">
             <div style={{ display: "flex" }} className="gap-4 w-1/2">
-              {repayment.map((item) => (
+              {opportunities && opportunities.map((item) => (
                 <UnderwriterCard
                   onClick={() => path("/underwriterDashboard/poolDetail", item)}
                   data = {item}
