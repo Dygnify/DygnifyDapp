@@ -48,13 +48,17 @@ const BorrowRequest = () => {
       ) : (
         <div className="mb-16 ">
           <div style={{ display: "flex" }} className="gap-4 w-1/2">
-            {repayment.map((item) => (
-              <UnderwriterCard
-                onClick={() => path("/underwriterDashboard/poolDetail", item)}
-                data={item}
-                key={item.id}
-              />
-            ))}
+            {repayment
+              ? repayment.map((item) => (
+                  <UnderwriterCard
+                    onClick={() =>
+                      path("/underwriterDashboard/poolDetail", item)
+                    }
+                    data={item}
+                    key={item.id}
+                  />
+                ))
+              : null}
           </div>
         </div>
       )}
