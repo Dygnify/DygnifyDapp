@@ -8,6 +8,7 @@ import {
 } from "../../services/fileHelper";
 import ArrowRight from "./Components/SVG/ArrowRight";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
+import { getBorrowerDetails } from "../../components/transaction/TransactionHelper";
 
 const BorrowerProfile = () => {
   const navigate = useNavigate();
@@ -50,20 +51,21 @@ const BorrowerProfile = () => {
 
     loadBlockpassWidget();
 
-    let borrowerDataCID =
-      "bafybeiaqaqrrd7r7pir2j3rzsr35qi74y2cndjnqd2qadvmlzzzn7jtayu";
-    retrieveFiles(borrowerDataCID, true).then((res) => {
-      if (res) {
-        let read = getBinaryFileData(res);
-        read.onloadend = function () {
-          let brJson = JSON.parse(read.result);
-          loadBorrowerData(brJson);
-          setborrowerJson(brJson);
-        };
-      } else {
-        // load the empty profile page
+    const fetchData = async () => {
+      let borrowerCID = await getBorrowerDetails();
+      if (borrowerCID) {
+        let data = await retrieveFiles(borrowerCID, true);
+        if (data) {
+          let read = getBinaryFileData(data);
+          read.onloadend = function () {
+            let brJson = JSON.parse(read.result);
+            loadBorrowerData(brJson);
+            setborrowerJson(brJson);
+          };
+        }
       }
-    });
+    };
+    fetchData();
   }, []);
 
   const fetchBorrowerLogo = (imgcid) => {
