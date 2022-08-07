@@ -32,11 +32,11 @@ const BorrowerDashboard = () => {
             <li>
               <Link to="/borrower_dashboard/transaction">Transactions</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/borrower_dashboard/underwriterQueries">
                 Underwriter queries
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/borrower_dashboard/borrower_profile">Profile</Link>
             </li>

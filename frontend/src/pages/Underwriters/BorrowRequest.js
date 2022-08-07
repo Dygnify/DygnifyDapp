@@ -5,18 +5,18 @@ import { useNavigate } from "react-router-dom";
 
 import ViewPoolCard from "../Investor/components/Cards/ViewPoolCard";
 import UnderwriterCard from "./Components/UnderwriterCard";
-import {getAllUnderReviewOpportunities} from "../../components/transaction/TransactionHelper"
+import { getAllUnderReviewOpportunities } from "../../components/transaction/TransactionHelper";
 
 const BorrowRequest = () => {
   const path = useNavigate();
   const [opportunities, setOpportunities] = useState([]);
 
-
   useEffect(async () => {
     await getUnderReviewOpportunity();
+    console.log(process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS);
   }, []);
 
-  async function getUnderReviewOpportunity(){
+  async function getUnderReviewOpportunity() {
     let list = await getAllUnderReviewOpportunities();
     console.log(list);
     if (list) {
@@ -61,9 +61,8 @@ const BorrowRequest = () => {
               ))}
             </div>
           </div>
-        )
-      }
-      
+        </div>
+      )}
     </div>
   );
 };

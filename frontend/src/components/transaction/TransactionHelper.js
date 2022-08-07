@@ -270,9 +270,13 @@ function getOpportunity(opportunity) {
   obj.capitalLoss = opportunity.capitalLoss.toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  obj.createdOn = convertDate(
-    new Date(parseInt(opportunity.createdOn.toString()))
-  );
+
+  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn)));
+  console.log(opportunity.createdOn.toString());
+  console.log(opportunity.createdOn.toBigInt());
+  let date = new Date(0); // The 0 there is the key, which sets the date to the epoch
+  date.setUTCSeconds(opportunity.createdOn);
+  console.log(date);
 
   return obj;
 }
@@ -369,14 +373,25 @@ export async function getAllUnderReviewOpportunities() {
         provider
       );
 
-      const count = await contract.getUnderWritersOpportunities();
+      const count = await contract.getTotalOpportunities();
       let opportunities = [];
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
+        let obj = {};
         let tx = await contract.opportunityToId(id);
         if (tx.opportunityStatus.toString() == "0") {
-          let obj = getOpportunity(tx);
+          obj.borrower = tx.borrower.toString();
+          obj.opportunityID = tx.opportunityID.toString();
+          obj.opportunityInfo = tx.opportunityInfo.toString();
+          obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
+          obj.loanAmount = tx.loanAmount.toString();
+          obj.loanTenure = tx.loanTenureInDays.toString();
+          obj.loanInterest = tx.loanInterest.toString();
+          obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
+          obj.collateralDocument = tx.collateralDocument.toString();
+          obj.capitalLoss = tx.capitalLoss.toString();
+          obj.createdOn = tx.createdOn.toString();
           opportunities.push(obj);
         }
       }
