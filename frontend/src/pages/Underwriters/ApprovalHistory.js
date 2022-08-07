@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Underwriters/Components/TransactionsCard";
-import {getApprovalHistory} from "../../components/transaction/TransactionHelper"
+import { getApprovalHistory } from "../../components/transaction/TransactionHelper";
 
 const ApprovalHistory = () => {
   const [transactions, setTransactions] = useState([]);
@@ -8,29 +8,24 @@ const ApprovalHistory = () => {
     await getHistory();
   }, []);
 
-  async function getHistory(){
+  async function getHistory() {
     let list = await getApprovalHistory();
-    console.log(list)
+    console.log(list);
     setTransactions(list);
   }
 
   return (
     <div className="mb-16">
       <h2 className="text-2xl mb-6">Transaction History</h2>
-      {
-        transactions.length == 0 
-        ?
-        (
-          <div style={{ display: "flex" }} className="justify-center">
-            <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
-              No Borrow requests are present at the moment.
-            </div>
+      {transactions.length == 0 ? (
+        <div style={{ display: "flex" }} className="justify-center">
+          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+            No Borrow requests are present at the moment.
           </div>
-        ) 
-        :
-        (
-          <div>
-            <div className="collapse mb-3">
+        </div>
+      ) : (
+        <div>
+          <div className="collapse mb-3">
             <input type="checkbox" className="peer" />
             <div
               style={{
@@ -47,14 +42,14 @@ const ApprovalHistory = () => {
             </div>
           </div>
           <div>
-            {transactions.map((item) => (
-              <TransactionsCard key={transactions.id} data={item} />
-            ))}
+            {transactions
+              ? transactions.map((item) => (
+                  <TransactionsCard key={transactions.id} data={item} />
+                ))
+              : null}
           </div>
-          </div>
-        )
-      }
-      
+        </div>
+      )}
     </div>
   );
 };
