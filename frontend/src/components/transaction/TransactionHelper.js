@@ -239,6 +239,12 @@ export async function createOpportunity(formData) {
   }
 }
 
+function convertDate(inputFormat) {
+  function pad(s) { return (s < 10) ? '0' + s : s; }
+  var d = new Date(inputFormat)
+  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
+}
+
 function getOpportunity(opportunity) {
   if (!opportunity) {
     return undefined;
@@ -250,15 +256,15 @@ function getOpportunity(opportunity) {
   obj.borrower = opportunity.borrower.toString();
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  obj.opportunityAmount = opportunity.loanAmount.toString();
+  obj.opportunityAmount = ethers.utils.formatUnits(opportunity.loanAmount, decimals).toString();
   obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
-  obj.loanInterest = opportunity.loanInterest.toString();
+  obj.loanInterest = ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString();
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = opportunity.capitalLoss.toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  obj.createdOn = new Date(parseInt(opportunity.createdOn.toString()));
+  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn.toString())));
 
   return obj;
 }
