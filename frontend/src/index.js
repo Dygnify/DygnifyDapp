@@ -16,5 +16,7 @@ import InvestModal from "./investor/components/Modal/InvestModal";
 import InvestorDashboardNew from "./pages/Investor/InvestorDashboardNew";
 import BorrowChart from "./components/charts/BorrowChart";
 import PoolDetails from "./pages/Underwriters/PoolDetails";
+import DoughnutChart from "./pages/Components/DoughnutChart";
+import FileUploader from "./pages/Components/FileUploader";
 
 ReactDOM.render(<Paths />, document.getElementById("root"));
