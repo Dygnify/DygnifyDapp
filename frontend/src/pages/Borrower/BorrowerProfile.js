@@ -6,9 +6,13 @@ import {
   getBinaryFileData,
   getDataURLFromFile,
 } from "../../services/fileHelper";
+import ArrowRight from "./Components/SVG/ArrowRight";
+import KYBModal from "./Components/Modal/KYB/KYBModal";
 
 const BorrowerProfile = () => {
   const navigate = useNavigate();
+
+  const [selected, setSelected] = useState(null);
 
   const [borrowerJson, setborrowerJson] = useState();
   const [logoImgSrc, setLogoImgSrc] = useState();
@@ -20,9 +24,32 @@ const BorrowerProfile = () => {
   const [twitter, setTwitter] = useState();
   const [linkedin, setLinkedin] = useState();
 
+  const handleForm = () => {
+    setSelected(null);
+  };
+
+  const loadBlockpassWidget = () => {
+    console.log("#############");
+    const blockpass = new window.BlockpassKYCConnect(
+      "kyc_aml_c7be4", // service client_id from the admin console
+      {
+        refId: "1", // assign the local user_id of the connected user
+      }
+    );
+
+    blockpass.startKYCConnect();
+
+    blockpass.on("KYCConnectSuccess", () => {
+      //add code that will trigger when data have been sent.
+    });
+  };
+
   useEffect(async () => {
     // make the call to get borrower specific cid to fetch the data
     // currently we'll mock the cid
+
+    loadBlockpassWidget();
+
     let borrowerDataCID =
       "bafybeiaqaqrrd7r7pir2j3rzsr35qi74y2cndjnqd2qadvmlzzzn7jtayu";
     retrieveFiles(borrowerDataCID, true).then((res) => {
@@ -137,6 +164,7 @@ const BorrowerProfile = () => {
   return (
     <>
       <div className="mb-16 ">
+        {selected && <KYBModal handleForm={handleForm} />}
         <h2 className="mb-6 text-2xl font-medium">Borrower Profile</h2>
         <div
           style={{ display: "flex" }}
@@ -167,11 +195,57 @@ const BorrowerProfile = () => {
           </button>
         </div>
 
-        <div className="w-full">
-          <div className="w-1/2">
-            <strong>Completer your KYC</strong>
-            <div></div>
-          </div>
+        <div
+          className="flex-row w-full mt-10 mb-10 gap-4"
+          style={{ display: "flex" }}
+        >
+          <label
+            className="w-1/2"
+            style={{
+              borderWidth: 1,
+              borderRightWidth: 20,
+              borderColor: "#5375FE",
+              borderRadius: "16px",
+              padding: "14px",
+              paddingRight: "60px",
+              cursor: "pointer",
+            }}
+            id="blockpass-kyc-connect"
+            onClick={() => console.log("cljoj")}
+          >
+            <div style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}>
+              Completer your KYC
+            </div>
+            <div style={{ lineHeight: "19px" }}>
+              Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt
+              qui esse pariatur duis deserunt mollit dolore cillum minim tempor
+              enim.
+            </div>
+          </label>
+          <label
+            htmlFor="kybModal"
+            className="w-1/2"
+            style={{
+              borderWidth: 1,
+              borderRightWidth: 20,
+
+              borderColor: "#5375FE",
+              borderRadius: "16px",
+              padding: "14px",
+              paddingRight: "60px",
+              cursor: "pointer",
+            }}
+            onClick={() => setSelected(true)}
+          >
+            <div style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}>
+              Completer your KYB
+            </div>
+            <div style={{ lineHeight: "19px" }}>
+              Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt
+              qui esse pariatur duis deserunt mollit dolore cillum minim tempor
+              enim.
+            </div>
+          </label>
         </div>
 
         <div

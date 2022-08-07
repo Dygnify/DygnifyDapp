@@ -22,41 +22,53 @@ const FileUploader = ({
     handleFile(fileUploaded);
   };
   return (
-    <div className={`${className}`}>
-      <label class="label" style={{ marginBottom: 3 }}>
-        <span class="text-white">{label}</span>
-      </label>
-      <div style={{ display: "flex" }} className="flex-row items-center gap-4">
+    <>
+      <div className={`${className}`}>
+        <label class="label" style={{ marginBottom: 1 }}>
+          <span class="text-white">{label}</span>
+        </label>
         <div
-          className="bg-[#18191a]"
-          onClick={handleClick}
           style={{
-            borderRadius: "37px",
-            color: "white",
-            padding: "8px 24px",
-            cursor: "pointer",
+            display: "flex",
+            padding: "6px 4px",
+            borderWidth: 2,
+            border: "2px dashed #3A3C43",
+            borderRadius: "8px",
           }}
+          className=" flex-row bg-[#24272F] items-center gap-4"
         >
-          Choose file
+          <div
+            className="bg-[#30333A]"
+            onClick={handleClick}
+            style={{
+              borderRadius: "37px",
+              color: "white",
+              padding: "4.5px 20px",
+              cursor: "pointer",
+              fontSize: 14,
+            }}
+          >
+            Choose file
+          </div>
+          <div style={{ color: "#c7cad1", fontStyle: "italic" }}>
+            {fileUploadedName}
+          </div>
         </div>
-        <div style={{ color: "#c7cad1", fontStyle: "italic" }}>
-          {fileUploadedName}
-        </div>
+        <input
+          type="file"
+          name={name}
+          onBlur={onBlur}
+          ref={hiddenFileInput}
+          onChange={handleChange}
+          style={{ display: "none" }}
+        />
+        {error && (
+          <p style={{ color: "red", margin: "0px" }}>
+            <small>{error}</small>
+          </p>
+        )}
       </div>
-      <input
-        type="file"
-        name={name}
-        onBlur={onBlur}
-        ref={hiddenFileInput}
-        onChange={handleChange}
-        style={{ display: "none" }}
-      />
-      {error && (
-        <p style={{ color: "red", margin: "0px" }}>
-          <small>{error}</small>
-        </p>
-      )}
-    </div>
+    </>
   );
 };
 export default FileUploader;

@@ -16,9 +16,9 @@ const LandingPage = () => {
       <Header />
 
       <div className="flex-col items-center" style={{ display: "flex" }}>
-        <div style={{ position: "absolute", overflow: "hidden" }}>
+        {/* <div style={{ position: "absolute", overflow: "hidden" }}>
           <GradientDark />
-        </div>
+        </div> */}
         <h1
           style={{
             fontSize: 50,
@@ -89,7 +89,11 @@ const LandingPage = () => {
             Invest USDC in real-world-assets and earn attractive, risk adjusted
             returns.
           </h6>
-          <GradientButton onClick={() => path("/investor-dashboardN")}>
+          <GradientButton
+            onClick={() => {
+              path("/investor-dashboardN");
+            }}
+          >
             Invest
           </GradientButton>
         </div>
@@ -112,7 +116,13 @@ const LandingPage = () => {
             Invest USDC in real-world-assets and earn attractive, risk adjusted
             returns.
           </h6>
-          <GradientButton>Borrow</GradientButton>
+          <GradientButton
+            onClick={() => {
+              path("/borrower_dashboard");
+            }}
+          >
+            Borrow
+          </GradientButton>
         </div>
       </div>
       <br />

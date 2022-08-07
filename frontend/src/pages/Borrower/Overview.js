@@ -16,6 +16,7 @@ const Overview = () => {
   const [repayment, setRepayment] = useState([]);
   const [dueList, setDueList] = useState([]);
   const [selected, setSelected] = useState(null);
+
   const handleForm = () => {
     setSelected(null);
   };
@@ -42,12 +43,12 @@ const Overview = () => {
     <div>
       <DashboardHeader setSelected={setSelected}></DashboardHeader>
       {selected && (
-        // <LoanFormModal
-        //   key={data?.id}
-        //   data={data}
-        //   handleForm={handleForm}
-        // ></LoanFormModal>
-        <KYBModal data={data} handleForm={handleForm} key={data?.id} />
+        <LoanFormModal
+          key={data?.id}
+          data={data}
+          handleForm={handleForm}
+        ></LoanFormModal>
+        // <KYBModal data={data} handleForm={handleForm} key={data?.id} />
       )}
       <div style={{ display: "flex" }} className="w-full my-10">
         <div

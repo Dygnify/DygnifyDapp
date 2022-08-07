@@ -5,7 +5,7 @@ import TextField from "../../../../../../tools/Inputs/TextField";
 import FileUploader from "../../../../../Components/FileUploader";
 import { BusinessIncorValidationSchema } from "../validation";
 
-export default function Details({ handleNext, handlePrev, formData }) {
+export default function Incorporation({ handleNext, handlePrev, formData }) {
   const formik = useFormik({
     initialValues: {
       incorpDocName: "",

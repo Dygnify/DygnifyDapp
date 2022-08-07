@@ -1,4 +1,5 @@
 import React from "react";
+import FileUploader from "../../pages/Components/FileUploader";
 import FileFields from "./FileFields";
 import TextField from "./TextField";
 
@@ -15,12 +16,13 @@ const InputGroup = ({ caption, onChange, reference }) => {
           placeholder="Enter Document Name"
           className="w-1/2 mr-4"
           reference={reference}
-        ></TextField>
-        <FileFields
+        />
+
+        <FileUploader
           label="Upload Document"
           className="w-1/2 ml-4"
-          onChange={onChange}
-        ></FileFields>
+          handleFile={onChange}
+        />
       </div>
     </div>
   );
