@@ -9,6 +9,7 @@ import borrowerContract from "../../artifacts/contracts/protocol/Borrower.sol/Bo
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
+const decimals = 6;
 
 export async function getUserWalletAddress() {
   try {
@@ -219,16 +220,19 @@ export async function createOpportunity(formData) {
       opportunityOrigination.abi,
       signer
     );
+    const loanAmt = ethers.utils.parseUnits(loan_amount, decimals);
+    const loanInterest = ethers.utils.parseUnits(loan_interest, decimals);
+    const capitalLoss = ethers.utils.parseUnits(capital_loss, decimals);
     const transaction1 = await contract.createOpportunity(
       borrower,
       loanInfoHash,
       loan_type,
-      loan_amount,
+      loanAmt,
       loan_tenure,
-      loan_interest,
+      loanInterest,
       payment_frequency,
       collateralHash,
-      capital_loss
+      capitalLoss
     );
     await transaction1.wait();
     console.log("successfully created*******");
