@@ -26,6 +26,7 @@ const BorrowList = () => {
       const fetchData = async () => {
         let opportunityList = await getOpportunitysOf();
         setOpportunities(opportunityList);
+        console.log(opportunityList);
       };
       fetchData();
     } catch (error) {

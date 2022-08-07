@@ -19,7 +19,7 @@ const FileUploader = ({
     const fileUploaded = event.target.files[0];
     setFileUploadedName(fileUploaded.name);
     console.log(fileUploaded.name);
-    handleFile(fileUploaded);
+    handleFile(event.target.files);
   };
   return (
     <>
