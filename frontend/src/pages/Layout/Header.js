@@ -21,8 +21,6 @@ const Header = () => {
   async function hitRequestAccount() {
     await requestAccount(true);
     fetchStatus();
-    //put a regex here to read result and set Status
-    //store the wallet address in contexts
   }
 
   useEffect(() => {
@@ -57,7 +55,26 @@ const Header = () => {
             Connect Wallet
           </GradientButton>
         ) : (
-          <PrimaryButton>Connected</PrimaryButton>
+          <div
+            style={{
+              width: "170px",
+              height: "50px",
+              justifyContent: "center",
+              alignItems: "center",
+
+              borderRadius: "100px",
+              borderWidth: 2,
+              borderColor: "#9281FF",
+              display: "flex",
+              marginRight: -5,
+            }}
+            className="flex-row justify-center content-center items-center"
+          >
+            <WalletWhiteSmall />
+            <div style={{ fontSize: "16px", fontWeight: "600", marginLeft: 5 }}>
+              Connected
+            </div>
+          </div>
         )}
       </div>
     </>
