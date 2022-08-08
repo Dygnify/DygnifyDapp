@@ -11,7 +11,7 @@ import { getBinaryFileData } from "../../services/fileHelper";
 const Invest = () => {
   const path = useNavigate();
   const [juniorPools, setJuniorPools] = useState([]);
-  const [seniorPool, setSeniorPool] = useState();
+  const [seniorPool, setSeniorPool] = useState([]);
 
   useEffect(() => {
     try {
@@ -70,8 +70,14 @@ const Invest = () => {
         <h2 style={{ fontSize: 24 }} className=" mb-5">
           Senior pools
         </h2>
-        <div style={{ display: "flex" }} className="gap-4 w-1/2">
-          {seniorPool ? (
+        {seniorPool.length === 0 ? (
+          <div style={{ display: "flex" }} className="justify-center">
+            <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+              No senior pool investments are available.
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex" }} className="gap-4 w-1/2">
             <ViewPoolCard
               onClick={() =>
                 path("/investor-dashboardN/viewSeniorPool", {
@@ -80,10 +86,8 @@ const Invest = () => {
               }
               data={seniorPool}
             />
-          ) : (
-            ""
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <div className="mb-16">
         <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>

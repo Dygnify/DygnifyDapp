@@ -123,7 +123,7 @@ const KYBModal = ({ handleForm }) => {
     // const loan_info = { loan_name, loan_purpose };
     // console.log(loanDetails);
 
-    // // setCurrentStep(prevCurrentStep => prevCurrentStep + 1);
+    setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
     // const [collateralHash, loanInfoHash] = await onFileUpload(
     //   collateral_document,
     //   loan_info
