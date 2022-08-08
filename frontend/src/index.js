@@ -18,5 +18,6 @@ import BorrowChart from "./components/charts/BorrowChart";
 import PoolDetails from "./pages/Underwriters/PoolDetails";
 import DoughnutChart from "./pages/Components/DoughnutChart";
 import FileUploader from "./pages/Components/FileUploader";
+import LineChart from "./pages/Investor/components/LineChart";
 
 ReactDOM.render(<Paths />, document.getElementById("root"));

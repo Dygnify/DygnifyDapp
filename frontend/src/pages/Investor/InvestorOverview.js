@@ -10,6 +10,7 @@ import {
 } from "../../components/transaction/TransactionHelper";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
+import LineChart from "./components/LineChart";
 
 const InvestorOverview = () => {
   const [totalInvestment, setTotalInvestment] = useState(0);
@@ -94,15 +95,16 @@ const InvestorOverview = () => {
         </div>
       </div>
 
-      <div className="flex-row items-center" style={{ display: "flex" }}>
+      <div
+        className="flex-row items-center w-full gap-2"
+        style={{ display: "flex" }}
+      >
         <div
-          className="flex-row rounded-box justify-between items-center bg-[#191D23]  "
+          className="flex-row rounded-box justify-between items-center bg-[#191D23] w-1/2 "
           style={{
             display: "flex",
+            padding: "32px 46px",
             height: 278,
-            width: 584,
-            paddingLeft: 46,
-            paddingRight: 46,
           }}
         >
           <div
@@ -143,10 +145,15 @@ const InvestorOverview = () => {
           </div>
         </div>
         <div
-          className="justify-center items-center rounded-box bg-[#191D23] w-50 ml-5 "
-          style={{ display: "flex", height: 278, width: 584 }}
+          className="justify-center items-center rounded-box bg-[#191D23] w-1/2  "
+          style={{
+            display: "flex",
+            padding: "15px 10px",
+            paddingLeft: 30,
+            height: 278,
+          }}
         >
-          <BorrowChart />
+          <LineChart />
         </div>
       </div>
       <div style={{ fontSize: 23 }} className="mt-5 mb-3">
@@ -157,7 +164,7 @@ const InvestorOverview = () => {
       </h2>
       {seniorPool.length === 0 ? (
         <div style={{ display: "flex" }} className="justify-center">
-          <div style={{ color: "#64748B", fontSize: 18, margin: "20px 0" }}>
+          <div style={{ color: "#64748B", fontSize: 18, margin: "50px 0" }}>
             No senior pool investments stats available. Explore opportunities
             here.
           </div>
@@ -177,7 +184,7 @@ const InvestorOverview = () => {
       </h2>
       {juniorPool.length === 0 ? (
         <div style={{ display: "flex" }} className="justify-center">
-          <div style={{ color: "#64748B", fontSize: 18, margin: "20px 0 " }}>
+          <div style={{ color: "#64748B", fontSize: 18, margin: "50px 0 " }}>
             No junior pool investments stats available. Explore opportunities
             here.
           </div>

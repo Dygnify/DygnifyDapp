@@ -17,28 +17,28 @@ const BorrowList = () => {
     setSelected(null);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let op = await getDrawdownOpportunities();
-      if (op && op.length) {
-        setData(op);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let op = await getDrawdownOpportunities();
+  //     if (op && op.length) {
+  //       setData(op);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        let opportunityList = await getOpportunitysOf();
-        setOpportunities(opportunityList);
-        console.log(opportunityList);
-      };
-      fetchData();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const fetchData = async () => {
+  //       let opportunityList = await getOpportunitysOf();
+  //       setOpportunities(opportunityList);
+  //       console.log(opportunityList);
+  //     };
+  //     fetchData();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   return (
     <div>
@@ -52,11 +52,22 @@ const BorrowList = () => {
       )}
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
-        <div style={{ display: "flex" }} className=" gap-4">
-          {data.map((item) => (
-            <DrawdownCard key={data?.id} data={item} />
-          ))}
-        </div>
+        {data.length === 0 ? (
+          <div
+            style={{ display: "flex", marginTop: 20 }}
+            className="justify-center"
+          >
+            <div style={{ color: "#64748B", fontSize: 18 }}>
+              No drawdown available.
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex" }} className=" gap-4">
+            {data.map((item) => (
+              <DrawdownCard key={data?.id} data={data} />
+            ))}
+          </div>
+        )}
       </div>
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Borrow Request</h2>
@@ -76,16 +87,24 @@ const BorrowList = () => {
             <p className="w-1/4 text-center">Status</p>
           </div>
         </div>
-        <div>
-          {opportunities
-            ? opportunities.map((item) => (
-                <OpportunityCardCollapsible
-                  key={item.id}
-                  data={item}
-                />
-              ))
-            : null}
-        </div>
+        {opportunities.length === 0 ? (
+          <div
+            style={{ display: "flex", marginTop: 40 }}
+            className="justify-center"
+          >
+            <div style={{ color: "#64748B", fontSize: 18 }}>
+              No borrow request available.
+            </div>
+          </div>
+        ) : (
+          <div>
+            {opportunities
+              ? opportunities.map((item) => (
+                  <OpportunityCardCollapsible key={item.id} data={item} />
+                ))
+              : null}
+          </div>
+        )}
       </div>
     </div>
   );

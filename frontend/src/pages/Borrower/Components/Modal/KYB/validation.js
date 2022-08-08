@@ -1,20 +1,20 @@
 import * as Yup from "yup";
 
 export const BusinessIncorValidationSchema = Yup.object().shape({
-  incorpDocName: Yup.string().required().label("Document Name"),
+  incorpDocName: Yup.string().label("Document Name"),
 
-  incorpDoc: Yup.mixed().required("A file is required"),
+  incorpDoc: Yup.mixed(),
 });
 
 export const BusinessProofValidationSchema = Yup.object().shape({
-  identityDocName: Yup.string().required().label("Document Name"),
-  identityDoc: Yup.mixed().required("A file is required"),
-  addressDocName: Yup.string().required().label("Document Name"),
-  addressDoc: Yup.mixed().required("A file is required"),
+  identityDocName: Yup.string().label("Document Name"),
+  identityDoc: Yup.mixed(),
+  addressDocName: Yup.string().label("Document Name"),
+  addressDoc: Yup.mixed(),
 });
 
 export const BusinessLicenseValidationSchema = Yup.object().shape({
-  licenseDocName: Yup.string().required().label("Document Name"),
+  licenseDocName: Yup.string().label("Document Name"),
 
-  licenseDoc: Yup.mixed().required("A file is required"),
+  licenseDoc: Yup.mixed(),
 });

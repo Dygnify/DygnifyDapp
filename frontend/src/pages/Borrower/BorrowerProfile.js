@@ -178,15 +178,15 @@ const BorrowerProfile = () => {
           <div style={{ display: "flex" }}>
             <div class="avatar">
               <div class="w-16 rounded-full">
-                <img src={logoImgSrc} />
+                <img src="/images/ImpactLogo.jpeg" />
               </div>
             </div>
             <div
               style={{ display: "flex" }}
               className="flex-col justify-center ml-4"
             >
-              <h4 className="text-md">{companyName}</h4>
-              <p className="text-xs">{companyRepName}</p>
+              <h4 style={{ fontSize: 23 }}>Impact Capital Partners</h4>
+              <p style={{ fontSize: 19, color: "#B8C0CC" }}>Alice</p>
             </div>
           </div>
           <div
@@ -228,12 +228,13 @@ const BorrowerProfile = () => {
             id="blockpass-kyc-connect"
           >
             <div style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}>
-              Completer your KYC
+              Complete your KYC
             </div>
             <div style={{ lineHeight: "19px" }}>
-              Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt
-              qui esse pariatur duis deserunt mollit dolore cillum minim tempor
-              enim.
+              For Individuals - KYC verification includes verification of
+              Identity Details and document verification such as utility bills
+              as proof of address. Verifying your details ensures that you have
+              a smooth and secure experience with us.
             </div>
           </label>
           <label
@@ -252,22 +253,25 @@ const BorrowerProfile = () => {
             onClick={() => setSelected(true)}
           >
             <div style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}>
-              Completer your KYB
+              Complete your KYB
             </div>
             <div style={{ lineHeight: "19px" }}>
-              Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt
-              qui esse pariatur duis deserunt mollit dolore cillum minim tempor
-              enim.
+              For Entities - KYB verification includes Identity and
+              incorporation verification of your business. Verfifying your
+              details ensures that you have a smooth and secure experience with
+              us.
             </div>
           </label>
         </div>
 
         <div
           style={{ display: "flex" }}
-          className="w-full justify-between mb-6"
+          className="w-full justify-between items-center mb-6"
         >
           <div className="w-1/2">
-            <h5 className="text-lg">Socials</h5>
+            <h5 className="text-lg" style={{ fontSize: 23 }}>
+              Socials
+            </h5>
           </div>
           <div style={{ display: "flex" }} className="w-1/2 justify-end">
             <button
@@ -325,26 +329,57 @@ const BorrowerProfile = () => {
           </div>
         </div>
         <div className="mb-6">
-          <h5 className="text-lg">Bio</h5>
-          <p className="text-sm font-light text-justify"> {companyBio} </p>
+          <h5 className="text-lg" style={{ fontSize: "23px" }}>
+            Bio
+          </h5>
+          <p
+            className="text-sm font-light text-justify"
+            style={{
+              fontSize: "18px",
+              fontWeight: 400,
+              lineHeight: "28px",
+              color: "#E6E6E6",
+            }}
+          >
+            Impact Capital Partners is an innovative investing platform
+            providing financing solutions in emerging markets serving the needs
+            of low and middle income populations, thus catalysing lasting
+            impacts. We have a portfolio of investee companies that scale
+            financial inclusion, access to clean energy, access to healthcare,
+            access to education and agri-business. <br /> Highlights : <br /> 1.
+            Operations in 70 countries for more than 10 Years. <br /> 2. We
+            specifically target businesses whose products/services result in
+            positive social and environmental changes. <br /> 3. All the
+            investees are businesses at Series A ,B,C level with proven
+            Product-market fit . <br /> 4. Funds provided to businesses with
+            proven track record of positive cash flows.
+          </p>
         </div>
 
         <div className="mb-6">
           <h5 className="text-lg">KYC Details</h5>
-          <DocumentCard></DocumentCard>
-          <DocumentCard></DocumentCard>
+          <DocumentCard docName={"Aadhar Card.pdf"} />
+          <DocumentCard docName={"Passport.pdf"} />
         </div>
         <div className="mb-6">
           <h5 className="text-lg">KYB Details</h5>
-          <h6 className="text-neutral text-sm">Business Identify Proof</h6>
-          <DocumentCard></DocumentCard>
-          <DocumentCard></DocumentCard>
-          <h6 className="text-neutral text-sm">Business Address Proof</h6>
-          <DocumentCard></DocumentCard>
-          <h6 className="text-neutral text-sm">Business License Proof</h6>
-          <DocumentCard></DocumentCard>
-          <h6 className="text-neutral text-sm">Business Incorporation Proof</h6>
-          <DocumentCard></DocumentCard>
+          <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+            Business Identify Proof
+          </h6>
+          <DocumentCard docName={"Impact identity proof.pdf"} />
+
+          <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+            Business Address Proof
+          </h6>
+          <DocumentCard docName={"Impact address proof.pdf"} />
+          <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+            Business License Proof
+          </h6>
+          <DocumentCard docName={"Impact license.pdf"} />
+          <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+            Business Incorporation Proof
+          </h6>
+          <DocumentCard docName={"Impact incorporation proof.pdf"} />
         </div>
       </div>
     </>

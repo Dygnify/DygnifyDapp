@@ -86,7 +86,7 @@ const Overview = () => {
             backgroundColor: "#191D23",
             //boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)",
             borderRadius: "16px",
-            padding: 10,
+            padding: 15,
             height: 300,
             display: "flex",
           }}
@@ -187,19 +187,41 @@ const Overview = () => {
       </div>
       <div className="mb-16 text-xl">
         <h2 className="mb-2">Repayment Notification</h2>
-        <div style={{ display: "flex" }} className="gap-4">
-          {repaymentList.map((item) => (
-            <RepaymentCard key={item.id} data={item} />
-          ))}
-        </div>
+        {repaymentList.length === 0 ? (
+          <div
+            style={{ display: "flex", marginTop: 20 }}
+            className="justify-center"
+          >
+            <div style={{ color: "#64748B", fontSize: 18 }}>
+              No repayment available.
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex" }} className="gap-4">
+            {repaymentList.map((item) => (
+              <RepaymentCard key={item.id} data={item} />
+            ))}
+          </div>
+        )}
       </div>
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
-        <div style={{ display: "flex" }} className=" gap-4">
-          {drawdownList.map((item) => (
-            <DrawdownCard key={item.id} data={item} />
-          ))}
-        </div>
+        {drawdownList.length === 0 ? (
+          <div
+            style={{ display: "flex", marginTop: 20 }}
+            className="justify-center"
+          >
+            <div style={{ color: "#64748B", fontSize: 18 }}>
+              No drawdown available.
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex" }} className=" gap-4">
+            {drawdownList.map((item) => (
+              <DrawdownCard key={item.id} data={item} />
+            ))}
+          </div>
+        )}
       </div>
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Upcoming Due Dates</h2>
@@ -219,12 +241,27 @@ const Overview = () => {
             <p className="w-1/4 text-center">Due Date</p>
           </div>
         </div>
-        <div>
-          {repaymentList.map((item) => (
-            <DueDateCard key={item.id} data={item} />
-          ))}
-        </div>
+        {repaymentList.length === 0 ? (
+          <div
+            style={{ display: "flex", marginTop: 40 }}
+            className="justify-center"
+          >
+            <div style={{ color: "#64748B", fontSize: 18 }}>
+              No due dates available.
+            </div>
+          </div>
+        ) : (
+          <div>
+            {repaymentList.map((item) => (
+              <DueDateCard key={item.id} data={item} />
+            ))}
+          </div>
+        )}
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 };
