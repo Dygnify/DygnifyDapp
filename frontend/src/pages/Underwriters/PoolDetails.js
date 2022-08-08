@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import GradientButton from "../../tools/Button/GradientButton";
-import {voteOpportunity} from "../../components/transaction/TransactionHelper";
+import { voteOpportunity } from "../../components/transaction/TransactionHelper";
 
 const PoolDetails = () => {
   const location = useLocation();
@@ -10,7 +10,9 @@ const PoolDetails = () => {
   };
   const [expand, setExpand] = useState(false);
 
-  const status = { approve: false, unsure: false, reject: false };
+  const [approveStatus, setApproveStatus] = useState(false);
+
+  const status = { approve: approveStatus, unsure: false, reject: false };
 
   const info = [
     {
@@ -21,17 +23,17 @@ const PoolDetails = () => {
     { label: "Borrower Address", value: "0xfasd45sd" },
   ];
 
-  function updateStatus(){
-    let opStatus = location?.item?.status ?? '';
-    if(opStatus == "1")status.reject = true
-    else if(opStatus == "2") status.approve = true
-    else if(opStatus == "3") status.unsure = true
+  function updateStatus() {
+    let opStatus = location?.item?.status ?? "";
+    if (opStatus == "1") status.reject = true;
+    else if (opStatus == "2") status.approve = true;
+    else if (opStatus == "3") status.unsure = true;
   }
 
-  async function vote(voteID){
-    await voteOpportunity(location?.item?.opportunityID ?? '', voteID);
+  async function vote(voteID) {
+    await voteOpportunity(location?.item?.opportunityID ?? "", voteID);
     updateStatus();
-  } 
+  }
 
   return (
     <div>
@@ -52,7 +54,7 @@ const PoolDetails = () => {
           !(status.approve || status.reject || status.unsure) ? (
             <button
               disabled={status.approve}
-              onClick = {()=> vote("2")}
+              onClick={() => setApproveStatus(true)}
               style={{
                 borderRadius: "100px",
                 padding: "3px 16px",
@@ -68,7 +70,7 @@ const PoolDetails = () => {
           !(status.approve || status.reject || status.unsure) ? (
             <button
               disabled={status.reject}
-              onClick = {()=> vote("1")}
+              onClick={() => vote("1")}
               style={{
                 borderRadius: "100px",
                 padding: "3px 16px",
@@ -83,7 +85,7 @@ const PoolDetails = () => {
           !(status.approve || status.reject || status.unsure) ? (
             <button
               disabled={status.unsure}
-              onClick = {()=> vote("3")}
+              onClick={() => vote("3")}
               style={{ borderRadius: "100px", padding: "3px 16px" }}
               className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
             >
