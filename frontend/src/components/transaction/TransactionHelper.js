@@ -222,7 +222,7 @@ export async function createOpportunity(formData) {
     );
     const loanAmt = ethers.utils.parseUnits(loan_amount, decimals);
     const loanInterest = ethers.utils.parseUnits(loan_interest, decimals);
-    const capitalLoss = ethers.utils.parseUnits(capital_loss, decimals);
+    const capitalLoss = capital_loss ? ethers.utils.parseUnits(capital_loss, decimals) : 0;
     const transaction1 = await contract.createOpportunity(
       borrower,
       loanInfoHash,
@@ -240,11 +240,9 @@ export async function createOpportunity(formData) {
 }
 
 function convertDate(inputFormat) {
-  function pad(s) {
-    return s < 10 ? "0" + s : s;
-  }
-  var d = new Date(inputFormat);
-  return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join("/");
+  function pad(s) { return (s < 10) ? '0' + s : s; }
+  var d = new Date(inputFormat)
+  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
 }
 
 function getOpportunity(opportunity) {
@@ -258,25 +256,15 @@ function getOpportunity(opportunity) {
   obj.borrower = opportunity.borrower.toString();
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  obj.opportunityAmount = ethers.utils
-    .formatUnits(opportunity.loanAmount, decimals)
-    .toString();
+  obj.opportunityAmount = ethers.utils.formatUnits(opportunity.loanAmount, decimals).toString();
   obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
-  obj.loanInterest = ethers.utils
-    .formatUnits(opportunity.loanInterest, decimals)
-    .toString();
+  obj.loanInterest = ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString();
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = opportunity.capitalLoss.toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-
-  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn)));
-  console.log(opportunity.createdOn.toString());
-  console.log(opportunity.createdOn.toBigInt());
-  let date = new Date(0); // The 0 there is the key, which sets the date to the epoch
-  date.setUTCSeconds(opportunity.createdOn);
-  console.log(date);
+  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn.toString())));
 
   return obj;
 }
@@ -378,20 +366,10 @@ export async function getAllUnderReviewOpportunities() {
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        let obj = {};
+        
         let tx = await contract.opportunityToId(id);
         if (tx.opportunityStatus.toString() == "0") {
-          obj.borrower = tx.borrower.toString();
-          obj.opportunityID = tx.opportunityID.toString();
-          obj.opportunityInfo = tx.opportunityInfo.toString();
-          obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
-          obj.loanAmount = tx.loanAmount.toString();
-          obj.loanTenure = tx.loanTenureInDays.toString();
-          obj.loanInterest = tx.loanInterest.toString();
-          obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
-          obj.collateralDocument = tx.collateralDocument.toString();
-          obj.capitalLoss = tx.capitalLoss.toString();
-          obj.createdOn = tx.createdOn.toString();
+          let obj = getOpportunity(tx);
           opportunities.push(obj);
         }
       }

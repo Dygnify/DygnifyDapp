@@ -61,7 +61,6 @@ const BorrowRequest = () => {
               ))}
             </div>
           </div>
-        </div>
       )}
     </div>
   );

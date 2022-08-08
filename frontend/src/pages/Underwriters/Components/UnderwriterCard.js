@@ -1,8 +1,27 @@
 import React, { useState } from "react";
 
 import PrimaryButton from "../../../tools/Button/PrimaryButton";
+import { getBinaryFileData } from "../../../services/fileHelper";
+import { retrieveFiles } from "../../../services/web3storageIPFS";
 
 const UnderwriterCard = ({ onClick, data }) => {
+
+  const [companyName, setCompanyName] = useState();
+  const [poolName, setPoolName] = useState();
+
+  // fetch the opportunity details from IPFS
+  retrieveFiles(data?.opportunityInfo, true).then((res) => {
+    if (res) {
+      let read = getBinaryFileData(res);
+      read.onloadend = function () {
+        let opJson = JSON.parse(read.result);
+        if (opJson) {
+          setCompanyName(opJson.company_name);
+          setPoolName(opJson.loanName);
+        }
+      };
+    }
+  });
 
   return (
     <div
@@ -23,13 +42,12 @@ const UnderwriterCard = ({ onClick, data }) => {
       <div style={{ marginLeft: 32, width: 400 }}>
         <div style={{ display: "flex", marginTop: -10 }} className="flex-col">
           <p className="card-title mb-0" style={{ fontSize: 23 }}>
-            Name of Pool
-          </p>
+            {poolName}</p>
           <p
             className="card-title mb-4 mt-0"
             style={{ fontSize: 16, fontWeight: 400 }}
           >
-            Name of Company
+            {companyName}
           </p>
         </div>
 
@@ -44,7 +62,7 @@ const UnderwriterCard = ({ onClick, data }) => {
             Pool Size
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {data.loanAmount} {process.env.REACT_APP_TOKEN_NAME}
+            {data.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
           </p>
         </div>
         <div style={{ display: "flex" }} className="mb-1">
