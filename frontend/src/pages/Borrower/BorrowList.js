@@ -17,28 +17,30 @@ const BorrowList = () => {
     setSelected(null);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     let op = await getDrawdownOpportunities();
-  //     if (op && op.length) {
-  //       setData(op);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      let op = await getDrawdownOpportunities();
+      if (op && op.length) {
+        setData(op);
+      }
+    };
+    fetchData();
+  }, []);
 
-  // useEffect(() => {
-  //   try {
-  //     const fetchData = async () => {
-  //       let opportunityList = await getOpportunitysOf();
-  //       setOpportunities(opportunityList);
-  //       console.log(opportunityList);
-  //     };
-  //     fetchData();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        let opportunityList = await getOpportunitysOf();
+        if (opportunityList && opportunityList.length) {
+          setOpportunities(opportunityList);
+        }
+        console.log(opportunityList);
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
     <div>

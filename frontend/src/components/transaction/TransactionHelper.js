@@ -222,7 +222,9 @@ export async function createOpportunity(formData) {
     );
     const loanAmt = ethers.utils.parseUnits(loan_amount, decimals);
     const loanInterest = ethers.utils.parseUnits(loan_interest, decimals);
-    const capitalLoss = capital_loss ? ethers.utils.parseUnits(capital_loss, decimals) : 0;
+    const capitalLoss = capital_loss
+      ? ethers.utils.parseUnits(capital_loss, decimals)
+      : 0;
     const transaction1 = await contract.createOpportunity(
       borrower,
       loanInfoHash,
@@ -240,9 +242,11 @@ export async function createOpportunity(formData) {
 }
 
 function convertDate(inputFormat) {
-  function pad(s) { return (s < 10) ? '0' + s : s; }
-  var d = new Date(inputFormat)
-  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
+  function pad(s) {
+    return s < 10 ? "0" + s : s;
+  }
+  var d = new Date(inputFormat);
+  return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join("/");
 }
 
 function getOpportunity(opportunity) {
@@ -256,15 +260,23 @@ function getOpportunity(opportunity) {
   obj.borrower = opportunity.borrower.toString();
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  obj.opportunityAmount = ethers.utils.formatUnits(opportunity.loanAmount, decimals).toString();
+  obj.opportunityAmount = ethers.utils
+    .formatUnits(opportunity.loanAmount, decimals)
+    .toString();
   obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
-  obj.loanInterest = ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString();
+  obj.loanInterest = ethers.utils
+    .formatUnits(opportunity.loanInterest, decimals)
+    .toString();
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
   obj.collateralDocument = opportunity.collateralDocument.toString();
-  obj.capitalLoss = opportunity.capitalLoss.toString();
+  obj.capitalLoss = ethers.utils
+    .formatUnits(opportunity.capitalLoss)
+    .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn.toString())));
+  obj.createdOn = convertDate(
+    new Date(parseInt(opportunity.createdOn.toString()))
+  );
 
   return obj;
 }
@@ -366,7 +378,7 @@ export async function getAllUnderReviewOpportunities() {
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        
+
         let tx = await contract.opportunityToId(id);
         if (tx.opportunityStatus.toString() == "0") {
           let obj = getOpportunity(tx);
@@ -480,6 +492,10 @@ export async function getDrawdownOpportunities() {
       let opportunities = [];
       for (const opportunity of data) {
         let tx = await contract.opportunityToId(opportunity);
+
+        if (!tx.opportunityPoolAddress) {
+          continue;
+        }
 
         // Get opportunities available for drawdown
         let poolAddress = tx.opportunityPoolAddress.toString();
@@ -692,4 +708,37 @@ export async function getOpportunitiesWithDues() {
   }
 
   return undefined;
+}
+
+export async function getAllUnderwriterOpportunities() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      let underWriter = await getEthAddress();
+      const count = await contract.underwriterToOpportunity(underWriter);
+      let opportunities = [];
+
+      for (let i = 0; i < count; i++) {
+        let id = await contract.opportunityIds(i);
+
+        let tx = await contract.opportunityToId(id);
+        if (tx.opportunityStatus.toString() == "0") {
+          let obj = getOpportunity(tx);
+          opportunities.push(obj);
+        }
+      }
+      return opportunities;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
 }
