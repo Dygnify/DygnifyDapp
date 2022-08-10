@@ -124,6 +124,7 @@ contract OpportunityOrigination is
             "Opportunity is already Judged"
         );
         underwritersOf[_opportunityId][0] = _underwriter;
+        underwriterToOpportunity[_underwriter].push(_opportunityId);
     }
 
     function voteOpportunity(bytes32 _opportunityId, uint8 _status)
@@ -153,7 +154,6 @@ contract OpportunityOrigination is
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus(
             _status
         );
-        underwriterToOpportunity[msg.sender].push(_opportunityId);
     }
 
     function mintCollateral(bytes32 _opportunityId)
