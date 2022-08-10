@@ -86,7 +86,7 @@ const LandingPage = () => {
               marginBottom: 10,
             }}
           >
-            Invest USDC in real-world-assets and earn attractive, risk adjusted
+            Invest USDC in real world assets and earn attractive risk adjusted
             returns.
           </h6>
           <GradientButton
@@ -113,8 +113,7 @@ const LandingPage = () => {
               marginTop: 10,
             }}
           >
-            Invest USDC in real-world-assets and earn attractive, risk adjusted
-            returns.
+            On tap liquidity in a transaparent and hassle free manner at competitive prices.
           </h6>
           <GradientButton
             onClick={() => {

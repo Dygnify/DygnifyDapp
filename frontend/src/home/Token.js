@@ -7,9 +7,13 @@ import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
 import { amlCheck } from "../services/OFACAxiosOptions";
 import axios from "axios";
 import { Web3Storage, getFilesFromPath } from "web3.storage";
-
-const tokenAddress = "0x1546A8e7389B47d2Cf1bacE7C0ad3e0A91CAae94";
+import opportunityOrigination from "../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
+import seniorPool from "../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
+import opportunityPool from "../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
+import "./Token.css"
+const tokenAddress = "0x7d7FE8dbb260a213322b0dEE20cB1ca2d313EBfE";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
+
 
 //metadata to ipfs
 const pinJSONToIPFS = async (JSONBody) => {
@@ -44,6 +48,156 @@ function Token() {
   const [selectedFile, setSelectedFile] = useState();
   const [tokenURI, setTokenURI] = useState("");
   const [nameForAMLCheck, setNameForAMLCheck] = useState("");
+  const [admin, setAdmin] = useState("");
+  const [juniorPool, setJuniorPool] = useState("");
+  const [usdcReceiver, setUsdcReceiver] = useState("");
+  const [receiverContract, setReceiverContract] = useState("");
+  const [opportunityId, setOpportunityId] = useState("");
+  const [underWriter, setUnderWriter] = useState("");
+  const [opportunityIdForInvest, setOpportunityIdForInvest] = useState("");
+  
+  async function grantAdminRole(contractId, receiver) {
+    const admin = "0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775";
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      let contract;
+      if(contractId == 0){
+        contract = new ethers.Contract(
+          process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+          opportunityOrigination.abi,
+          signer
+        );
+      }
+      else if(contractId == 1){
+        contract = new ethers.Contract(
+          process.env.REACT_APP_SENIORPOOL,
+          seniorPool.abi,
+          signer
+        );
+      }
+
+      const transaction1 = await contract.grantRole(admin,receiver);
+      await transaction1.wait();
+    }
+  }
+
+  async function grantAdminRoleOfPool(receiver) {
+    const admin = "0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775";
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const  contract = new ethers.Contract(
+          juniorPool,
+          opportunityPool.abi,
+          signer
+        );
+
+      const transaction1 = await contract.grantRole(admin,receiver);
+      await transaction1.wait();
+    }
+  }
+
+  async function approveUSDCToken() {
+    let amount = "10000000000000000000000000000";
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const contract2 = new ethers.Contract(
+        process.env.REACT_APP_TEST_USDCTOKEN,
+        dygToken.abi,
+        signer
+      );
+      const transaction = await contract2.approve(
+        usdcReceiver,
+        amount
+      );
+      await transaction.wait();
+    }
+  }
+
+  async function investInToJunior() {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      let contract = new ethers.Contract(
+          process.env.REACT_APP_SENIORPOOL,
+          seniorPool.abi,
+          signer
+        );
+
+      const transaction1 = await contract.invest(opportunityIdForInvest);
+      await transaction1.wait();
+    }
+  }
+
+  async function approveUSDCFromSenior() {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      let contract = new ethers.Contract(
+          process.env.REACT_APP_SENIORPOOL,
+          seniorPool.abi,
+          signer
+        );
+
+      const transaction1 = await contract.approveUSDC(receiverContract);
+      await transaction1.wait();
+    }
+  }
+
+  async function assignUnderWriter() {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      let contract = new ethers.Contract(
+          process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+          opportunityOrigination.abi,
+          signer
+        );
+
+      const transaction1 = await contract.assignUnderwriters(opportunityId, underWriter);
+      await transaction1.wait();
+    }
+  }
+
+  async function lockPool(poolId) {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const  contract = new ethers.Contract(
+          juniorPool,
+          opportunityPool.abi,
+          signer
+        );
+
+      const transaction1 = await contract.lockPool(poolId);
+      await transaction1.wait();
+    }
+  }
+
+  async function unlockPool(poolId) {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const  contract = new ethers.Contract(
+          juniorPool,
+          opportunityPool.abi,
+          signer
+        );
+
+      const transaction1 = await contract.unLockPool(poolId);
+      await transaction1.wait();
+    }
+  }
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -191,6 +345,127 @@ function Token() {
           onChange={(event) => setNameForAMLCheck(event.target.value)}
         />
         <button onClick={() => onCheckAML(nameForAMLCheck)}>Check</button>
+        <br />
+        <br />
+        <h3>Opportunity Origination contract</h3>
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setAdmin(event.target.value)}
+          placeholder="Target Address"
+        />
+        <button onClick={() => grantAdminRole(0,admin)}>Change Admin Role</button>
+
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setOpportunityId(event.target.value)}
+          placeholder="opportunity ID"
+        />
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setUnderWriter(event.target.value)}
+          placeholder="UnderWriter Address"
+        />
+        <button onClick={() => assignUnderWriter()}>Assign underWriter</button>
+
+        <br />
+        <br />
+        <h3>Senior Pool contract</h3>
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setAdmin(event.target.value)}
+          placeholder="Target Address"
+        />
+        <button onClick={() => grantAdminRole(1,admin)}>Change Admin Role</button>
+
+        <br />
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setReceiverContract(event.target.value)}
+          placeholder="Receiver contract Address"
+        />
+        <button onClick={() => approveUSDCFromSenior()}>Approve</button>
+
+        <br />
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setOpportunityIdForInvest(event.target.value)}
+          placeholder="Opportunity Id"
+        />
+        <button onClick={() => investInToJunior()}>Invest in Senior tranche</button>
+
+        <br />
+        <br />
+        <h3>Junior Pool contract</h3>
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setJuniorPool(event.target.value)}
+          placeholder="Juniorpool Contract Address"
+        />
+        
+        <br />
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setAdmin(event.target.value)}
+          placeholder="Target Address"
+        />
+        <br />
+        <br />
+        <button onClick={() => grantAdminRoleOfPool(admin)}>Change Admin Role</button>
+
+        <br /><br />
+        <input
+          type="text"
+          onChange={(event) => setJuniorPool(event.target.value)}
+          placeholder="Juniorpool Contract Address"
+        />
+
+        <button onClick={() => lockPool(1)}>Lock senior tranche</button>
+        
+        <br /><br />
+        <input
+          type="text"
+          onChange={(event) => setJuniorPool(event.target.value)}
+          placeholder="Juniorpool Contract Address"
+        />
+
+        <button onClick={() => lockPool(0)}>Lock junior tranche</button>
+
+        <br /><br />
+        <input
+          type="text"
+          onChange={(event) => setJuniorPool(event.target.value)}
+          placeholder="Juniorpool Contract Address"
+        />
+
+        <button onClick={() => unlockPool(1)}>Unlock senior tranche</button>
+        
+        <br /><br />
+        <input
+          type="text"
+          onChange={(event) => setJuniorPool(event.target.value)}
+          placeholder="Juniorpool Contract Address"
+        />
+
+        <button onClick={() => unlockPool(0)}>Unlock junior tranche</button>
+
+        <br />
+        <br />
+        <h3>Test USDC</h3>
+        <br />
+        <input
+          type="text"
+          onChange={(event) => setUsdcReceiver(event.target.value)}
+          placeholder="Receiver Address"
+        />
+        <button onClick={() => approveUSDCToken(usdcReceiver)}>Approve</button>
       </header>
     </div>
   );
