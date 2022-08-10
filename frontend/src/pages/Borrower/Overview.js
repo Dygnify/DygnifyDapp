@@ -161,8 +161,8 @@ const Overview = () => {
             }}
             className="mb-4 px-4 py-4"
           >
-            <h3 className="font-semibold text-3xl text-purple-100">
-              {nextDueAmount ? nextDueAmount : "--"}
+            <h3 className=" text-3xl text-purple-100">
+              {nextDueAmount ? nextDueAmount : "- -"}
             </h3>
             <p className="text-base font-semibold text-gray-500">
               Next Due Amount
@@ -176,8 +176,8 @@ const Overview = () => {
             }}
             className="px-4 py-4"
           >
-            <h3 className="font-semibold text-3xl text-purple-100">
-              {nextDueDate ? nextDueDate : "--"}
+            <h3 className="text-3xl text-purple-100">
+              {nextDueDate ? nextDueDate : "- -"}
             </h3>
             <p className="text-base font-semibold text-gray-500">
               Next Due Date
