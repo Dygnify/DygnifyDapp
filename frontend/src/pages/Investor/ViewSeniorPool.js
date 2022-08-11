@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import GradientButton from "../../tools/Button/GradientButton";
-import DueDateCard from "../Investor/components/Cards/DueDateCard";
+import TransactionCard from "./components/Cards/TransactionCard";
 import axiosHttpService from "../../services/axioscall";
+import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Alert from "../Components/Alert";
 import InvestModal from "./components/Modal/InvestModal";
@@ -12,7 +13,7 @@ const ViewSeniorPool = () => {
   const defaultPoolName = "Senior Pool";
   const defaultAPY = "10";
   const defaultPoolAmount = 0;
-  const [dueList, setDueList] = useState([]);
+  const [transactionData, setTransactionData] = useState([]);
   const [poolName, setPoolName] = useState(defaultPoolName);
   const [poolDescription, setPoolDescription] = useState();
   const [estimatedAPY, setEstimatedAPY] = useState(defaultAPY);
@@ -27,10 +28,16 @@ const ViewSeniorPool = () => {
   };
 
   useEffect(() => {
-    fetch("/dueList.json")
-      .then((res) => res.json())
-      .then((data) => setDueList(data));
-  }, [dueList]);
+    const fetchData = async () => {
+      const transactionDetails = await axiosHttpService(
+        tokenTransactions(process.env.REACT_APP_SENIORPOOL)
+      );
+      if (transactionDetails && transactionDetails.res) {
+        setTransactionData(transactionDetails.res.result);
+      }
+    };
+    fetchData();
+  }, []);
 
   const checkForKyc = async (refId) => {
     console.log("reached");
@@ -62,7 +69,7 @@ const ViewSeniorPool = () => {
           : defaultPoolAmount
       );
     }
-  }, [poolName, estimatedAPY, poolAmount]);
+  }, []);
 
   return (
     <>
@@ -132,18 +139,23 @@ const ViewSeniorPool = () => {
       <div style={{ marginTop: "50px", fontSize: 19, marginBottom: "20px" }}>
         Recent Activity
       </div>
-
-      <div>
-        {dueList.map((item) => (
-          <DueDateCard key={dueList.id} data={item} />
-        ))}
-      </div>
-
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
+      {transactionData.length > 0 ? (
+        <div className="w-1/2">
+          {transactionData ? (
+            transactionData.map((item) => (
+              <TransactionCard
+                key={transactionData.blockHash}
+                data={item}
+                address={process.env.REACT_APP_SENIORPOOL}
+              />
+            ))
+          ) : (
+            <></>
+          )}
+        </div>
+      ) : (
+        <p>Transaction details are not available at this moment</p>
+      )}
     </>
   );
 };

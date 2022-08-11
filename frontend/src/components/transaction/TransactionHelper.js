@@ -6,6 +6,10 @@ import opportunityOrigination from "../../artifacts/contracts/protocol/Opportuni
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import seniorPool from "../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 import borrowerContract from "../../artifacts/contracts/protocol/Borrower.sol/Borrower.json";
+import {
+  getDisplayAmount,
+  getTrimmedWalletAddress,
+} from "../../services/displayTextHelper";
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
@@ -241,7 +245,7 @@ export async function createOpportunity(formData) {
   }
 }
 
-function convertDate(inputFormat) {
+export function convertDate(inputFormat) {
   function pad(s) {
     return s < 10 ? "0" + s : s;
   }
@@ -258,15 +262,16 @@ function getOpportunity(opportunity) {
   let obj = {};
   obj.id = opportunity.opportunityID.toString();
   obj.borrower = opportunity.borrower.toString();
+  obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  obj.opportunityAmount = ethers.utils
-    .formatUnits(opportunity.loanAmount, decimals)
-    .toString();
+  obj.opportunityAmount = getDisplayAmount(
+    ethers.utils.formatUnits(opportunity.loanAmount, decimals)
+  );
   obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
-  obj.loanInterest = ethers.utils
-    .formatUnits(opportunity.loanInterest, decimals)
-    .toString();
+  obj.loanInterest =
+    ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString() +
+    "%";
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = ethers.utils
@@ -274,9 +279,8 @@ function getOpportunity(opportunity) {
     .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  obj.createdOn = convertDate(
-    new Date(parseInt(opportunity.createdOn.toString()))
-  );
+  //epoch gives timestamp in seconds we need to convert it in miliseconds
+  obj.createdOn = convertDate(new Date(opportunity.createdOn * 1000));
 
   return obj;
 }
@@ -409,25 +413,17 @@ export async function getApprovalHistory() {
         underWriter
       );
       let count = opportunities.length;
+      let opportunitiesList = [];
 
       for (let i = 0; i < count; i++) {
-        let obj = {};
         let tx = await contract.opportunityToId(opportunities[i]);
-        obj.borrower = tx.borrower.toString();
-        obj.opportunityID = tx.opportunityID.toString();
-        obj.opportunityInfo = tx.opportunityInfo.toString();
-        obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
-        obj.loanAmount = tx.loanAmount.toString();
-        obj.loanTenure = tx.loanTenureInDays.toString();
-        obj.loanInterest = tx.loanInterest.toString();
-        obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
-        obj.collateralDocument = tx.collateralDocument.toString();
-        obj.capitalLoss = tx.capitalLoss.toString();
-        obj.createdOn = tx.createdOn.toString();
-        obj.status = tx.opportunityStatus.toString();
-        opportunities.push(obj);
+        if (tx.opportunityStatus.toString() != "0") {
+          //neglecting non voted opoortunities.
+          let obj = getOpportunity(tx);
+          opportunitiesList.push(obj);
+        }
       }
-      return opportunities;
+      return opportunitiesList;
     }
   } catch (error) {
     console.log(error);
@@ -585,7 +581,7 @@ export async function getUserSeniorPoolInvestment() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        process.env.REACT_APP_SENIORPOOL,
         seniorPool.abi,
         provider
       );
@@ -741,4 +737,24 @@ export async function getAllUnderwriterOpportunities() {
   }
 
   return 0;
+}
+
+export async function investInSeniorPool(amount) {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_SENIORPOOL,
+        seniorPool.abi,
+        signer
+      );
+
+      let transaction = await contract.stake(amount);
+      await transaction.wait();
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
