@@ -28,7 +28,7 @@ function getDisplayAmount(amount) {
   let displayAmt;
   if (amount) {
     if (amount > 999) {
-      displayAmt = amount / 1000 + "K";
+      displayAmt = (amount / 1000).toString() + "K";
     } else {
       displayAmt = amount;
     }

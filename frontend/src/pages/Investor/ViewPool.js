@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import InvestModal from "../Investor/components/Modal/InvestModal";
 import GradientButton from "../../tools/Button/GradientButton";
-import DueDateCard from "./components/Cards/DueDateCard";
+import TransactionCard from "./components/Cards/TransactionCard";
 import {
   getWalletBal,
   getUserWalletAddress,
@@ -290,7 +290,7 @@ const ViewPool = () => {
 
         <div>
           {dueList.map((item) => (
-            <DueDateCard key={dueList.id} data={item} />
+            <TransactionCard key={dueList.id} data={item} />
           ))}
         </div>
 
