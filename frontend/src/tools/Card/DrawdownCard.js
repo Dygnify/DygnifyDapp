@@ -57,7 +57,7 @@ const DrawdownCard = ({ data }) => {
             className={`btn btn-secondary w-full bg-blue-500 hover:bg-blue-500 capitalize font-medium border-none`}
             onClick={() => setSelected(data)}
           >
-            Withdraw Funds
+            Drawdown Funds
           </label>
         </div>
         {selected && (

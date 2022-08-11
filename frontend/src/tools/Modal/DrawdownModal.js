@@ -29,7 +29,7 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
           <div style={{ display: "flex" }} className="justify-center my-6">
             <img
               style={{ borderRadius: "50%" }}
-              className="p-4 bg-secondary opacity-80"
+              className="p-4 bg-base-500 opacity-80"
               src="/images/wallet_white.png"
               alt=""
             />
@@ -46,12 +46,12 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
                 {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
               </p>
             </div>
-            <small
+            {/* <small
               style={{ display: "flex", color: "#777E91" }}
               className="justify-end"
             >
-              ${data?.loan_amount}
-            </small>
+              {data?.loan_amount} USDT
+            </small> */}
           </div>
           <div className="text-sm py-3 px-4">
             <div style={{ display: "flex" }} className="mb-2">

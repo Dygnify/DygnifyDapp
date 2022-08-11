@@ -1,26 +1,19 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
-import ViewPoolCard from "../Investor/components/Cards/ViewPoolCard";
 import UnderwriterCard from "./Components/UnderwriterCard";
 import { getAllUnderReviewOpportunities } from "../../components/transaction/TransactionHelper";
 
 const BorrowRequest = () => {
-  const path = useNavigate();
   const [opportunities, setOpportunities] = useState([]);
 
   useEffect(async () => {
     await getUnderReviewOpportunity();
-    console.log(process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS);
   }, []);
 
   async function getUnderReviewOpportunity() {
     let list = await getAllUnderReviewOpportunities();
-    console.log(list);
     if (list) {
-      setOpportunities(list); 
+      setOpportunities(list);
     }
   }
 
@@ -40,27 +33,21 @@ const BorrowRequest = () => {
         </div>
       </div>
 
-      {opportunities.length === 0 ? 
-      (
+      {opportunities.length === 0 ? (
         <div style={{ display: "flex" }} className="justify-center">
           <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
             No Borrow requests are present at the moment.
           </div>
         </div>
-      ) 
-       :
-        (
-          <div className="mb-16 ">
-            <div style={{ display: "flex" }} className="gap-4 w-1/2">
-              {opportunities && opportunities.map((item) => (
-                <UnderwriterCard
-                  onClick={() => path("/underwriterDashboard/poolDetail", item)}
-                  data = {item}
-                  key = {item.id}
-                />
+      ) : (
+        <div className="mb-16 ">
+          <div style={{ display: "flex" }} className="gap-4 w-1/2">
+            {opportunities &&
+              opportunities.map((item) => (
+                <UnderwriterCard data={item} key={item.id} />
               ))}
-            </div>
           </div>
+        </div>
       )}
     </div>
   );

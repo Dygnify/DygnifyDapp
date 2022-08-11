@@ -1,27 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import GradientButton from "../../tools/Button/GradientButton";
 import { voteOpportunity } from "../../components/transaction/TransactionHelper";
+import {
+  getTrimmedWalletAddress,
+  getExtendableTextBreakup,
+  getDisplayAmount,
+} from "../../services/displayTextHelper";
 
 const PoolDetails = () => {
   const location = useLocation();
-  const OP = {
-    estimatedAPY: "24%",
-  };
   const [expand, setExpand] = useState(false);
-
   const [approveStatus, setApproveStatus] = useState(false);
+  const [opDetails, setOpDetails] = useState();
+  const [info, setInfo] = useState([]);
+  const [loanPurpose, setLoanPurpose] = useState({
+    isSliced: false,
+    firstText: "",
+    secondText: "",
+  });
+
+  useEffect(() => {
+    setOpDetails(location.state);
+    loadInfo();
+    loadLoanPurpose();
+  }, []);
 
   const status = { approve: approveStatus, unsure: false, reject: false };
 
-  const info = [
-    {
-      label: "Opening Date",
-      value: "--",
-    },
-    { label: "Payment Frequency", value: "4 Years" },
-    { label: "Borrower Address", value: "0xfasd45sd" },
-  ];
+  function loadInfo() {
+    if (opDetails) {
+      setInfo([
+        {
+          label: "Opening Date",
+          value: opDetails.createdOn ? opDetails.createdOn : "--",
+        },
+        {
+          label: "Payment Frequency",
+          value: opDetails.paymentFrequencyInDays
+            ? opDetails.paymentFrequencyInDays + " Days"
+            : "--",
+        },
+        {
+          label: "Borrower Address",
+          value: opDetails.borrower
+            ? getTrimmedWalletAddress(opDetails.borrower)
+            : "--",
+        },
+        {
+          label: "Interest Rate",
+          value: opDetails.loanInterest ? opDetails.loanInterest + "%" : "--",
+        },
+        {
+          label: "Payment Tenure",
+          value: opDetails.loanTenureInDays
+            ? opDetails.loanTenureInDays / 30 + " Months"
+            : "--",
+        },
+        {
+          label: "Drawdown Cap",
+          value: opDetails.opportunityAmount
+            ? getDisplayAmount(opDetails.opportunityAmount)
+            : "--",
+        },
+      ]);
+      console.log(info);
+    }
+  }
+
+  function loadLoanPurpose() {
+    const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+      opDetails.loanPurpose,
+      200
+    );
+    if (isSliced) {
+      setLoanPurpose({
+        firstText: firstText,
+        secondText: secondText,
+        isSlied: isSliced,
+      });
+    } else {
+      setLoanPurpose({
+        firstText: firstText,
+        isSliced: isSliced,
+      });
+    }
+  }
 
   function updateStatus() {
     let opStatus = location?.item?.status ?? "";
@@ -43,10 +106,10 @@ const PoolDetails = () => {
       >
         <div className="flex-col">
           <div style={{ fontSize: 28 }} className="mb-0">
-            Name of the Pool
+            {opDetails?.loanName}
           </div>
           <small style={{ color: "#64748B", fontSize: 14 }}>
-            Name of the creator company
+            {opDetails?.company_name}
           </small>
         </div>
         <div className="mr-10">
@@ -81,7 +144,7 @@ const PoolDetails = () => {
               {status.reject ? "Rejected" : "Reject"}
             </button>
           ) : null}
-          {status.unsure ||
+          {/* {status.unsure ||
           !(status.approve || status.reject || status.unsure) ? (
             <button
               disabled={status.unsure}
@@ -91,7 +154,7 @@ const PoolDetails = () => {
             >
               Unsure
             </button>
-          ) : null}
+          ) : null} */}
         </div>
       </div>
 
@@ -109,50 +172,33 @@ const PoolDetails = () => {
             </div>
           </div>
           <div style={{ color: "#D0D5DD" }}>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum. Nulla Lorem mollit cupidatat irure.
-            Laborum magna nulla duis ullamco cillum dolor. Voluptate
-            exercitation incididunt aliquip deserunt reprehenderit elit
-            laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-            ullamco cillum dolor. Voluptate exercitation incididunt aliquip
-            deserunt reprehenderit elit laborum. Nulla Lorem mollit cupidatat
-            irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate
-            exercitation incididunt aliquip deserunt reprehenderit elit
-            laborum.Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum. Voluptate exercitation incididunt
-            aliquip deserunt reprehenderit elit laborum.Voluptate exercitation
-            incididunt aliquip deserunt reprehenderit...
-            <a
-              style={{ fontWeight: 600, cursor: "pointer" }}
-              onClick={() => setExpand(true)}
-            >
-              {expand ? null : "view more"}
-            </a>
-            {expand ? (
+            {loanPurpose.isSliced ? (
               <div>
-                Laborum magna nulla duis ullamco cillum dolor. Voluptate
-                exercitation incididunt aliquip deserunt reprehenderit elit
-                laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla
-                duis ullamco cillum dolor. Voluptate exercitation incididunt
-                aliquip deserunt reprehenderit elit laborum. Nulla Lorem mollit
-                cupidatat irure. Laborum magna nulla duis ullamco cillum dolor.
-                Voluptate
+                {loanPurpose.firstText}
+                <a
+                  style={{ fontWeight: 600, cursor: "pointer" }}
+                  onClick={() => setExpand(true)}
+                >
+                  {expand ? null : "view more"}
+                </a>
+                {expand ? <div>{loanPurpose.secondText}</div> : null}
+                <a
+                  style={{ fontWeight: 600, cursor: "pointer" }}
+                  onClick={() => setExpand(false)}
+                >
+                  {expand ? "view less" : null}
+                </a>
               </div>
-            ) : null}
-            <a
-              style={{ fontWeight: 600, cursor: "pointer" }}
-              onClick={() => setExpand(false)}
-            >
-              {expand ? "view less" : null}
-            </a>
+            ) : (
+              <div>{loanPurpose.firstText} </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Deal Terms */}
 
-      <div style={{ display: "flex" }} className="flex-col w-1/2">
+      <div style={{ display: "flex" }} className="flex-col w-full">
         <div
           style={{ display: "flex" }}
           className="flex-row justify-between mt-10 mb-3"
@@ -171,44 +217,28 @@ const PoolDetails = () => {
           }}
         >
           <div style={{ display: "flex" }} className="w-full">
-            {info.map((e, i) => {
-              return (
-                <div
-                  className="justify-center w-1/3 flex-col items-center "
-                  style={{
-                    display: "flex",
-                    borderRight: "0.5px solid   #292C33",
-                    borderBottom: "0.5px solid   #292C33",
-                    padding: "40px 0",
-                  }}
-                >
-                  <div style={{ fontSize: 14, color: "#A0ABBB" }}>
-                    {e.label}
+            {info ? (
+              info.map((e, i) => {
+                return (
+                  <div
+                    className="justify-center w-1/3 flex-col items-center "
+                    style={{
+                      display: "flex",
+                      borderRight: "0.5px solid   #292C33",
+                      borderBottom: "0.5px solid   #292C33",
+                      padding: "40px 0",
+                    }}
+                  >
+                    <div style={{ fontSize: 14, color: "#A0ABBB" }}>
+                      {e.label}
+                    </div>
+                    <div style={{ fontSize: 20 }}>{e.value}</div>
                   </div>
-                  <div style={{ fontSize: 20 }}>{e.value}</div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div style={{ display: "flex" }} className="w-full">
-            {info.map((e, i) => {
-              return (
-                <div
-                  className="justify-center w-1/3 flex-col items-center "
-                  style={{
-                    display: "flex",
-                    borderRight: "0.5px solid   #292C33",
-                    padding: "40px 0",
-                  }}
-                >
-                  <div style={{ fontSize: 14, color: "#A0ABBB" }}>
-                    {e.label}
-                  </div>
-                  <div style={{ fontSize: 20 }}>{e.value}</div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
@@ -226,7 +256,7 @@ const PoolDetails = () => {
           }}
         >
           <div style={{ fontSize: "14px", color: "#64748B" }}>
-            Name of documents
+            Name of documents - <div>{}</div>
           </div>
           <div>Document descripton</div>
           <div style={{ fontSize: 14, color: "#64748B" }}>
@@ -283,49 +313,11 @@ const PoolDetails = () => {
         <div style={{ margin: "10px 0", marginTop: "40px", fontSize: 19 }}>
           KYC Details
         </div>
-        {info.map(() => {
-          return (
-            <div
-              style={{
-                display: "flex",
-                background: "#292C33",
-                borderRadius: "12px",
-                padding: "5px",
-                paddingLeft: "20px",
-                paddingRight: "20px",
-                margin: "10px 0",
-              }}
-              className="flex-row justify-between"
-            >
-              <div>Docname</div>
-              <div style={{ color: "#5375FE" }}>View Documents</div>
-            </div>
-          );
-        })}
       </div>
       <div className="w-1/2">
         <div style={{ margin: "10px 0", marginTop: "40px", fontSize: 19 }}>
           KYB Details
         </div>
-        {info.map(() => {
-          return (
-            <div
-              style={{
-                display: "flex",
-                background: "#292C33",
-                borderRadius: "12px",
-                padding: "5px",
-                paddingLeft: "20px",
-                paddingRight: "20px",
-                margin: "10px 0",
-              }}
-              className="flex-row justify-between"
-            >
-              <div>Docname</div>
-              <div style={{ color: "#5375FE" }}>View Documents</div>
-            </div>
-          );
-        })}
       </div>
 
       <br />

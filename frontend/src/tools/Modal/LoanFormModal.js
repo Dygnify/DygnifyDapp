@@ -17,7 +17,7 @@ const LoanFormModal = ({ handleForm }) => {
   const path = useNavigate();
   const [formData, setFormData] = useState({
     loan_name: "",
-    loan_type: "",
+    loan_type: "0",
     loan_amount: "",
     loan_purpose: "",
     loan_tenure: "",

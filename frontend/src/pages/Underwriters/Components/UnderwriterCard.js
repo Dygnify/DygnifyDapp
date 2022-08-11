@@ -1,27 +1,32 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../tools/Button/PrimaryButton";
 import { getBinaryFileData } from "../../../services/fileHelper";
 import { retrieveFiles } from "../../../services/web3storageIPFS";
 
-const UnderwriterCard = ({ onClick, data }) => {
-
+const UnderwriterCard = ({ data }) => {
+  const path = useNavigate();
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState();
+  const [poolDetails, setPoolDetails] = useState();
 
-  // fetch the opportunity details from IPFS
-  retrieveFiles(data?.opportunityInfo, true).then((res) => {
-    if (res) {
-      let read = getBinaryFileData(res);
-      read.onloadend = function () {
-        let opJson = JSON.parse(read.result);
-        if (opJson) {
-          setCompanyName(opJson.company_name);
-          setPoolName(opJson.loanName);
-        }
-      };
-    }
-  });
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(data?.opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setCompanyName(opJson.company_name);
+            setPoolName(opJson.loanName);
+            setPoolDetails({ ...data, ...opJson });
+            console.log(opJson);
+          }
+        };
+      }
+    });
+  }, []);
 
   return (
     <div
@@ -42,7 +47,8 @@ const UnderwriterCard = ({ onClick, data }) => {
       <div style={{ marginLeft: 32, width: 400 }}>
         <div style={{ display: "flex", marginTop: -10 }} className="flex-col">
           <p className="card-title mb-0" style={{ fontSize: 23 }}>
-            {poolName}</p>
+            {poolName}
+          </p>
           <p
             className="card-title mb-4 mt-0"
             style={{ fontSize: 16, fontWeight: 400 }}
@@ -89,7 +95,12 @@ const UnderwriterCard = ({ onClick, data }) => {
         </div>
 
         <div style={{ marginTop: 28 }}>
-          <PrimaryButton disable={false} onClick={onClick}>
+          <PrimaryButton
+            disable={false}
+            onClick={() =>
+              path("/underwriterDashboard/poolDetail", { state: poolDetails })
+            }
+          >
             View Details
           </PrimaryButton>
         </div>
