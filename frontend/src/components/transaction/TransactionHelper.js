@@ -6,6 +6,7 @@ import opportunityOrigination from "../../artifacts/contracts/protocol/Opportuni
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import seniorPool from "../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 import borrowerContract from "../../artifacts/contracts/protocol/Borrower.sol/Borrower.json";
+import { getDisplayAmount } from "../../services/displayTextHelper";
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
@@ -260,13 +261,13 @@ function getOpportunity(opportunity) {
   obj.borrower = opportunity.borrower.toString();
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  obj.opportunityAmount = ethers.utils
-    .formatUnits(opportunity.loanAmount, decimals)
-    .toString();
+  obj.opportunityAmount = getDisplayAmount(
+    ethers.utils.formatUnits(opportunity.loanAmount, decimals)
+  );
   obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
-  obj.loanInterest = ethers.utils
-    .formatUnits(opportunity.loanInterest, decimals)
-    .toString();
+  obj.loanInterest =
+    ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString() +
+    "%";
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = ethers.utils
