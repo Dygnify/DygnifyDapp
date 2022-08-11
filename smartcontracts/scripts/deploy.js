@@ -23,7 +23,6 @@ async function main() {
   await testUSDCToken.deployed();
 
   console.log("TestUSDCToken deployed to:", testUSDCToken.address);
-  console.log("Balance : ", await testUSDCToken.totalSupply());
 
   // const usdtToken = "0x3813e82e6f7098b9583FC0F33a962D02018B6803";
   //const DygnifyStaking = await hre.ethers.getContractFactory("DygnifyStaking");
@@ -115,12 +114,14 @@ async function main() {
   await dygnifyConfig.setAddress(4, opportunityPool.address);
   await dygnifyConfig.setAddress(5, collateralToken.address);
   await dygnifyConfig.setAddress(6, opportunityOrigination.address);
+  console.log("Pool Addresses configured successfully");
 
   // Set all numbers
   await dygnifyConfig.setNumber(0, 4);
   await dygnifyConfig.setNumber(1, 100000);
   await dygnifyConfig.setNumber(2, 5000000);
   await dygnifyConfig.setNumber(3, 200000);
+  console.log("Initial numbers configured successfully");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -124,7 +124,7 @@ contract OpportunityOrigination is
             "Opportunity is already Judged"
         );
         underwritersOf[_opportunityId][0] = _underwriter;
-        underwriterToOpportunity[msg.sender].push(_opportunityId);
+        underwriterToOpportunity[_underwriter].push(_opportunityId);
     }
 
     function voteOpportunity(bytes32 _opportunityId, uint8 _status)
