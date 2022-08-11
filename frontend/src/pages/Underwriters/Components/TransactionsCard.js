@@ -35,7 +35,7 @@ const TransactionsCard = ({ data }) => {
         <p className="w-1/6 text-center">{companyName}</p>
         <p className="w-1/6 text-center">{data?.createdOn}</p>
 
-        {data?.status == "2" && (
+        {(data?.status == "2" || data?.status >= "4" ) && (
           <p className="w-1/6 text-center">
             <div
               style={{

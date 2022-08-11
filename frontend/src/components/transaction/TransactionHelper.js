@@ -751,7 +751,7 @@ export async function investInSeniorPool(amount) {
         seniorPool.abi,
         signer
       );
-
+      amount = ethers.utils.parseUnits(amount, 6);
       let transaction = await contract.stake(amount);
       await transaction.wait();
     }
