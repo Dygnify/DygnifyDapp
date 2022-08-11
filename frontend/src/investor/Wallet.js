@@ -62,16 +62,6 @@ const Wallet = () => {
   }, [walletBalance, withdrawlBal, totalYield]);
 
   useEffect(() => {
-    getWithdrawBal()
-      .then((data) => {
-        setWithdrawlBal(Number(data).toFixed(2));
-      })
-      .catch(() => {
-        console.log("Error in getting withdrawl balance");
-      });
-  }, [withdrawlBal, walletBalance, totalYield]);
-
-  useEffect(() => {
     getTotalYield()
       .then((data) => {
         setTotalYield(Number(data).toFixed(2));
@@ -84,11 +74,11 @@ const Wallet = () => {
   const onSubmitApprove = (event) => {
     setApproveLoading(true)
     event.preventDefault();
-    if(parseInt( values.deposit) >  Number(walletBalance)){
-      errorNotify("Please enter an amount not exceeding the wallet balance");
-      setApproveLoading(false)
-    }
-    else{
+    // if(parseInt( values.deposit) >  Number(walletBalance)){
+    //   errorNotify("Please enter an amount not exceeding the wallet balance");
+    //   setApproveLoading(false)
+    // }
+    // else{
       setValues({ ...values, deposit: "" });
       const amount = ethers.utils.parseEther(values.deposit);
       console.log("AMOUNT: " + amount);
@@ -100,7 +90,7 @@ const Wallet = () => {
           errorNotify("Approval failed. Please try again.");
           setApproveLoading(false)
         });
-    }
+    //}
     
   };
 
@@ -115,10 +105,10 @@ const Wallet = () => {
           errorNotify("Please approve the amount before depositing");
           setDepositeLoading(false)
         }
-        else if(parseInt( values.deposit) >  Number(walletBalance)){
-          errorNotify("Please enter an amount not exceeding the wallet balance");
-          setDepositeLoading(false)
-        }
+        // else if(parseInt( values.deposit) >  Number(walletBalance)){
+        //   errorNotify("Please enter an amount not exceeding the wallet balance");
+        //   setDepositeLoading(false)
+        // }
         else{
           event.preventDefault();
           setValues({ ...values, deposit: "" });

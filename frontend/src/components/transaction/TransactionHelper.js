@@ -222,7 +222,9 @@ export async function createOpportunity(formData) {
     );
     const loanAmt = ethers.utils.parseUnits(loan_amount, decimals);
     const loanInterest = ethers.utils.parseUnits(loan_interest, decimals);
-    const capitalLoss = ethers.utils.parseUnits(capital_loss, decimals);
+    const capitalLoss = capital_loss
+      ? ethers.utils.parseUnits(capital_loss, decimals)
+      : 0;
     const transaction1 = await contract.createOpportunity(
       borrower,
       loanInfoHash,
@@ -267,16 +269,14 @@ function getOpportunity(opportunity) {
     .toString();
   obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
   obj.collateralDocument = opportunity.collateralDocument.toString();
-  obj.capitalLoss = opportunity.capitalLoss.toString();
+  obj.capitalLoss = ethers.utils
+    .formatUnits(opportunity.capitalLoss)
+    .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-
-  obj.createdOn = convertDate(new Date(parseInt(opportunity.createdOn)));
-  console.log(opportunity.createdOn.toString());
-  console.log(opportunity.createdOn.toBigInt());
-  let date = new Date(0); // The 0 there is the key, which sets the date to the epoch
-  date.setUTCSeconds(opportunity.createdOn);
-  console.log(date);
+  obj.createdOn = convertDate(
+    new Date(parseInt(opportunity.createdOn.toString()))
+  );
 
   return obj;
 }
@@ -378,20 +378,10 @@ export async function getAllUnderReviewOpportunities() {
 
       for (let i = 0; i < count; i++) {
         let id = await contract.opportunityIds(i);
-        let obj = {};
+
         let tx = await contract.opportunityToId(id);
         if (tx.opportunityStatus.toString() == "0") {
-          obj.borrower = tx.borrower.toString();
-          obj.opportunityID = tx.opportunityID.toString();
-          obj.opportunityInfo = tx.opportunityInfo.toString();
-          obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
-          obj.loanAmount = tx.loanAmount.toString();
-          obj.loanTenure = tx.loanTenureInDays.toString();
-          obj.loanInterest = tx.loanInterest.toString();
-          obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
-          obj.collateralDocument = tx.collateralDocument.toString();
-          obj.capitalLoss = tx.capitalLoss.toString();
-          obj.createdOn = tx.createdOn.toString();
+          let obj = getOpportunity(tx);
           opportunities.push(obj);
         }
       }
@@ -502,6 +492,10 @@ export async function getDrawdownOpportunities() {
       let opportunities = [];
       for (const opportunity of data) {
         let tx = await contract.opportunityToId(opportunity);
+
+        if (!tx.opportunityPoolAddress) {
+          continue;
+        }
 
         // Get opportunities available for drawdown
         let poolAddress = tx.opportunityPoolAddress.toString();
@@ -714,4 +708,37 @@ export async function getOpportunitiesWithDues() {
   }
 
   return undefined;
+}
+
+export async function getAllUnderwriterOpportunities() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      let underWriter = await getEthAddress();
+      const count = await contract.underwriterToOpportunity(underWriter);
+      let opportunities = [];
+
+      for (let i = 0; i < count; i++) {
+        let id = await contract.opportunityIds(i);
+
+        let tx = await contract.opportunityToId(id);
+        if (tx.opportunityStatus.toString() == "0") {
+          let obj = getOpportunity(tx);
+          opportunities.push(obj);
+        }
+      }
+      return opportunities;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return 0;
 }
