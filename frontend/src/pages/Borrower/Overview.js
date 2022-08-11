@@ -12,14 +12,7 @@ import {
 import DoughnutChart from "../Components/DoughnutChart";
 
 const Overview = () => {
-  const [drawdownList, setDrawdownList] = useState([
-    {
-      opportunity_name: "Impact fund",
-      opportunityAmount: "450,000",
-      loan_amount: "98,000",
-      loan_interest: "15",
-    },
-  ]);
+  const [drawdownList, setDrawdownList] = useState([]);
   const [repaymentList, setRepaymentList] = useState([]);
   const [nextDueDate, setNextDueDate] = useState();
   const [nextDueAmount, setNextDueAmount] = useState();
@@ -29,15 +22,15 @@ const Overview = () => {
     setSelected(null);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     let opportunities = await getDrawdownOpportunities();
-  //     if (opportunities && opportunities.length) {
-  //       setDrawdownList(opportunities);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [drawdownList]);
+  useEffect(() => {
+    const fetchData = async () => {
+      let opportunities = await getDrawdownOpportunities();
+      if (opportunities && opportunities.length) {
+        setDrawdownList(opportunities);
+      }
+    };
+    fetchData();
+  }, [drawdownList]);
 
   function sortByProperty(property) {
     return function (a, b) {

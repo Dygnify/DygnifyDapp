@@ -8,8 +8,6 @@ import Account from "../../pages/Borrower/LoanForm/Steps/Account";
 import Details from "../../pages/Borrower/LoanForm/Steps/Details";
 import Final from "../../pages/Borrower/LoanForm/Steps/Final";
 import { loanDetailsValidationSchema } from "../../pages/LoanForm/validations/validation";
-import axiosHttpService from "../../services/axioscall";
-import { pinataCall, uploadFileToIPFS } from "../../services/PinataIPFSOptions";
 import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
 
 const LoanFormModal = ({ handleForm }) => {
@@ -70,9 +68,7 @@ const LoanFormModal = ({ handleForm }) => {
       let collateralHash = await storeFiles(selectedFile);
 
       // make metadata for loan info
-      const metadata = {};
-      metadata.loanName = loan_info.loan_name;
-      metadata.loanPurpose = loan_info.loan_purpose;
+      const metadata = { ...loan_info };
       metadata.company_name = company.company_name;
       metadata.company_details = company.company_details;
       let loanInfoFile = makeFileObjects(metadata, `${collateralHash}.json`);
@@ -98,7 +94,7 @@ const LoanFormModal = ({ handleForm }) => {
     } = data;
     loan_tenure = loan_tenure * 30;
     const collateral_document = rest.collateral_document;
-
+    console.log(rest);
     let loanDetails = {
       loan_type: "0",
       loan_amount,
@@ -108,8 +104,13 @@ const LoanFormModal = ({ handleForm }) => {
       capital_loss,
     };
     console.log(collateral_document);
-    const loan_info = { loan_name, loan_purpose };
-    //console.log(loanDetails);
+    const loan_info = {
+      loan_name,
+      loan_purpose,
+    };
+    loan_info.collateral_document_name = rest.collateral_document_name;
+    loan_info.collateral_document_description =
+      rest.collateral_document_description;
 
     const [collateralHash, loanInfoHash] = await onFileUpload(
       collateral_document,

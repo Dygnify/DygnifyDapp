@@ -27,7 +27,7 @@ const TransactionCard = ({ data, address }) => {
       getUserAddress();
       let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
       setAmount(getDisplayAmount(amt));
-      setDate(convertDate(new Date(parseInt(data.timeStamp.toString()))));
+      setDate(convertDate(data.timeStamp));
     }
   }, []);
   return (

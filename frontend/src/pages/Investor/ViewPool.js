@@ -57,7 +57,7 @@ const ViewPool = () => {
     fetch("/dueList.json")
       .then((res) => res.json())
       .then((data) => setDueList(data));
-  }, [dueList]);
+  }, []);
 
   const checkForKyc = async (refId) => {
     console.log("reached");

@@ -245,11 +245,12 @@ export async function createOpportunity(formData) {
   }
 }
 
-export function convertDate(inputFormat) {
+export function convertDate(epochTimestamp) {
   function pad(s) {
     return s < 10 ? "0" + s : s;
   }
-  var d = new Date(inputFormat);
+  //epoch gives timestamp in seconds we need to convert it in miliseconds
+  var d = new Date(epochTimestamp * 1000);
   return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join("/");
 }
 
@@ -279,8 +280,8 @@ function getOpportunity(opportunity) {
     .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  //epoch gives timestamp in seconds we need to convert it in miliseconds
-  obj.createdOn = convertDate(new Date(opportunity.createdOn * 1000));
+
+  obj.createdOn = convertDate(new Date(opportunity.createdOn));
 
   return obj;
 }
