@@ -19,7 +19,6 @@ const InvestorOverview = () => {
   const [totalYield, setTotalYield] = useState(0);
   const [seniorPool, setSeniorPool] = useState([]);
   const [juniorPool, setJuniorPool] = useState([]);
-  const [kycStatus, setKycStatus] = useState();
 
   const path = useNavigate();
 
@@ -27,12 +26,6 @@ const InvestorOverview = () => {
     setTotalInvestment((prev) => prev + investment);
     setTotalYield((prev) => prev + investment * interest);
   }
-
-  const checkForKyc = async (refId) => {
-    const result = await axiosHttpService(kycOptions(refId));
-    if (result.status === "success") setKycStatus(true);
-    setKycStatus(false);
-  };
 
   useEffect(() => {
     try {

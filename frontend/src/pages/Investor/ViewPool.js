@@ -7,6 +7,9 @@ import {
   getWalletBal,
   getUserWalletAddress,
 } from "../../components/transaction/TransactionHelper";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
+import Alert from "../Components/Alert";
 
 const ViewPool = () => {
   const location = useLocation();
@@ -14,13 +17,15 @@ const ViewPool = () => {
   const [dueList, setDueList] = useState([]);
   const [expand, setExpand] = useState(false);
 
+  const [kycStatus, setKycStatus] = useState(1);
+  const [error, setError] = useState();
+
   const [selected, setSelected] = useState(null);
   const handleDrawdown = () => {
     setSelected(null);
   };
 
   const loadBlockpassWidget = (address) => {
-    console.log("#############");
     const blockpass = new window.BlockpassKYCConnect(
       process.env.REACT_APP_CLIENT_ID, // service client_id from the admin console
       {
@@ -51,9 +56,25 @@ const ViewPool = () => {
       .then((data) => setDueList(data));
   }, [dueList]);
 
+  const checkForKyc = async (refId) => {
+    console.log("reached");
+    const result = await axiosHttpService(kycOptions(refId));
+    console.log(result, result.res.status);
+    if (result.res.status === "success") setKycStatus(true);
+    if (result.res.status === "error") {
+      setError(result.res.message);
+      setKycStatus(false);
+    }
+
+    console.log(kycStatus);
+  };
+
   return (
     <>
       <div>
+        {!kycStatus && (
+          <Alert header={"Please Complete Your KYC."} label={error} />
+        )}
         {selected ? <InvestModal handleDrawdown={handleDrawdown} /> : null}
         <div
           className="flex-row justify-between items-center"

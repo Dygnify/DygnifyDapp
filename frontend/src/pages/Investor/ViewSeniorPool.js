@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import GradientButton from "../../tools/Button/GradientButton";
 import DueDateCard from "../Investor/components/Cards/DueDateCard";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
+import Alert from "../Components/Alert";
 
 const ViewSeniorPool = () => {
   const location = useLocation();
@@ -14,11 +17,27 @@ const ViewSeniorPool = () => {
   const [estimatedAPY, setEstimatedAPY] = useState(defaultAPY);
   const [poolAmount, setPoolAmount] = useState(defaultPoolAmount);
 
+  const [kycStatus, setKycStatus] = useState(1);
+  const [error, setError] = useState();
+
   useEffect(() => {
     fetch("/dueList.json")
       .then((res) => res.json())
       .then((data) => setDueList(data));
   }, [dueList]);
+
+  const checkForKyc = async (refId) => {
+    console.log("reached");
+    const result = await axiosHttpService(kycOptions(refId));
+    console.log(result, result.res.status);
+    if (result.res.status === "success") setKycStatus(true);
+    if (result.res.status === "error") {
+      setError(result.res.message);
+      setKycStatus(false);
+    }
+
+    console.log(kycStatus);
+  };
 
   useEffect(() => {
     if (location.state) {
@@ -41,6 +60,9 @@ const ViewSeniorPool = () => {
 
   return (
     <>
+      {!kycStatus && (
+        <Alert header={"Please Complete Your KYC."} label={error} />
+      )}
       <div style={{ fontSize: 28 }} className="mb-0">
         {poolName}
       </div>
@@ -82,7 +104,14 @@ const ViewSeniorPool = () => {
               <h2 style={{ fontSize: 28 }}>{poolAmount}</h2>
             </div>
 
-            <GradientButton className={"w-full mt-20"}>Invest</GradientButton>
+            <GradientButton
+              className={"w-full mt-20"}
+              onClick={() =>
+                checkForKyc("0xC78810A9EDb753C3FdC71EEe6998A68d3B823705")
+              }
+            >
+              Invest
+            </GradientButton>
           </div>
         </div>
       </div>

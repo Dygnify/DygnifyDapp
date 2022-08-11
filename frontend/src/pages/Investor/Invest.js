@@ -11,7 +11,11 @@ import { getBinaryFileData } from "../../services/fileHelper";
 const Invest = () => {
   const path = useNavigate();
   const [juniorPools, setJuniorPools] = useState([]);
-  const [seniorPool, setSeniorPool] = useState([]);
+  const [seniorPool, setSeniorPool] = useState([
+    {
+      poolName: "New Oppo",
+    },
+  ]);
 
   useEffect(() => {
     try {
@@ -27,28 +31,28 @@ const Invest = () => {
     }
   }, []);
 
-  useEffect(() => {
-    // fetch data from IPFS
-    retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
-      if (res) {
-        let read = getBinaryFileData(res);
-        read.onloadend = async function () {
-          let spJson = JSON.parse(read.result);
-          if (spJson) {
-            let seniorInvestmentData = {};
-            seniorInvestmentData.poolName = spJson.poolName;
-            seniorInvestmentData.opportunityAmount = await getWalletBal(
-              process.env.REACT_APP_SENIORPOOL
-            );
-            seniorInvestmentData.loanInterest = spJson.estimatedAPY;
-            seniorInvestmentData.poolDescription = spJson.poolDescription;
-            seniorInvestmentData.isFull = false;
-            setSeniorPool(seniorInvestmentData);
-          }
-        };
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   // fetch data from IPFS
+  //   retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
+  //     if (res) {
+  //       let read = getBinaryFileData(res);
+  //       read.onloadend = async function () {
+  //         let spJson = JSON.parse(read.result);
+  //         if (spJson) {
+  //           let seniorInvestmentData = {};
+  //           seniorInvestmentData.poolName = spJson.poolName;
+  //           seniorInvestmentData.opportunityAmount = await getWalletBal(
+  //             process.env.REACT_APP_SENIORPOOL
+  //           );
+  //           seniorInvestmentData.loanInterest = spJson.estimatedAPY;
+  //           seniorInvestmentData.poolDescription = spJson.poolDescription;
+  //           seniorInvestmentData.isFull = false;
+  //           setSeniorPool(seniorInvestmentData);
+  //         }
+  //       };
+  //     }
+  //   });
+  // }, []);
 
   return (
     <>
