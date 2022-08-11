@@ -173,7 +173,41 @@ const BorrowerProfile = () => {
     <>
       <div className="mb-16 ">
         {selected && <KYBModal handleForm={handleForm} />}
-        <h2 className="mb-6 text-2xl font-medium">Borrower Profile</h2>
+        {!profileStatus && (
+          <div className="flex-col " style={{ display: "flex" }}>
+            <div
+              className="flex-row justify-between items-start"
+              style={{ display: "flex" }}
+            >
+              <h2 className="mb-6 text-2xl font-medium">Borrower Profile</h2>
+              <div
+                style={{ display: "flex", marginRight: 15 }}
+                className="flex-row justify-center items-center"
+              >
+                <button
+                  onClick={() =>
+                    navigate("/borrower_dashboard/edit_profile", borrowerJson)
+                  }
+                  style={{
+                    borderRadius: "100px",
+                    padding: "8px 16px",
+                    display: "flex",
+                  }}
+                  className="btn btn-sm btn-outline text-white "
+                >
+                  <Edits />
+                  <div style={{ marginLeft: 2 }}>Create Profile</div>
+                </button>
+              </div>
+            </div>
+            <p
+              className="justify-center"
+              style={{ color: "#64748B", display: "flex", marginTop: 40 }}
+            >
+              Complete your profile.
+            </p>
+          </div>
+        )}
         {profileStatus ? (
           <>
             <div
@@ -388,15 +422,7 @@ const BorrowerProfile = () => {
               <DocumentCard docName={"Impact incorporation proof.pdf"} />
             </div>
           </>
-        ) : (
-          <div style={{ display: "flex" }} className="justify-center mt-10">
-            <GradientButton
-              onClick={() => navigate("/borrower_dashboard/edit_profile")}
-            >
-              Complete your profile
-            </GradientButton>
-          </div>
-        )}
+        ) : null}
       </div>
     </>
   );

@@ -10,6 +10,9 @@ import {
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Alert from "../Components/Alert";
+import Twitter from "../SVGIcons/Twitter";
+import Website from "../SVGIcons/Website";
+import LinkedIn from "../SVGIcons/LinkedIn";
 
 const ViewPool = () => {
   const location = useLocation();
@@ -90,22 +93,41 @@ const ViewPool = () => {
           </div>
           <div className="mr-10">
             <button
-              style={{ borderRadius: "100px", padding: "3px 16px" }}
-              className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
+              id="linkedin"
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                border: "1px solid #64748B",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-white"
             >
-              LinkedIn
+              <LinkedIn />
+              <div style={{ marginLeft: 2 }}>LinkedIn</div>
+            </button>
+
+            <button
+              id="linkedin"
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                border: "1px solid #64748B",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-white"
+            >
+              <Website />
+              <div style={{ marginLeft: 2 }}>Website</div>
             </button>
             <button
-              style={{ borderRadius: "100px", padding: "3px 16px" }}
-              className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
+              id="twitter"
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                border: "1px solid #64748B",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-white"
             >
-              Website
-            </button>
-            <button
-              style={{ borderRadius: "100px", padding: "3px 16px" }}
-              className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
-            >
-              twitter
+              <Twitter />
+              <div style={{ marginLeft: 2 }}>twitter</div>
             </button>
           </div>
         </div>
