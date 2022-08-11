@@ -3,11 +3,14 @@ import ViewPoolCard from "./components/Cards/ViewPoolCard";
 import { useNavigate } from "react-router-dom";
 import {
   getAllActiveOpportunities,
+  getUserWalletAddress,
   getWalletBal,
 } from "../../components/transaction/TransactionHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
 
 const Invest = () => {
   const path = useNavigate();
@@ -17,6 +20,28 @@ const Invest = () => {
       poolName: "New Oppo",
     },
   ]);
+
+  const [kycStatus, setKycStatus] = useState();
+
+  useEffect(() => {
+    getUserWalletAddress().then((address) => checkForKyc(address));
+  }, []);
+
+  const checkForKyc = async (refId) => {
+    try {
+      console.log("reached");
+      const result = await axiosHttpService(kycOptions(refId));
+      console.log(result, result.res.status);
+      if (result.res.status === "success") setKycStatus(true);
+      if (result.res.status === "error") {
+        setKycStatus(false);
+      }
+
+      console.log(kycStatus);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     try {
@@ -89,7 +114,7 @@ const Invest = () => {
                   state: seniorPool,
                 })
               }
-              data={seniorPool}
+              data={{ ...seniorPool, kycStatus: kycStatus }}
             />
           </div>
         )}
