@@ -11,6 +11,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
 import LineChart from "./components/LineChart";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
 
 const InvestorOverview = () => {
   const [totalInvestment, setTotalInvestment] = useState(0);
@@ -22,7 +24,6 @@ const InvestorOverview = () => {
 
   function updateSummery(investment, interest) {
     setTotalInvestment((prev) => prev + investment);
-
     setTotalYield((prev) => prev + investment * interest);
   }
 

@@ -7,9 +7,16 @@ import {
   getWalletBal,
 } from "../../components/transaction/TransactionHelper";
 
+import InvestModal from "./components/Modal/InvestModal";
+
 const Withdraw = () => {
   const [seniorPool, setSeniorPool] = useState([]);
   const [juniorPools, setJuniorPools] = useState([]);
+  const [selected, setSelected] = useState();
+
+  const handleForm = () => {
+    setSelected(null);
+  };
 
   useEffect(() => {
     try {
@@ -47,6 +54,7 @@ const Withdraw = () => {
   return (
     <>
       <div className="px-5">
+        {selected && <InvestModal handleForm={handleForm} />}
         <div
           style={{ display: "flex" }}
           className="items-center justify-between mb-14 "
@@ -57,7 +65,19 @@ const Withdraw = () => {
           >
             Withdraw
           </h2>
-          <GradientButton className={"w-40"}>+ Invest</GradientButton>
+          <label
+            htmlFor="InvestModal"
+            style={{
+              borderRadius: "100px",
+              padding: "12px 15px",
+              color: "white",
+              marginRight: 8,
+            }}
+            className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
+            onClick={() => setSelected(true)}
+          >
+            +Invest
+          </label>
         </div>
       </div>
       {seniorPool.capitalInvested > 0 ? (

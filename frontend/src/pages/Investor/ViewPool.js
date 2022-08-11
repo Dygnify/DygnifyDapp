@@ -7,6 +7,12 @@ import {
   getWalletBal,
   getUserWalletAddress,
 } from "../../components/transaction/TransactionHelper";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
+import Alert from "../Components/Alert";
+import Twitter from "../SVGIcons/Twitter";
+import Website from "../SVGIcons/Website";
+import LinkedIn from "../SVGIcons/LinkedIn";
 
 const ViewPool = () => {
   const location = useLocation();
@@ -14,13 +20,15 @@ const ViewPool = () => {
   const [dueList, setDueList] = useState([]);
   const [expand, setExpand] = useState(false);
 
+  const [kycStatus, setKycStatus] = useState(1);
+  const [error, setError] = useState();
+
   const [selected, setSelected] = useState(null);
   const handleDrawdown = () => {
     setSelected(null);
   };
 
   const loadBlockpassWidget = (address) => {
-    console.log("#############");
     const blockpass = new window.BlockpassKYCConnect(
       process.env.REACT_APP_CLIENT_ID, // service client_id from the admin console
       {
@@ -51,9 +59,25 @@ const ViewPool = () => {
       .then((data) => setDueList(data));
   }, [dueList]);
 
+  const checkForKyc = async (refId) => {
+    console.log("reached");
+    const result = await axiosHttpService(kycOptions(refId));
+    console.log(result, result.res.status);
+    if (result.res.status === "success") setKycStatus(true);
+    if (result.res.status === "error") {
+      setError(result.res.message);
+      setKycStatus(false);
+    }
+
+    console.log(kycStatus);
+  };
+
   return (
     <>
       <div>
+        {!kycStatus && (
+          <Alert header={"Please Complete Your KYC."} label={error} />
+        )}
         {selected ? <InvestModal handleDrawdown={handleDrawdown} /> : null}
         <div
           className="flex-row justify-between items-center"
@@ -69,22 +93,41 @@ const ViewPool = () => {
           </div>
           <div className="mr-10">
             <button
-              style={{ borderRadius: "100px", padding: "3px 16px" }}
-              className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
+              id="linkedin"
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                border: "1px solid #64748B",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-white"
             >
-              LinkedIn
+              <LinkedIn />
+              <div style={{ marginLeft: 2 }}>LinkedIn</div>
+            </button>
+
+            <button
+              id="linkedin"
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                border: "1px solid #64748B",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-white"
+            >
+              <Website />
+              <div style={{ marginLeft: 2 }}>Website</div>
             </button>
             <button
-              style={{ borderRadius: "100px", padding: "3px 16px" }}
-              className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
+              id="twitter"
+              style={{
+                borderRadius: "100px",
+                padding: "3px 16px",
+                border: "1px solid #64748B",
+              }}
+              className="ml-3 btn btn-xs btn-outline text-white"
             >
-              Website
-            </button>
-            <button
-              style={{ borderRadius: "100px", padding: "3px 16px" }}
-              className="ml-3 btn btn-xs btn-outline text-white text-xs capitalize"
-            >
-              twitter
+              <Twitter />
+              <div style={{ marginLeft: 2 }}>twitter</div>
             </button>
           </div>
         </div>
@@ -196,7 +239,7 @@ const ViewPool = () => {
               >
                 Invest KYC
               </GradientButton>
-              <GradientButton
+              {/* <GradientButton
                 className={"w-full mt-20"}
                 onClick={() => {
                   setSelected(true);
@@ -204,7 +247,19 @@ const ViewPool = () => {
                 }}
               >
                 Invest modal
-              </GradientButton>
+              </GradientButton> */}
+              <label
+                htmlFor="InvestModal"
+                style={{
+                  borderRadius: "100px",
+                  padding: "12px 24px",
+                  color: "white",
+                }}
+                className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
+                onClick={() => setSelected(true)}
+              >
+                Invest
+              </label>
             </div>
           </div>
         </div>
