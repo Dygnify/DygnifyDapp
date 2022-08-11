@@ -10,34 +10,30 @@ import {
   getDrawdownOpportunities,
 } from "../../components/transaction/TransactionHelper";
 import DoughnutChart from "../Components/DoughnutChart";
+import ProcessingRequestModal from "./Components/Modal/processingRequestModal";
 
 const Overview = () => {
-  const [drawdownList, setDrawdownList] = useState([
-    {
-      opportunity_name: "Impact fund",
-      opportunityAmount: "450,000",
-      loan_amount: "98,000",
-      loan_interest: "15",
-    },
-  ]);
+  const [drawdownList, setDrawdownList] = useState([]);
   const [repaymentList, setRepaymentList] = useState([]);
   const [nextDueDate, setNextDueDate] = useState();
   const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
+  const [processSelected, setProcessSelected] = useState();
 
   const handleForm = () => {
     setSelected(null);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     let opportunities = await getDrawdownOpportunities();
-  //     if (opportunities && opportunities.length) {
-  //       setDrawdownList(opportunities);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [drawdownList]);
+  useEffect(() => {
+    const fetchData = async () => {
+      let opportunities = await getDrawdownOpportunities();
+      if (opportunities && opportunities.length) {
+        setDrawdownList(opportunities);
+        console.log(drawdownList);
+      }
+    };
+    fetchData();
+  }, [drawdownList]);
 
   function sortByProperty(property) {
     return function (a, b) {
@@ -60,6 +56,8 @@ const Overview = () => {
         // set next due date and amount
         setNextDueAmount(opportunities[0].repaymentAmount);
         setNextDueAmount(opportunities[0].nextDueDate);
+
+        console.log(repaymentList, nextDueAmount);
       }
     };
     fetchData();
@@ -75,6 +73,7 @@ const Overview = () => {
           handleForm={handleForm}
         />
       )}
+      {processSelected && <ProcessingRequestModal />}
       <div style={{ display: "flex" }} className="w-full my-10">
         <div
           style={{
@@ -213,6 +212,9 @@ const Overview = () => {
       </div>
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
+        <label htmlFor="processModal" onClick={() => setProcessSelected(true)}>
+          Process Modal
+        </label>
         {drawdownList.length === 0 ? (
           <div
             style={{ display: "flex", marginTop: 20 }}

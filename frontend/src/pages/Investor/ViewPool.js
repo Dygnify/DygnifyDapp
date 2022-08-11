@@ -24,6 +24,7 @@ const ViewPool = () => {
   const [error, setError] = useState();
 
   const [selected, setSelected] = useState(null);
+
   const handleDrawdown = () => {
     setSelected(null);
   };

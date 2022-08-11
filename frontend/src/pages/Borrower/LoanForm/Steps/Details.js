@@ -13,7 +13,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
       collateral_document_name: "",
       collateral_document: "",
       collateral_document_description: "",
-      capital_loss: "45 %",
+      capital_loss: "",
     },
     validationSchema: CollateralDetailsValidationSchema,
     onSubmit: (values) => {

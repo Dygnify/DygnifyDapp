@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
-const OpportunityCardCollapsible = ({ data }) => {
+import DoughnutChart from "../../pages/Components/DoughnutChart";
 
+const OpportunityCardCollapsible = ({ data }) => {
   const [poolName, setPoolName] = useState();
 
   // fetch the opportunity details from IPFS
@@ -19,31 +20,31 @@ const OpportunityCardCollapsible = ({ data }) => {
   });
 
   function getStatus(index) {
-    let status = '';
+    let status = "";
     switch (index) {
-      case '0':
-        status = 'UnderReview';
+      case "0":
+        status = "Under Review";
         break;
-      case '1':
-        status = 'Rejected';
+      case "1":
+        status = "Rejected";
         break;
-      case '2':
-        status = 'Approved';
+      case "2":
+        status = "Approved";
         break;
-      case '3':
-        status = 'Unsure';
+      case "3":
+        status = "Unsure";
         break;
-      case '4':
-        status = 'Collateralized';
+      case "4":
+        status = "Collateralized";
         break;
-      case '5':
-        status = 'Active';
+      case "5":
+        status = "Active";
         break;
-      case '6':
-        status = 'Drawndown';
+      case "6":
+        status = "Drawndown";
         break;
-      case '7':
-        status = 'Repaid';
+      case "7":
+        status = "Repaid";
         break;
     }
 
@@ -74,9 +75,35 @@ const OpportunityCardCollapsible = ({ data }) => {
         >
           <div
             style={{ borderRight: "1px solid #292C33", display: "flex" }}
-            className="w-1/2 text-center flex-col justify-center items-center"
+            className="w-1/2 text-center flex-row justify-around items-center"
           >
-            <p>Chart</p>
+            <DoughnutChart
+              data={[100, 20]}
+              color={["#5375FE", "#ffffff"]}
+              width={200}
+              labels={["Capital Requested", "Total Raised"]}
+              borderWidth={[1, 8]}
+              legendStyle={{ display: false }}
+            />
+            <div
+              style={{ display: "flex", color: "red" }}
+              className="flex-col "
+            >
+              <div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
+                Capital requested
+              </div>
+              <div style={{ fontSize: 28, color: "white" }} className="mb-10">
+                {data ? data.opportunityAmount : "--"}{" "}
+                {process.env.REACT_APP_TOKEN_NAME}
+              </div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
+                Total raised till now
+              </div>
+
+              <div style={{ fontSize: 28, color: "white" }}>
+                --{process.env.REACT_APP_TOKEN_NAME}
+              </div>
+            </div>
           </div>
           <div
             style={{ borderLeft: "1px solid #292C33", display: "flex" }}
