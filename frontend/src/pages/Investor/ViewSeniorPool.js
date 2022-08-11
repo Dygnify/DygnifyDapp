@@ -6,6 +6,7 @@ import axiosHttpService from "../../services/axioscall";
 import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Alert from "../Components/Alert";
+import InvestModal from "./components/Modal/InvestModal";
 
 const ViewSeniorPool = () => {
   const location = useLocation();
@@ -17,9 +18,14 @@ const ViewSeniorPool = () => {
   const [poolDescription, setPoolDescription] = useState();
   const [estimatedAPY, setEstimatedAPY] = useState(defaultAPY);
   const [poolAmount, setPoolAmount] = useState(defaultPoolAmount);
+  const [selected, setSelected] = useState(null);
 
   const [kycStatus, setKycStatus] = useState(1);
   const [error, setError] = useState();
+
+  const handleDrawdown = () => {
+    setSelected(null);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +76,9 @@ const ViewSeniorPool = () => {
       {!kycStatus && (
         <Alert header={"Please Complete Your KYC."} label={error} />
       )}
+
+      {selected ? <InvestModal handleDrawdown={handleDrawdown} /> : null}
+
       <div style={{ fontSize: 28 }} className="mb-0">
         {poolName}
       </div>
@@ -111,14 +120,18 @@ const ViewSeniorPool = () => {
               <h2 style={{ fontSize: 28 }}>{poolAmount}</h2>
             </div>
 
-            <GradientButton
-              className={"w-full mt-20"}
-              onClick={() =>
-                checkForKyc("0xC78810A9EDb753C3FdC71EEe6998A68d3B823705")
-              }
+            <label
+              htmlFor="InvestModal"
+              style={{
+                borderRadius: "100px",
+                padding: "12px 24px",
+                color: "white",
+              }}
+              className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
+              onClick={() => setSelected(true)}
             >
               Invest
-            </GradientButton>
+            </label>
           </div>
         </div>
       </div>

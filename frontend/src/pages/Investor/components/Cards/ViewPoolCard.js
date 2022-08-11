@@ -4,7 +4,7 @@ import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 
-const ViewPoolCard = ({ onClick, data }) => {
+const ViewPoolCard = ({ onClick, data, kycStatus }) => {
   const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
   const [companyName, setCompanyName] = useState();
@@ -99,7 +99,7 @@ const ViewPoolCard = ({ onClick, data }) => {
           <StatusButton label="Open" isFullStatus={isFull} />
         </div>
         <div style={{ marginTop: 32 }}>
-          <PrimaryButton onClick={onClick}>View Pool </PrimaryButton>
+          <PrimaryButton onClick={onClick}>View Pool</PrimaryButton>
         </div>
       </div>
     </div>

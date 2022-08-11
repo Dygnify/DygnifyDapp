@@ -10,6 +10,7 @@ import {
   getDrawdownOpportunities,
 } from "../../components/transaction/TransactionHelper";
 import DoughnutChart from "../Components/DoughnutChart";
+import ProcessingRequestModal from "./Components/Modal/processingRequestModal";
 
 const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
@@ -17,6 +18,7 @@ const Overview = () => {
   const [nextDueDate, setNextDueDate] = useState();
   const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
+  const [processSelected, setProcessSelected] = useState();
 
   const handleForm = () => {
     setSelected(null);
@@ -53,6 +55,8 @@ const Overview = () => {
         // set next due date and amount
         setNextDueAmount(opportunities[0].repaymentAmount);
         setNextDueAmount(opportunities[0].nextDueDate);
+
+        console.log(repaymentList, nextDueAmount);
       }
     };
     fetchData();
@@ -68,6 +72,7 @@ const Overview = () => {
           handleForm={handleForm}
         />
       )}
+      {processSelected && <ProcessingRequestModal />}
       <div style={{ display: "flex" }} className="w-full my-10">
         <div
           style={{
@@ -206,6 +211,9 @@ const Overview = () => {
       </div>
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
+        <label htmlFor="processModal" onClick={() => setProcessSelected(true)}>
+          Process Modal
+        </label>
         {drawdownList.length === 0 ? (
           <div
             style={{ display: "flex", marginTop: 20 }}

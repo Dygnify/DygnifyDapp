@@ -31,6 +31,7 @@ const BorrowList = () => {
     try {
       const fetchData = async () => {
         let opportunityList = await getOpportunitysOf();
+        console.log("*****", opportunityList);
         if (opportunityList && opportunityList.length) {
           setOpportunities(opportunityList);
         }

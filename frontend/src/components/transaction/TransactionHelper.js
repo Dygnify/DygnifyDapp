@@ -414,28 +414,17 @@ export async function getApprovalHistory() {
         underWriter
       );
       let count = opportunities.length;
+      let opportunitiesList = [];
 
       for (let i = 0; i < count; i++) {
-        let obj = {};
         let tx = await contract.opportunityToId(opportunities[i]);
         if (tx.opportunityStatus.toString() != "0") {
           //neglecting non voted opoortunities.
-          obj.borrower = tx.borrower.toString();
-          obj.opportunityID = tx.opportunityID.toString();
-          obj.opportunityInfo = tx.opportunityInfo.toString();
-          obj.loanType = tx.loanType.toString(); // 0 or 1 need to be handled
-          obj.loanAmount = tx.loanAmount.toString();
-          obj.loanTenure = tx.loanTenureInDays.toString();
-          obj.loanInterest = tx.loanInterest.toString();
-          obj.paymentFrequency = tx.paymentFrequencyInDays.toString();
-          obj.collateralDocument = tx.collateralDocument.toString();
-          obj.capitalLoss = tx.capitalLoss.toString();
-          obj.createdOn = tx.createdOn.toString();
-          obj.status = tx.opportunityStatus.toString();
-          opportunities.push(obj);
+          let obj = getOpportunity(tx);
+          opportunitiesList.push(obj);
         }
       }
-      return opportunities;
+      return opportunitiesList;
     }
   } catch (error) {
     console.log(error);
@@ -593,7 +582,7 @@ export async function getUserSeniorPoolInvestment() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        process.env.REACT_APP_SENIORPOOL,
         seniorPool.abi,
         provider
       );
