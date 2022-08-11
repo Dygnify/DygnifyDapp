@@ -21,7 +21,7 @@ contract OpportunityOrigination is
     // opportunityID => selected 9 auditors
     mapping(bytes32 => address[9]) underwritersOf;
 
-    mapping(address => bytes32[]) underwriterToOpportunity;
+    mapping(address => bytes32[]) public underwriterToOpportunity;
 
     // storing all the opportunities in an array.
     bytes32[] public opportunityIds;
@@ -124,6 +124,7 @@ contract OpportunityOrigination is
             "Opportunity is already Judged"
         );
         underwritersOf[_opportunityId][0] = _underwriter;
+        underwriterToOpportunity[msg.sender].push(_opportunityId);
     }
 
     function voteOpportunity(bytes32 _opportunityId, uint8 _status)
@@ -153,22 +154,21 @@ contract OpportunityOrigination is
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus(
             _status
         );
-        underwriterToOpportunity[msg.sender].push(_opportunityId);
+
+        if(_status == uint8(OpportunityStatus.Approved) ){
+            mintCollateral(_opportunityId);
+            createOpportunityPool(_opportunityId);
+        }
     }
 
     function mintCollateral(bytes32 _opportunityId)
-        external
-        override
+        private
         nonReentrant
         whenNotPaused
     {
         require(
             isOpportunity[_opportunityId] == true,
             "Opportunity ID doesn't exist"
-        );
-        require(
-            msg.sender == opportunityToId[_opportunityId].borrower,
-            "Only borrower of the opportunity can mint the collateral."
         );
         require(
             opportunityToId[_opportunityId].opportunityStatus ==
@@ -184,16 +184,11 @@ contract OpportunityOrigination is
     }
 
     function createOpportunityPool(bytes32 _opportunityId)
-        external
-        override
+        private
         nonReentrant
         whenNotPaused
         returns (address pool)
     {
-        require(
-            msg.sender == opportunityToId[_opportunityId].borrower,
-            "You are not a borrower"
-        );
         require(
             opportunityToId[_opportunityId].opportunityStatus ==
                 OpportunityStatus.Collateralized,

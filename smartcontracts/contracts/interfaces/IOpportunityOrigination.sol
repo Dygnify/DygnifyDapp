@@ -58,12 +58,6 @@ interface IOpportunityOrigination {
 
     function voteOpportunity(bytes32 _opportunityId, uint8 _status) external;
 
-    function mintCollateral(bytes32 _opportunityId) external;
-
-    function createOpportunityPool(bytes32 _opportunityId)
-        external
-        returns (address pool);
-
     function markDrawDown(bytes32 id) external;
 
     function markRepaid(bytes32 id) external;
