@@ -6,7 +6,10 @@ import opportunityOrigination from "../../artifacts/contracts/protocol/Opportuni
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import seniorPool from "../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 import borrowerContract from "../../artifacts/contracts/protocol/Borrower.sol/Borrower.json";
-import { getDisplayAmount } from "../../services/displayTextHelper";
+import {
+  getDisplayAmount,
+  getTrimmedWalletAddress,
+} from "../../services/displayTextHelper";
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
@@ -259,6 +262,7 @@ function getOpportunity(opportunity) {
   let obj = {};
   obj.id = opportunity.opportunityID.toString();
   obj.borrower = opportunity.borrower.toString();
+  obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
   obj.opportunityAmount = getDisplayAmount(
@@ -275,9 +279,8 @@ function getOpportunity(opportunity) {
     .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  obj.createdOn = convertDate(
-    new Date(parseInt(opportunity.createdOn.toString()))
-  );
+  //epoch gives timestamp in seconds we need to convert it in miliseconds
+  obj.createdOn = convertDate(new Date(opportunity.createdOn * 1000));
 
   return obj;
 }
@@ -414,7 +417,8 @@ export async function getApprovalHistory() {
       for (let i = 0; i < count; i++) {
         let obj = {};
         let tx = await contract.opportunityToId(opportunities[i]);
-        if(tx.opportunityStatus.toString() != "0"){ //neglecting non voted opoortunities.
+        if (tx.opportunityStatus.toString() != "0") {
+          //neglecting non voted opoortunities.
           obj.borrower = tx.borrower.toString();
           obj.opportunityID = tx.opportunityID.toString();
           obj.opportunityInfo = tx.opportunityInfo.toString();

@@ -21,9 +21,12 @@ const PoolDetails = () => {
 
   useEffect(() => {
     setOpDetails(location.state);
+  }, []);
+
+  useEffect(() => {
     loadInfo();
     loadLoanPurpose();
-  }, []);
+  }, [opDetails]);
 
   const status = { approve: approveStatus, unsure: false, reject: false };
 
@@ -42,13 +45,13 @@ const PoolDetails = () => {
         },
         {
           label: "Borrower Address",
-          value: opDetails.borrower
-            ? getTrimmedWalletAddress(opDetails.borrower)
+          value: opDetails.borrowerDisplayAdd
+            ? opDetails.borrowerDisplayAdd
             : "--",
         },
         {
           label: "Interest Rate",
-          value: opDetails.loanInterest ? opDetails.loanInterest + "%" : "--",
+          value: opDetails.loanInterest ? opDetails.loanInterest : "--",
         },
         {
           label: "Payment Tenure",
@@ -68,6 +71,9 @@ const PoolDetails = () => {
   }
 
   function loadLoanPurpose() {
+    if (!opDetails || !opDetails.loanPurpose) {
+      return;
+    }
     const { isSliced, firstText, secondText } = getExtendableTextBreakup(
       opDetails.loanPurpose,
       200
