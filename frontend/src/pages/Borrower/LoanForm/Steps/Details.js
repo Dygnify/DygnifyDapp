@@ -13,7 +13,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
       collateral_document_name: "",
       collateral_document: "",
       collateral_document_description: "",
-      capital_loss: "",
+      capital_loss: "45 %",
     },
     validationSchema: CollateralDetailsValidationSchema,
     onSubmit: (values) => {
@@ -84,7 +84,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
           label="First Capital Loss"
           placeholder="Enter First Capital Loss (if any)"
           className="w-full"
-        ></TextField>
+        />
 
         <div
           style={{ display: "flex", marginTop: 20 }}

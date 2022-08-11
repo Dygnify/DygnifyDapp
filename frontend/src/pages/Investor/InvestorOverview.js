@@ -11,20 +11,28 @@ import {
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
 import LineChart from "./components/LineChart";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
 
 const InvestorOverview = () => {
   const [totalInvestment, setTotalInvestment] = useState(0);
   const [totalYield, setTotalYield] = useState(0);
   const [seniorPool, setSeniorPool] = useState([]);
   const [juniorPool, setJuniorPool] = useState([]);
+  const [kycStatus, setKycStatus] = useState();
 
   const path = useNavigate();
 
   function updateSummery(investment, interest) {
     setTotalInvestment((prev) => prev + investment);
-
     setTotalYield((prev) => prev + investment * interest);
   }
+
+  const checkForKyc = async (refId) => {
+    const result = await axiosHttpService(kycOptions(refId));
+    if (result.status === "success") setKycStatus(true);
+    setKycStatus(false);
+  };
 
   useEffect(() => {
     try {

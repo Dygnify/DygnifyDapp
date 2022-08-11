@@ -196,7 +196,7 @@ const ViewPool = () => {
               >
                 Invest KYC
               </GradientButton>
-              <GradientButton
+              {/* <GradientButton
                 className={"w-full mt-20"}
                 onClick={() => {
                   setSelected(true);
@@ -204,7 +204,19 @@ const ViewPool = () => {
                 }}
               >
                 Invest modal
-              </GradientButton>
+              </GradientButton> */}
+              <label
+                htmlFor="InvestModal"
+                style={{
+                  borderRadius: "100px",
+                  padding: "12px 24px",
+                  color: "white",
+                }}
+                className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
+                onClick={() => setSelected(true)}
+              >
+                Invest
+              </label>
             </div>
           </div>
         </div>
