@@ -686,16 +686,7 @@ export async function getOpportunitiesWithDues() {
           obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
           const overdueTime = Math.floor(Date.now() / 1000) - repaymentDate;
           obj.isOverDue = overdueTime > 0 ? true : false;
-
-          if (obj.isOverDue) {
-            // Now calculate the overdue amount
-            let overduePercent = await poolContract.getOverDuePercentage();
-            if (overduePercent && overduePercent > 0) {
-              obj.repaymentAmount +=
-                obj.repaymentAmount * overdueTime * overduePercent;
-            }
-          }
-
+          
           opportunities.push(obj);
         }
       }

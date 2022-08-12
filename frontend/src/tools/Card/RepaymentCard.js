@@ -50,10 +50,17 @@ const RepaymentCard = ({ data }) => {
             </p>
           </div>
           <div style={{ display: "flex" }} className="mb-2">
-            <p style={{ display: "flex" }} className="justify-start">
-              Due Amount
-            </p>
-            <p style={{ display: "flex" }} className="justify-end">
+            { 
+              data?.isOverDue ?
+                <p style={{ display: "flex", color: "#EF4444" }} className="justify-start">
+                  Overdue Amount
+                </p>
+              :
+                <p style={{ display: "flex" }} className="justify-start">
+                  Due Amount
+                </p>
+            }
+            <p style={{ display: "flex", color: `${data?.isOverDue ? "#EF4444" : "white"}` }} className="justify-end">
               {data?.repaymentDisplayAmount} {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
