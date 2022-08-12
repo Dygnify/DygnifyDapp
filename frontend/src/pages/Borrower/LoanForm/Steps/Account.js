@@ -4,7 +4,7 @@ import TextArea from "../../../../tools/Inputs/TextArea";
 import TextField from "../../../../tools/Inputs/TextField";
 import { loanDetailsValidationSchema } from "../../../LoanForm/validations/validation";
 
-export default function Account({ formData, handleNext }) {
+export default function Account({ formData, handleNext, handleForm }) {
   const formik = useFormik({
     initialValues: formData,
     validationSchema: loanDetailsValidationSchema,
@@ -135,10 +135,27 @@ export default function Account({ formData, handleNext }) {
             label="Loan Purpose"
             placeholder="Short Summary on Purpose of Loans"
           ></TextArea>
+
           <div
             style={{ display: "flex", marginTop: 20 }}
-            className="justify-center"
+            className="flex-row justify-between w-full items-center content-center "
           >
+            <div
+              style={{ display: "flex" }}
+              className="justify-center flex-row w-1/3"
+            >
+              <label
+                onClick={handleForm}
+                style={{
+                  cursor: "pointer",
+                  marginLeft: 5,
+                  display: "flex",
+                  marginLeft: 50,
+                }}
+              >
+                Cancel
+              </label>
+            </div>
             <GradientButton type="submit">Next</GradientButton>
           </div>
         </form>

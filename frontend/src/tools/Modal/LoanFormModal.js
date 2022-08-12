@@ -40,7 +40,13 @@ const LoanFormModal = ({ handleForm }) => {
   const displayStep = (step) => {
     switch (step) {
       case 1:
-        return <Account handleNext={handleNext} formData={formData} />;
+        return (
+          <Account
+            handleNext={handleNext}
+            formData={formData}
+            handleForm={handleForm}
+          />
+        );
       case 2:
         return (
           <Details

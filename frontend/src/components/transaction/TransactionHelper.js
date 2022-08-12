@@ -745,7 +745,7 @@ export async function investInSeniorPool(amount) {
         seniorPool.abi,
         signer
       );
-      amount = ethers.utils.parseUnits(amount, 6);
+      amount = ethers.utils.parseUnits(amount, decimals);
       let transaction = await contract.stake(amount);
       await transaction.wait();
     }
@@ -766,11 +766,58 @@ export async function investInJuniorPool(poolAddress, amount) {
         opportunityPool.abi,
         signer
       );
-      amount = ethers.utils.parseUnits(amount, 6);
+      amount = ethers.utils.parseUnits(amount, decimals);
       let transaction = await contract.deposit("0" , amount); //0 denotes junior subpool
       await transaction.wait();
     }
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function getAllRepaymentOpportunities() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      const count = await contract.getTotalOpportunities();;
+      let opportunities = [];
+
+      for (let i = 0; i < count; i++) {
+        let id = await contract.opportunityIds(i);
+        
+        let tx = await contract.opportunityToId(id);
+
+        if (tx.opportunityStatus.toString() == "6") {
+          let poolAddress = tx.opportunityPoolAddress.toString();
+          console.log(poolAddress);
+          const poolContract = new ethers.Contract(
+            poolAddress,
+            opportunityPool.abi,
+            provider
+          );
+          let repaymentAmount = await poolContract.getRepaymentAmount();
+          repaymentAmount = ethers.utils.formatUnits(repaymentAmount, decimals);
+          const repaymentDue = await poolContract.nextRepaymentTime();
+          let obj = getOpportunity(tx);
+          obj.repaymentAmount = repaymentAmount;
+          obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
+          obj.repaymentDueDate = convertDate(repaymentDue);
+          opportunities.push(obj);
+        }
+      }
+      return opportunities;
+    }
+  }
+  catch (error) {
+    console.log(error);
+  }
+
+  return 0;
 }

@@ -7,6 +7,7 @@ import { tokenTransactions } from "../../services/blockchainTransactionDataOptio
 import { kycOptions } from "../../services/KYC/blockpass";
 import Alert from "../Components/Alert";
 import InvestModal from "./components/Modal/InvestModal";
+import { getUserWalletAddress } from "../../components/transaction/TransactionHelper";
 
 const ViewSeniorPool = () => {
   const location = useLocation();
@@ -20,11 +21,30 @@ const ViewSeniorPool = () => {
   const [poolAmount, setPoolAmount] = useState(defaultPoolAmount);
   const [selected, setSelected] = useState(null);
 
-  const [kycStatus, setKycStatus] = useState(1);
+  const [kycStatus, setKycStatus] = useState();
   const [error, setError] = useState();
 
   const handleDrawdown = () => {
     setSelected(null);
+  };
+
+  useEffect(() => {
+    getUserWalletAddress().then((address) => loadBlockpassWidget(address));
+  }, []);
+
+  const loadBlockpassWidget = (address) => {
+    const blockpass = new window.BlockpassKYCConnect(
+      process.env.REACT_APP_CLIENT_ID,
+      {
+        refId: address, // assign the local user_id of the connected user
+      }
+    );
+
+    blockpass.startKYCConnect();
+
+    blockpass.on("KYCConnectSuccess", () => {
+      //add code that will trigger when data have been sent.
+    });
   };
 
   useEffect(() => {
@@ -38,19 +58,6 @@ const ViewSeniorPool = () => {
     };
     fetchData();
   }, []);
-
-  const checkForKyc = async (refId) => {
-    console.log("reached");
-    const result = await axiosHttpService(kycOptions(refId));
-    console.log(result, result.res.status);
-    if (result.res.status === "success") setKycStatus(true);
-    if (result.res.status === "error") {
-      setError(result.res.message);
-      setKycStatus(false);
-    }
-
-    console.log(kycStatus);
-  };
 
   useEffect(() => {
     if (location.state) {
@@ -68,16 +75,16 @@ const ViewSeniorPool = () => {
           ? location.state.opportunityAmount
           : defaultPoolAmount
       );
+
+      setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
     }
   }, []);
 
   return (
     <>
-      {!kycStatus && (
-        <Alert header={"Please Complete Your KYC."} label={error} />
-      )}
-
-      {selected ? <InvestModal handleDrawdown={handleDrawdown} isSenior={true} /> : null}
+      {selected ? (
+        <InvestModal handleDrawdown={handleDrawdown} isSenior={true} />
+      ) : null}
 
       <div style={{ fontSize: 28 }} className="mb-0">
         {poolName}
@@ -121,16 +128,20 @@ const ViewSeniorPool = () => {
             </div>
 
             <label
-              htmlFor="InvestModal"
+              htmlFor={kycStatus ? "InvestModal" : ""}
+              id={kycStatus ? "" : "blockpass-kyc-connect"}
               style={{
                 borderRadius: "100px",
                 padding: "12px 24px",
                 color: "white",
               }}
               className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
-              onClick={() => setSelected(true)}
+              onClick={() => {
+                if (kycStatus) return setSelected(true);
+                else return null;
+              }}
             >
-              Invest
+              {kycStatus ? "Invest" : "Complete your KYC"}
             </label>
           </div>
         </div>
