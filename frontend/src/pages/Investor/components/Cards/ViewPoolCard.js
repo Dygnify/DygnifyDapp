@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 import { getBinaryFileData } from "../../../../services/fileHelper";
@@ -10,19 +10,21 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState(data.poolName);
 
-  // fetch the opportunity details from IPFS
-  retrieveFiles(opportunityInfo, true).then((res) => {
-    if (res) {
-      let read = getBinaryFileData(res);
-      read.onloadend = function () {
-        let opJson = JSON.parse(read.result);
-        if (opJson) {
-          setCompanyName(opJson.company_name);
-          setPoolName(opJson.loanName);
-        }
-      };
-    }
-  });
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setCompanyName(opJson.company_name);
+            setPoolName(opJson.loanName);
+          }
+        };
+      }
+    });
+  }, []);
 
   const StatusButton = ({ label, isFullStatus }) => {
     return (

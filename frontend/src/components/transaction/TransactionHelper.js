@@ -269,11 +269,12 @@ function getOpportunity(opportunity) {
   obj.opportunityAmount = getDisplayAmount(
     ethers.utils.formatUnits(opportunity.loanAmount, decimals)
   );
-  obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
+  obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
   obj.loanInterest =
     ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString() +
     "%";
-  obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
+  obj.paymentFrequencyInDays =
+    opportunity.paymentFrequencyInDays.toString() + " Days";
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = ethers.utils
     .formatUnits(opportunity.capitalLoss)
@@ -346,25 +347,15 @@ export async function getOpportunityAt(id) {
         provider
       );
 
-      let obj = {};
       console.log("check");
       let tx = await contract.opportunityToId(id);
-      obj.borrower = tx.borrower.toString();
-      obj.opportunity_id = tx.opportunityID.toString();
-      obj.opportunity_info = tx.opportunityInfo.toString();
-      obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
-      obj.loan_amount = tx.loanAmount.toString();
-      obj.loan_tenure = tx.loanTenureInDays.toString();
-      obj.loan_interest = tx.loanInterest.toString();
-      obj.payment_frequency = tx.paymentFrequencyInDays.toString();
-      obj.collateral_document = tx.collateralDocument.toString();
-      obj.capital_loss = tx.capitalLoss.toString();
+      let obj = getOpportunity(tx);
       return obj;
     }
   } catch (error) {
     console.log(error);
-    return 0;
   }
+  return null;
 }
 
 export async function getAllUnderReviewOpportunities() {
