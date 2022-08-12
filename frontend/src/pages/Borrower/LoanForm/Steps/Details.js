@@ -6,6 +6,7 @@ import TextArea from "../../../../tools/Inputs/TextArea";
 import TextField from "../../../../tools/Inputs/TextField";
 import FileUploader from "../../../Components/FileUploader";
 import { CollateralDetailsValidationSchema } from "../../../LoanForm/validations/validation";
+import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
 export default function Details({ handleNext, handlePrev, formData }) {
   const formik = useFormik({
@@ -88,9 +89,25 @@ export default function Details({ handleNext, handlePrev, formData }) {
 
         <div
           style={{ display: "flex", marginTop: 20 }}
-          className="flex-row justify-around w-full "
+          className="flex-row justify-between w-full items-center content-center "
         >
-          <GradientButton onClick={handlePrev}>Back</GradientButton>
+          <div
+            style={{ display: "flex" }}
+            className="justify-center flex-row w-1/3 ml-10"
+          >
+            <label
+              onClick={handlePrev}
+              className="text-gray-500 flex-row"
+              style={{
+                cursor: "pointer",
+                marginLeft: 5,
+                display: "flex",
+              }}
+            >
+              <ArrowLeft color="#64748B" />
+              Back
+            </label>
+          </div>
           <GradientButton type="submit">Next</GradientButton>
         </div>
       </form>

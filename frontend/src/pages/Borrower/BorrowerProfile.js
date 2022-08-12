@@ -30,7 +30,7 @@ const BorrowerProfile = () => {
   const [twitter, setTwitter] = useState();
   const [linkedin, setLinkedin] = useState();
 
-  const [profileStatus, setProfileStatus] = useState(false);
+  const [profileStatus, setProfileStatus] = useState(true);
 
   const handleForm = () => {
     setSelected(null);
@@ -40,7 +40,7 @@ const BorrowerProfile = () => {
     const blockpass = new window.BlockpassKYCConnect(
       process.env.REACT_APP_CLIENT_ID,
       {
-        refId: "1", // assign the local user_id of the connected user
+        refId: "1",
       }
     );
 
@@ -59,14 +59,17 @@ const BorrowerProfile = () => {
 
     const fetchData = async () => {
       let borrowerCID = await getBorrowerDetails();
+      console.log("CID", borrowerCID);
       if (borrowerCID) {
         let data = await retrieveFiles(borrowerCID, true);
+        console.log("*****", data);
         if (data) {
           let read = getBinaryFileData(data);
           read.onloadend = function () {
             let brJson = JSON.parse(read.result);
             loadBorrowerData(brJson);
             setborrowerJson(brJson);
+            console.log(brJson);
           };
         }
       }

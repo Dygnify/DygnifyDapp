@@ -111,10 +111,10 @@ const Invest = () => {
             <ViewPoolCard
               onClick={() =>
                 path("/investor-dashboardN/viewSeniorPool", {
-                  state: seniorPool,
+                  state: { ...seniorPool, kycStatus: kycStatus },
                 })
               }
-              data={{ ...seniorPool, kycStatus: kycStatus }}
+              data={seniorPool}
             />
           </div>
         )}
