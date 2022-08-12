@@ -1,8 +1,8 @@
 import {React, useState} from "react";
 import GradientButton from "../../../../tools/Button/GradientButton";
-import {investInSeniorPool} from "../../../../components/transaction/TransactionHelper"
+import {investInSeniorPool, investInJuniorPool} from "../../../../components/transaction/TransactionHelper"
 
-const InvestModal = ({isSenior}) => {
+const InvestModal = ({isSenior, poolAddress}) => {
   const data = {
     poolName: "New Pool",
     poolLimit: "$450,000.00",
@@ -12,6 +12,10 @@ const InvestModal = ({isSenior}) => {
 
   async function investSenior(){
     await investInSeniorPool(amount);
+  }
+
+  async function investJunior(){
+    await investInJuniorPool(poolAddress, amount);
   }
 
   return (
@@ -134,7 +138,7 @@ const InvestModal = ({isSenior}) => {
           <div className="modal-action mx-4 mt-2 mb-4">
             <GradientButton
               className="w-full"
-              onClick={() => isSenior ? investSenior() : "" }//if condition not true then investJunior will execute
+              onClick={() => isSenior ? investSenior() : investJunior() }//if condition not true then investJunior will execute
             >
               Invest
             </GradientButton>
