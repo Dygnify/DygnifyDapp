@@ -3,12 +3,10 @@ import PrimaryButton from "../Button/PrimaryButton";
 import RepaymentModal from "../Modal/RepaymentModal";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
-import { repayment } from "../../components/transaction/TransactionHelper";
 
 const RepaymentCard = ({ data }) => {
   const [selected, setSelected] = useState(null);
   const handleRepayment = async () => {
-    await repayment(data.opportunityPoolAddress);
     setSelected(null);
   };
   const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;

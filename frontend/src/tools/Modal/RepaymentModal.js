@@ -1,8 +1,15 @@
 import React from 'react';
 import GradientButton from '../Button/GradientButton';
+import { repayment } from '../../components/transaction/TransactionHelper';
 
 const RepaymentModal = ({ data, handleRepayment, poolName }) => {
     console.log(data)
+
+    async function onRepayment(){
+        await repayment(data.opportunityPoolAddress);
+        handleRepayment();
+    }
+
     return (
         <div >
             <input type="checkbox" id="repayment-modal" className="modal-toggle" />
@@ -35,7 +42,7 @@ const RepaymentModal = ({ data, handleRepayment, poolName }) => {
                         </div>
                     </div>
                     <div className="modal-action mx-4 mt-2 mb-4">
-                        <GradientButton className='w-full' onClick={handleRepayment}>Make Repayment</GradientButton>
+                        <GradientButton className='w-full' onClick={onRepayment}>Make Repayment</GradientButton>
                     </div>
                 </div>
             </div>
