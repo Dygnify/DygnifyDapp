@@ -51,7 +51,6 @@ const Overview = () => {
       let opportunities = await getOpportunitiesWithDues();
       if (opportunities && opportunities.length) {
         //sort the list based on date
-        console.log(opportunities);
         opportunities.sort(sortByProperty("epochDueDate"));
         setRepaymentList(opportunities);
 
@@ -69,7 +68,8 @@ const Overview = () => {
     // set total borrowed amount
     let totalAmt = 0;
     for (const op of repaymentList) {
-      totalAmt += op.actualLoanAmount;
+      totalAmt += parseInt(op.actualLoanAmount);
+      console.log(op.actualLoanAmount)
     }
     setTotalBorrowedAmt("$" + getDisplayAmount(totalAmt));
     // total repaid

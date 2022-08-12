@@ -266,9 +266,11 @@ function getOpportunity(opportunity) {
   obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
+  let amount = ethers.utils.formatUnits(opportunity.loanAmount, decimals)
   obj.opportunityAmount = getDisplayAmount(
-    ethers.utils.formatUnits(opportunity.loanAmount, decimals)
+    amount
   );
+  obj.actualLoanAmount = amount;
   obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
   obj.loanInterest =
     ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString() +
@@ -777,5 +779,23 @@ export async function investInJuniorPool(poolAddress, amount) {
     }
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function repayment(poolAddress) {
+  let borrower = await getEthAddress();
+
+  if (typeof window.ethereum !== "undefined") {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    console.log({ provider });
+    const signer = provider.getSigner();
+    const poolContract = new ethers.Contract(
+      poolAddress,
+      opportunityPool.abi,
+      signer
+    );
+
+    const transaction1 = await poolContract.repayment();
+    await transaction1.wait();
   }
 }

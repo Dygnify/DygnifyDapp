@@ -1,7 +1,7 @@
 import React from 'react';
 import GradientButton from '../Button/GradientButton';
 
-const RepaymentModal = ({ data, handleRepayment }) => {
+const RepaymentModal = ({ data, handleRepayment, poolName }) => {
     console.log(data)
     return (
         <div >
@@ -23,15 +23,15 @@ const RepaymentModal = ({ data, handleRepayment }) => {
                     <div className='text-sm py-3 px-4'>
                         <div style={{ display: 'flex' }} className='mb-2'>
                             <p style={{ display: 'flex' }} className='justify-start'>Pool Name</p>
-                            <p style={{ display: 'flex' }} className='justify-end'>{data?.opportunity_name}</p>
+                            <p style={{ display: 'flex' }} className='justify-end'>{poolName}</p>
                         </div>
                         <div style={{ display: 'flex' }} className='mb-2'>
                             <p style={{ display: 'flex' }} className='justify-start'>Due Amount</p>
-                            <p style={{ display: 'flex' }} className='justify-end'>${data?.repayment_amount}</p>
+                            <p style={{ display: 'flex' }} className='justify-end'>${data?.repaymentDisplayAmount}</p>
                         </div>
                         <div style={{ display: 'flex' }} className='mb-2'>
                             <p style={{ display: 'flex' }} className='justify-start'>Due Date</p>
-                            <p style={{ display: 'flex' }} className='justify-end'>{data?.repayment_date}</p>
+                            <p style={{ display: 'flex' }} className='justify-end'>{data?.nextDueDate}</p>
                         </div>
                     </div>
                     <div className="modal-action mx-4 mt-2 mb-4">
