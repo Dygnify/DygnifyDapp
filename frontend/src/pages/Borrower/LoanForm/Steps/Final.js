@@ -1,4 +1,5 @@
 import GradientButton from "../../../../tools/Button/GradientButton";
+import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
 export default function Final({ handlePrev, finalSubmit, formData }) {
   const handleClick = () => {
@@ -69,15 +70,33 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
           </p>
         </div>
       </div>
+
       <div
-        style={{ display: "flex", marginTop: 40 }}
-        className="flex-row justify-around w-full "
+        style={{ display: "flex", marginTop: 20 }}
+        className="flex-row justify-between w-full items-center content-center "
       >
-        <GradientButton onClick={handlePrev}>Back</GradientButton>
+        <div
+          style={{ display: "flex" }}
+          className="justify-center flex-row w-1/3 ml-10"
+        >
+          <label
+            onClick={handlePrev}
+            className="text-gray-500 flex-row"
+            style={{
+              cursor: "pointer",
+              marginLeft: 5,
+              display: "flex",
+            }}
+          >
+            <ArrowLeft color="#64748B" />
+            Back
+          </label>
+        </div>
         <GradientButton type="submit" onClick={handleClick}>
           Submit
         </GradientButton>
       </div>
+
       <div style={{ display: "flex" }} className="m-5 justify-center">
         <div style={{ fontWeight: 600, fontSize: "14px", color: "#FBBF24" }}>
           Note - This pool created will only be valid for 60 days from the day

@@ -30,23 +30,23 @@ const EditBorrowerProfile = () => {
     useState();
   const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
-  const onLogoFileUpload = (event) => {
-    setLogoFile(event.target.files);
+  const onLogoFileUpload = (files) => {
+    setLogoFile(files);
   };
-  const onKYCFilesUpload = (event) => {
-    setKYCFiles(event.target.files);
+  const onKYCFilesUpload = (files) => {
+    setKYCFiles(files);
   };
-  const onBusinessIdentityFilesUpload = (event) => {
-    setBusinessIdentityFiles(event.target.files);
+  const onBusinessIdentityFilesUpload = (files) => {
+    setBusinessIdentityFiles(files);
   };
-  const onBusinessAddressFilesUpload = (event) => {
-    setBusinessAddressFiles(event.target.files);
+  const onBusinessAddressFilesUpload = (files) => {
+    setBusinessAddressFiles(files);
   };
-  const onBusinessIncorporationFilesUpload = (event) => {
-    setBusinessIncorporationFiles(event.target.files);
+  const onBusinessIncorporationFilesUpload = (files) => {
+    setBusinessIncorporationFiles(files);
   };
-  const onBusinessLicenseFilesUpload = (event) => {
-    setBusinessLicenseFiles(event.target.files);
+  const onBusinessLicenseFilesUpload = (files) => {
+    setBusinessLicenseFiles(files);
   };
 
   const uploadFilesToIPFS = async (files) => {
@@ -96,41 +96,43 @@ const EditBorrowerProfile = () => {
 
       // Prepare a json file with borrower data
       let borrowerJsonData = {
-        companyName: companyName.current.value,
-        companyRepName: companyRepName.current.value,
-        companyBio: companyBio.current.value,
-        companyLogoCID: logoFileCID,
+        companyName: "companyName",
+        companyRepName: "companyRepName",
+        companyBio: "companyBio",
+        companyLogoCID: "logoFileCID",
         kycFile: {
-          kycFileName: kycFileName.current.value,
+          //kycFileName: kycFileName.current.value,
+          kycFileName: "kycFileName",
           kycCID: kycFilesCID,
         },
         businessIdFile: {
-          businessIdFileName: bizIdFileName.current.value,
+          businessIdFileName: "bizIdFileName.current.value",
           businessIdFileCID: businessIdFilesCID,
         },
         businessAddFile: {
-          businessAddFileName: bizAddFileName.current.value,
+          businessAddFileName: "bizAddFileName",
           businessAddFileCID: businessAddFilesCID,
         },
         businessIncoFile: {
-          businessIncoFileName: bizIncoFileName.current.value,
+          businessIncoFileName: "bizIncoFileName",
           businessIncoFileCID: businessIncoFilesCID,
         },
         businessLicFile: {
-          businessLicFileName: bizLicFileName.current.value,
+          businessLicFileName: "bizLicFileName",
           businessLicFileCID: businessLicFilesCID,
         },
-        website: website.current.value,
-        email: email.current.value,
-        twitter: twitter.current.value,
-        linkedin: linkedin.current.value,
+        website: "www.dygnify.com",
+        email: "ankitx.sri@gmail.com",
+        twitter: "@api_url",
+        linkedin: "www.linkedin.com",
       };
 
-      console.log(borrowerJsonData);
+      //console.log(borrowerJsonData);
       let file = makeFileObjects(borrowerJsonData, Math.random());
       let borrowerDataCID = await storeFiles(file);
       // Save this CID in the blockchain
       await updateBorrowerDetails(borrowerDataCID);
+      console.log("success uploaded data");
     } catch (error) {
       console.log(error);
     }
@@ -168,10 +170,10 @@ const EditBorrowerProfile = () => {
           ></TextArea>
         </div>
       </div>
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h2 className="text-xl font-medium mb-2">KYC Documents</h2>
         <InputGroup onChange={onKYCFilesUpload} reference={kycFileName} />
-      </div>
+      </div> */}
       <div className="mb-6">
         <h2 className="text-xl font-medium mb-2">KYB Documents</h2>
         <InputGroup
