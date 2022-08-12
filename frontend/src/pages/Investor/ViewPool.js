@@ -6,6 +6,7 @@ import TransactionCard from "./components/Cards/TransactionCard";
 import {
   getWalletBal,
   getUserWalletAddress,
+  getBorrowerDetails,
 } from "../../components/transaction/TransactionHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
@@ -24,7 +25,7 @@ const ViewPool = () => {
   const [poolData, setPoolData] = useState();
   const [transactionData, setTransactionData] = useState([]);
   const [expand, setExpand] = useState(false);
-  const [companyName, setCompanyName] = useState();
+  const [companyDetails, setCompanyDetails] = useState();
   const [poolName, setPoolName] = useState();
   const [kycStatus, setKycStatus] = useState(1);
   const [error, setError] = useState();
@@ -84,6 +85,25 @@ const ViewPool = () => {
         }
       );
 
+      // get borrower details
+      getBorrowerDetails(poolData.borrower).then((cid) => {
+        console.log(cid);
+        console.log(poolData.borrower);
+        if (cid) {
+          retrieveFiles(cid, true).then((res) => {
+            if (res) {
+              let read = getBinaryFileData(res);
+              read.onloadend = function () {
+                let opJson = JSON.parse(read.result);
+                if (opJson) {
+                  setCompanyDetails(opJson);
+                }
+              };
+            }
+          });
+        }
+      });
+
       // fetch the opportunity details from IPFS
       retrieveFiles(poolData.opportunityInfo, true).then((res) => {
         if (res) {
@@ -91,7 +111,6 @@ const ViewPool = () => {
           read.onloadend = function () {
             let opJson = JSON.parse(read.result);
             if (opJson) {
-              setCompanyName(opJson.company_name);
               setPoolName(opJson.loanName);
 
               // get the loan purpose
@@ -213,50 +232,62 @@ const ViewPool = () => {
               {poolName}
             </div>
             <small style={{ color: "#64748B", fontSize: 14 }}>
-              {companyName}
+              {companyDetails ? companyDetails.companyName : ""}
             </small>
           </div>
           <div className="mr-10">
-            <button
-              id="linkedin"
-              style={{
-                borderRadius: "100px",
-                padding: "3px 16px",
-                border: "1px solid #64748B",
-              }}
-              className="ml-3 btn btn-xs btn-outline text-white"
-              onClick={redirectToURl}
-            >
-              <LinkedIn />
-              <div style={{ marginLeft: 2 }}>LinkedIn</div>
-            </button>
+            {companyDetails && companyDetails.linkedin ? (
+              <button
+                id="linkedin"
+                style={{
+                  borderRadius: "100px",
+                  padding: "3px 16px",
+                  border: "1px solid #64748B",
+                }}
+                className="ml-3 btn btn-xs btn-outline text-white"
+                onClick={redirectToURl}
+              >
+                <LinkedIn />
+                <div style={{ marginLeft: 2 }}>LinkedIn</div>
+              </button>
+            ) : (
+              <></>
+            )}
 
-            <button
-              id="website"
-              style={{
-                borderRadius: "100px",
-                padding: "3px 16px",
-                border: "1px solid #64748B",
-              }}
-              className="ml-3 btn btn-xs btn-outline text-white"
-              onClick={redirectToURl}
-            >
-              <Website />
-              <div style={{ marginLeft: 2 }}>Website</div>
-            </button>
-            <button
-              id="twitter"
-              style={{
-                borderRadius: "100px",
-                padding: "3px 16px",
-                border: "1px solid #64748B",
-              }}
-              className="ml-3 btn btn-xs btn-outline text-white"
-              onClick={redirectToURl}
-            >
-              <Twitter />
-              <div style={{ marginLeft: 2 }}>twitter</div>
-            </button>
+            {companyDetails && companyDetails.website ? (
+              <button
+                id="website"
+                style={{
+                  borderRadius: "100px",
+                  padding: "3px 16px",
+                  border: "1px solid #64748B",
+                }}
+                className="ml-3 btn btn-xs btn-outline text-white"
+                onClick={redirectToURl}
+              >
+                <Website />
+                <div style={{ marginLeft: 2 }}>Website</div>
+              </button>
+            ) : (
+              <></>
+            )}
+            {companyDetails && companyDetails.twitter ? (
+              <button
+                id="twitter"
+                style={{
+                  borderRadius: "100px",
+                  padding: "3px 16px",
+                  border: "1px solid #64748B",
+                }}
+                className="ml-3 btn btn-xs btn-outline text-white"
+                onClick={redirectToURl}
+              >
+                <Twitter />
+                <div style={{ marginLeft: 2 }}>twitter</div>
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
 
@@ -391,7 +422,7 @@ const ViewPool = () => {
             <div style={{ fontSize: 19 }} className="mb-0">
               Deals terms
             </div>
-            <div
+            {/* <div
               style={{
                 width: 119,
                 height: 36,
@@ -402,7 +433,7 @@ const ViewPool = () => {
               className="rounded-box items-center justify-center ml-20"
             >
               Contracts
-            </div>
+            </div> */}
           </div>
 
           <div
@@ -414,43 +445,41 @@ const ViewPool = () => {
             }}
           >
             <div style={{ display: "flex" }} className="w-full">
-              {info.map((e, i) => {
-                return (
-                  <div
-                    className="justify-center w-1/3 flex-col items-center "
-                    style={{
-                      display: "flex",
-                      borderRight: "0.5px solid   #292C33",
-                      borderBottom: "0.5px solid   #292C33",
-                      padding: "40px 0",
-                    }}
-                  >
-                    <div style={{ fontSize: 14, color: "#A0ABBB" }}>
-                      {e.label}
-                    </div>
-                    <div style={{ fontSize: 20 }}>{e.value}</div>
+              {info.map((e) => {
+                <div
+                  key={e.label}
+                  className="justify-center w-1/3 flex-col items-center "
+                  style={{
+                    display: "flex",
+                    borderRight: "0.5px solid   #292C33",
+                    borderBottom: "0.5px solid   #292C33",
+                    padding: "40px 0",
+                  }}
+                >
+                  <div style={{ fontSize: 14, color: "#A0ABBB" }}>
+                    {e.label}
                   </div>
-                );
+                  <div style={{ fontSize: 20 }}>{e.value}</div>
+                </div>;
               })}
             </div>
 
             <div style={{ display: "flex" }} className="w-full">
-              {info2.map((e, i) => {
-                return (
-                  <div
-                    className="justify-center w-1/3 flex-col items-center "
-                    style={{
-                      display: "flex",
-                      borderRight: "0.5px solid   #292C33",
-                      padding: "40px 0",
-                    }}
-                  >
-                    <div style={{ fontSize: 14, color: "#A0ABBB" }}>
-                      {e.label}
-                    </div>
-                    <div style={{ fontSize: 20 }}>{e.value}</div>
+              {info2.map((e) => {
+                <div
+                  key={e.label}
+                  className="justify-center w-1/3 flex-col items-center "
+                  style={{
+                    display: "flex",
+                    borderRight: "0.5px solid   #292C33",
+                    padding: "40px 0",
+                  }}
+                >
+                  <div style={{ fontSize: 14, color: "#A0ABBB" }}>
+                    {e.label}
                   </div>
-                );
+                  <div style={{ fontSize: 20 }}>{e.value}</div>
+                </div>;
               })}
             </div>
           </div>
@@ -482,35 +511,30 @@ const ViewPool = () => {
             className="flex-row justify-between mt-10 mb-3"
           >
             <div style={{ fontSize: 19 }} className="mb-0">
-              Name of Company
+              {companyDetails ? companyDetails.companyBio : ""}
             </div>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                background: "#292C33",
-                display: "flex",
-              }}
-              className="rounded-box items-center justify-center ml-20"
-            >
-              in
-            </div>
+            {companyDetails && companyDetails.linkedin ? (
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  background: "#292C33",
+                  display: "flex",
+                }}
+                className="rounded-box items-center justify-center ml-20"
+              >
+                in
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
           <div>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum. Nulla Lorem mollit cupidatat irure.
-            Laborum magna nulla duis ullamco cillum dolor. Voluptate
-            exercitation incididunt aliquip deserunt reprehenderit elit
-            laborum.Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-            ullamco cillum dolor. Voluptate exercitation incididunt aliquip
-            deserunt reprehenderit elit laborum. Nulla Lorem mollit cupidatat
-            irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate
-            exercitation incididunt aliquip deserunt reprehenderit elit
-            laborum.Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum. Voluptate exercitation incididunt
-            aliquip deserunt reprehenderit elit laborum.Voluptate exercitation
-            incididunt aliquip deserunt reprehenderit...view more{" "}
+            {companyDetails ? (
+              companyDetails.companyBio
+            ) : (
+              <p>Unable to fetch company profile</p>
+            )}
           </div>
         </div>
         <br />
