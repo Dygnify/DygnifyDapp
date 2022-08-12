@@ -23,7 +23,7 @@ const Overview = () => {
   const handleForm = () => {
     setSelected(null);
   };
-
+  
   useEffect(() => {
     const fetchData = async () => {
       let opportunities = await getDrawdownOpportunities();
@@ -32,7 +32,7 @@ const Overview = () => {
       }
     };
     fetchData();
-  }, [drawdownList]);
+  }, []);
 
   function sortByProperty(property) {
     return function (a, b) {
@@ -49,6 +49,7 @@ const Overview = () => {
       let opportunities = await getOpportunitiesWithDues();
       if (opportunities && opportunities.length) {
         //sort the list based on date
+        console.log(opportunities);
         opportunities.sort(sortByProperty("epochDueDate"));
         setRepaymentList(opportunities);
 
@@ -60,7 +61,7 @@ const Overview = () => {
       }
     };
     fetchData();
-  }, [repaymentList]);
+  }, []);
 
   return (
     <div>
@@ -204,7 +205,7 @@ const Overview = () => {
         ) : (
           <div style={{ display: "flex" }} className="gap-4">
             {repaymentList.map((item) => (
-              <RepaymentCard key={item.id} data={item} />
+              <RepaymentCard key = {item.id} data={item} />
             ))}
           </div>
         )}

@@ -1,12 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PrimaryButton from "../Button/PrimaryButton";
 import RepaymentModal from "../Modal/RepaymentModal";
+import { getBinaryFileData } from "../../services/fileHelper";
+import { retrieveFiles } from "../../services/web3storageIPFS";
 
 const RepaymentCard = ({ data }) => {
   const [selected, setSelected] = useState(null);
   const handleRepayment = () => {
     setSelected(null);
   };
+  const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
+
+  const [poolName, setPoolName] = useState(data.poolName);
+
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setPoolName(opJson.loanName);
+          }
+        };
+      }
+    });
+  }, []);
   return (
     <div
       style={{ boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)` }}
@@ -19,7 +39,7 @@ const RepaymentCard = ({ data }) => {
         }}
         className="card-body"
       >
-        <h2 className="card-title mb-4">{data?.opportunity_name} </h2>
+        <h2 className="card-title mb-4">{poolName} </h2>
         <div className="text-sm">
           <div style={{ display: "flex" }} className="mb-2">
             <p style={{ display: "flex" }} className="justify-start">
@@ -34,7 +54,7 @@ const RepaymentCard = ({ data }) => {
               Due Amount
             </p>
             <p style={{ display: "flex" }} className="justify-end">
-              {data?.repaymentAmount} {process.env.REACT_APP_TOKEN_NAME}
+              {data?.repaymentDisplayAmount} {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
           <div style={{ display: "flex" }} className="mb-2">

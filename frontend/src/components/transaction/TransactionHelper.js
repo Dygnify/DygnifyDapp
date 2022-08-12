@@ -277,12 +277,12 @@ function getOpportunity(opportunity) {
     opportunity.paymentFrequencyInDays.toString() + " Days";
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = ethers.utils
-    .formatUnits(opportunity.capitalLoss)
+    .formatUnits(opportunity.capitalLoss, decimals)
     .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
 
-  obj.createdOn = convertDate(new Date(opportunity.createdOn));
+  obj.createdOn = convertDate(opportunity.createdOn);
 
   return obj;
 }
@@ -499,7 +499,10 @@ export async function getDrawdownOpportunities() {
         }
 
         let poolBalance = await poolContract.poolBalance();
-        if (poolBalance >= tx.loanAmount) {
+        poolBalance = ethers.utils.formatUnits(poolBalance, decimals);
+        let loanAmount = ethers.utils.formatUnits(tx.loanAmount, decimals);
+        console.log(poolBalance.toString())
+        if (parseInt(poolBalance) >= parseInt(loanAmount)  ) {
           let obj = await getOpportunity(tx);
           opportunities.push(obj);
         }
@@ -672,11 +675,13 @@ export async function getOpportunitiesWithDues() {
 
           let repaymentDate = await poolContract.nextRepaymentTime();
           let repaymentAmount = await poolContract.getRepaymentAmount();
+          repaymentAmount = ethers.utils.formatUnits(repaymentAmount, decimals);
 
           let obj = await getOpportunity(tx);
-          obj.nextDueDate = new Date(parseInt(repaymentDate));
-          obj.epochDueDate = repaymentDate;
+          obj.nextDueDate = convertDate(repaymentDate);
+          obj.epochDueDate = repaymentDate.toString();
           obj.repaymentAmount = repaymentAmount;
+          obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
           const overdueTime = Math.floor(Date.now() / 1000) - repaymentDate;
           obj.isOverDue = overdueTime > 0 ? true : false;
 
@@ -773,51 +778,4 @@ export async function investInJuniorPool(poolAddress, amount) {
   } catch (error) {
     console.log(error);
   }
-}
-
-export async function getAllRepaymentOpportunities() {
-  try {
-    if (typeof window.ethereum !== "undefined") {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      console.log({ provider });
-      const contract = new ethers.Contract(
-        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
-        opportunityOrigination.abi,
-        provider
-      );
-
-      const count = await contract.getTotalOpportunities();;
-      let opportunities = [];
-
-      for (let i = 0; i < count; i++) {
-        let id = await contract.opportunityIds(i);
-        
-        let tx = await contract.opportunityToId(id);
-
-        if (tx.opportunityStatus.toString() == "6") {
-          let poolAddress = tx.opportunityPoolAddress.toString();
-          console.log(poolAddress);
-          const poolContract = new ethers.Contract(
-            poolAddress,
-            opportunityPool.abi,
-            provider
-          );
-          let repaymentAmount = await poolContract.getRepaymentAmount();
-          repaymentAmount = ethers.utils.formatUnits(repaymentAmount, decimals);
-          const repaymentDue = await poolContract.nextRepaymentTime();
-          let obj = getOpportunity(tx);
-          obj.repaymentAmount = repaymentAmount;
-          obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
-          obj.repaymentDueDate = convertDate(repaymentDue);
-          opportunities.push(obj);
-        }
-      }
-      return opportunities;
-    }
-  }
-  catch (error) {
-    console.log(error);
-  }
-
-  return 0;
 }
