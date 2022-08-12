@@ -753,3 +753,24 @@ export async function investInSeniorPool(amount) {
     console.log(error);
   }
 }
+
+
+export async function investInJuniorPool(poolAddress, amount) {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        poolAddress,
+        opportunityPool.abi,
+        signer
+      );
+      amount = ethers.utils.parseUnits(amount, 6);
+      let transaction = await contract.deposit("0" , amount); //0 denotes junior subpool
+      await transaction.wait();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}

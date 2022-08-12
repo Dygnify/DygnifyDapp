@@ -222,7 +222,7 @@ const ViewPool = () => {
         {!kycStatus && (
           <Alert header={"Please Complete Your KYC."} label={error} />
         )}
-        {selected ? <InvestModal handleDrawdown={handleDrawdown} /> : null}
+        {selected ? <InvestModal handleDrawdown={handleDrawdown} isSenior={false} poolAddress={poolData.opportunityPoolAddress}/> : null}
         <div
           className="flex-row justify-between items-center"
           style={{ display: "flex" }}
