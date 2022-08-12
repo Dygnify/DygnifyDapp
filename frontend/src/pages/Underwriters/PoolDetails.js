@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { voteOpportunity } from "../../components/transaction/TransactionHelper";
-import {
-  getTrimmedWalletAddress,
-  getExtendableTextBreakup,
-  getDisplayAmount,
-} from "../../services/displayTextHelper";
+import { getExtendableTextBreakup } from "../../services/displayTextHelper";
 
 const PoolDetails = () => {
   const location = useLocation();
@@ -40,7 +36,7 @@ const PoolDetails = () => {
         {
           label: "Payment Frequency",
           value: opDetails.paymentFrequencyInDays
-            ? opDetails.paymentFrequencyInDays + " Days"
+            ? opDetails.paymentFrequencyInDays
             : "--",
         },
         {
@@ -55,14 +51,12 @@ const PoolDetails = () => {
         },
         {
           label: "Payment Tenure",
-          value: opDetails.loanTenureInDays
-            ? opDetails.loanTenureInDays / 30 + " Months"
-            : "--",
+          value: opDetails.loanTenure ? opDetails.loanTenure : "--",
         },
         {
           label: "Drawdown Cap",
           value: opDetails.opportunityAmount
-            ? getDisplayAmount(opDetails.opportunityAmount)
+            ? opDetails.opportunityAmount
             : "--",
         },
       ]);

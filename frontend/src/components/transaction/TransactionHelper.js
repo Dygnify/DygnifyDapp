@@ -245,11 +245,12 @@ export async function createOpportunity(formData) {
   }
 }
 
-export function convertDate(inputFormat) {
+export function convertDate(epochTimestamp) {
   function pad(s) {
     return s < 10 ? "0" + s : s;
   }
-  var d = new Date(inputFormat);
+  //epoch gives timestamp in seconds we need to convert it in miliseconds
+  var d = new Date(epochTimestamp * 1000);
   return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join("/");
 }
 
@@ -268,19 +269,20 @@ function getOpportunity(opportunity) {
   obj.opportunityAmount = getDisplayAmount(
     ethers.utils.formatUnits(opportunity.loanAmount, decimals)
   );
-  obj.loanTenureInDays = opportunity.loanTenureInDays.toString();
+  obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
   obj.loanInterest =
     ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString() +
     "%";
-  obj.paymentFrequencyInDays = opportunity.paymentFrequencyInDays.toString();
+  obj.paymentFrequencyInDays =
+    opportunity.paymentFrequencyInDays.toString() + " Days";
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = ethers.utils
     .formatUnits(opportunity.capitalLoss)
     .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-  //epoch gives timestamp in seconds we need to convert it in miliseconds
-  obj.createdOn = convertDate(new Date(opportunity.createdOn * 1000));
+
+  obj.createdOn = convertDate(new Date(opportunity.createdOn));
 
   return obj;
 }
@@ -345,25 +347,15 @@ export async function getOpportunityAt(id) {
         provider
       );
 
-      let obj = {};
       console.log("check");
       let tx = await contract.opportunityToId(id);
-      obj.borrower = tx.borrower.toString();
-      obj.opportunity_id = tx.opportunityID.toString();
-      obj.opportunity_info = tx.opportunityInfo.toString();
-      obj.loan_type = tx.loanType.toString(); // 0 or 1 need to be handled
-      obj.loan_amount = tx.loanAmount.toString();
-      obj.loan_tenure = tx.loanTenureInDays.toString();
-      obj.loan_interest = tx.loanInterest.toString();
-      obj.payment_frequency = tx.paymentFrequencyInDays.toString();
-      obj.collateral_document = tx.collateralDocument.toString();
-      obj.capital_loss = tx.capitalLoss.toString();
+      let obj = getOpportunity(tx);
       return obj;
     }
   } catch (error) {
     console.log(error);
-    return 0;
   }
+  return null;
 }
 
 export async function getAllUnderReviewOpportunities() {
@@ -595,20 +587,22 @@ export async function getUserSeniorPoolInvestment() {
   return undefined;
 }
 
-export async function getBorrowerDetails() {
+export async function getBorrowerDetails(address) {
   try {
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
       const contract = new ethers.Contract(
-        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        process.env.REACT_APP_BORROWER,
         borrowerContract.abi,
         provider
       );
-      let borrower = await getEthAddress();
-      if (borrower) {
-        return await contract.borrowerProfile(borrower);
+      if (!address) {
+        address = await getEthAddress();
+      }
+      if (address) {
+        return await contract.borrowerProfile(address);
       }
     }
   } catch (error) {
@@ -624,13 +618,14 @@ export async function updateBorrowerDetails(cid) {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider });
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        process.env.REACT_APP_DYGNIFY_STAKING_ADDRESS,
+        process.env.REACT_APP_BORROWER,
         borrowerContract.abi,
-        provider
+        signer
       );
-
-      return await contract.updateBorrowerProfile(cid);
+      let transaction = await contract.updateBorrowerProfile(cid);
+      await transaction.wait();
     }
   } catch (error) {
     console.log(error);
@@ -750,11 +745,79 @@ export async function investInSeniorPool(amount) {
         seniorPool.abi,
         signer
       );
-
+      amount = ethers.utils.parseUnits(amount, decimals);
       let transaction = await contract.stake(amount);
       await transaction.wait();
     }
   } catch (error) {
     console.log(error);
   }
+}
+
+
+export async function investInJuniorPool(poolAddress, amount) {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        poolAddress,
+        opportunityPool.abi,
+        signer
+      );
+      amount = ethers.utils.parseUnits(amount, decimals);
+      let transaction = await contract.deposit("0" , amount); //0 denotes junior subpool
+      await transaction.wait();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getAllRepaymentOpportunities() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({ provider });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+
+      const count = await contract.getTotalOpportunities();;
+      let opportunities = [];
+
+      for (let i = 0; i < count; i++) {
+        let id = await contract.opportunityIds(i);
+        
+        let tx = await contract.opportunityToId(id);
+
+        if (tx.opportunityStatus.toString() == "6") {
+          let poolAddress = tx.opportunityPoolAddress.toString();
+          console.log(poolAddress);
+          const poolContract = new ethers.Contract(
+            poolAddress,
+            opportunityPool.abi,
+            provider
+          );
+          let repaymentAmount = await poolContract.getRepaymentAmount();
+          repaymentAmount = ethers.utils.formatUnits(repaymentAmount, decimals);
+          const repaymentDue = await poolContract.nextRepaymentTime();
+          let obj = getOpportunity(tx);
+          obj.repaymentAmount = repaymentAmount;
+          obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
+          obj.repaymentDueDate = convertDate(repaymentDue);
+          opportunities.push(obj);
+        }
+      }
+      return opportunities;
+    }
+  }
+  catch (error) {
+    console.log(error);
+  }
+
+  return 0;
 }

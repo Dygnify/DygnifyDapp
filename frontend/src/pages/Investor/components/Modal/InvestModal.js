@@ -1,12 +1,23 @@
-import React from "react";
+import {React, useState} from "react";
 import GradientButton from "../../../../tools/Button/GradientButton";
+import {investInSeniorPool, investInJuniorPool} from "../../../../components/transaction/TransactionHelper"
 
-const InvestModal = () => {
+const InvestModal = ({isSenior, poolAddress}) => {
   const data = {
     poolName: "New Pool",
     poolLimit: "$450,000.00",
     estimatedApy: "24%",
   };
+  const [amount, setAmount] = useState("");
+
+  async function investSenior(){
+    await investInSeniorPool(amount);
+  }
+
+  async function investJunior(){
+    await investInJuniorPool(poolAddress, amount);
+  }
+
   return (
     <>
       <input type="checkbox" id="InvestModal" className="modal-toggle" />
@@ -119,6 +130,7 @@ const InvestModal = () => {
       "
                 id="exampleNumber0"
                 placeholder="0.0"
+                onChange={(event) => setAmount(event.target.value)}
               />
             </div>
           </div>
@@ -126,7 +138,7 @@ const InvestModal = () => {
           <div className="modal-action mx-4 mt-2 mb-4">
             <GradientButton
               className="w-full"
-              // onClick={handleDrawdown}
+              onClick={() => isSenior ? investSenior() : investJunior() }//if condition not true then investJunior will execute
             >
               Invest
             </GradientButton>

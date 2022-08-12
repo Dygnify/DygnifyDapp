@@ -82,7 +82,9 @@ const ViewSeniorPool = () => {
 
   return (
     <>
-      {selected ? <InvestModal handleDrawdown={handleDrawdown} /> : null}
+      {selected ? (
+        <InvestModal handleDrawdown={handleDrawdown} isSenior={true} />
+      ) : null}
 
       <div style={{ fontSize: 28 }} className="mb-0">
         {poolName}

@@ -130,7 +130,7 @@ const Invest = () => {
             </div>
           </div>
         ) : (
-          <div style={{ display: "flex" }} className=" gap-4">
+          <div style={{ display: "flex" }} className=" gap-4 w-1/2">
             {juniorPools.map((item) => (
               <ViewPoolCard
                 data={item}

@@ -29,7 +29,6 @@ const Overview = () => {
       let opportunities = await getDrawdownOpportunities();
       if (opportunities && opportunities.length) {
         setDrawdownList(opportunities);
-        console.log(drawdownList);
       }
     };
     fetchData();
