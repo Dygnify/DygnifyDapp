@@ -11,10 +11,12 @@ import {
 } from "../../components/transaction/TransactionHelper";
 import DoughnutChart from "../Components/DoughnutChart";
 import ProcessingRequestModal from "./Components/Modal/processingRequestModal";
+import { getDisplayAmount } from "../../services/displayTextHelper";
 
 const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
   const [repaymentList, setRepaymentList] = useState([]);
+  const [totalBorrowedAmt, setTotalBorrowedAmt] = useState("--");
   const [nextDueDate, setNextDueDate] = useState();
   const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
@@ -54,12 +56,23 @@ const Overview = () => {
 
         // set next due date and amount
         setNextDueAmount(opportunities[0].repaymentAmount);
-        setNextDueAmount(opportunities[0].nextDueDate);
+        setNextDueDate(opportunities[0].nextDueDate);
 
         console.log(repaymentList, nextDueAmount);
       }
     };
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    // set total borrowed amount
+    let totalAmt = 0;
+    for (const op of repaymentList) {
+      totalAmt += op.actualLoanAmount;
+    }
+    setTotalBorrowedAmt("$" + getDisplayAmount(totalAmt));
+    // total repaid
+    // total outstanding
   }, [repaymentList]);
 
   return (
@@ -83,7 +96,9 @@ const Overview = () => {
           }}
           className="w-1/4 mr-4 px-4 py-4 justify-center flex-col"
         >
-          <h1 className="font-semibold text-5xl text-green-400">$850K</h1>
+          <h1 className="font-semibold text-5xl text-green-400">
+            {totalBorrowedAmt ? totalBorrowedAmt : "--"}
+          </h1>
           <p className="text-xl">Total Amount Borrowed</p>
         </div>
         <div
