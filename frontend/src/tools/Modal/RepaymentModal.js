@@ -1,8 +1,15 @@
 import React from 'react';
 import GradientButton from '../Button/GradientButton';
+import { repayment } from '../../components/transaction/TransactionHelper';
 
-const RepaymentModal = ({ data, handleRepayment }) => {
+const RepaymentModal = ({ data, handleRepayment, poolName }) => {
     console.log(data)
+
+    async function onRepayment(){
+        await repayment(data.opportunityPoolAddress);
+        handleRepayment();
+    }
+
     return (
         <div >
             <input type="checkbox" id="repayment-modal" className="modal-toggle" />
@@ -23,19 +30,24 @@ const RepaymentModal = ({ data, handleRepayment }) => {
                     <div className='text-sm py-3 px-4'>
                         <div style={{ display: 'flex' }} className='mb-2'>
                             <p style={{ display: 'flex' }} className='justify-start'>Pool Name</p>
-                            <p style={{ display: 'flex' }} className='justify-end'>{data?.opportunity_name}</p>
+                            <p style={{ display: 'flex' }} className='justify-end'>{poolName}</p>
                         </div>
                         <div style={{ display: 'flex' }} className='mb-2'>
-                            <p style={{ display: 'flex' }} className='justify-start'>Due Amount</p>
-                            <p style={{ display: 'flex' }} className='justify-end'>${data?.repayment_amount}</p>
+                            {
+                                data?.isOverDue ?
+                                    <p style={{ display: 'flex', color: "#EF4444"}} className='justify-start'>Overdue Amount</p>
+                                :
+                                    <p style={{ display: 'flex' }} className='justify-start'>Due Amount</p>
+                            }
+                            <p style={{ display: 'flex', color: `${data?.isOverDue ? "#EF4444" : "white"}`}} className='justify-end'>${data?.repaymentDisplayAmount}</p>
                         </div>
                         <div style={{ display: 'flex' }} className='mb-2'>
                             <p style={{ display: 'flex' }} className='justify-start'>Due Date</p>
-                            <p style={{ display: 'flex' }} className='justify-end'>{data?.repayment_date}</p>
+                            <p style={{ display: 'flex' }} className='justify-end'>{data?.nextDueDate}</p>
                         </div>
                     </div>
                     <div className="modal-action mx-4 mt-2 mb-4">
-                        <GradientButton className='w-full' onClick={handleRepayment}>Make Repayment</GradientButton>
+                        <GradientButton className='w-full' onClick={onRepayment}>Make Repayment</GradientButton>
                     </div>
                 </div>
             </div>
