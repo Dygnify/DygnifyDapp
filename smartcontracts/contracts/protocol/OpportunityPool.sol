@@ -32,11 +32,12 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public capitalLoss;
     uint256 public poolBalance;
     uint256 public repaymentStartTime;
-    uint256 public repaymentCounter = 1;
+    uint256 public repaymentCounter;
     uint256 public totalRepayments;
     uint256 public emiAmount;
     uint256 public amountWithoutEMI;
     uint256 public dailyInterestRate;
+    uint256 public totalRepaidAmount;
 
     uint256 public seniorYieldPerecentage;
     uint256 public juniorYieldPerecentage;
@@ -108,6 +109,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         paymentFrequencyInDays = _paymentFrequencyInDays;
         collateralDocument = _collateralDocument;
         capitalLoss = _capitalLoss;
+        repaymentCounter = 1;
 
         if (dygnifyConfig.getFlag(_opportunityID) == false) {
             // follow 4x leverage ratio
@@ -305,6 +307,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             opportunityOrigination.markRepaid(opportunityID);
         }
         uint256 amount = emiAmount;
+        totalRepaidAmount += emiAmount;
         uint256 currentTime = block.timestamp;
         uint256 currentRepaymentDue = nextRepaymentTime();
         uint256 overDueFee;
