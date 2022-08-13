@@ -19,5 +19,6 @@ import PoolDetails from "./pages/Underwriters/PoolDetails";
 import DoughnutChart from "./pages/Components/DoughnutChart";
 import FileUploader from "./pages/Components/FileUploader";
 import LineChart from "./pages/Investor/components/LineChart";
+import TestFile from "./pages/Test";
 
 ReactDOM.render(<Paths />, document.getElementById("root"));

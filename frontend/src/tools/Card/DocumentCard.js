@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getIPFSFileURL } from "../../services/web3storageIPFS";
 
-const DocumentCard = ({ docName, doc }) => {
+const DocumentCard = ({ docName, docCid, fileName }) => {
+  const viewDoc = () => {
+    if (!docCid) return null;
+    let url = getIPFSFileURL(docCid);
+    if (fileName) url += `/${fileName}`;
+    console.log(fileName);
+    window.open(url, "_blank");
+  };
+
   return (
     <div
       style={{
@@ -17,7 +26,7 @@ const DocumentCard = ({ docName, doc }) => {
           <p style={{ fontStyle: "italic", color: "#E6E6E6" }}> {docName}</p>
         ) : null}
       </div>
-      <a className="text-blue-700" href="#">
+      <a className="text-blue-700" onClick={viewDoc}>
         View Document
       </a>
     </div>

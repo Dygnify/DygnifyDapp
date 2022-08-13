@@ -7,6 +7,7 @@ const FileUploader = ({
   onBlur,
   error,
   handleFile,
+  fileName,
 }) => {
   const hiddenFileInput = React.useRef(null);
 
@@ -51,7 +52,7 @@ const FileUploader = ({
             Choose file
           </div>
           <div style={{ color: "#c7cad1", fontStyle: "italic" }}>
-            {fileUploadedName}
+            {fileUploadedName ? fileUploadedName : fileName}
           </div>
         </div>
         <input

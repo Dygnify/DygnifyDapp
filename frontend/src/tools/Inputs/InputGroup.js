@@ -3,7 +3,7 @@ import FileUploader from "../../pages/Components/FileUploader";
 import FileFields from "./FileFields";
 import TextField from "./TextField";
 
-const InputGroup = ({ caption, onChange, reference }) => {
+const InputGroup = ({ caption, value, onChange, fileName, reference }) => {
   return (
     <div
       className="bg-[#20232A]  w-full px-4 pb-4 mb-2"
@@ -15,6 +15,7 @@ const InputGroup = ({ caption, onChange, reference }) => {
           label="Document Name"
           placeholder="Enter Document Name"
           className="w-1/2 mr-4"
+          value={value}
           reference={reference}
         />
 
@@ -22,6 +23,7 @@ const InputGroup = ({ caption, onChange, reference }) => {
           label="Upload Document"
           className="w-1/2 ml-4"
           handleFile={onChange}
+          fileName={fileName}
         />
       </div>
     </div>

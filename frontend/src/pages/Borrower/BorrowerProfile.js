@@ -59,10 +59,12 @@ const BorrowerProfile = () => {
 
     const fetchData = async () => {
       let borrowerCID = await getBorrowerDetails();
-      console.log("CID", borrowerCID);
+      console.log(borrowerCID);
+
+      if (!borrowerCID) return setProfileStatus(false);
       if (borrowerCID) {
         let data = await retrieveFiles(borrowerCID, true);
-        console.log("*****", data);
+
         if (data) {
           let read = getBinaryFileData(data);
           read.onloadend = function () {
@@ -130,7 +132,11 @@ const BorrowerProfile = () => {
     try {
       if (jsonData) {
         // Load the Logo image if there is any
-        fetchBorrowerLogo(jsonData.companyLogoCID);
+        fetchBorrowerLogo(
+          jsonData.companyLogoFile
+            ? jsonData.companyLogoFile.businessLogoFileCID
+            : jsonData.companyLogoCID
+        );
         // Load rest of the data
         loadBorrowerProfileData(jsonData);
 
@@ -143,6 +149,8 @@ const BorrowerProfile = () => {
 
   const redirectToURl = (event) => {
     let url;
+    console.log(event);
+
     switch (event.target.id) {
       case "twitter":
         url = twitter;
@@ -198,8 +206,8 @@ const BorrowerProfile = () => {
                   }}
                   className="btn btn-sm btn-outline text-white "
                 >
+                  <div style={{ marginRight: 2 }}>Create Profile</div>
                   <Edits />
-                  <div style={{ marginLeft: 2 }}>Create Profile</div>
                 </button>
               </div>
             </div>
@@ -220,15 +228,17 @@ const BorrowerProfile = () => {
               <div style={{ display: "flex" }}>
                 <div class="avatar">
                   <div class="w-16 rounded-full">
-                    <img src="/images/ImpactLogo.jpeg" />
+                    <img src={logoImgSrc} />
                   </div>
                 </div>
                 <div
                   style={{ display: "flex" }}
                   className="flex-col justify-center ml-4"
                 >
-                  <h4 style={{ fontSize: 23 }}>Impact Capital Partners</h4>
-                  <p style={{ fontSize: 19, color: "#B8C0CC" }}>Alice</p>
+                  <h4 style={{ fontSize: 23 }}>{companyName}</h4>
+                  <p style={{ fontSize: 19, color: "#B8C0CC" }}>
+                    {companyRepName}
+                  </p>
                 </div>
               </div>
               <div
@@ -237,7 +247,9 @@ const BorrowerProfile = () => {
               >
                 <button
                   onClick={() =>
-                    navigate("/borrower_dashboard/edit_profile", borrowerJson)
+                    navigate("/borrower_dashboard/edit_profile", {
+                      state: borrowerJson,
+                    })
                   }
                   style={{
                     borderRadius: "100px",
@@ -246,8 +258,8 @@ const BorrowerProfile = () => {
                   }}
                   className="btn btn-sm btn-outline text-white "
                 >
+                  <div style={{ marginRight: 3 }}>Edit Profile</div>
                   <Edits />
-                  <div style={{ marginLeft: 2 }}>Edit Profile</div>
                 </button>
               </div>
             </div>
@@ -279,7 +291,7 @@ const BorrowerProfile = () => {
                   you have a smooth and secure experience with us.
                 </div>
               </label>
-              <label
+              {/* <label
                 htmlFor="kybModal"
                 className="w-1/2"
                 style={{
@@ -303,7 +315,7 @@ const BorrowerProfile = () => {
                   details ensures that you have a smooth and secure experience
                   with us.
                 </div>
-              </label>
+              </label> */}
             </div>
 
             <div
@@ -316,58 +328,74 @@ const BorrowerProfile = () => {
                 </h5>
               </div>
               <div style={{ display: "flex" }} className="w-1/2 justify-end">
-                <button
-                  id="twitter"
-                  style={{
-                    borderRadius: "100px",
-                    padding: "8px 16px",
-                    border: "1px solid #64748B",
-                  }}
-                  className="ml-3 btn btn-sm btn-outline text-white"
-                  onClick={redirectToURl}
-                >
-                  <Twitter />
-                  <div style={{ marginLeft: 2 }}>twitter</div>
-                </button>
-                <button
-                  id="linkedin"
-                  style={{
-                    borderRadius: "100px",
-                    padding: "8px 16px",
-                    border: "1px solid #64748B",
-                  }}
-                  className="ml-3 btn btn-sm btn-outline text-white"
-                  onClick={redirectToURl}
-                >
-                  <LinkedIn />
-                  <div style={{ marginLeft: 2 }}>LinkedIn</div>
-                </button>
-                <button
-                  id="linkedin"
-                  style={{
-                    borderRadius: "100px",
-                    padding: "8px 16px",
-                    border: "1px solid #64748B",
-                  }}
-                  className="ml-3 btn btn-sm btn-outline text-white"
-                  onClick={redirectToURl}
-                >
-                  <Email />
-                  <div style={{ marginLeft: 2 }}>Email</div>
-                </button>
-                <button
-                  id="linkedin"
-                  style={{
-                    borderRadius: "100px",
-                    padding: "8px 16px",
-                    border: "1px solid #64748B",
-                  }}
-                  className="ml-3 btn btn-sm btn-outline text-white"
-                  onClick={redirectToURl}
-                >
-                  <Website />
-                  <div style={{ marginLeft: 2 }}>Website</div>
-                </button>
+                {twitter ? (
+                  <button
+                    id="twitter"
+                    style={{
+                      borderRadius: "100px",
+                      padding: "8px 16px",
+                      border: "1px solid #64748B",
+                    }}
+                    className="ml-3 btn btn-sm btn-outline text-white"
+                    onClick={redirectToURl}
+                  >
+                    <Twitter />
+                    <div style={{ marginLeft: 2 }}>twitter</div>
+                  </button>
+                ) : (
+                  <></>
+                )}
+                {linkedin ? (
+                  <button
+                    id="linkedin"
+                    style={{
+                      borderRadius: "100px",
+                      padding: "8px 16px",
+                      border: "1px solid #64748B",
+                    }}
+                    className="ml-3 btn btn-sm btn-outline text-white"
+                    onClick={redirectToURl}
+                  >
+                    <LinkedIn />
+                    <div style={{ marginLeft: 2 }}>LinkedIn</div>
+                  </button>
+                ) : (
+                  <></>
+                )}
+                {email ? (
+                  <button
+                    id="email"
+                    style={{
+                      borderRadius: "100px",
+                      padding: "8px 16px",
+                      border: "1px solid #64748B",
+                    }}
+                    className="ml-3 btn btn-sm btn-outline text-white"
+                    onClick={redirectForEmail}
+                  >
+                    <Email />
+                    <div style={{ marginLeft: 2 }}>Email</div>
+                  </button>
+                ) : (
+                  <></>
+                )}
+                {website ? (
+                  <button
+                    id="website"
+                    style={{
+                      borderRadius: "100px",
+                      padding: "8px 16px",
+                      border: "1px solid #64748B",
+                    }}
+                    className="ml-3 btn btn-sm btn-outline text-white"
+                    onClick={redirectToURl}
+                  >
+                    <Website />
+                    <div style={{ marginLeft: 2 }}>Website</div>
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="mb-6">
@@ -383,46 +411,98 @@ const BorrowerProfile = () => {
                   color: "#E6E6E6",
                 }}
               >
-                Impact Capital Partners is an innovative investing platform
-                providing financing solutions in emerging markets serving the
-                needs of low and middle income populations, thus catalysing
-                lasting impacts. We have a portfolio of investee companies that
-                scale financial inclusion, access to clean energy, access to
-                healthcare, access to education and agri-business. <br />{" "}
-                Highlights : <br /> 1. Operations in 70 countries for more than
-                10 Years. <br /> 2. We specifically target businesses whose
-                products/services result in positive social and environmental
-                changes. <br /> 3. All the investees are businesses at Series A
-                ,B,C level with proven Product-market fit . <br /> 4. Funds
-                provided to businesses with proven track record of positive cash
-                flows.
+                {companyBio}
               </p>
             </div>
 
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <h5 className="text-lg">KYC Details</h5>
               <DocumentCard docName={"Aadhar Card.pdf"} />
               <DocumentCard docName={"Passport.pdf"} />
-            </div>
+            </div> */}
             <div className="mb-6">
               <h5 className="text-lg">KYB Details</h5>
               <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
                 Business Identify Proof
               </h6>
-              <DocumentCard docName={"Impact identity proof.pdf"} />
+              <DocumentCard
+                docName={
+                  borrowerJson
+                    ? borrowerJson.businessIdFile.businessIdDocName
+                    : ""
+                }
+                docCid={
+                  borrowerJson
+                    ? borrowerJson.businessIdFile.businessIdFileCID
+                    : null
+                }
+                fileName={
+                  borrowerJson
+                    ? borrowerJson.businessIdFile.businessIdFileName
+                    : null
+                }
+              />
 
               <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
                 Business Address Proof
               </h6>
-              <DocumentCard docName={"Impact address proof.pdf"} />
+              <DocumentCard
+                docName={
+                  borrowerJson
+                    ? borrowerJson.businessAddFile.businessAddDocName
+                    : ""
+                }
+                docCid={
+                  borrowerJson
+                    ? borrowerJson.businessAddFile.businessAddFileCID
+                    : null
+                }
+                fileName={
+                  borrowerJson
+                    ? borrowerJson.businessAddFile.businessAddFileName
+                    : null
+                }
+              />
               <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
                 Business License Proof
               </h6>
-              <DocumentCard docName={"Impact license.pdf"} />
+              <DocumentCard
+                docName={
+                  borrowerJson
+                    ? borrowerJson.businessLicFile.businessLicDocName
+                    : ""
+                }
+                docCid={
+                  borrowerJson
+                    ? borrowerJson.businessLicFile.businessLicFileCID
+                    : null
+                }
+                fileName={
+                  borrowerJson
+                    ? borrowerJson.businessLicFile.businessLicFileName
+                    : null
+                }
+              />
               <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
                 Business Incorporation Proof
               </h6>
-              <DocumentCard docName={"Impact incorporation proof.pdf"} />
+              <DocumentCard
+                docName={
+                  borrowerJson
+                    ? borrowerJson.businessIncoFile.businessIncoDocName
+                    : ""
+                }
+                docCid={
+                  borrowerJson
+                    ? borrowerJson.businessIncoFile.businessIncoFileCID
+                    : null
+                }
+                fileName={
+                  borrowerJson
+                    ? borrowerJson.businessIncoFile.businessIncoFileName
+                    : null
+                }
+              />
             </div>
           </>
         ) : null}

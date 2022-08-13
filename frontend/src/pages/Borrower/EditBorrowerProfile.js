@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import GradientButton from "../../tools/Button/GradientButton";
 import FileFields from "../../tools/Inputs/FileFields";
 import InputGroup from "../../tools/Inputs/InputGroup";
@@ -7,6 +7,7 @@ import TextField from "../../tools/Inputs/TextField";
 import FileUploader from "../Components/FileUploader";
 import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
 import { updateBorrowerDetails } from "../../components/transaction/TransactionHelper";
+import { useLocation } from "react-router-dom";
 
 const EditBorrowerProfile = () => {
   const companyName = useRef();
@@ -30,6 +31,10 @@ const EditBorrowerProfile = () => {
     useState();
   const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
+  const location = useLocation();
+
+  console.log(location.state);
+
   const onLogoFileUpload = (files) => {
     setLogoFile(files);
   };
@@ -48,6 +53,36 @@ const EditBorrowerProfile = () => {
   const onBusinessLicenseFilesUpload = (files) => {
     setBusinessLicenseFiles(files);
   };
+
+  const {
+    companyName: name,
+    companyBio: bio,
+    companyRepName: repName,
+    businessIdFile: IdFile,
+    businessAddFile: AddFile,
+    businessIncoFile: IncoFile,
+    businessLicFile: LicFile,
+    companyLogoFile: LogoFile,
+    website: web,
+    twitter: twit,
+    email: mail,
+    linkedin: lin,
+  } = location.state;
+
+  useEffect(() => {
+    companyName.current.value = name;
+    companyRepName.current.value = repName;
+    companyBio.current.value = bio;
+    website.current.value = web;
+    email.current.value = mail;
+    twitter.current.value = twit;
+    linkedin.current.value = lin;
+    bizAddFileName.current.value = AddFile.businessAddDocName;
+    bizIdFileName.current.value = IdFile.businessIdDocName;
+    bizIncoFileName.current.value = IncoFile.businessIncoDocName;
+    bizLicFileName.current.value = LicFile.businessLicDocName;
+    setLogoFile(LogoFile);
+  }, []);
 
   const uploadFilesToIPFS = async (files) => {
     try {
@@ -96,43 +131,52 @@ const EditBorrowerProfile = () => {
 
       // Prepare a json file with borrower data
       let borrowerJsonData = {
-        companyName: "companyName",
-        companyRepName: "companyRepName",
-        companyBio: "companyBio",
-        companyLogoCID: "logoFileCID",
+        companyName: companyName.current.value,
+        companyRepName: companyRepName.current.value,
+        companyBio: companyBio.current.value,
+        companyLogoFile: {
+          businessLogoFileName: logoFile[0].name,
+          businessLogoFileCID: logoFileCID,
+        },
         kycFile: {
           //kycFileName: kycFileName.current.value,
-          kycFileName: "kycFileName",
+          kycFileName: kycFileName,
           kycCID: kycFilesCID,
         },
         businessIdFile: {
-          businessIdFileName: "bizIdFileName.current.value",
+          businessIdDocName: bizIdFileName.current.value,
           businessIdFileCID: businessIdFilesCID,
+          businessIdFileName: businessIdentityFiles[0].name,
         },
         businessAddFile: {
-          businessAddFileName: "bizAddFileName",
+          businessAddDocName: bizAddFileName.current.value,
           businessAddFileCID: businessAddFilesCID,
+          businessAddFileName: businessAddressFiles[0].name,
         },
         businessIncoFile: {
-          businessIncoFileName: "bizIncoFileName",
+          businessIncoDocName: bizIncoFileName.current.value,
           businessIncoFileCID: businessIncoFilesCID,
+          businessIncoFileName: businessIncorporationFiles[0].name,
         },
         businessLicFile: {
-          businessLicFileName: "bizLicFileName",
+          businessLicDocName: bizLicFileName.current.value,
           businessLicFileCID: businessLicFilesCID,
+          businessLicFileName: businessLicenseFiles[0].name,
         },
-        website: "www.dygnify.com",
-        email: "ankitx.sri@gmail.com",
-        twitter: "@api_url",
-        linkedin: "www.linkedin.com",
+        website: website.current.value,
+        email: email.current.value,
+        twitter: twitter.current.value,
+        linkedin: linkedin.current.value,
       };
 
       //console.log(borrowerJsonData);
       let file = makeFileObjects(borrowerJsonData, Math.random());
       let borrowerDataCID = await storeFiles(file);
       // Save this CID in the blockchain
+      console.log("DURING save", borrowerDataCID);
+      console.log(borrowerJsonData);
       await updateBorrowerDetails(borrowerDataCID);
-      console.log("success uploaded data");
+      console.log("upload successful");
     } catch (error) {
       console.log(error);
     }
@@ -147,6 +191,7 @@ const EditBorrowerProfile = () => {
             label="Company Logo"
             className="w-1/3"
             handleFile={onLogoFileUpload}
+            fileName={logoFile ? logoFile.businessLogoFileName : null}
           />
           <TextField
             label="Company Name"
@@ -180,21 +225,25 @@ const EditBorrowerProfile = () => {
           caption="Business Identify Proof"
           onChange={onBusinessIdentityFilesUpload}
           reference={bizIdFileName}
+          fileName={IdFile.businessIdFileName}
         />
         <InputGroup
           caption="Business Address Proof"
           onChange={onBusinessAddressFilesUpload}
           reference={bizAddFileName}
+          fileName={AddFile.businessAddFileName}
         />
         <InputGroup
           caption="Business Incorporation Proof"
           onChange={onBusinessIncorporationFilesUpload}
           reference={bizIncoFileName}
+          fileName={IncoFile.businessIncoFileName}
         />
         <InputGroup
           caption="Business License Proof"
           onChange={onBusinessLicenseFilesUpload}
           reference={bizLicFileName}
+          fileName={LicFile.businessLicFileName}
         />
       </div>
       <div className="mb-6">
