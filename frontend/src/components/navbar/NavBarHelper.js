@@ -25,13 +25,14 @@ export const requestAccount = async (metaMask) => {
 };
 
 export const isConnected = async () => {
-  let connectionStatus = await window.ethereum.isConnected();
-  console.log(connectionStatus);
-  let chainId = window.ethereum.networkVersion;
-  console.log(chainId);
-  if (chainId == "80001" && connectionStatus == true) {
-    return connectionStatus;
-  } else {
-    return false;
+  if (window.ethereum) {
+    let connectionStatus = await window.ethereum.isConnected();
+    console.log(connectionStatus);
+    let chainId = window.ethereum.networkVersion;
+    console.log(chainId);
+    if (chainId == "80001" && connectionStatus == true) {
+      return connectionStatus;
+    }
   }
+  return false;
 };

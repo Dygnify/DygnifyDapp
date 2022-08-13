@@ -25,7 +25,7 @@ const Overview = () => {
   const handleForm = () => {
     setSelected(null);
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       let opportunities = await getDrawdownOpportunities();
@@ -69,9 +69,10 @@ const Overview = () => {
     let totalAmt = 0;
     for (const op of repaymentList) {
       totalAmt += parseInt(op.actualLoanAmount);
-      console.log(op.actualLoanAmount)
     }
-    setTotalBorrowedAmt("$" + getDisplayAmount(totalAmt));
+    if (totalAmt > 0) {
+      setTotalBorrowedAmt("$" + getDisplayAmount(totalAmt));
+    }
     // total repaid
     // total outstanding
   }, [repaymentList]);
@@ -220,7 +221,7 @@ const Overview = () => {
         ) : (
           <div style={{ display: "flex" }} className="gap-4">
             {repaymentList.map((item) => (
-              <RepaymentCard key = {item.id} data={item} />
+              <RepaymentCard key={item.id} data={item} />
             ))}
           </div>
         )}

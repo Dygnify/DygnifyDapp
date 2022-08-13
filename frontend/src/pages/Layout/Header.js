@@ -7,13 +7,14 @@ import {
 } from "../../components/navbar/NavBarHelper";
 import PrimaryButton from "../../tools/Button/PrimaryButton";
 import WalletWhiteSmall from "../SVGIcons/WalletWhiteSmall";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
   const [status, setStatus] = useState(false);
+  const location = useLocation();
 
   const fetchStatus = async () => {
     const getStatus = await isConnected();
-    console.log(getStatus);
     if (getStatus) return setStatus(true);
     setStatus(false);
   };
@@ -25,7 +26,7 @@ const Header = () => {
 
   useEffect(() => {
     fetchStatus();
-  }, []);
+  }, [location]);
 
   return (
     <>
