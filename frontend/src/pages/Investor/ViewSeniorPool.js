@@ -7,7 +7,11 @@ import { tokenTransactions } from "../../services/blockchainTransactionDataOptio
 import { kycOptions } from "../../services/KYC/blockpass";
 import Alert from "../Components/Alert";
 import InvestModal from "./components/Modal/InvestModal";
-import { getUserWalletAddress } from "../../components/transaction/TransactionHelper";
+import {
+  getUserWalletAddress,
+  getWalletBal,
+} from "../../components/transaction/TransactionHelper";
+import { getDisplayAmount } from "../../services/displayTextHelper";
 
 const ViewSeniorPool = () => {
   const location = useLocation();
@@ -48,15 +52,17 @@ const ViewSeniorPool = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const transactionDetails = await axiosHttpService(
-        tokenTransactions(process.env.REACT_APP_SENIORPOOL)
-      );
-      if (transactionDetails && transactionDetails.res) {
-        setTransactionData(transactionDetails.res.result);
+    axiosHttpService(tokenTransactions(process.env.REACT_APP_SENIORPOOL)).then(
+      (transactionDetails) => {
+        if (transactionDetails && transactionDetails.res) {
+          setTransactionData(transactionDetails.res.result);
+        }
       }
-    };
-    fetchData();
+    );
+
+    getWalletBal(process.env.REACT_APP_SENIORPOOL).then((amt) => {
+      setPoolAmount(getDisplayAmount(amt));
+    });
   }, []);
 
   useEffect(() => {
@@ -70,12 +76,6 @@ const ViewSeniorPool = () => {
       setEstimatedAPY(
         location.state.estimatedAPY ? location.state.estimatedAPY : defaultAPY
       );
-      setPoolAmount(
-        location.state.opportunityAmount
-          ? location.state.opportunityAmount
-          : defaultPoolAmount
-      );
-
       setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
     }
   }, []);

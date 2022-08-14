@@ -151,7 +151,7 @@ export async function getWalletBal(address) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       // console.log({ provider });
       const contract = new ethers.Contract(
-        process.env.REACT_APP_TOKEN,
+        process.env.REACT_APP_TEST_USDCTOKEN,
         dygnifyToken.abi,
         provider
       );
@@ -266,10 +266,8 @@ function getOpportunity(opportunity) {
   obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  let amount = ethers.utils.formatUnits(opportunity.loanAmount, decimals)
-  obj.opportunityAmount = getDisplayAmount(
-    amount
-  );
+  let amount = ethers.utils.formatUnits(opportunity.loanAmount, decimals);
+  obj.opportunityAmount = getDisplayAmount(amount);
   obj.actualLoanAmount = amount;
   obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
   obj.loanInterest =
@@ -503,8 +501,8 @@ export async function getDrawdownOpportunities() {
         let poolBalance = await poolContract.poolBalance();
         poolBalance = ethers.utils.formatUnits(poolBalance, decimals);
         let loanAmount = ethers.utils.formatUnits(tx.loanAmount, decimals);
-        console.log(poolBalance.toString())
-        if (parseInt(poolBalance) >= parseInt(loanAmount)  ) {
+        console.log(poolBalance.toString());
+        if (parseInt(poolBalance) >= parseInt(loanAmount)) {
           let obj = await getOpportunity(tx);
           opportunities.push(obj);
         }
@@ -686,7 +684,7 @@ export async function getOpportunitiesWithDues() {
           obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
           const overdueTime = Math.floor(Date.now() / 1000) - repaymentDate;
           obj.isOverDue = overdueTime > 0 ? true : false;
-          
+
           opportunities.push(obj);
         }
       }
@@ -752,7 +750,6 @@ export async function investInSeniorPool(amount) {
   }
 }
 
-
 export async function investInJuniorPool(poolAddress, amount) {
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -765,7 +762,7 @@ export async function investInJuniorPool(poolAddress, amount) {
         signer
       );
       amount = ethers.utils.parseUnits(amount, decimals);
-      let transaction = await contract.deposit("0" , amount); //0 denotes junior subpool
+      let transaction = await contract.deposit("0", amount); //0 denotes junior subpool
       await transaction.wait();
     }
   } catch (error) {
