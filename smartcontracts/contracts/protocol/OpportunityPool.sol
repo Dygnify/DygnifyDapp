@@ -9,6 +9,7 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "./OpportunityOrigination.sol";
+import "./Investor.sol";
 
 contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     DygnifyConfig public dygnifyConfig;
@@ -17,6 +18,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     using SafeERC20 for IERC20;
     using SafeERC20Upgradeable for IERC20;
     OpportunityOrigination public opportunityOrigination;
+    Investor public investor;
 
     IERC20 public usdcToken;
     LPToken public lpToken;
@@ -91,6 +93,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         opportunityOrigination = OpportunityOrigination(
             dygnifyConfig.getOpportunityOrigination()
         );
+        investor = Investor(dygnifyConfig.investorContractAddress());
 
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
@@ -206,6 +209,9 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
                 .depositedAmount
                 .add(amount);
+            if(isStaking[msg.sender] == false){
+                investor.addOpportunity(msg.sender, opportunityID);
+            }
             stakingBalance[msg.sender] = stakingBalance[msg.sender].add(amount);
             isStaking[msg.sender] = true;
         }

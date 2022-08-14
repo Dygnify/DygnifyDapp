@@ -12,7 +12,8 @@ library ConfigOptions {
         SeniorPool,
         PoolImplAddress,
         CollateralToken,
-        OpportunityOrigination
+        OpportunityOrigination,
+        InvestorContract
     }
 
     enum Numbers {

@@ -53,4 +53,8 @@ library ConfigHelper {
   function getJuniorSubpoolFee(DygnifyConfig config) internal view returns (uint256) {
     return config.getNumber(uint256(ConfigOptions.Numbers.JuniorSubpoolFee));
   }
+
+  function investorContractAddress(DygnifyConfig config) internal view returns (address) {
+    return config.getAddress(uint256(ConfigOptions.Addresses.InvestorContract));
+  }
 }
