@@ -5,39 +5,72 @@ import {
   getAllWithdrawableOpportunities,
   getUserSeniorPoolInvestment,
   getWalletBal,
+  getSeniorPoolDisplaySharePrice,
 } from "../../components/transaction/TransactionHelper";
+import { retrieveFiles } from "../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../services/fileHelper";
+import { getDisplayAmount } from "../../services/displayTextHelper";
 
 import InvestModal from "./components/Modal/InvestModal";
 
 const Withdraw = () => {
-  const [seniorPool, setSeniorPool] = useState([]);
+  const [seniorPool, setSeniorPool] = useState();
   const [juniorPools, setJuniorPools] = useState([]);
   const [selected, setSelected] = useState();
+  const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
 
   const handleForm = () => {
     setSelected(null);
   };
 
   useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const data = await getUserSeniorPoolInvestment();
-        if (data) {
-          let seniorInvestmentData = {};
-          seniorInvestmentData.capitalInvested =
-            data.stakingAmt + data.withdrawableAmt;
-          seniorInvestmentData.opportunityAmount = await getWalletBal(
-            process.env.REACT_APP_SENIORPOOL
-          );
-          seniorInvestmentData.withdrawableAmt = data.withdrawableAmt;
-          setSeniorPool(seniorInvestmentData);
-        }
-      };
-      fetchData();
-    } catch (error) {
-      console.log(error);
-    }
+    getUserSeniorPoolInvestment()
+      .then((data) => {
+        setSeniorPoolInvestment(data);
+      })
+      .catch((error) => console.log("Failed to get senior pool investment"));
   }, []);
+
+  useEffect(() => {
+    if (seniorPoolInvestment) {
+      // fetch data from IPFS
+      retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
+        if (res) {
+          let read = getBinaryFileData(res);
+          read.onloadend = async function () {
+            try {
+              let spJson = JSON.parse(read.result);
+              if (spJson) {
+                let seniorInvestmentData = {};
+                seniorInvestmentData.poolName = spJson.poolName;
+                seniorInvestmentData.opportunityAmount = getDisplayAmount(
+                  await getWalletBal(process.env.REACT_APP_SENIORPOOL)
+                );
+
+                let totalInvestment =
+                  seniorPoolInvestment.stakingAmt +
+                  seniorPoolInvestment.withdrawableAmt;
+                seniorInvestmentData.capitalInvested = getDisplayAmount(
+                  totalInvestment
+                );
+                const {
+                  sharePrice,
+                  displaySharePrice,
+                } = await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
+                seniorInvestmentData.estimatedAPY = displaySharePrice;
+                seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+                  seniorPoolInvestment.withdrawableAmt
+                );
+                setSeniorPool(seniorInvestmentData);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          };
+        }
+      });
+    }
+  }, [seniorPoolInvestment]);
 
   useEffect(() => {
     try {
@@ -80,7 +113,7 @@ const Withdraw = () => {
           </label>
         </div>
       </div>
-      {seniorPool.capitalInvested > 0 ? (
+      {seniorPool ? (
         <div className="mb-16 ">
           <h2 style={{ fontSize: 24 }} className=" mb-5">
             Senior pools
