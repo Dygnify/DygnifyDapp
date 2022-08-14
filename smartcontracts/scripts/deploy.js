@@ -24,14 +24,6 @@ async function main() {
 
   console.log("TestUSDCToken deployed to:", testUSDCToken.address);
 
-  // const usdtToken = "0x3813e82e6f7098b9583FC0F33a962D02018B6803";
-  //const DygnifyStaking = await hre.ethers.getContractFactory("DygnifyStaking");
-  //const dygnifyStaking = await DygnifyStaking.deploy(testUSDCToken.address, 10);
-
-  //await dygnifyStaking.deployed();
-
-  //console.log("DygnifyStaking deployed to:", dygnifyStaking.address);
-
   // deply the config first as this will be used in most of the contracts
   const DygnifyConfig = await hre.ethers.getContractFactory("DygnifyConfig");
   const dygnifyConfig = await DygnifyConfig.deploy();
@@ -46,9 +38,6 @@ async function main() {
   const seniorPool = await SeniorPool.deploy();
 
   await seniorPool.deployed();
-  // initialize the senior pool
-  // 12 months is the lockin period
-  await seniorPool.initialize(dygnifyConfig.address, 12);
   console.log("SeniorPool deployed to:", seniorPool.address);
 
   // LP token deplyment
@@ -56,8 +45,6 @@ async function main() {
   const lpToken = await LPToken.deploy();
 
   await lpToken.deployed();
-  // Initialize LP token
-  await lpToken.initialize(seniorPool.address);
   console.log("LPToken deployed to:", lpToken.address);
 
   // Deploy the borrower
@@ -65,8 +52,6 @@ async function main() {
   const borrower = await Borrower.deploy();
 
   await borrower.deployed();
-  // Initialize Borrower
-  await borrower.initialize(dygnifyConfig.address);
   console.log("Borrower deployed to:", borrower.address);
 
   // Deploy Opportunity origination pool
@@ -76,9 +61,6 @@ async function main() {
   const opportunityOrigination = await OpportunityOrigination.deploy();
 
   await opportunityOrigination.deployed();
-
-  // Initialize the Opportunity origination pool
-  await opportunityOrigination.initialize(dygnifyConfig.address);
   console.log(
     "Opportunity Origination deployed to:",
     opportunityOrigination.address
@@ -91,11 +73,6 @@ async function main() {
   const collateralToken = await CollateralToken.deploy();
 
   await collateralToken.deployed();
-  // Initialize the collateral token
-  await collateralToken.initialize(
-    dygnifyConfig.address,
-    opportunityOrigination.address
-  );
   console.log("collateralToken deployed to:", collateralToken.address);
 
   // Opportunity pool deployment
@@ -114,7 +91,7 @@ async function main() {
   await dygnifyConfig.setAddress(4, opportunityPool.address);
   await dygnifyConfig.setAddress(5, collateralToken.address);
   await dygnifyConfig.setAddress(6, opportunityOrigination.address);
-  console.log("Pool Addresses configured successfully");
+  console.log("DygnifyConfig configured successfully");
 
   // Set all numbers
   await dygnifyConfig.setNumber(0, 4);
@@ -122,6 +99,23 @@ async function main() {
   await dygnifyConfig.setNumber(2, 5000000);
   await dygnifyConfig.setNumber(3, 200000);
   console.log("Initial numbers configured successfully");
+
+  // Initialize contracts
+  // initialize the senior pool
+  // 12 months is the lockin period
+  await seniorPool.initialize(dygnifyConfig.address, 12);
+  // Initialize LP token
+  await lpToken.initialize(seniorPool.address);
+  // Initialize Borrower
+  await borrower.initialize(dygnifyConfig.address);
+  // Initialize the Opportunity origination pool
+  await opportunityOrigination.initialize(dygnifyConfig.address);
+  // Initialize the collateral token
+  await collateralToken.initialize(
+    dygnifyConfig.address,
+    opportunityOrigination.address
+  );
+  console.log("All contracts initilaized successfully");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

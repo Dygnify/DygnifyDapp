@@ -195,23 +195,27 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
     /// Get the investment overview of the user
     function getUserInvestment()
         external
+        view
         returns (uint256 withdrawableAmt, uint256 stakingAmt)
     {
-        require(isStaking[msg.sender] = true, "User has not staked any amount");
+        require(
+            isStaking[msg.sender] == true,
+            "User has not staked any amount"
+        );
 
         uint256 stakingAmount;
+        uint256 withdrawableAmount;
         uint256 lockinTime = investmentLockinInMonths * oneMonth;
-        InvestmentTimestamp[] storage arr = stackingAmount[msg.sender];
+        InvestmentTimestamp[] memory arr = stackingAmount[msg.sender];
         for (uint256 i = 0; i < arr.length; i++) {
             if (arr[i].timestamp + lockinTime <= block.timestamp) {
-                availableForWithdrawal[msg.sender] += arr[i].amount;
-                delete arr[i];
+                withdrawableAmount += arr[i].amount;
             } else {
                 stakingAmount += arr[i].amount;
             }
         }
 
-        return (availableForWithdrawal[msg.sender], stakingAmount);
+        return (withdrawableAmount, stakingAmount);
     }
 
     function getDefaultLockinMonths() external view returns (uint256) {
@@ -219,6 +223,10 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
     }
 
     function getTotalStakingBal() internal view returns (uint256) {
+        require(
+            isStaking[msg.sender] == true,
+            "User has not staked any amount"
+        );
         uint256 amount;
         InvestmentTimestamp[] memory arr = stackingAmount[msg.sender];
         for (uint256 i = 0; i < arr.length; i++) {
@@ -231,14 +239,30 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
     // Withdraw of funds in user wallet
     function withdrawWithLP(uint256 amount) external {
         require(
-            isStaking[msg.sender] =
-                true &&
-                availableForWithdrawal[msg.sender] >= amount &&
-                amount > 0,
-            "Nothing to withdraw/withdraw amount is higher than amount available for withdraw"
+            isStaking[msg.sender] == true && amount > 0,
+            "User has not invested in this pool or amount should be greater than 0"
+        );
+
+        // calculate the amount available for investment first
+        uint256 stakingAmount;
+        uint256 lockinTime = investmentLockinInMonths * oneMonth;
+        InvestmentTimestamp[] storage arr = stackingAmount[msg.sender];
+        for (uint256 i = 0; i < arr.length; i++) {
+            if (arr[i].timestamp + lockinTime <= block.timestamp) {
+                availableForWithdrawal[msg.sender] += arr[i].amount;
+                delete arr[i];
+            } else {
+                stakingAmount += arr[i].amount;
+            }
+        }
+
+        require(
+            availableForWithdrawal[msg.sender] >= amount,
+            "Withdraw amount is higher than amount available for withdraw"
         );
 
         availableForWithdrawal[msg.sender] -= amount;
+
         if (
             getTotalStakingBal() == 0 && availableForWithdrawal[msg.sender] == 0
         ) {
