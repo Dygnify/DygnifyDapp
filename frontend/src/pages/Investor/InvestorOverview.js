@@ -1,24 +1,25 @@
 import { useState, useEffect } from "react";
 import PoolCard from "./components/Cards/PoolCard";
-import PieGraph from "../../investor/components/PieChart";
 import GradientButton from "../../tools/Button/GradientButton";
-import BorrowChart from "../../components/charts/BorrowChart";
 import {
   getAllWithdrawableOpportunities,
   getUserSeniorPoolInvestment,
   getWalletBal,
+  getSeniorPoolDisplaySharePrice,
 } from "../../components/transaction/TransactionHelper";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
 import LineChart from "./components/LineChart";
-import axiosHttpService from "../../services/axioscall";
-import { kycOptions } from "../../services/KYC/blockpass";
+import { retrieveFiles } from "../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../services/fileHelper";
+import { getDisplayAmount } from "../../services/displayTextHelper";
 
 const InvestorOverview = () => {
   const [totalInvestment, setTotalInvestment] = useState(0);
   const [totalYield, setTotalYield] = useState(0);
   const [seniorPool, setSeniorPool] = useState([]);
   const [juniorPool, setJuniorPool] = useState([]);
+  const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
 
   const path = useNavigate();
 
@@ -28,30 +29,53 @@ const InvestorOverview = () => {
   }
 
   useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const data = await getUserSeniorPoolInvestment();
-        if (data) {
-          let seniorInvestmentData = {};
-          seniorInvestmentData.capitalInvested =
-            data.stakingAmt + data.withdrawableAmt;
-          seniorInvestmentData.opportunityAmount = await getWalletBal(
-            process.env.REACT_APP_SENIORPOOL
-          );
-          seniorInvestmentData.loanInterest = 10;
-          setSeniorPool(seniorInvestmentData);
-          updateSummery(
-            seniorInvestmentData.capitalInvested,
-            seniorInvestmentData.capitalInvested *
-              seniorInvestmentData.loanInterest
-          );
-        }
-      };
-      fetchData();
-    } catch (error) {
-      console.log(error);
-    }
+    getUserSeniorPoolInvestment()
+      .then((data) => {
+        setSeniorPoolInvestment(data);
+      })
+      .catch((error) => console.log("Failed to get senior pool investment"));
   }, []);
+
+  useEffect(() => {
+    if (seniorPoolInvestment) {
+      // fetch data from IPFS
+      retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
+        if (res) {
+          let read = getBinaryFileData(res);
+          read.onloadend = async function () {
+            try {
+              let spJson = JSON.parse(read.result);
+              if (spJson) {
+                let seniorInvestmentData = {};
+                seniorInvestmentData.poolName = spJson.poolName;
+                seniorInvestmentData.opportunityAmount = getDisplayAmount(
+                  await getWalletBal(process.env.REACT_APP_SENIORPOOL)
+                );
+
+                let totalInvestment =
+                  seniorPoolInvestment.stakingAmt +
+                  seniorPoolInvestment.withdrawableAmt;
+                seniorInvestmentData.capitalInvested = getDisplayAmount(
+                  totalInvestment
+                );
+                const {
+                  sharePrice,
+                  displaySharePrice,
+                } = await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
+                seniorInvestmentData.estimatedAPY = displaySharePrice;
+                seniorInvestmentData.yieldGenerated = getDisplayAmount(
+                  parseFloat((totalInvestment * sharePrice) / 100)
+                );
+                setSeniorPool(seniorInvestmentData);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          };
+        }
+      });
+    }
+  }, [seniorPoolInvestment]);
 
   useEffect(() => {
     try {
@@ -163,19 +187,17 @@ const InvestorOverview = () => {
       <h2 style={{ fontSize: 24 }} className=" mb-5">
         Senior Pool
       </h2>
-      {seniorPool.length === 0 ? (
+      {seniorPool ? (
+        <div className="mb-16 w-1/2 ">
+          <div style={{ display: "flex" }} className="gap-4">
+            <PoolCard data={seniorPool} />
+          </div>
+        </div>
+      ) : (
         <div style={{ display: "flex" }} className="justify-center">
           <div style={{ color: "#64748B", fontSize: 18, margin: "50px 0" }}>
             No senior pool investments stats available. Explore opportunities
             here.
-          </div>
-        </div>
-      ) : (
-        <div className="mb-16 w-1/2 ">
-          <div style={{ display: "flex" }} className="gap-4">
-            {seniorPool.map((seniorPoolData) => (
-              <PoolCard key={seniorPoolData.id} data={seniorPoolData} />
-            ))}
           </div>
         </div>
       )}

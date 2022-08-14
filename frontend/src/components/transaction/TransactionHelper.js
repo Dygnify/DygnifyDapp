@@ -13,7 +13,8 @@ import {
 
 const opportunityOriginationAddress =
   process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
-const decimals = 6;
+const sixDecimals = 6;
+const eighteenDecimals = 18;
 
 export async function getUserWalletAddress() {
   try {
@@ -144,6 +145,7 @@ export async function getTotalYield() {
   return 0;
 }
 
+// once all work done this function name needs to be changed to getUSDCWalletBal
 export async function getWalletBal(address) {
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -159,7 +161,7 @@ export async function getWalletBal(address) {
       const bal = await contract.balanceOf(
         address ? address : await signer.getAddress()
       );
-      return ethers.utils.formatEther(bal);
+      return ethers.utils.formatUnits(bal, sixDecimals);
     }
   } catch (error) {
     console.log(error);
@@ -224,10 +226,10 @@ export async function createOpportunity(formData) {
       opportunityOrigination.abi,
       signer
     );
-    const loanAmt = ethers.utils.parseUnits(loan_amount, decimals);
-    const loanInterest = ethers.utils.parseUnits(loan_interest, decimals);
+    const loanAmt = ethers.utils.parseUnits(loan_amount, sixDecimals);
+    const loanInterest = ethers.utils.parseUnits(loan_interest, sixDecimals);
     const capitalLoss = capital_loss
-      ? ethers.utils.parseUnits(capital_loss, decimals)
+      ? ethers.utils.parseUnits(capital_loss, sixDecimals)
       : 0;
     const transaction1 = await contract.createOpportunity(
       borrower,
@@ -266,18 +268,18 @@ function getOpportunity(opportunity) {
   obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
   obj.opportunityInfo = opportunity.opportunityInfo.toString();
   obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-  let amount = ethers.utils.formatUnits(opportunity.loanAmount, decimals);
+  let amount = ethers.utils.formatUnits(opportunity.loanAmount, sixDecimals);
   obj.opportunityAmount = getDisplayAmount(amount);
   obj.actualLoanAmount = amount;
   obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
   obj.loanInterest =
-    ethers.utils.formatUnits(opportunity.loanInterest, decimals).toString() +
+    ethers.utils.formatUnits(opportunity.loanInterest, sixDecimals).toString() +
     "%";
   obj.paymentFrequencyInDays =
     opportunity.paymentFrequencyInDays.toString() + " Days";
   obj.collateralDocument = opportunity.collateralDocument.toString();
   obj.capitalLoss = ethers.utils
-    .formatUnits(opportunity.capitalLoss, decimals)
+    .formatUnits(opportunity.capitalLoss, sixDecimals)
     .toString();
   obj.status = opportunity.opportunityStatus.toString();
   obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
@@ -499,8 +501,8 @@ export async function getDrawdownOpportunities() {
         }
 
         let poolBalance = await poolContract.poolBalance();
-        poolBalance = ethers.utils.formatUnits(poolBalance, decimals);
-        let loanAmount = ethers.utils.formatUnits(tx.loanAmount, decimals);
+        poolBalance = ethers.utils.formatUnits(poolBalance, sixDecimals);
+        let loanAmount = ethers.utils.formatUnits(tx.loanAmount, sixDecimals);
         console.log(poolBalance.toString());
         if (parseInt(poolBalance) >= parseInt(loanAmount)) {
           let obj = await getOpportunity(tx);
@@ -574,14 +576,26 @@ export async function getUserSeniorPoolInvestment() {
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      console.log({ provider });
+      const signer = provider.getSigner();
+      console.log({ signer });
       const contract = new ethers.Contract(
         process.env.REACT_APP_SENIORPOOL,
         seniorPool.abi,
-        provider
+        signer
       );
 
-      return await contract.getUserInvestment();
+      let data = await contract.getUserInvestment();
+      if (data) {
+        return {
+          stakingAmt: parseFloat(
+            ethers.utils.formatUnits(data.stakingAmt, sixDecimals)
+          ),
+          withdrawableAmt: parseFloat(
+            ethers.utils.formatUnits(data.withdrawableAmt),
+            sixDecimals
+          ),
+        };
+      }
     }
   } catch (error) {
     console.log(error);
@@ -675,7 +689,10 @@ export async function getOpportunitiesWithDues() {
 
           let repaymentDate = await poolContract.nextRepaymentTime();
           let repaymentAmount = await poolContract.getRepaymentAmount();
-          repaymentAmount = ethers.utils.formatUnits(repaymentAmount, decimals);
+          repaymentAmount = ethers.utils.formatUnits(
+            repaymentAmount,
+            sixDecimals
+          );
 
           let obj = await getOpportunity(tx);
           obj.nextDueDate = convertDate(repaymentDate);
@@ -741,7 +758,7 @@ export async function investInSeniorPool(amount) {
         seniorPool.abi,
         signer
       );
-      amount = ethers.utils.parseUnits(amount, decimals);
+      amount = ethers.utils.parseUnits(amount, sixDecimals);
       let transaction = await contract.stake(amount);
       await transaction.wait();
     }
@@ -761,13 +778,44 @@ export async function investInJuniorPool(poolAddress, amount) {
         opportunityPool.abi,
         signer
       );
-      amount = ethers.utils.parseUnits(amount, decimals);
+      amount = ethers.utils.parseUnits(amount, sixDecimals);
       let transaction = await contract.deposit("0", amount); //0 denotes junior subpool
       await transaction.wait();
     }
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function getSeniorPoolSharePrice() {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_SENIORPOOL,
+        seniorPool.abi,
+        provider
+      );
+      let sharePrice = await contract.sharePrice();
+      return ethers.utils.formatUnits(sharePrice, eighteenDecimals);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return 0;
+}
+
+export async function getSeniorPoolDisplaySharePrice(defaultSharePrice) {
+  let sharePrice;
+  // 10 will be the default in case we didn't get default share price
+  defaultSharePrice = defaultSharePrice ? defaultSharePrice : 10;
+  let backendSharePrice = parseFloat(await getSeniorPoolSharePrice());
+  if (backendSharePrice > (100 + parseFloat(defaultSharePrice)) / 100) {
+    sharePrice = parseFloat((1 - backendSharePrice) * 100);
+  } else {
+    sharePrice = defaultSharePrice;
+  }
+  return { sharePrice: sharePrice, displaySharePrice: sharePrice + "%" };
 }
 
 export async function repayment(poolAddress) {
