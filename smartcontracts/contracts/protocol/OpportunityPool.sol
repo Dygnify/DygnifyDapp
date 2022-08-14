@@ -209,11 +209,12 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
                 .depositedAmount
                 .add(amount);
-            if(isStaking[msg.sender] == false){
-                investor.addOpportunity(msg.sender, opportunityID);
-            }
+            
             stakingBalance[msg.sender] = stakingBalance[msg.sender].add(amount);
             isStaking[msg.sender] = true;
+            if(investor.isExistInInvestor(msg.sender, opportunityID) == false){
+                investor.addOpportunity(msg.sender, opportunityID);
+            }
         }
 
         poolBalance = poolBalance.add(amount);
@@ -273,6 +274,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             stakingBalance[msg.sender] = stakingBalance[msg.sender].sub(amount);
             if (stakingBalance[msg.sender] == 0) {
                 isStaking[msg.sender] = false;
+                investor.removeOpportunity(msg.sender, opportunityID);
             }
         }
 
@@ -446,6 +448,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                     .overdueGenerated
                     .sub(overdueGathered);
             }
+            investor.removeOpportunity(msg.sender, opportunityID);
         }
 
         poolBalance = poolBalance.sub(amount);
