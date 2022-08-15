@@ -22,6 +22,8 @@ const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
   const [repaymentList, setRepaymentList] = useState([]);
   const [totalBorrowedAmt, setTotalBorrowedAmt] = useState("--");
+  const [totalOutstandingAmt, setTotalOutstandingAmt] = useState("--");
+  const [totalRepaidAmt, setTotalRepaidAmt] = useState("--");
   const [nextDueDate, setNextDueDate] = useState();
   const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
@@ -96,15 +98,30 @@ const Overview = () => {
 
   useEffect(() => {
     // set total borrowed amount
-    let totalAmt = 0;
+    let totalLoanAmt = 0;
+    let totalLoanWithIntAmount = 0;
+    let totalRepaidAmt = 0;
     for (const op of repaymentList) {
-      totalAmt += parseInt(op.actualLoanAmount);
+      let loanAmt = parseFloat(op.actualLoanAmount);
+      totalLoanAmt += loanAmt;
+      totalLoanWithIntAmount +=
+        loanAmt +
+        parseFloat((loanAmt * parseFloat(op.loanActualInterest)) / 100);
+      totalRepaidAmt += op.totalRepaidAmount;
     }
-    if (totalAmt > 0) {
-      setTotalBorrowedAmt("$" + getDisplayAmount(totalAmt));
+    if (totalLoanAmt > 0) {
+      setTotalBorrowedAmt("$" + getDisplayAmount(totalLoanAmt));
     }
-    // total repaid
-    // total outstanding
+
+    totalRepaidAmt = totalRepaidAmt ? totalRepaidAmt : 0;
+    if (totalRepaidAmt > 0) {
+      setTotalRepaidAmt(getDisplayAmount(totalRepaidAmt));
+    }
+    if (totalLoanWithIntAmount) {
+      setTotalOutstandingAmt(
+        getDisplayAmount(totalLoanWithIntAmount - totalRepaidAmt)
+      );
+    }
   }, [repaymentList]);
 
   return (
@@ -177,7 +194,7 @@ const Overview = () => {
               style={{ fontSize: 28, color: "white", marginLeft: 20 }}
               className="mb-10"
             >
-              380K
+              {totalOutstandingAmt}
             </div>
 
             <div style={{ display: "flex" }} className="flex-row items-center">
@@ -195,7 +212,7 @@ const Overview = () => {
               </div>
             </div>
             <div style={{ fontSize: 28, color: "white", marginLeft: 20 }}>
-              365K
+              {totalRepaidAmt}
             </div>
           </div>
           <div style={{ marginRight: 20 }}>

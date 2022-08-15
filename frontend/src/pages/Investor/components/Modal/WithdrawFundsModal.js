@@ -1,5 +1,4 @@
 import React from "react";
-
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 
 const WithdrawFundsModal = () => {

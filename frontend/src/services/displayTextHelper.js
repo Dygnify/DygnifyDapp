@@ -27,8 +27,9 @@ function getExtendableTextBreakup(text, sliceAt) {
 function getDisplayAmount(amount) {
   let displayAmt;
   if (amount) {
+    amount = parseFloat(amount).toFixed(2);
     if (amount > 999) {
-      displayAmt = (amount / 1000).toString() + "K";
+      displayAmt = (amount / 1000).toFixed(2).toString() + "K";
     } else {
       displayAmt = amount;
     }

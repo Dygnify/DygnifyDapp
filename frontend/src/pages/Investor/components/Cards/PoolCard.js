@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 
@@ -12,21 +12,23 @@ const PoolCard = ({ data }) => {
   } = data;
 
   const [companyName, setCompanyName] = useState();
-  const [poolName, setPoolName] = useState();
+  const [poolName, setPoolName] = useState(data.poolName);
 
-  // fetch the opportunity details from IPFS
-  retrieveFiles(opportunityInfo, true).then((res) => {
-    if (res) {
-      let read = getBinaryFileData(res);
-      read.onloadend = function () {
-        let opJson = JSON.parse(read.result);
-        if (opJson) {
-          setCompanyName(opJson.company_name);
-          setPoolName(opJson.loanName);
-        }
-      };
-    }
-  });
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setCompanyName(opJson.company_name);
+            setPoolName(opJson.loanName);
+          }
+        };
+      }
+    });
+  }, []);
 
   return (
     <div

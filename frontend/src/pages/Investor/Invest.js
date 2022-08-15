@@ -15,11 +15,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 const Invest = () => {
   const path = useNavigate();
   const [juniorPools, setJuniorPools] = useState([]);
-  const [seniorPool, setSeniorPool] = useState([
-    {
-      poolName: "New Oppo",
-    },
-  ]);
+  const [seniorPool, setSeniorPool] = useState();
 
   const [kycStatus, setKycStatus] = useState();
 
@@ -45,13 +41,11 @@ const Invest = () => {
 
   useEffect(() => {
     try {
-      const fetchData = async () => {
-        const juniorPool = await getAllActiveOpportunities();
+      getAllActiveOpportunities().then((juniorPool) => {
         if (juniorPool && juniorPool.length) {
           setJuniorPools(juniorPool);
         }
-      };
-      fetchData();
+      });
     } catch (error) {
       console.log(error);
     }
@@ -70,7 +64,7 @@ const Invest = () => {
             seniorInvestmentData.opportunityAmount = getDisplayAmount(
               await getWalletBal(process.env.REACT_APP_SENIORPOOL)
             );
-            seniorInvestmentData.loanInterest = spJson.estimatedAPY;
+            seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
             seniorInvestmentData.poolDescription = spJson.poolDescription;
             seniorInvestmentData.isFull = false;
             setSeniorPool(seniorInvestmentData);
@@ -100,13 +94,7 @@ const Invest = () => {
         <h2 style={{ fontSize: 24 }} className=" mb-5">
           Senior pools
         </h2>
-        {seniorPool.length === 0 ? (
-          <div style={{ display: "flex" }} className="justify-center">
-            <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
-              No senior pool investments are available.
-            </div>
-          </div>
-        ) : (
+        {seniorPool ? (
           <div style={{ display: "flex" }} className="gap-4 w-1/2">
             <ViewPoolCard
               onClick={() =>
@@ -116,6 +104,12 @@ const Invest = () => {
               }
               data={seniorPool}
             />
+          </div>
+        ) : (
+          <div style={{ display: "flex" }} className="justify-center">
+            <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
+              No senior pool investments are available.
+            </div>
           </div>
         )}
       </div>

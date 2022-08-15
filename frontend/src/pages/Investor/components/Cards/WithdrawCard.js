@@ -1,34 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 
-const WithdrawCard = ({ data }) => {
+const WithdrawCard = ({ data, setSelected }) => {
   const {
     opportunityInfo,
     opportunityAmount,
     estimatedAPY,
     capitalInvested,
     withdrawableAmt,
-    setSelected,
   } = data;
 
   const [companyName, setCompanyName] = useState();
-  const [poolName, setPoolName] = useState();
+  const [poolName, setPoolName] = useState(data.poolName);
 
-  // fetch the opportunity details from IPFS
-  retrieveFiles(opportunityInfo, true).then((res) => {
-    if (res) {
-      let read = getBinaryFileData(res);
-      read.onloadend = function () {
-        let opJson = JSON.parse(read.result);
-        if (opJson) {
-          setCompanyName(opJson.company_name);
-          setPoolName(opJson.loanName);
-        }
-      };
-    }
-  });
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setCompanyName(opJson.company_name);
+            setPoolName(opJson.loanName);
+          }
+        };
+      }
+    });
+  }, []);
 
   return (
     <div
@@ -103,18 +104,24 @@ const WithdrawCard = ({ data }) => {
             Available for Withdrawal
           </p>
           <p style={{ display: "flex", fontSize: 16 }} className="justify-end">
-            {withdrawableAmt}
+            {withdrawableAmt ? withdrawableAmt : "- -"}
           </p>
         </div>
 
         <div style={{ marginTop: 28 }}>
-          <PrimaryButton
-            disable={false}
+          <label
             htmlFor="WithdrawModal"
-            onClick={() => setSelected(true)}
+            disable={false}
+            onClick={setSelected}
+            style={{
+              borderRadius: "100px",
+              padding: "12px 24px",
+              color: "white",
+            }}
+            className="btn bg-blue-500  hover:bg-blue-500 capitalize font-medium border-none w-full"
           >
             Withdraw Funds
-          </PrimaryButton>
+          </label>
         </div>
       </div>
     </div>

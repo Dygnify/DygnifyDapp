@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { voteOpportunity } from "../../components/transaction/TransactionHelper";
 import { getExtendableTextBreakup } from "../../services/displayTextHelper";
+import DocumentCard from "../../tools/Card/DocumentCard";
 
 const PoolDetails = () => {
   const location = useLocation();
   const [expand, setExpand] = useState(false);
   const [approveStatus, setApproveStatus] = useState(false);
   const [opDetails, setOpDetails] = useState();
+  const [companyDetails, setCompanyDetails] = useState();
   const [info, setInfo] = useState([]);
   const [loanPurpose, setLoanPurpose] = useState({
     isSliced: false,
@@ -22,6 +24,7 @@ const PoolDetails = () => {
   useEffect(() => {
     loadInfo();
     loadLoanPurpose();
+    setCompanyDetails(opDetails.companyDetails);
   }, [opDetails]);
 
   const status = { approve: approveStatus, unsure: false, reject: false };
@@ -279,7 +282,7 @@ const PoolDetails = () => {
           className="flex-row justify-between mt-5 mb-3"
         >
           <div style={{ fontSize: 16 }} className="mb-0">
-            Name of Company
+            {companyDetails ? companyDetails.companyName : ""}
           </div>
           <div
             style={{
@@ -294,19 +297,7 @@ const PoolDetails = () => {
           </div>
         </div>
         <div style={{ color: "#D0D5DD" }}>
-          Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-          cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-          reprehenderit elit laborum. Nulla Lorem mollit cupidatat irure.
-          Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation
-          incididunt aliquip deserunt reprehenderit elit laborum.Nulla Lorem
-          mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor.
-          Voluptate exercitation incididunt aliquip deserunt reprehenderit elit
-          laborum. Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-          ullamco cillum dolor. Voluptate exercitation incididunt aliquip
-          deserunt reprehenderit elit laborum.Voluptate exercitation incididunt
-          aliquip deserunt reprehenderit elit laborum. Voluptate exercitation
-          incididunt aliquip deserunt reprehenderit elit laborum.Voluptate
-          exercitation incididunt aliquip deserunt reprehenderit...view more{" "}
+          {companyDetails ? companyDetails.companyBio : ""}
         </div>
       </div>
       <div className="w-1/2">
@@ -318,6 +309,87 @@ const PoolDetails = () => {
         <div style={{ margin: "10px 0", marginTop: "40px", fontSize: 19 }}>
           KYB Details
         </div>
+        <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+          Business Identify Proof
+        </h6>
+        <DocumentCard
+          docName={
+            companyDetails
+              ? companyDetails.businessIdFile.businessIdDocName
+              : ""
+          }
+          docCid={
+            companyDetails
+              ? companyDetails.businessIdFile.businessIdFileCID
+              : null
+          }
+          fileName={
+            companyDetails
+              ? companyDetails.businessIdFile.businessIdFileName
+              : null
+          }
+        />
+
+        <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+          Business Address Proof
+        </h6>
+        <DocumentCard
+          docName={
+            companyDetails
+              ? companyDetails.businessAddFile.businessAddDocName
+              : ""
+          }
+          docCid={
+            companyDetails
+              ? companyDetails.businessAddFile.businessAddFileCID
+              : null
+          }
+          fileName={
+            companyDetails
+              ? companyDetails.businessAddFile.businessAddFileName
+              : null
+          }
+        />
+        <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+          Business Incorporation Proof
+        </h6>
+        <DocumentCard
+          docName={
+            companyDetails
+              ? companyDetails.businessIncoFile.businessIncoDocName
+              : ""
+          }
+          docCid={
+            companyDetails
+              ? companyDetails.businessIncoFile.businessIncoFileCID
+              : null
+          }
+          fileName={
+            companyDetails
+              ? companyDetails.businessIncoFile.businessIncoFileName
+              : null
+          }
+        />
+        <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+          Business License Proof
+        </h6>
+        <DocumentCard
+          docName={
+            companyDetails
+              ? companyDetails.businessLicFile.businessLicDocName
+              : ""
+          }
+          docCid={
+            companyDetails
+              ? companyDetails.businessLicFile.businessLicFileCID
+              : null
+          }
+          fileName={
+            companyDetails
+              ? companyDetails.businessLicFile.businessLicFileName
+              : null
+          }
+        />
       </div>
 
       <br />
