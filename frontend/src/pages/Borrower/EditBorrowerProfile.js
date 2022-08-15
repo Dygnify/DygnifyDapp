@@ -152,9 +152,6 @@ const EditBorrowerProfile = () => {
               logoFile ? logoFile : profileState.companyLogoFile
             );
           }
-        // if (kycFiles && kycFiles.length) {
-        //   kycFilesCID = await uploadFilesToIPFS(kycFiles);
-        // }
 
         if (
           (businessIdentityFiles && businessIdentityFiles.length) ||

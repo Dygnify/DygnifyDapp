@@ -7,7 +7,10 @@ import {
   getDataURLFromFile,
 } from "../../services/fileHelper";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
-import { getBorrowerDetails } from "../../components/transaction/TransactionHelper";
+import {
+  getBorrowerDetails,
+  getUserWalletAddress,
+} from "../../components/transaction/TransactionHelper";
 import Twitter from "../SVGIcons/Twitter";
 import LinkedIn from "../SVGIcons/LinkedIn";
 import Email from "../SVGIcons/Email";
@@ -38,17 +41,18 @@ const BorrowerProfile = () => {
 
   useEffect(() => {
     loadBorrowerProfileData();
+    fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
   }, []);
 
   const handleForm = () => {
     setSelected(null);
   };
 
-  const loadBlockpassWidget = () => {
+  const loadBlockpassWidget = (refId) => {
     const blockpass = new window.BlockpassKYCConnect(
       process.env.REACT_APP_CLIENT_ID,
       {
-        refId: "1",
+        refId: refId,
       }
     );
 
@@ -63,7 +67,7 @@ const BorrowerProfile = () => {
     // make the call to get borrower specific cid to fetch the data
     // currently we'll mock the cid
     console.log("reached use Effect BOrrower");
-    loadBlockpassWidget();
+    getUserWalletAddress().then((address) => loadBlockpassWidget(address));
 
     const fetchData = async () => {
       let borrowerCID = await getBorrowerDetails();
