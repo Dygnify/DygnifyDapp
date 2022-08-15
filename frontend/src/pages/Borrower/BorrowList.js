@@ -67,7 +67,7 @@ const BorrowList = () => {
         ) : (
           <div style={{ display: "flex" }} className=" gap-4">
             {data.map((item) => (
-              <DrawdownCard key={data?.id} data={data} />
+              <DrawdownCard key={item?.id} data={item} />
             ))}
           </div>
         )}

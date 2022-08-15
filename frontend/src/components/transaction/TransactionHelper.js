@@ -691,7 +691,7 @@ export async function getOpportunitiesWithDues() {
 
           let repaymentDate = await poolContract.nextRepaymentTime();
           let repaymentAmount = await poolContract.getRepaymentAmount();
-          let totalRepaidAmt = await poolAddress.totalRepaidAmount();
+          let totalRepaidAmt = await poolContract.totalRepaidAmount();
           repaymentAmount = ethers.utils.formatUnits(
             repaymentAmount,
             sixDecimals
@@ -881,4 +881,22 @@ export async function getJuniorWithdrawableOp(){
     console.log(error);
   }
   return [];
+}
+
+export async function drawdown(poolAddress) {
+  let borrower = await getEthAddress();
+
+  if (typeof window.ethereum !== "undefined") {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    console.log({ provider });
+    const signer = provider.getSigner();
+    const poolContract = new ethers.Contract(
+      poolAddress,
+      opportunityPool.abi,
+      signer
+    );
+
+    const transaction1 = await poolContract.drawdown();
+    await transaction1.wait();
+  }
 }

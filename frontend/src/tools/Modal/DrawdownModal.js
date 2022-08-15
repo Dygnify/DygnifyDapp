@@ -1,7 +1,7 @@
 import React from "react";
 import GradientButton from "../Button/GradientButton";
 
-const DrawdownModal = ({ data, handleDrawdown }) => {
+const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
   return (
     <div>
       <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
@@ -67,7 +67,7 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
                 Interest Rate
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.loan_interest}%
+                {data?.loanInterest}
               </p>
             </div>
             <div style={{ display: "flex" }} className="mb-2">
@@ -75,12 +75,12 @@ const DrawdownModal = ({ data, handleDrawdown }) => {
                 Available for drawdown
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                ${data?.loan_amount}
+                ${data?.opportunityAmount}
               </p>
             </div>
           </div>
           <div className="modal-action mx-4 mt-2 mb-4">
-            <GradientButton className="w-full" onClick={handleDrawdown}>
+            <GradientButton className="w-full" onClick={onDrawdown}>
               Drawdown Funds
             </GradientButton>
           </div>

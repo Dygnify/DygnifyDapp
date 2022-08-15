@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import DrawdownModal from "../Modal/DrawdownModal";
+import { drawdown } from "../../components/transaction/TransactionHelper";
 
 const DrawdownCard = ({ data }) => {
   const [selected, setSelected] = useState(null);
   const handleDrawdown = () => {
+    setSelected(null);
+  };
+  const onDrawdown = async () => {
+    await drawdown(data?.opportunityPoolAddress);
     setSelected(null);
   };
   return (
@@ -65,6 +70,7 @@ const DrawdownCard = ({ data }) => {
             key={data?.id}
             data={data}
             handleDrawdown={handleDrawdown}
+            onDrawdown = {onDrawdown}
           ></DrawdownModal>
         )}
       </div>
