@@ -83,7 +83,9 @@ const Overview = () => {
     }
 
     totalRepaidAmt = totalRepaidAmt ? totalRepaidAmt : 0;
-    setTotalRepaidAmt(getDisplayAmount(totalRepaidAmt));
+    if (totalRepaidAmt > 0) {
+      setTotalRepaidAmt(getDisplayAmount(totalRepaidAmt));
+    }
     if (totalLoanWithIntAmount) {
       setTotalOutstandingAmt(
         getDisplayAmount(totalLoanWithIntAmount - totalRepaidAmt)
