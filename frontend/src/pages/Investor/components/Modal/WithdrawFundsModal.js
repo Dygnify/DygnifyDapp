@@ -44,53 +44,49 @@ const WithdrawFundsModal = () => {
             style={{ backgroundColor: "#292C33", borderRadius: "4px" }}
             className="mx-4 mb-3 py-4 px-4 text-base"
           >
-            <div style={{ display: "flex" }}>
-              <p style={{ display: "flex" }} className="justify-start">
-                Total Balance
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
+            <div
+              style={{ display: "flex" }}
+              className="flex-row justify-between"
+            >
+              <p style={{ display: "flex" }}>Total Balance</p>
+              <p style={{ display: "flex" }}>
                 $100,000,000.00 {process.env.REACT_APP_TOKEN_NAME}
               </p>
             </div>
-            <small
-              style={{ display: "flex", color: "#777E91" }}
-              className="justify-end"
-            >
-              $50,000.00
-            </small>
           </div>
-          <div className="text-sm py-3 px-4">
-            <div style={{ display: "flex" }} className="mb-1">
-              <p style={{ display: "flex" }} className="justify-start">
-                Pool Name
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
-                {data?.poolName}
-              </p>
+          <div
+            className="text-sm py-3 px-4 flex-col"
+            style={{ display: "flex" }}
+          >
+            <div
+              style={{ display: "flex" }}
+              className="flex-row mb-1 justify-between"
+            >
+              <p style={{ display: "flex" }}>Pool Name</p>
+              <p style={{ display: "flex" }}>{data?.poolName}</p>
             </div>
-            <div style={{ display: "flex" }} className="mb-1">
-              <p style={{ display: "flex" }} className="justify-start">
-                Amount Invested
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
-                {data?.amountInvested}%
-              </p>
+
+            <div
+              style={{ display: "flex" }}
+              className="flex-row mb-1 justify-between"
+            >
+              <p style={{ display: "flex" }}>Amount Invested</p>
+              <p style={{ display: "flex" }}>{data?.amountInvested}%</p>
             </div>
-            <div style={{ display: "flex" }} className="mb-1">
-              <p style={{ display: "flex" }} className="justify-start">
-                Estimated APY
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
-                {data?.estimatedApy}
-              </p>
+
+            <div
+              style={{ display: "flex" }}
+              className="mb-1 flex-row justify-between"
+            >
+              <p style={{ display: "flex" }}>Estimated APY</p>
+              <p style={{ display: "flex" }}>{data?.estimatedApy}</p>
             </div>
-            <div style={{ display: "flex" }} className="mb-0">
-              <p style={{ display: "flex" }} className="justify-start">
-                Available for withdrawal
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
-                {data?.availableForWithdrawal}
-              </p>
+            <div
+              style={{ display: "flex" }}
+              className="mb-0 flex-row justify-between"
+            >
+              <p style={{ display: "flex" }}>Available for withdrawal</p>
+              <p style={{ display: "flex" }}>{data?.availableForWithdrawal}</p>
             </div>
           </div>
 

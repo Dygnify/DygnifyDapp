@@ -1,8 +1,11 @@
-import {React, useState} from "react";
+import { React, useState } from "react";
 import GradientButton from "../../../../tools/Button/GradientButton";
-import {investInSeniorPool, investInJuniorPool} from "../../../../components/transaction/TransactionHelper"
+import {
+  investInSeniorPool,
+  investInJuniorPool,
+} from "../../../../components/transaction/TransactionHelper";
 
-const InvestModal = ({isSenior, poolAddress}) => {
+const InvestModal = ({ isSenior, poolAddress }) => {
   const data = {
     poolName: "New Pool",
     poolLimit: "$450,000.00",
@@ -10,11 +13,11 @@ const InvestModal = ({isSenior, poolAddress}) => {
   };
   const [amount, setAmount] = useState("");
 
-  async function investSenior(){
+  async function investSenior() {
     await investInSeniorPool(amount);
   }
 
-  async function investJunior(){
+  async function investJunior() {
     await investInJuniorPool(poolAddress, amount);
   }
 
@@ -51,48 +54,46 @@ const InvestModal = ({isSenior, poolAddress}) => {
             />
           </div>
           <div
-            style={{ backgroundColor: "#292C33", borderRadius: "4px" }}
-            className="mx-4 mb-3 py-4 px-4 text-base"
+            style={{
+              backgroundColor: "#292C33",
+              borderRadius: "4px",
+            }}
+            className="mx-4 mb-3 py-4 px-4 text-base "
           >
-            <div style={{ display: "flex" }}>
-              <p style={{ display: "flex" }} className="justify-start">
-                Total Balance
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
+            <div
+              style={{ display: "flex" }}
+              className="flex-row justify-between"
+            >
+              <p style={{ display: "flex" }}>Total Balance</p>
+              <p style={{ display: "flex" }}>
                 $100,000,000.00 {process.env.REACT_APP_TOKEN_NAME}
               </p>
             </div>
-            <small
-              style={{ display: "flex", color: "#777E91" }}
-              className="justify-end"
-            >
-              $50,000.00
-            </small>
           </div>
-          <div className="text-sm py-3 px-4">
-            <div style={{ display: "flex" }} className="mb-2">
-              <p style={{ display: "flex" }} className="justify-start">
-                Pool Name
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
-                {data?.poolName}
-              </p>
+          <div
+            className="flex-col text-sm py-3 px-4 w-full"
+            style={{ display: "flex" }}
+          >
+            <div
+              style={{ display: "flex" }}
+              className="flex-row mb-2 justify-between"
+            >
+              <p style={{ display: "flex" }}>Pool Name</p>
+              <p style={{ display: "flex" }}>{data?.poolName}</p>
             </div>
-            <div style={{ display: "flex" }} className="mb-2">
-              <p style={{ display: "flex" }} className="justify-start">
-                Pool Limit
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
-                {data?.poolLimit}%
-              </p>
+            <div
+              style={{ display: "flex" }}
+              className="flex-row mb-2 justify-between"
+            >
+              <p style={{ display: "flex" }}>Pool Limit</p>
+              <p style={{ display: "flex" }}>{data?.poolLimit}%</p>
             </div>
-            <div style={{ display: "flex" }} className="mb-0">
-              <p style={{ display: "flex" }} className="justify-start">
-                Estimated APY
-              </p>
-              <p style={{ display: "flex" }} className="justify-end">
-                {data?.estimatedApy}
-              </p>
+            <div
+              style={{ display: "flex" }}
+              className="flex-row mb-0 justify-between"
+            >
+              <p style={{ display: "flex" }}>Estimated APY</p>
+              <p style={{ display: "flex" }}>{data?.estimatedApy}</p>
             </div>
           </div>
 
@@ -138,7 +139,7 @@ const InvestModal = ({isSenior, poolAddress}) => {
           <div className="modal-action mx-4 mt-2 mb-4">
             <GradientButton
               className="w-full"
-              onClick={() => isSenior ? investSenior() : investJunior() }//if condition not true then investJunior will execute
+              onClick={() => (isSenior ? investSenior() : investJunior())} //if condition not true then investJunior will execute
             >
               Invest
             </GradientButton>
