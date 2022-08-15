@@ -11,7 +11,7 @@ import { retrieveFiles } from "../../services/web3storageIPFS";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
 
-import InvestModal from "./components/Modal/InvestModal";
+import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";
 
 const Withdraw = () => {
   const [seniorPool, setSeniorPool] = useState();
@@ -87,7 +87,7 @@ const Withdraw = () => {
   return (
     <>
       <div className="px-5">
-        {selected && <InvestModal handleForm={handleForm} />}
+        {selected && <WithdrawFundsModal handleForm={handleForm} />}
         <div
           style={{ display: "flex" }}
           className="items-center justify-between mb-14 "
@@ -119,7 +119,7 @@ const Withdraw = () => {
             Senior pools
           </h2>
           <div style={{ display: "flex" }} className="gap-4 w-1/2">
-            <WithdrawCard data={seniorPool} />
+            <WithdrawCard data={seniorPool} setSelected={setSelected} />
           </div>
         </div>
       ) : (

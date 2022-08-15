@@ -3,7 +3,7 @@ import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 
-const WithdrawCard = ({ data }) => {
+const WithdrawCard = ({ data, setSelected }) => {
   const {
     opportunityInfo,
     opportunityAmount,
@@ -109,7 +109,19 @@ const WithdrawCard = ({ data }) => {
         </div>
 
         <div style={{ marginTop: 28 }}>
-          <PrimaryButton disable={false}>Withdraw Funds</PrimaryButton>
+          <label
+            htmlFor="WithdrawModal"
+            disable={false}
+            onClick={setSelected}
+            style={{
+              borderRadius: "100px",
+              padding: "12px 24px",
+              color: "white",
+            }}
+            className="btn btn-wide bg-blue-500  hover:bg-blue-500 capitalize font-medium border-none w-full"
+          >
+            Withdraw Funds
+          </label>
         </div>
       </div>
     </div>

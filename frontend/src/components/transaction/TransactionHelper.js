@@ -272,9 +272,9 @@ function getOpportunity(opportunity) {
   obj.opportunityAmount = getDisplayAmount(amount);
   obj.actualLoanAmount = amount;
   obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
-  obj.loanInterest =
-    ethers.utils.formatUnits(opportunity.loanInterest, sixDecimals).toString() +
-    "%";
+  let loanInt = ethers.utils.formatUnits(opportunity.loanInterest, sixDecimals);
+  obj.loanActualInterest = loanInt;
+  obj.loanInterest = loanInt.toString() + "%";
   obj.paymentFrequencyInDays =
     opportunity.paymentFrequencyInDays.toString() + " Days";
   obj.collateralDocument = opportunity.collateralDocument.toString();
@@ -689,6 +689,7 @@ export async function getOpportunitiesWithDues() {
 
           let repaymentDate = await poolContract.nextRepaymentTime();
           let repaymentAmount = await poolContract.getRepaymentAmount();
+          let totalRepaidAmt = await poolAddress.totalRepaidAmount();
           repaymentAmount = ethers.utils.formatUnits(
             repaymentAmount,
             sixDecimals
@@ -699,6 +700,9 @@ export async function getOpportunitiesWithDues() {
           obj.epochDueDate = repaymentDate.toString();
           obj.repaymentAmount = repaymentAmount;
           obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
+          obj.totalRepaidAmount = parseFloat(
+            ethers.utils.formatUnits(totalRepaidAmt, sixDecimals)
+          );
           const overdueTime = Math.floor(Date.now() / 1000) - repaymentDate;
           obj.isOverDue = overdueTime > 0 ? true : false;
 

@@ -1,6 +1,5 @@
 import React from "react";
-import GradientButton from "../../../tools/Button/GradientButton";
-import PrimaryButton from "../../../tools/Button/PrimaryButton";
+import PrimaryButton from "../../../../tools/Button/PrimaryButton";
 
 const WithdrawFundsModal = () => {
   const data = {
@@ -11,7 +10,7 @@ const WithdrawFundsModal = () => {
   };
   return (
     <>
-      <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
+      <input type="checkbox" id="WithdrawModal" className="modal-toggle" />
       <div
         style={{ backdropFilter: "brightness(40%) blur(8px)" }}
         className="modal"
@@ -21,7 +20,7 @@ const WithdrawFundsModal = () => {
           className="modal-box w-1/3 max-w-5xl p-0"
         >
           <label
-            for="drawdown-modal"
+            for="WithdrawModal"
             className="btn btn-ghost absolute right-2 top-2 pb-2"
             // onClick={() => handleDrawdown()}
           >
