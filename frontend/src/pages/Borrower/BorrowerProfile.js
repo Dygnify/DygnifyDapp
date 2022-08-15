@@ -17,6 +17,8 @@ import Email from "../SVGIcons/Email";
 import Website from "../SVGIcons/Website";
 import Edits from "../SVGIcons/Edits";
 import GradientButton from "../../tools/Button/GradientButton";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
 
 const BorrowerProfile = () => {
   const navigate = useNavigate();
@@ -38,14 +40,25 @@ const BorrowerProfile = () => {
   console.log("#############", brJson);
 
   const [profileStatus, setProfileStatus] = useState(true);
+  const [kycStatus, setKycStatus] = useState(false);
 
   useEffect(() => {
     loadBorrowerProfileData();
-    fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
+    if (brJson) fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
   }, []);
 
   const handleForm = () => {
     setSelected(null);
+  };
+
+  const checkKyc = (refId) => {
+    axiosHttpService(kycOptions(refId)).then((result) => {
+      if (result.res.status === "success") setKycStatus(true);
+      if (result.res.status === "error") {
+        setKycStatus(false);
+      }
+      console.log(result.res);
+    });
   };
 
   const loadBlockpassWidget = (refId) => {
@@ -67,7 +80,12 @@ const BorrowerProfile = () => {
     // make the call to get borrower specific cid to fetch the data
     // currently we'll mock the cid
     console.log("reached use Effect BOrrower");
-    getUserWalletAddress().then((address) => loadBlockpassWidget(address));
+    getUserWalletAddress().then((address) => {
+      checkKyc(address);
+      {
+        !kycStatus && loadBlockpassWidget(address);
+      }
+    });
 
     const fetchData = async () => {
       let borrowerCID = await getBorrowerDetails();
@@ -283,29 +301,35 @@ const BorrowerProfile = () => {
               className="flex-row w-full mt-10 mb-10 gap-4"
               style={{ display: "flex" }}
             >
-              <label
-                className="w-1/2"
-                style={{
-                  borderWidth: 1,
-                  borderRightWidth: 20,
-                  borderColor: "#5375FE",
-                  borderRadius: "16px",
-                  padding: "14px",
-                  paddingRight: "60px",
-                  cursor: "pointer",
-                }}
-                id="blockpass-kyc-connect"
-              >
-                <div style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}>
-                  Complete your KYC
-                </div>
-                <div style={{ lineHeight: "19px" }}>
-                  For Individuals - KYC verification includes verification of
-                  Identity Details and document verification such as utility
-                  bills as proof of address. Verifying your details ensures that
-                  you have a smooth and secure experience with us.
-                </div>
-              </label>
+              {!kycStatus ? (
+                <label
+                  className="w-1/2"
+                  style={{
+                    borderWidth: 1,
+                    borderRightWidth: 20,
+                    borderColor: "#5375FE",
+                    borderRadius: "16px",
+                    padding: "14px",
+                    paddingRight: "60px",
+                    cursor: "pointer",
+                  }}
+                  id="blockpass-kyc-connect"
+                >
+                  <div
+                    style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}
+                  >
+                    Complete your KYC
+                  </div>
+                  <div style={{ lineHeight: "19px" }}>
+                    For Individuals - KYC verification includes verification of
+                    Identity Details and document verification such as utility
+                    bills as proof of address. Verifying your details ensures
+                    that you have a smooth and secure experience with us.
+                  </div>
+                </label>
+              ) : (
+                <></>
+              )}
               {/* <label
                 htmlFor="kybModal"
                 className="w-1/2"

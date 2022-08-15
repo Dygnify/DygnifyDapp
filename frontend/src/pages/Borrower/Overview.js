@@ -64,14 +64,12 @@ const Overview = () => {
       if (result.res.status === "error") {
         setKycStatus(false);
       }
-      console.log(kycStatus, result);
+
       getBorrowerDetails().then((borrowerCID) => {
         console.log(borrowerCID);
         if (borrowerCID) setProfileStatus(true);
         else setProfileStatus(false);
       });
-
-      console.log(profileStatus);
     } catch (error) {
       console.log(error);
     }
