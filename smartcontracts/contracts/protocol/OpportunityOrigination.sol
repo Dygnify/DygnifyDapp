@@ -163,8 +163,6 @@ contract OpportunityOrigination is
 
     function mintCollateral(bytes32 _opportunityId)
         private
-        nonReentrant
-        whenNotPaused
     {
         require(
             isOpportunity[_opportunityId] == true,
@@ -185,8 +183,6 @@ contract OpportunityOrigination is
 
     function createOpportunityPool(bytes32 _opportunityId)
         private
-        nonReentrant
-        whenNotPaused
         returns (address pool)
     {
         require(
