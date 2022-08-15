@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DocumentCard from "../../tools/Card/DocumentCard";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import {
   getBinaryFileData,
@@ -29,8 +29,16 @@ const BorrowerProfile = () => {
   const [email, setEmail] = useState();
   const [twitter, setTwitter] = useState();
   const [linkedin, setLinkedin] = useState();
+  const location = useLocation();
+  const brJson = location.state;
+
+  console.log("#############", brJson);
 
   const [profileStatus, setProfileStatus] = useState(true);
+
+  useEffect(() => {
+    loadBorrowerProfileData();
+  }, []);
 
   const handleForm = () => {
     setSelected(null);
@@ -54,7 +62,7 @@ const BorrowerProfile = () => {
   useEffect(async () => {
     // make the call to get borrower specific cid to fetch the data
     // currently we'll mock the cid
-
+    console.log("reached use Effect BOrrower");
     loadBlockpassWidget();
 
     const fetchData = async () => {
@@ -76,7 +84,8 @@ const BorrowerProfile = () => {
         }
       }
     };
-    fetchData();
+
+    if (!location.state) fetchData();
   }, []);
 
   const fetchBorrowerLogo = (imgcid) => {
@@ -99,28 +108,32 @@ const BorrowerProfile = () => {
   };
 
   const loadBorrowerProfileData = (profileData) => {
-    if (profileData) {
+    let data;
+    if (brJson) data = brJson;
+    else data = profileData;
+    console.log(data);
+    if (data) {
       try {
-        if (profileData.companyName) {
-          setCompanyName(profileData.companyName);
+        if (data.companyName) {
+          setCompanyName(data.companyName);
         }
-        if (profileData.companyRepName) {
-          setCompanyRepName(profileData.companyRepName);
+        if (data.companyRepName) {
+          setCompanyRepName(data.companyRepName);
         }
-        if (profileData.companyBio) {
-          setCompanyBio(profileData.companyBio);
+        if (data.companyBio) {
+          setCompanyBio(data.companyBio);
         }
-        if (profileData.website) {
-          setWebsite(profileData.website);
+        if (data.website) {
+          setWebsite(data.website);
         }
-        if (profileData.email) {
-          setEmail("mailto:" + profileData.email);
+        if (data.email) {
+          setEmail("mailto:" + data.email);
         }
-        if (profileData.twitter) {
-          setTwitter(profileData.twitter);
+        if (data.twitter) {
+          setTwitter(data.twitter);
         }
-        if (profileData.linkedin) {
-          setLinkedin(profileData.linkedin);
+        if (data.linkedin) {
+          setLinkedin(data.linkedin);
         }
       } catch (error) {
         console.log(error);
@@ -196,9 +209,7 @@ const BorrowerProfile = () => {
                 className="flex-row justify-center items-center"
               >
                 <button
-                  onClick={() =>
-                    navigate("/borrower_dashboard/edit_profile", borrowerJson)
-                  }
+                  onClick={() => navigate("/borrower_dashboard/edit_profile")}
                   style={{
                     borderRadius: "100px",
                     padding: "8px 16px",
@@ -408,6 +419,7 @@ const BorrowerProfile = () => {
                   fontSize: "18px",
                   fontWeight: 400,
                   lineHeight: "28px",
+
                   color: "#E6E6E6",
                 }}
               >

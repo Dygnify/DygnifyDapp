@@ -10,6 +10,7 @@ const WithdrawCard = ({ data }) => {
     estimatedAPY,
     capitalInvested,
     withdrawableAmt,
+    setSelected,
   } = data;
 
   const [companyName, setCompanyName] = useState();
@@ -107,7 +108,13 @@ const WithdrawCard = ({ data }) => {
         </div>
 
         <div style={{ marginTop: 28 }}>
-          <PrimaryButton disable={false}>Withdraw Funds</PrimaryButton>
+          <PrimaryButton
+            disable={false}
+            htmlFor="WithdrawModal"
+            onClick={() => setSelected(true)}
+          >
+            Withdraw Funds
+          </PrimaryButton>
         </div>
       </div>
     </div>

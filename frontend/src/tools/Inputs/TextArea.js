@@ -29,7 +29,7 @@ const TextArea = ({
           borderRadius: "8px",
         }}
         ref={reference}
-      ></textarea>
+      />
       {error && (
         <p style={{ color: "red", margin: "0px" }}>
           <small>{error}</small>

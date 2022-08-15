@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createOpportunity } from "../../components/transaction/TransactionHelper";
+import {
+  createOpportunity,
+  getBorrowerDetails,
+} from "../../components/transaction/TransactionHelper";
 import { UseContextProvider } from "../../pages/Borrower/Contexts/StepperContext";
 import Stepper from "../../pages/Borrower/LoanForm/Stepper";
 import StepperControl from "../../pages/Borrower/LoanForm/StepperControl";
@@ -8,7 +11,12 @@ import Account from "../../pages/Borrower/LoanForm/Steps/Account";
 import Details from "../../pages/Borrower/LoanForm/Steps/Details";
 import Final from "../../pages/Borrower/LoanForm/Steps/Final";
 import { loanDetailsValidationSchema } from "../../pages/LoanForm/validations/validation";
-import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../services/fileHelper";
+import {
+  storeFiles,
+  makeFileObjects,
+  retrieveFiles,
+} from "../../services/web3storageIPFS";
 
 const LoanFormModal = ({ handleForm }) => {
   const [processed, setProcessed] = useState(false);
@@ -24,6 +32,7 @@ const LoanFormModal = ({ handleForm }) => {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [company, setCompany] = useState({});
+  const [brJson, setBrJson] = useState();
 
   useEffect(() => {
     const fetchJSON = async () => {
@@ -33,6 +42,23 @@ const LoanFormModal = ({ handleForm }) => {
     };
 
     fetchJSON();
+  }, []);
+
+  useEffect(async () => {
+    getBorrowerDetails()
+      .then((borrowerCID) => {
+        retrieveFiles(borrowerCID, true)
+          .then((data) => {
+            let read = getBinaryFileData(data);
+            read.onloadend = function () {
+              let brJson = JSON.parse(read.result);
+              setBrJson(brJson);
+              console.log(brJson);
+            };
+          })
+          .catch((e) => console.log(e));
+      })
+      .catch((e) => console.log(e));
   }, []);
 
   const steps = ["Add Loan Details", "Add Collateral", "Submit for Review"];
@@ -68,16 +94,8 @@ const LoanFormModal = ({ handleForm }) => {
   };
   async function onFileUpload(selectedFile, loan_info) {
     try {
-      console.log(loan_info);
-      console.log("Upload called");
-
       let collateralHash = await storeFiles(selectedFile);
-
-      // make metadata for loan info
-      const metadata = { ...loan_info };
-      metadata.company_name = company.company_name;
-      metadata.company_details = company.company_details;
-      let loanInfoFile = makeFileObjects(metadata, `${collateralHash}.json`);
+      let loanInfoFile = makeFileObjects(loan_info, `${collateralHash}.json`);
       let loanInfoHash = await storeFiles(loanInfoFile);
 
       return [collateralHash, loanInfoHash];
@@ -100,6 +118,7 @@ const LoanFormModal = ({ handleForm }) => {
     } = data;
     loan_tenure = loan_tenure * 30;
     const collateral_document = rest.collateral_document;
+
     console.log(rest);
     let loanDetails = {
       loan_type: "0",
@@ -117,6 +136,8 @@ const LoanFormModal = ({ handleForm }) => {
     loan_info.collateral_document_name = rest.collateral_document_name;
     loan_info.collateral_document_description =
       rest.collateral_document_description;
+
+    loan_info.companyDetails = brJson;
 
     const [collateralHash, loanInfoHash] = await onFileUpload(
       collateral_document,

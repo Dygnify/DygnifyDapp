@@ -8,10 +8,15 @@ import DashboardHeader from "./DashboardHeader";
 import {
   getOpportunitiesWithDues,
   getDrawdownOpportunities,
+  getBorrowerDetails,
+  getUserWalletAddress,
 } from "../../components/transaction/TransactionHelper";
 import DoughnutChart from "../Components/DoughnutChart";
 import ProcessingRequestModal from "./Components/Modal/processingRequestModal";
 import { getDisplayAmount } from "../../services/displayTextHelper";
+import KycCheckModal from "./Components/Modal/KycCheckModal";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
 
 const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
@@ -20,9 +25,13 @@ const Overview = () => {
   const [nextDueDate, setNextDueDate] = useState();
   const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
+  const [kycSelected, setKycSelected] = useState();
+  const [kycStatus, setKycStatus] = useState();
+  const [profileStatus, setProfileStatus] = useState();
 
   const handleForm = () => {
     setSelected(null);
+    setKycSelected(null);
   };
 
   useEffect(() => {
@@ -33,6 +42,7 @@ const Overview = () => {
       }
     };
     fetchData();
+    getUserWalletAddress().then((address) => checkForKycAndProfile(address));
   }, []);
 
   function sortByProperty(property) {
@@ -43,6 +53,27 @@ const Overview = () => {
       return 0;
     };
   }
+
+  const checkForKycAndProfile = async (refId) => {
+    try {
+      const result = await axiosHttpService(kycOptions(refId));
+
+      if (result.res.status === "success") setKycStatus(true);
+      if (result.res.status === "error") {
+        setKycStatus(false);
+      }
+      console.log(kycStatus, result);
+      getBorrowerDetails().then((borrowerCID) => {
+        console.log(borrowerCID);
+        if (borrowerCID) setProfileStatus(true);
+        else setProfileStatus(false);
+      });
+
+      console.log(profileStatus);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // get all upcoming reapayments
   useEffect(() => {
@@ -78,13 +109,24 @@ const Overview = () => {
 
   return (
     <div>
-      <DashboardHeader setSelected={setSelected}></DashboardHeader>
+      <DashboardHeader
+        setSelected={setSelected}
+        kycStatus={kycStatus}
+        profileStatus={profileStatus}
+        setKycSelected={setKycSelected}
+      />
       {selected && (
         <LoanFormModal
           key={drawdownList?.id}
           data={drawdownList}
           handleForm={handleForm}
         />
+      )}
+
+      {kycSelected ? (
+        <KycCheckModal kycStatus={kycStatus} profileStatus={profileStatus} />
+      ) : (
+        <></>
       )}
 
       <div style={{ display: "flex" }} className="w-full my-10">

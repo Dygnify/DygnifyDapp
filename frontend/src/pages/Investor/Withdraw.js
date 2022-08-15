@@ -6,55 +6,53 @@ import {
   getUserSeniorPoolInvestment,
   getWalletBal,
 } from "../../components/transaction/TransactionHelper";
-
-import InvestModal from "./components/Modal/InvestModal";
+import { useNavigate } from "react-router-dom";
+import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";
 
 const Withdraw = () => {
-  const [seniorPool, setSeniorPool] = useState([]);
+  const [seniorPool, setSeniorPool] = useState([{ poolSize: "$450,000" }]);
   const [juniorPools, setJuniorPools] = useState([]);
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState(false);
 
-  const handleForm = () => {
-    setSelected(null);
-  };
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const data = await getUserSeniorPoolInvestment();
-        if (data) {
-          let seniorInvestmentData = {};
-          seniorInvestmentData.capitalInvested =
-            data.stakingAmt + data.withdrawableAmt;
-          seniorInvestmentData.opportunityAmount = await getWalletBal(
-            process.env.REACT_APP_SENIORPOOL
-          );
-          seniorInvestmentData.withdrawableAmt = data.withdrawableAmt;
-          setSeniorPool(seniorInvestmentData);
-        }
-      };
-      fetchData();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const fetchData = async () => {
+  //       const data = await getUserSeniorPoolInvestment();
+  //       if (data) {
+  //         let seniorInvestmentData = {};
+  //         seniorInvestmentData.capitalInvested =
+  //           data.stakingAmt + data.withdrawableAmt;
+  //         seniorInvestmentData.opportunityAmount = await getWalletBal(
+  //           process.env.REACT_APP_SENIORPOOL
+  //         );
+  //         seniorInvestmentData.withdrawableAmt = data.withdrawableAmt;
+  //         setSeniorPool(seniorInvestmentData);
+  //       }
+  //     };
+  //     fetchData();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const opportunities = await getAllWithdrawableOpportunities();
-        setJuniorPools(opportunities);
-      };
-      fetchData();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const fetchData = async () => {
+  //       const opportunities = await getAllWithdrawableOpportunities();
+  //       setJuniorPools(opportunities);
+  //     };
+  //     fetchData();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   return (
     <>
+      {selected ? <WithdrawFundsModal /> : <></>}
       <div className="px-5">
-        {selected && <InvestModal handleForm={handleForm} />}
         <div
           style={{ display: "flex" }}
           className="items-center justify-between mb-14 "
@@ -66,7 +64,6 @@ const Withdraw = () => {
             Withdraw
           </h2>
           <label
-            htmlFor="InvestModal"
             style={{
               borderRadius: "100px",
               padding: "12px 15px",
@@ -74,7 +71,7 @@ const Withdraw = () => {
               marginRight: 8,
             }}
             className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
-            onClick={() => setSelected(true)}
+            onClick={() => navigate("/investor-dashboardN/invest")}
           >
             +Invest
           </label>
@@ -86,7 +83,7 @@ const Withdraw = () => {
             Senior pools
           </h2>
           <div style={{ display: "flex" }} className="gap-4 w-1/2">
-            <WithdrawCard data={seniorPool} />
+            <WithdrawCard data={seniorPool} setSelected={setSelected} />
           </div>
         </div>
       ) : (
