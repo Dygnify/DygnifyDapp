@@ -30,8 +30,8 @@ contract Investor is BaseUpgradeablePausable {
 
     function addOpportunity(address _investor, bytes32 _id) external {
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(_id);
-        require(_investor == address(0), "Invalid Investor address");
-        require(poolAddress == address(0), "Opportunity pool doesn't exist.");
+        require(_investor != address(0), "Invalid Investor address");
+        require(poolAddress != address(0), "Opportunity pool doesn't exist.");
         require(msg.sender == poolAddress, "Given opportunity can only be added by that pool." );
         require(OpportunityPool(poolAddress).isStaking(_investor) == true, "Investor is not having a staking position in provided opportunity.");
         bool exist = isExistInInvestor(_investor, _id);
@@ -42,8 +42,8 @@ contract Investor is BaseUpgradeablePausable {
     
     function removeOpportunity(address _investor, bytes32 _id) external {
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(_id);
-        require(_investor == address(0), "Invalid Investor address");
-        require(poolAddress == address(0), "Opportunity pool doesn't exist.");
+        require(_investor != address(0), "Invalid Investor address");
+        require(poolAddress != address(0), "Opportunity pool doesn't exist.");
         require(msg.sender == poolAddress, "Given opportunity can only be added by that pool." );
         bool exist = isExistInInvestor(_investor, _id);
         require(exist == true, "Investor doesn't invested in this opportunity.");
