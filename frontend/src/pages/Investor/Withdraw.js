@@ -6,6 +6,7 @@ import {
   getUserSeniorPoolInvestment,
   getWalletBal,
   getSeniorPoolDisplaySharePrice,
+  getJuniorWithdrawableOp
 } from "../../components/transaction/TransactionHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import { getBinaryFileData } from "../../services/fileHelper";
@@ -72,7 +73,7 @@ const Withdraw = () => {
   useEffect(() => {
     try {
       const fetchData = async () => {
-        const opportunities = await getAllWithdrawableOpportunities();
+        const opportunities = await getJuniorWithdrawableOp();
         setJuniorPools(opportunities);
       };
       fetchData();

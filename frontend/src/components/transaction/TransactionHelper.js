@@ -6,6 +6,8 @@ import opportunityOrigination from "../../artifacts/contracts/protocol/Opportuni
 import opportunityPool from "../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import seniorPool from "../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 import borrowerContract from "../../artifacts/contracts/protocol/Borrower.sol/Borrower.json";
+import investor from "../../artifacts/contracts/protocol/Investor.sol/Investor.json";
+
 import {
   getDisplayAmount,
   getTrimmedWalletAddress,
@@ -838,4 +840,45 @@ export async function repayment(poolAddress) {
     const transaction1 = await poolContract.repayment();
     await transaction1.wait();
   }
+}
+
+export async function getJuniorWithdrawableOp(){
+  let investorAddress = await getEthAddress();
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_INVESTOR,
+        investor.abi,
+        provider
+      );
+      const originationContract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+      
+      let opportunities = await contract.getOpportunityOfInvestor(investorAddress);
+      let opportunityList = [];
+      for(let i = 0 ; i<opportunities.length ; i++){
+        let tx = await originationContract.opportunityToId(opportunities[i]);
+        let obj = await getOpportunity(tx);
+
+        const poolContract = new ethers.Contract(
+          obj.opportunityPoolAddress,
+          opportunityPool.abi,
+          provider
+        );
+        let stakingBal = await poolContract.stakingBalance(investorAddress);
+        stakingBal =  ethers.utils.formatUnits(stakingBal.toString(), sixDecimals)
+        obj.capitalInvested = stakingBal;
+        opportunityList.push(obj);
+      }
+      console.log(opportunityList)
+      return opportunityList;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return [];
 }
