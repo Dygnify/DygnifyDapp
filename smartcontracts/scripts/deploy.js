@@ -15,15 +15,6 @@ async function main() {
 
   // We get the contract to deploy
 
-  const TestUSDCToken = await hre.ethers.getContractFactory("TestUSDCToken");
-  const testUSDCToken = await TestUSDCToken.deploy(
-    process.env.DGNFY_TOKEN_TOTAL_SUPPLY
-  );
-
-  await testUSDCToken.deployed();
-
-  console.log("TestUSDCToken deployed to:", testUSDCToken.address);
-
   // deply the config first as this will be used in most of the contracts
   const DygnifyConfig = await hre.ethers.getContractFactory("DygnifyConfig");
   const dygnifyConfig = await DygnifyConfig.deploy();
@@ -92,11 +83,15 @@ async function main() {
   // Initialize the Dygnify config
   // Set all the addresses
   await dygnifyConfig.setAddress(1, lpToken.address);
-  await dygnifyConfig.setAddress(2, testUSDCToken.address);
+  await dygnifyConfig.setAddress(
+    2,
+    "0x7c04fAcB6dFa76DccADd04A2d41841cbeD517cC0"
+  );
   await dygnifyConfig.setAddress(3, seniorPool.address);
   await dygnifyConfig.setAddress(4, opportunityPool.address);
   await dygnifyConfig.setAddress(5, collateralToken.address);
   await dygnifyConfig.setAddress(6, opportunityOrigination.address);
+  await dygnifyConfig.setAddress(7, investor.address);
   console.log("DygnifyConfig configured successfully");
 
   // Set all numbers
