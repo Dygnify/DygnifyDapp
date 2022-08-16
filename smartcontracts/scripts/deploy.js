@@ -83,6 +83,12 @@ async function main() {
   await opportunityPool.deployed();
   console.log("OpportunityPool deployed to:", opportunityPool.address);
 
+  // Investor pool deployment
+  const Investor = await hre.ethers.getContractFactory("Investor");
+  const investor = await Investor.deploy();
+  await investor.deployed();
+  console.log("Investor deployed to:", investor.address);
+
   // Initialize the Dygnify config
   // Set all the addresses
   await dygnifyConfig.setAddress(1, lpToken.address);
@@ -115,6 +121,8 @@ async function main() {
     dygnifyConfig.address,
     opportunityOrigination.address
   );
+  // Initialize the investor contract
+  await investor.initialize(dygnifyConfig.address);
   console.log("All contracts initilaized successfully");
 }
 
