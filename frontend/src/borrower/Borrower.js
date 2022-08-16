@@ -1,16 +1,19 @@
 import { React, useState, useEffect } from "react";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import OpportunityTable from "./OpportunityTable.js";
-import DrawdownCard from "./DrawdownCard.js";
-import { useHistory } from "react-router-dom";
 
+// import DrawdownCard from "./DrawdownCard.js";
+import DrawdownCard from "./DrawdownCard.js";
 import OpportunityStatus from "./OpportunityStatus.js";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
+import { useNavigate } from "react-router-dom";
+import RepaymentCard from "../tools/Card/RepaymentCard.js";
 
 const Borrower = () => {
   const [opportunity, setOpportunity] = useState();
-  //const path = useHistory();
-
+  const path = useNavigate();
+  const [data, setData] = useState([]);
+  const [repayment, setRepayment] = useState([]);
   const [userInfo, setUserInfo] = useState({
     companyName: "Hector Ltd",
     name: "Jane Hector",
@@ -19,8 +22,38 @@ const Borrower = () => {
     amountReadyToWithdraw: "48,00,000",
   });
 
+  const loadBlockpassWidget = () => {
+    console.log("#############");
+    const blockpass = new window.BlockpassKYCConnect(
+      "kyc_aml_c7be4", // service client_id from the admin console
+      {
+        refId: "1", // assign the local user_id of the connected user
+      }
+    );
+
+    blockpass.startKYCConnect();
+
+    blockpass.on("KYCConnectSuccess", () => {
+      //add code that will trigger when data have been sent.
+    });
+  };
+
+  useEffect(() => {
+    fetch("/drawdown.json")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
+
+  useEffect(() => {
+    fetch("/repayment.json")
+      .then((res) => res.json())
+      .then((data) => setRepayment(data));
+  }, []);
+
   useEffect(() => {
     try {
+      loadBlockpassWidget();
+      console.log("******************");
       const fetchData = async () => {
         console.log("******************");
         let opportunities = await getOpportunitysOf();
@@ -28,6 +61,8 @@ const Borrower = () => {
         console.log(opportunities);
       };
       fetchData();
+
+      //loadBlockpassWidget();
     } catch (error) {
       console.log(error);
     }
@@ -84,6 +119,9 @@ const Borrower = () => {
           >
             Connect Wallet
           </Button>
+          <button style={{ height: 50, width: 50 }} id="blockpass-kyc-connect">
+            KYC
+          </button>
         </div>
       </Box>
 
@@ -120,7 +158,7 @@ const Borrower = () => {
           sx={{ backgroundColor: "#843bc5" }}
           variant="contained"
           size="large"
-          //onClick={()=> path.push(`/loan-form`)}
+          onClick={() => path.push(`/loan-form`)}
         >
           Create New Loan request
         </Button>
@@ -189,33 +227,37 @@ const Borrower = () => {
           </Typography>
         </Card>
       </Box>
+      {/* {repayment ? <RepaymentCard key={repayment.id} data={repayment}></RepaymentCard> : null} */}
+      {repayment.map((item) => (
+        <RepaymentCard key={data.id} data={item} />
+      ))}
+      {data.map((item) => (
+        <DrawdownCard key={data.id} data={item} />
+      ))}
 
-      {/* {opportunity? opportunity.map((data,i)=>{return(<OpportunityTable loanAmount={data.loanAmount} />)}) :null}
-
-      <DrawdownCard /> */}
       <br />
 
       {/*add a if statement for data*/}
-
       {opportunity ? (
         opportunity.map((data, i) => {
           return (
             <div
               onClick={() => {
                 console.log("clicked");
-                //path.push(`/opportunity-details/${id}`)
+                //path(`/opportunity-details/${id}`)
               }}
               key={i}
             >
               <OpportunityStatus
                 opportunityName="Opportunity 1"
-                loanAmount={data.loanAmount}
-                loanInterest={data.loanInterest}
-                loanType={data.loanType}
-                loanTenure={data.loanTenure}
+                loanAmount={data.loan_amount}
+                loanInterest={data.loan_interest}
+                loanType={data.loan_type}
+                loanTenure={data.loan_tenure}
+                paymentFrequency={data.payment_frequency}
                 //opportunityStatus={data.oppurtunityStatus}
                 opportunityStatus="0"
-                mDate="12/05/2022"
+                // mDate="12/05/2022"
               />
             </div>
           );

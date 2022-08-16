@@ -10,26 +10,27 @@ import {
 } from "@mui/material";
 import PieGraph from "./components/PieChart";
 import Graph from "../mock/components/Graph";
-import {getTransctionHistory} from "../components/transactionHistory/TransactionGetter";
+import { getTransactionHistory } from "../components/transactionHistory/TransactionGetter";
 import { useState, useEffect } from "react";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 
-async function getHis(){
-  await getTransctionHistory();
+async function getHis() {
+  await getTransactionHistory();
 }
 
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
 
-  useEffect(async()=>{
-    let data = await getTransctionHistory();
+  useEffect(async () => {
+    let data = await getTransactionHistory();
     setHistory(data);
-  },[])
+    console.log(data);
+  }, []);
 
   return (
     <>
@@ -72,7 +73,7 @@ const Dashboard = () => {
           </div>
         </div>
       </Box>
-      <Stack sx={{ color: "#ffffff", mt: "28px", textAlign : "center" }}>
+      <Stack sx={{ color: "#ffffff", mt: "28px", textAlign: "center" }}>
         <Typography variant="h4">Investor Dashboard</Typography>
       </Stack>
       <Box
@@ -111,7 +112,7 @@ const Dashboard = () => {
           }}
         >
           <div>
-            <Typography style={{marginLeft:"36px"}} variant="subtitle2">
+            <Typography style={{ marginLeft: "36px" }} variant="subtitle2">
               Income Generating Loans{" "}
             </Typography>
             <Typography variant="overline">Opportunity</Typography>
@@ -123,12 +124,16 @@ const Dashboard = () => {
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />{" "}
           <div>
-            <Typography variant="subtitle2">5,00,000 {process.env.REACT_APP_TOKEN_NAME}</Typography>
+            <Typography variant="subtitle2">
+              5,00,000 {process.env.REACT_APP_TOKEN_NAME}
+            </Typography>
             <Typography variant="overline">Amount Invested</Typography>
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />{" "}
           <div>
-            <Typography variant="subtitle2">52,250 {process.env.REACT_APP_TOKEN_NAME}</Typography>
+            <Typography variant="subtitle2">
+              52,250 {process.env.REACT_APP_TOKEN_NAME}
+            </Typography>
             <Typography variant="overline">Yield Generated</Typography>
           </div>
         </Card>
@@ -160,12 +165,16 @@ const Dashboard = () => {
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />
           <div>
-            <Typography variant="subtitle2">2,00,000 {process.env.REACT_APP_TOKEN_NAME}</Typography>
+            <Typography variant="subtitle2">
+              2,00,000 {process.env.REACT_APP_TOKEN_NAME}
+            </Typography>
             <Typography variant="overline">Amount Invested</Typography>
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />
           <div>
-            <Typography variant="subtitle2">48,600 {process.env.REACT_APP_TOKEN_NAME}</Typography>
+            <Typography variant="subtitle2">
+              48,600 {process.env.REACT_APP_TOKEN_NAME}
+            </Typography>
             <Typography variant="overline">Yield Generated</Typography>
           </div>
         </Card>
@@ -181,36 +190,54 @@ const Dashboard = () => {
             textAlign: "center",
           }}
         >
-        <Paper >
-          <Table >
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Transaction</TableCell>
-                <TableCell align="center">Amount</TableCell>
-                <TableCell align="center">Activity</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {history.map((history,i) => (
-                <TableRow key={i}>
-                  <TableCell align="center" component="th" scope="row" width="220px">
-                    {history.date}
-                  </TableCell>
-                  <TableCell width="220px" align="center"><a href={`https://mumbai.polygonscan.com/tx/${history.txHash}`}>{history.subHash}</a></TableCell>
-                  <TableCell 
-                    width="220px"
-                    align="center" 
-                    style={{color: `${history.activity==="Deposit" ? "green" : "red"}`
-                    }}>
-                      {`${history.activity==="Deposit" ? "+" : "-"}`+ history.amount}
-                  </TableCell>
-                  <TableCell width="220px" align="center">{history.activity}</TableCell>
+          <Paper>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">Transaction</TableCell>
+                  <TableCell align="center">Amount</TableCell>
+                  <TableCell align="center">Activity</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
+              </TableHead>
+              <TableBody>
+                {history.map((history, i) => (
+                  <TableRow key={i}>
+                    <TableCell
+                      align="center"
+                      component="th"
+                      scope="row"
+                      width="220px"
+                    >
+                      {history.date}
+                    </TableCell>
+                    <TableCell width="220px" align="center">
+                      <a
+                        href={`https://mumbai.polygonscan.com/tx/${history.txHash}`}
+                      >
+                        {history.subHash}
+                      </a>
+                    </TableCell>
+                    <TableCell
+                      width="220px"
+                      align="center"
+                      style={{
+                        color: `${
+                          history.activity === "Deposit" ? "green" : "red"
+                        }`,
+                      }}
+                    >
+                      {`${history.activity === "Deposit" ? "+" : "-"}` +
+                        history.amount}
+                    </TableCell>
+                    <TableCell width="220px" align="center">
+                      {history.activity}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
         </Card>
       </Box>
     </>

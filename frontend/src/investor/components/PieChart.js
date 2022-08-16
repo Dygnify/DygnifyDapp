@@ -37,7 +37,7 @@ const renderActiveShape = (props) => {
     React.createElement(
       "text",
       { x: cx, y: cy, dy: 8, textAnchor: "middle", fill: fill },
-      payload.name
+      <div style={{ fontSize: 14 }}>Amount Invested</div>
     ),
     React.createElement(Sector, {
       cx: cx,
@@ -46,8 +46,9 @@ const renderActiveShape = (props) => {
       outerRadius: outerRadius,
       startAngle: startAngle,
       endAngle: endAngle,
-      fill: fill,
+      fill: "#5375FE",
     }),
+
     React.createElement(Sector, {
       cx: cx,
       cy: cy,
@@ -77,7 +78,7 @@ const renderActiveShape = (props) => {
         textAnchor: textAnchor,
         fill: "#333",
       },
-      `${payload.name}`
+      `${"Amount Invested"}`
     ),
     React.createElement(
       "text",
@@ -111,7 +112,7 @@ const PieGraph = () => {
       cy: 150,
       innerRadius: 60,
       outerRadius: 80,
-      fill: "#8884d8",
+      fill: "#F790F9",
       dataKey: "value",
       onMouseEnter: onPieEnter,
     })

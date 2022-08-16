@@ -1,15 +1,16 @@
 import { React, useState } from "react";
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import NFTMinter from "../artifacts/contracts/protocol/NFT_minter.sol/NFTMinter.json";
-import axiosHttpService from '../services/axioscall';
-import { uploadFileToIPFS } from '../services/PinataIPFSOptions';
+import NFTMinter from "../artifacts/contracts/protocol/old/NFT_minter.sol/NFTMinter.json";
+import axiosHttpService from "../services/axioscall";
+import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
 import { getOpportunitysOf } from "../components/transaction/TransactionHelper";
-const axios = require('axios');
+const axios = require("axios");
 
 const REACT_APP_PINATA_API_KEY = "bd910e460ee4b6ef0519";
-const REACT_APP_PINATA_API_SECRET = "38f736a6d364857d02414d490277de4952207f74d1f495c4f2158332639120b7";
+const REACT_APP_PINATA_API_SECRET =
+  "38f736a6d364857d02414d490277de4952207f74d1f495c4f2158332639120b7";
 const tokenAddress = "0x1546A8e7389B47d2Cf1bacE7C0ad3e0A91CAae94";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 
@@ -22,21 +23,21 @@ const pinJSONToIPFS = async (JSONBody) => {
       headers: {
         pinata_api_key: REACT_APP_PINATA_API_KEY,
         pinata_secret_api_key: REACT_APP_PINATA_API_SECRET,
-      }
+      },
     })
     .then(function (response) {
       return {
         success: true,
-        pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
+        pinataUrl:
+          "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash,
       };
     })
     .catch(function (error) {
-      console.log(error)
+      console.log(error);
       return {
         success: false,
         message: error.message,
-      }
-
+      };
     });
 };
 const CompanyInfo = () => {
@@ -45,23 +46,21 @@ const CompanyInfo = () => {
   const [data, setData] = useState();
   const dataFetch = async () => {
     setData(await getOpportunitysOf());
-  }
+  };
   dataFetch();
   dataFetch();
-  console.log(data)
+  console.log(data);
 
   const [selectedFile, setSelectedFile] = useState();
   const [tokenURI, setTokenURI] = useState("");
 
   async function requestAccount() {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-
-
   async function mint_NFT(tokenURI, imageURI) {
-    if (typeof window.ethereum !== 'undefined') {
-      await requestAccount()
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(NFT_minter, NFTMinter.abi, signer);
@@ -75,7 +74,9 @@ const CompanyInfo = () => {
   async function onFileUpload() {
     try {
       console.log("Upload called");
-      let ipfsUploadRes = await axiosHttpService(uploadFileToIPFS(selectedFile));
+      let ipfsUploadRes = await axiosHttpService(
+        uploadFileToIPFS(selectedFile)
+      );
       console.log(ipfsUploadRes);
       //make metadata
       const metadata = new Object();
@@ -89,16 +90,18 @@ const CompanyInfo = () => {
         return {
           success: false,
           status: "😢 Something went wrong while uploading your tokenURI.",
-        }
+        };
       }
       const tokenURI = pinataResponse.pinataUrl;
       console.log(tokenURI);
-      mint_NFT(tokenURI, "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash);
-
+      mint_NFT(
+        tokenURI,
+        "https://gateway.pinata.cloud/ipfs/" + metadata.imageHash
+      );
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
     <>
@@ -218,7 +221,9 @@ const CompanyInfo = () => {
           }}
         >
           <div>
-            <Typography variant="subtitle2">Short term credit by financing receivables</Typography>
+            <Typography variant="subtitle2">
+              Short term credit by financing receivables
+            </Typography>
             <Typography variant="overline">Asset Type</Typography>
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />
@@ -233,7 +238,9 @@ const CompanyInfo = () => {
           </div>
           <Divider orientation="vertical" variant="middle" flexItem />{" "}
           <div>
-            <Typography variant="subtitle2">59,87,197 {process.env.REACT_APP_TOKEN_NAME}</Typography>
+            <Typography variant="subtitle2">
+              59,87,197 {process.env.REACT_APP_TOKEN_NAME}
+            </Typography>
             <Typography variant="overline">Value</Typography>
           </div>
         </Card>
@@ -263,11 +270,16 @@ const CompanyInfo = () => {
             textAlign: "justify",
           }}
         >
-          <Typography variant="h6">
-            ABC Finance Private Limited
-          </Typography>
+          <Typography variant="h6">ABC Finance Private Limited</Typography>
           <Typography variant="body2">
-            ABC is a  company operating in Southern India that provides invoice factoring services, which involves buying a business's unpaid invoices at a discount. ABC was founded in 20XX and has operations in southern states of Karnataka, Tamil Nadu, Andhra Pradesh, Telangana, and has since originated over $30 Mn in loans to over 10 millions borrowers. This opportunity will consist of tranches of a secured non convertible debenture with a maturity of 24 months backed by a portfolio of loans made to customers.
+            ABC is a company operating in Southern India that provides invoice
+            factoring services, which involves buying a business's unpaid
+            invoices at a discount. ABC was founded in 20XX and has operations
+            in southern states of Karnataka, Tamil Nadu, Andhra Pradesh,
+            Telangana, and has since originated over $30 Mn in loans to over 10
+            millions borrowers. This opportunity will consist of tranches of a
+            secured non convertible debenture with a maturity of 24 months
+            backed by a portfolio of loans made to customers.
           </Typography>
         </Card>
       </Box>
@@ -376,22 +388,36 @@ const CompanyInfo = () => {
             textAlign: "justify",
           }}
         >
-          {tokenURI === "" ?
+          {tokenURI === "" ? (
             <div style={{ display: "flex", flexDirection: "column" }}>
               <Typography mb={1} variant="subtitle2">
                 Upload collateral document for converting to a unique NFT
               </Typography>
-              <input type="file" style={{ maxWidth: "500px" }} onChange={(event) => setSelectedFile(event.target.files[0])} class="custom-file-upload" />
+              <input
+                type="file"
+                style={{ maxWidth: "500px" }}
+                onChange={(event) => setSelectedFile(event.target.files[0])}
+                class="custom-file-upload"
+              />
               <Button
-                sx={{ backgroundColor: "#7165E3", width: "300px", marginTop: "10px" }}
+                sx={{
+                  backgroundColor: "#7165E3",
+                  width: "300px",
+                  marginTop: "10px",
+                }}
                 variant="contained"
                 size="large"
                 onClick={onFileUpload}
               >
                 Mint
-              </Button> </div>
-            : <div><h4>View your minted NFT here : </h4><a href={tokenURI}>{tokenURI}</a></div>
-          }
+              </Button>{" "}
+            </div>
+          ) : (
+            <div>
+              <h4>View your minted NFT here : </h4>
+              <a href={tokenURI}>{tokenURI}</a>
+            </div>
+          )}
         </Card>
       </Box>
     </>

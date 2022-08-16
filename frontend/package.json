@@ -14,14 +14,18 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "buffer": "^6.0.3",
+    "chart.js": "^3.9.1",
+    "daisyui": "^2.19.1",
     "dotenv": "^16.0.1",
     "ethers": "^5.6.2",
     "formik": "^2.2.9",
     "material-ui-phone-number": "^3.0.0",
     "react": "^17.0.0",
+    "react-chartjs-2": "^4.3.1",
     "react-dom": "^17.0.0",
+    "react-google-charts": "^4.0.0",
     "react-loading-overlay": "^1.0.1",
-    "react-router-dom": "^5.3.3",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "react-spinners": "^0.12.0",
     "react-toastify": "^9.0.4",
@@ -54,5 +58,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.1.6"
   }
 }

@@ -8,18 +8,18 @@ import {
   Typography,
 } from "@mui/material";
 import MuiPhoneNumber from "material-ui-phone-number";
-import { useHistory } from "react-router-dom";
+import { useHistory, useNavigate } from "react-router-dom";
 
 const Mobile = () => {
   const [phone, setPhoneNo] = useState();
-  const history = useHistory();
+  const history = useNavigate();
 
   async function onSendCodeClicked() {
     try {
       let { status, requestId } = await sendMobileOtp(phone);
       if (status) {
         // Redirect to Verification page
-        history.push({ pathname: './verifyNumber', state: { 'phone': phone, 'requestId': requestId } });
+        history({ pathname: './verifyNumber', state: { 'phone': phone, 'requestId': requestId } });
       } else {
         //Showcase error 
       }
@@ -31,7 +31,7 @@ const Mobile = () => {
   function handleOnChange(value) {
     setPhoneNo(value);
   }
-  
+
   return (
     <>
       <Box
