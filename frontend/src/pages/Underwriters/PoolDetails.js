@@ -120,7 +120,7 @@ const PoolDetails = () => {
           !(status.approve || status.reject || status.unsure) ? (
             <button
               disabled={status.approve}
-              onClick={() => setApproveStatus(true)}
+              onClick={() => vote("2")}
               style={{
                 borderRadius: "100px",
                 padding: "3px 16px",
