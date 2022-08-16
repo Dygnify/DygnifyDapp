@@ -1,0 +1,87 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IOpportunityPool",
+  "sourceName": "contracts/interfaces/IOpportunityPool.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_subpoolId",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract DygnifyConfig",
+          "name": "_dygnifyConfig",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_opportunityID",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "_opportunityInfo",
+          "type": "string"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_loanType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanTenureInDays",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanInterest",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_paymentFrequencyInDays",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_collateralDocument",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_capitalLoss",
+          "type": "uint256"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

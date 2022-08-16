@@ -1,0 +1,158 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IOpportunityOrigination",
+  "sourceName": "contracts/interfaces/IOpportunityOrigination.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_opportunityId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "_underwriter",
+          "type": "address"
+        }
+      ],
+      "name": "assignUnderwriters",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_opportunityInfo",
+          "type": "string"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_loanType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanTenureInDays",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanInterest",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_paymentFrequencyInDays",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_collateralDocument",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_capitalLoss",
+          "type": "uint256"
+        }
+      ],
+      "name": "createOpportunity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        }
+      ],
+      "name": "getOpportunityOf",
+      "outputs": [
+        {
+          "internalType": "bytes32[]",
+          "name": "",
+          "type": "bytes32[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTotalOpportunities",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "markDrawDown",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "markRepaid",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_opportunityId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_status",
+          "type": "uint8"
+        }
+      ],
+      "name": "voteOpportunity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
