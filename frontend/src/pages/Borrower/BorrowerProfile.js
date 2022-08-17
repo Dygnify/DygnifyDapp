@@ -89,7 +89,7 @@ const BorrowerProfile = () => {
 
     const fetchData = async () => {
       let borrowerCID = await getBorrowerDetails();
-      console.log(borrowerCID);
+      console.log("CID", borrowerCID);
 
       if (!borrowerCID) return setProfileStatus(false);
       if (borrowerCID) {
@@ -467,17 +467,23 @@ const BorrowerProfile = () => {
               </h6>
               <DocumentCard
                 docName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessIdFile.businessIdDocName
+                    : borrowerJson
                     ? borrowerJson.businessIdFile.businessIdDocName
                     : ""
                 }
                 docCid={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessIdFile.businessIdFileCID
+                    : borrowerJson
                     ? borrowerJson.businessIdFile.businessIdFileCID
                     : null
                 }
                 fileName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessIdFile.businessIdFileName
+                    : borrowerJson
                     ? borrowerJson.businessIdFile.businessIdFileName
                     : null
                 }
@@ -488,17 +494,23 @@ const BorrowerProfile = () => {
               </h6>
               <DocumentCard
                 docName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessAddFile.businessAddDocName
+                    : borrowerJson
                     ? borrowerJson.businessAddFile.businessAddDocName
-                    : ""
+                    : null
                 }
                 docCid={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessAddFile.businessAddFileCID
+                    : borrowerJson
                     ? borrowerJson.businessAddFile.businessAddFileCID
                     : null
                 }
                 fileName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessAddFile.businessAddFileName
+                    : borrowerJson
                     ? borrowerJson.businessAddFile.businessAddFileName
                     : null
                 }
@@ -508,17 +520,23 @@ const BorrowerProfile = () => {
               </h6>
               <DocumentCard
                 docName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessLicFile.businessLicDocName
+                    : borrowerJson
                     ? borrowerJson.businessLicFile.businessLicDocName
-                    : ""
+                    : null
                 }
                 docCid={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessLicFile.businessLicFileCID
+                    : borrowerJson
                     ? borrowerJson.businessLicFile.businessLicFileCID
                     : null
                 }
                 fileName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessLicFile.businessLicFileName
+                    : borrowerJson
                     ? borrowerJson.businessLicFile.businessLicFileName
                     : null
                 }
@@ -528,17 +546,23 @@ const BorrowerProfile = () => {
               </h6>
               <DocumentCard
                 docName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessIncoFile.businessIncoDocName
+                    : borrowerJson
                     ? borrowerJson.businessIncoFile.businessIncoDocName
-                    : ""
+                    : null
                 }
                 docCid={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessIncoFile.businessIncoFileCID
+                    : borrowerJson
                     ? borrowerJson.businessIncoFile.businessIncoFileCID
                     : null
                 }
                 fileName={
-                  borrowerJson
+                  brJson
+                    ? brJson.businessIncoFile.businessIncoFileName
+                    : borrowerJson
                     ? borrowerJson.businessIncoFile.businessIncoFileName
                     : null
                 }

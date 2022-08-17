@@ -64,7 +64,10 @@ const KycCheckModal = ({ kycStatus, profileStatus }) => {
               )
             }
           >
-            <p className="justify-center" style={{ display: "flex" }}>
+            <p
+              className="justify-center"
+              style={{ display: "flex", cursor: "pointer" }}
+            >
               {!kycStatus && profileStatus ? "Go to Profile" : "Create Profile"}
             </p>
           </div>

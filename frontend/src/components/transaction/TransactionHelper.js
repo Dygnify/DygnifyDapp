@@ -606,7 +606,7 @@ export async function getUserSeniorPoolInvestment() {
   return undefined;
 }
 
-export async function getBorrowerDetails(address) {
+export async function getBorrowerDetails() {
   try {
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
@@ -617,10 +617,11 @@ export async function getBorrowerDetails(address) {
         borrowerContract.abi,
         provider
       );
-      if (!address) {
-        address = await getEthAddress();
-      }
+      const address = await getEthAddress();
+      // if (!address) {
+      // }
       if (address) {
+        console.log("getBrDe", await contract.borrowerProfile(address));
         return await contract.borrowerProfile(address);
       }
     }
@@ -842,7 +843,7 @@ export async function repayment(poolAddress) {
   }
 }
 
-export async function getJuniorWithdrawableOp(){
+export async function getJuniorWithdrawableOp() {
   let investorAddress = await getEthAddress();
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -857,10 +858,12 @@ export async function getJuniorWithdrawableOp(){
         opportunityOrigination.abi,
         provider
       );
-      
-      let opportunities = await contract.getOpportunityOfInvestor(investorAddress);
+
+      let opportunities = await contract.getOpportunityOfInvestor(
+        investorAddress
+      );
       let opportunityList = [];
-      for(let i = 0 ; i<opportunities.length ; i++){
+      for (let i = 0; i < opportunities.length; i++) {
         let tx = await originationContract.opportunityToId(opportunities[i]);
         let obj = await getOpportunity(tx);
 
@@ -870,20 +873,34 @@ export async function getJuniorWithdrawableOp(){
           provider
         );
         let stakingBal = await poolContract.stakingBalance(investorAddress);
-        stakingBal =  ethers.utils.formatUnits(stakingBal.toString(), sixDecimals)
+        stakingBal = ethers.utils.formatUnits(
+          stakingBal.toString(),
+          sixDecimals
+        );
         obj.capitalInvested = stakingBal;
         let poolBal = await poolContract.poolBalance();
         poolBal = ethers.utils.formatUnits(poolBal, sixDecimals);
         let JuniorPoolDetails = await poolContract.juniorSubpoolDetails();
-        let JuniorPoolBalance = ethers.utils.formatUnits( JuniorPoolDetails[2].toString(), sixDecimals);
+        let JuniorPoolBalance = ethers.utils.formatUnits(
+          JuniorPoolDetails[2].toString(),
+          sixDecimals
+        );
 
-        let investorWithdrawable = await poolContract.stakingBalance(investorAddress); 
-        investorWithdrawable = ethers.utils.formatUnits(investorWithdrawable.toString(), sixDecimals);
-        
-        obj.withdrawableAmt = (parseInt(poolBal) >= parseInt(obj.opportunityAmount) ? investorWithdrawable : 0)
+        let investorWithdrawable = await poolContract.stakingBalance(
+          investorAddress
+        );
+        investorWithdrawable = ethers.utils.formatUnits(
+          investorWithdrawable.toString(),
+          sixDecimals
+        );
+
+        obj.withdrawableAmt =
+          parseInt(poolBal) >= parseInt(obj.opportunityAmount)
+            ? investorWithdrawable
+            : 0;
         opportunityList.push(obj);
       }
-      console.log(opportunityList)
+      console.log(opportunityList);
       return opportunityList;
     }
   } catch (error) {
@@ -923,7 +940,7 @@ export async function withdrawAllJunior(poolAddress) {
       signer
     );
 
-    const transaction1 = await poolContract.withdrawAll(0);// 0 is juniorpool ID
+    const transaction1 = await poolContract.withdrawAll(0); // 0 is juniorpool ID
     await transaction1.wait();
   }
 }
