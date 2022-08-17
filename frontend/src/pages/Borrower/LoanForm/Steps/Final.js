@@ -1,7 +1,13 @@
+import LockedValueChart from "../../../../investor/components/LockedValueChart";
 import GradientButton from "../../../../tools/Button/GradientButton";
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
-export default function Final({ handlePrev, finalSubmit, formData }) {
+export default function Final({
+  handlePrev,
+  finalSubmit,
+  formData,
+  setProcessModal,
+}) {
   const handleClick = () => {
     finalSubmit(formData);
   };
@@ -92,9 +98,20 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
             Back
           </label>
         </div>
-        <GradientButton type="submit" onClick={handleClick}>
+
+        <label
+          typeof="submit"
+          htmlFor="ProcessModal"
+          onClick={() => setProcessModal(true)}
+          style={{
+            borderRadius: "100px",
+            padding: "12px 24px",
+            color: "white",
+          }}
+          className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
+        >
           Submit
-        </GradientButton>
+        </label>
       </div>
 
       <div style={{ display: "flex" }} className="m-5 justify-center">

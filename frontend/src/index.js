@@ -20,5 +20,6 @@ import DoughnutChart from "./pages/Components/DoughnutChart";
 import FileUploader from "./pages/Components/FileUploader";
 import LineChart from "./pages/Investor/components/LineChart";
 import TestFile from "./pages/Test";
+import Loading from "./pages/Components/Loading";
 
 ReactDOM.render(<Paths />, document.getElementById("root"));

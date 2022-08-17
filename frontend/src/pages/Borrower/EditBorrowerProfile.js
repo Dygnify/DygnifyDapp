@@ -36,12 +36,13 @@ const EditBorrowerProfile = () => {
 
   const [profileState, setProfileState] = useState();
 
-  const [allowSubmit, setAllowSubmit] = useState(true);
+  //const [allowSubmit, setAllowSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const [textChange, setTextChange] = useState(false);
   const [fileChange, setFileChange] = useState(false);
   const oldBrJson = location.state;
+  const [error, setError] = useState();
 
   let logoFileCID = "";
   let kycFilesCID = "";
@@ -50,9 +51,25 @@ const EditBorrowerProfile = () => {
   let businessAddFilesCID = "";
   let businessIncoFilesCID = "";
 
+  let allowSubmit;
+
   const checkEdited = (brJson) => {
-    if (JSON.stringify(brJson) === JSON.stringify(oldBrJson))
-      return setAllowSubmit(false);
+    if (JSON.stringify(brJson) === JSON.stringify(oldBrJson)) {
+      return (allowSubmit = false);
+    } //return setAllowSubmit(false);
+  };
+
+  const validations = () => {
+    if (
+      !(
+        businessIdentityFiles &&
+        businessIncorporationFiles &&
+        businessAddressFiles &&
+        logoFile
+      )
+    ) {
+      return setError(true);
+    }
   };
 
   const onLogoFileUpload = (files) => {
@@ -75,8 +92,8 @@ const EditBorrowerProfile = () => {
   };
 
   useEffect(() => {
+    console.log("location*****", location.state);
     if (location.state) {
-      console.log(location.state);
       setProfileState(location.state);
     }
   }, []);
@@ -138,7 +155,7 @@ const EditBorrowerProfile = () => {
   const uploadBorrowerData = async () => {
     try {
       //Insert all the files in one array
-
+      validations();
       {
         if (
           businessIdentityFiles ||
@@ -247,13 +264,15 @@ const EditBorrowerProfile = () => {
         businessLicFile: {
           businessLicDocName: businessLicenseFiles
             ? bizLicFileName.current.value
-            : profileState.businessLicFile.businessLicDocName,
+            : profileState
+            ? profileState.businessLicFile.businessLicDocName
+            : null,
           businessLicFileCID: businessLicenseFiles
             ? businessLicFilesCID
-            : profileState.businessLicFile.businessLicFileCID,
+            : profileState?.businessLicFile.businessLicFileCID,
           businessLicFileName: businessLicenseFiles
             ? businessLicenseFiles[0].name
-            : profileState.businessLicFile.businessLicFileName,
+            : profileState?.businessLicFile.businessLicFileName,
         },
         website: website.current.value,
         email: email.current.value,
@@ -263,7 +282,10 @@ const EditBorrowerProfile = () => {
 
       checkEdited(borrowerJsonData);
       // console.log(borrowerJsonData);
+      console.log(allowSubmit);
       if (allowSubmit) {
+        console.log("Inside allow");
+
         let file = makeFileObjects(borrowerJsonData, Math.random());
         let borrowerDataCID = await storeFiles(file);
         // Save this CID in the blockchain
@@ -280,38 +302,17 @@ const EditBorrowerProfile = () => {
     }
   };
 
-  const checkTextInput = () => {
-    const { companyName: n, companyRepName: r, companyBio: b } = oldBrJson;
-    console.log(
-      companyName,
-      companyBio,
-      companyRepName,
-      "called in check text inpuyt"
-    );
-
-    if (
-      !(
-        companyName.current.value === n && //now here error is cant read the value
-        companyBio.cuurent.value === r &&
-        companyRepName.current.value === b
-      )
-    )
-      setTextChange(true);
-
-    if (
-      businessLicenseFiles ||
-      businessIncorporationFiles ||
-      businessIdentityFiles ||
-      logoFile ||
-      businessAddressFiles
-    )
-      setFileChange(true);
-  };
-
   return (
     <>
       <div className={loading ? "blur-sm" : null}>
         <div className="mb-6">
+          {error ? (
+            <h6 style={{ color: "red" }}>
+              Please upload all the required details.
+            </h6>
+          ) : (
+            <></>
+          )}
           <h2 className="text-xl font-medium">Company Details</h2>
           <div style={{ display: "flex" }} className="w-full">
             <FileUploader
@@ -356,6 +357,7 @@ const EditBorrowerProfile = () => {
             caption="Business Identify Proof"
             onChange={onBusinessIdentityFilesUpload}
             reference={bizIdFileName}
+            error={error && "File required"}
             fileName={
               profileState ? profileState.businessIdFile.businessIdFileName : ""
             }
@@ -364,6 +366,7 @@ const EditBorrowerProfile = () => {
             caption="Business Address Proof"
             onChange={onBusinessAddressFilesUpload}
             reference={bizAddFileName}
+            error={error && "File required"}
             fileName={
               profileState
                 ? profileState.businessAddFile.businessAddFileName
@@ -374,6 +377,7 @@ const EditBorrowerProfile = () => {
             caption="Business Incorporation Proof"
             onChange={onBusinessIncorporationFilesUpload}
             reference={bizIncoFileName}
+            error={error && "File required"}
             fileName={
               profileState
                 ? profileState.businessIncoFile.businessIncoFileName
@@ -432,6 +436,7 @@ const EditBorrowerProfile = () => {
             color: "white",
           }}
           className="btn btn-wide btn-outline text-white mr-4"
+          onClick={() => navigate("/borrower_dashboard/borrower_profile")}
         >
           Exit
         </button>

@@ -14,7 +14,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 
 const Invest = () => {
   const path = useNavigate();
-  const [juniorPools, setJuniorPools] = useState([]);
+  const [juniorPools, setJuniorPools] = useState([{ poolName: "Junior Pool" }]);
   const [seniorPool, setSeniorPool] = useState();
 
   const [kycStatus, setKycStatus] = useState();
@@ -39,17 +39,17 @@ const Invest = () => {
     }
   };
 
-  useEffect(() => {
-    try {
-      getAllActiveOpportunities().then((juniorPool) => {
-        if (juniorPool && juniorPool.length) {
-          setJuniorPools(juniorPool);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     getAllActiveOpportunities().then((juniorPool) => {
+  //       if (juniorPool && juniorPool.length) {
+  //         setJuniorPools(juniorPool);
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   useEffect(() => {
     // fetch data from IPFS
@@ -131,7 +131,9 @@ const Invest = () => {
                 key={item.id}
                 //send data params
                 onClick={() =>
-                  path("/investor-dashboardN/viewPool", { state: item })
+                  path("/investor-dashboardN/viewPool", {
+                    state: { ...seniorPool, kycStatus: kycStatus },
+                  })
                 }
               />
             ))}

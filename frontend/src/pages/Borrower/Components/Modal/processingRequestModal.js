@@ -1,16 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const ProcessingRequestModal = () => {
+const ProcessingRequestModal = ({
+  borrowReqProcess,
+  setProcessModal,
+  setSelected,
+}) => {
   const data = {
-    poolName: "New Pool",
-    amountInvested: "200K USDC",
-    estimatedApy: "24%",
-    availableForWithdrawal: "248K USDC",
     success: false,
   };
+
+  const navigate = useNavigate();
   return (
     <>
-      <input type="checkbox" id="processModal" className="modal-toggle" />
+      <input type="checkbox" id="ProcessModal" className="modal-toggle" />
       <div
         style={{ backdropFilter: "brightness(40%) blur(8px)" }}
         className="modal"
@@ -20,7 +23,7 @@ const ProcessingRequestModal = () => {
           className="modal-box w-1/3 max-w-5xl p-0"
         >
           <label
-            for="drawdown-modal"
+            for="ProcessModal"
             className="btn btn-ghost absolute right-2 top-2 pb-2"
             // onClick={() => handleDrawdown()}
           >
@@ -36,22 +39,16 @@ const ProcessingRequestModal = () => {
             style={{ display: "flex", fontSize: 55, fontWeight: 600 }}
             className="justify-center"
           >
-            {data.success ? `Yay!🎉` : "In Progress⏱"}
+            {borrowReqProcess ? `Yay!🎉` : "In Progress⏱"}
           </p>
           <p
             style={{ display: "flex", fontSize: 23, fontWeight: 600 }}
             className="justify-center mb-2"
           >
-            {data.success
+            {borrowReqProcess
               ? "Borrow request created successfully."
               : "Request is in process"}
           </p>
-          {/* <p
-            className="justify-center"
-            style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
-          >
-            Request Successful
-          </p> */}
 
           <div
             className="modal-action mx-4 mt-2 mb-4 text-sm py-3 px-4 items-center justify-center"
@@ -66,7 +63,16 @@ const ProcessingRequestModal = () => {
               marginTop: 60,
             }}
           >
-            <p className="justify-center" style={{ display: "flex" }}>
+            <p
+              className="justify-center"
+              style={{ display: "flex", cursor: "pointer" }}
+              onClick={() => {
+                console.log("kkkkkk");
+                // navigate("/borrower_dashboard/");
+                setSelected(false);
+                setProcessModal(false);
+              }}
+            >
               Go to dashboard
             </p>
           </div>

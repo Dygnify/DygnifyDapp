@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DocumentCard from "../../tools/Card/DocumentCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import { retrieveFiles } from "../../services/web3storageIPFS";
@@ -35,12 +35,13 @@ const BorrowerProfile = () => {
   const [twitter, setTwitter] = useState();
   const [linkedin, setLinkedin] = useState();
   const location = useLocation();
-  const brJson = location.state;
-
-  console.log("#############", brJson);
-
   const [profileStatus, setProfileStatus] = useState(true);
   const [kycStatus, setKycStatus] = useState(false);
+  const brJson = location.state;
+
+  const brJsonLocationState = useRef();
+
+  console.log("new", brJson, profileStatus);
 
   useEffect(() => {
     loadBorrowerProfileData();
@@ -101,6 +102,7 @@ const BorrowerProfile = () => {
             let brJson = JSON.parse(read.result);
             loadBorrowerData(brJson);
             setborrowerJson(brJson);
+            brJsonLocationState.current.value = brJson;
             console.log(brJson);
           };
         }

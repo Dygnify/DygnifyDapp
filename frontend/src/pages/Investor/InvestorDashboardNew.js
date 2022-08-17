@@ -9,14 +9,6 @@ import PieChartNew from "./components/PieChartNew";
 import { kycOptions } from "../../services/KYC/blockpass";
 
 const InvestorDashboardNew = () => {
-  // useEffect(() => {
-  //   const fetchStatus = async () => {
-  //     let result = await axiosHttpService(kycOptions("r1657293169018"));
-  //     console.log(result.res.status);
-  //   };
-  //   fetchStatus();
-  // }, []);
-
   return (
     <>
       <div style={{ backgroundColor: "#14171F" }}>
