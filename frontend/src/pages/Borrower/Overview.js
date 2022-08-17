@@ -12,7 +12,7 @@ import {
   getUserWalletAddress,
 } from "../../components/transaction/TransactionHelper";
 import DoughnutChart from "../Components/DoughnutChart";
-import ProcessingRequestModal from "./Components/Modal/processingRequestModal";
+import ProcessingRequestModal from "./Components/Modal/ProcessingRequestModal";
 import { getDisplayAmount } from "../../services/displayTextHelper";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
@@ -30,6 +30,8 @@ const Overview = () => {
   const [kycSelected, setKycSelected] = useState();
   const [kycStatus, setKycStatus] = useState();
   const [profileStatus, setProfileStatus] = useState();
+  const [borrowReqProcess, setBorrowReqProcess] = useState();
+  const [processModal, setProcessModal] = useState();
 
   const handleForm = () => {
     setSelected(null);
@@ -135,6 +137,17 @@ const Overview = () => {
           key={drawdownList?.id}
           data={drawdownList}
           handleForm={handleForm}
+          setBorrowReqProcess={setBorrowReqProcess}
+          setSelected={setSelected}
+          setProcessModal={setProcessModal}
+        />
+      )}
+
+      {processModal && (
+        <ProcessingRequestModal
+          borrowReqProcess={borrowReqProcess}
+          setSelected={setSelected}
+          setProcessModal={setProcessModal}
         />
       )}
 

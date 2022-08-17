@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import InvestModal from "../Investor/components/Modal/InvestModal";
 import GradientButton from "../../tools/Button/GradientButton";
@@ -27,7 +27,7 @@ const ViewPool = () => {
   const [expand, setExpand] = useState(false);
   const [companyDetails, setCompanyDetails] = useState();
   const [poolName, setPoolName] = useState();
-  const [kycStatus, setKycStatus] = useState(1);
+  const [kycStatus, setKycStatus] = useState();
   const [error, setError] = useState();
   const [poolBal, setPoolBal] = useState();
   const [info, setInfo] = useState([]);
@@ -63,6 +63,7 @@ const ViewPool = () => {
     console.log(location.state);
     if (location?.state) {
       setPoolData(location.state);
+      //setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
     }
   }, []);
 
@@ -97,6 +98,7 @@ const ViewPool = () => {
                 let opJson = JSON.parse(read.result);
                 if (opJson) {
                   setCompanyDetails(opJson);
+                  console.log(opJson);
                 }
               };
             }
@@ -114,11 +116,8 @@ const ViewPool = () => {
               setPoolName(opJson.loanName);
 
               // get the loan purpose
-              const {
-                isSliced,
-                firstText,
-                secondText,
-              } = getExtendableTextBreakup(opJson.loanPurpose, 200);
+              const { isSliced, firstText, secondText } =
+                getExtendableTextBreakup(opJson.loanPurpose, 200);
 
               if (isSliced) {
                 setLoanPurpose({
@@ -178,19 +177,6 @@ const ViewPool = () => {
     }
   }
 
-  const checkForKyc = async (refId) => {
-    console.log("reached");
-    const result = await axiosHttpService(kycOptions(refId));
-    console.log(result, result.res.status);
-    if (result.res.status === "success") setKycStatus(true);
-    if (result.res.status === "error") {
-      setError(result.res.message);
-      setKycStatus(false);
-    }
-
-    console.log(kycStatus);
-  };
-
   const redirectToURl = (event) => {
     let url;
     switch (event.target.id) {
@@ -219,10 +205,13 @@ const ViewPool = () => {
   return (
     <>
       <div>
-        {!kycStatus && (
-          <Alert header={"Please Complete Your KYC."} label={error} />
-        )}
-        {selected ? <InvestModal handleDrawdown={handleDrawdown} isSenior={false} poolAddress={poolData.opportunityPoolAddress}/> : null}
+        {selected ? (
+          <InvestModal
+            handleDrawdown={handleDrawdown}
+            isSenior={false}
+            poolAddress={poolData.opportunityPoolAddress}
+          />
+        ) : null}
         <div
           className="flex-row justify-between items-center"
           style={{ display: "flex" }}
@@ -300,7 +289,7 @@ const ViewPool = () => {
               style={{ display: "flex" }}
               className="flex-row justify-between mt-10 mb-3"
             >
-              <div style={{ fontSize: 19 }} className="mb-0">
+              <div style={{ fontSize: 19, fontWeight: "600" }} className="mb-0">
                 Deals Overview
               </div>
             </div>
@@ -325,19 +314,20 @@ const ViewPool = () => {
               <div>{loanPurpose.firstText} </div>
             )}
           </div>
-          <div className="w-1/2">
+          <div className="w-1/2 flex-col  " style={{ display: "flex" }}>
             <div
               style={{
-                height: 290,
                 background: `linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)`,
               }}
-              className="rounded-box p-5 mt-10 ml-24"
+              className="rounded-box p-5 mt-10 ml-24 "
             >
               <div
                 style={{ display: "flex" }}
-                className="flex-row justify-between pb-2"
+                className="flex-row justify-between pb-2 "
               >
-                <h2 style={{ fontSize: 19 }}>Estimated APY.</h2>
+                <h2 style={{ fontSize: 19, marginBottom: 2 }}>
+                  Estimated APY.
+                </h2>
                 <h2 style={{ fontSize: 28 }}>
                   {poolData ? poolData.loanInterest : "--"}
                 </h2>
@@ -377,36 +367,22 @@ const ViewPool = () => {
                 </h2>
               </div>
 
-              <GradientButton
-                id="blockpass-kyc-connect"
-                className={"w-full mt-20"}
-                onClick={() => {
-                  setSelected(true);
-                  console.log(selected);
-                }}
-              >
-                Invest KYC
-              </GradientButton>
-              {/* <GradientButton
-                className={"w-full mt-20"}
-                onClick={() => {
-                  setSelected(true);
-                  console.log(selected);
-                }}
-              >
-                Invest modal
-              </GradientButton> */}
               <label
-                htmlFor="InvestModal"
+                htmlFor={kycStatus ? "InvestModal" : ""}
+                id={kycStatus ? "" : "blockpass-kyc-connect"}
                 style={{
                   borderRadius: "100px",
                   padding: "12px 24px",
                   color: "white",
+                  marginTop: 20,
                 }}
-                className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
-                onClick={() => setSelected(true)}
+                className={`btn w-full bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
+                onClick={() => {
+                  if (kycStatus) return setSelected(true);
+                  else return null;
+                }}
               >
-                Invest
+                {kycStatus ? "Invest" : "Complete your KYC"}
               </label>
             </div>
           </div>
@@ -419,21 +395,9 @@ const ViewPool = () => {
             style={{ display: "flex" }}
             className="flex-row justify-between mt-10 mb-3"
           >
-            <div style={{ fontSize: 19 }} className="mb-0">
+            <div style={{ fontSize: 19, fontWeight: "600" }} className="mb-0">
               Deals terms
             </div>
-            {/* <div
-              style={{
-                width: 119,
-                height: 36,
-                background: "#292C33",
-                display: "flex",
-                fontSize: 14,
-              }}
-              className="rounded-box items-center justify-center ml-20"
-            >
-              Contracts
-            </div> */}
           </div>
 
           <div
@@ -485,7 +449,14 @@ const ViewPool = () => {
           </div>
         </div>
 
-        <div style={{ marginTop: "50px", fontSize: 19, marginBottom: "20px" }}>
+        <div
+          style={{
+            marginTop: "50px",
+            fontSize: 19,
+            marginBottom: "20px",
+            fontWeight: "600",
+          }}
+        >
           Recent Activity
         </div>
 
@@ -505,13 +476,38 @@ const ViewPool = () => {
           )}
         </div>
 
+        <div
+          style={{
+            marginTop: "50px",
+            fontSize: 19,
+            marginBottom: 10,
+            fontWeight: "600",
+          }}
+        >
+          Borrower Details
+        </div>
+
         <div style={{ display: "flex" }} className="flex-col w-1/2">
           <div
             style={{ display: "flex" }}
-            className="flex-row justify-between mt-10 mb-3"
+            className="flex-row justify-between  mb-3"
           >
-            <div style={{ fontSize: 19 }} className="mb-0">
-              {companyDetails ? companyDetails.companyBio : ""}
+            <div
+              style={{ display: "flex" }}
+              className="flex-row gap-4 items-center"
+            >
+              <img
+                style={{
+                  background: "red",
+                  height: 50,
+                  width: 50,
+                  borderRadius: 25,
+                }}
+                src="https://picsum.photos/200/300"
+              />
+              <div style={{ fontSize: 18, fontWeight: "600" }} className="mb-0">
+                Name of the company
+              </div>
             </div>
             {companyDetails && companyDetails.linkedin ? (
               <div

@@ -30,7 +30,7 @@ const InvestModal = ({ isSenior, poolAddress }) => {
       >
         <div
           style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-          className="modal-box w-1/3 max-w-5xl p-0"
+          className="modal-box w-1/3 max-w-5xl p-0 "
         >
           <label
             for="InvestModal"
@@ -136,7 +136,10 @@ const InvestModal = ({ isSenior, poolAddress }) => {
             </div>
           </div>
 
-          <div className="modal-action mx-4 mt-2 mb-4">
+          <div
+            className="modal-action mx-4 mt-2 mb-4 justify-center"
+            style={{ display: "flex" }}
+          >
             <GradientButton
               className="w-full"
               onClick={() => (isSenior ? investSenior() : investJunior())} //if condition not true then investJunior will execute

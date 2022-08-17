@@ -23,6 +23,7 @@ ChartJS.register(
 
 const LineChart = () => {
   //const labels = Utils.months({ count: 7 });
+
   const data = {
     labels: [
       "Jan",
@@ -33,7 +34,7 @@ const LineChart = () => {
       "June",
       "July",
       "Aug",
-      "Spet",
+      "Sept",
       "Oct",
       "Nov",
       "Dec",

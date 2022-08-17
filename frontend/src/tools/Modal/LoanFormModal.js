@@ -18,7 +18,12 @@ import {
   retrieveFiles,
 } from "../../services/web3storageIPFS";
 
-const LoanFormModal = ({ handleForm }) => {
+const LoanFormModal = ({
+  handleForm,
+  setBorrowReqProcess,
+  setSelected,
+  setProcessModal,
+}) => {
   const [processed, setProcessed] = useState(false);
   const path = useNavigate();
   const [formData, setFormData] = useState({
@@ -87,6 +92,7 @@ const LoanFormModal = ({ handleForm }) => {
             handlePrev={handlePrev}
             finalSubmit={finalSubmit}
             formData={formData}
+            setProcessModal={setProcessModal}
           />
         );
       default:
@@ -105,6 +111,8 @@ const LoanFormModal = ({ handleForm }) => {
   }
 
   const finalSubmit = async (data) => {
+    setSelected(false);
+    setBorrowReqProcess(true);
     let {
       loan_name,
       loan_type,
@@ -126,7 +134,7 @@ const LoanFormModal = ({ handleForm }) => {
       loan_tenure,
       loan_interest,
       payment_frequency,
-      capital_loss,
+      capital_loss: capital_loss ? capital_loss : "0",
     };
     console.log(collateral_document);
     const loan_info = {
@@ -150,6 +158,7 @@ const LoanFormModal = ({ handleForm }) => {
     await createOpportunity(loanDetails);
     setProcessed(true);
     setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
+    setBorrowReqProcess(false);
   };
 
   const handleNext = (newData, value) => {
@@ -190,6 +199,7 @@ const LoanFormModal = ({ handleForm }) => {
           >
             Create Borrow Request
           </h3>
+
           <div className="mx-auto pb-2 ">
             <div className="mt-5 ">
               <Stepper steps={steps} currentStep={currentStep} />
