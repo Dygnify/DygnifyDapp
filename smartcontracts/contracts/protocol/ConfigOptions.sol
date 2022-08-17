@@ -19,7 +19,8 @@ library ConfigOptions {
     enum Numbers {
         LeverageRatio,
         DygnifyFee,
-        overDueFee,
-        JuniorSubpoolFee
+        OverDueFee,
+        JuniorSubpoolFee,
+        SeniorPoolFundLockinMonths
     }
 }

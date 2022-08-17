@@ -61,11 +61,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
     event Unstake(address indexed from, uint256 amount);
     event YieldWithdraw(address indexed to, uint256 amount);
 
-    function initialize(DygnifyConfig _dygnifyConfig, uint256 _lockInMonths)
-        public
-        initializer
-    {
-        require(_lockInMonths >= 0, "Fund lockin months cannot be negative");
+    function initialize(DygnifyConfig _dygnifyConfig) public initializer {
         require(
             address(_dygnifyConfig) != address(0),
             "Invalid config address"
@@ -82,7 +78,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
         lpToken = LPToken(dygnifyConfig.lpTokenAddress());
-        investmentLockinInMonths = _lockInMonths;
+        investmentLockinInMonths = dygnifyConfig.getSeniorPoolMockinMonths();
         sharePrice = 10**18;
     }
 

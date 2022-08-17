@@ -95,16 +95,21 @@ async function main() {
   console.log("DygnifyConfig configured successfully");
 
   // Set all numbers
+  // leverage ratio
   await dygnifyConfig.setNumber(0, 4);
+  // Dygnify Fee
   await dygnifyConfig.setNumber(1, 100000);
+  // OverDueFee
   await dygnifyConfig.setNumber(2, 5000000);
+  // JuniorSubpoolFee
   await dygnifyConfig.setNumber(3, 200000);
+  // second value should be the number of months for senior pool funds lockin for investor
+  await dygnifyConfig.setNumber(4, 0);
   console.log("Initial numbers configured successfully");
 
   // Initialize contracts
   // initialize the senior pool
-  // 12 months is the lockin period
-  await seniorPool.initialize(dygnifyConfig.address, 12);
+  await seniorPool.initialize(dygnifyConfig.address);
   // Initialize LP token
   await lpToken.initialize(seniorPool.address);
   // Initialize Borrower
