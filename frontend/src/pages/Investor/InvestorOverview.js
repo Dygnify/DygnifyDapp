@@ -6,6 +6,9 @@ import {
   getUserSeniorPoolInvestment,
   getWalletBal,
   getSeniorPoolDisplaySharePrice,
+  getTotalInvestmentOfInvestor,
+  getTotalYieldOfInvestor,
+  getJuniorWithdrawableOp
 } from "../../components/transaction/TransactionHelper";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
@@ -23,9 +26,11 @@ const InvestorOverview = () => {
 
   const path = useNavigate();
 
-  function updateSummery(investment, interest) {
-    setTotalInvestment((prev) => prev + investment);
-    setTotalYield((prev) => prev + investment * interest);
+  async function updateSummery() {
+    let amount = await getTotalInvestmentOfInvestor();
+    setTotalInvestment(amount);
+    let yieldEarned = await getTotalYieldOfInvestor();
+    setTotalYield(yieldEarned);
   }
 
   useEffect(() => {
@@ -77,25 +82,10 @@ const InvestorOverview = () => {
     }
   }, [seniorPoolInvestment]);
 
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const junorPools = await getAllWithdrawableOpportunities();
-        if (juniorPool && juniorPool.length) {
-          setJuniorPool(junorPools);
-          let investment = 0;
-          let yieldAccumulated = 0;
-          juniorPool.forEach((pool) => {
-            investment += pool.capitalInvested;
-            yieldAccumulated += pool.yieldGenerated;
-          });
-          updateSummery(investment, yieldAccumulated);
-        }
-      };
-      fetchData();
-    } catch (error) {
-      console.log(error);
-    }
+  useEffect(async () => {
+    await updateSummery();
+    const junorPools = await getJuniorWithdrawableOp();
+    setJuniorPool(junorPools);
   }, []);
 
   return (

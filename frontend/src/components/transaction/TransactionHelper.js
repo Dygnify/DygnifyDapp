@@ -944,3 +944,93 @@ export async function withdrawAllJunior(poolAddress) {
     await transaction1.wait();
   }
 }
+
+export async function getTotalInvestmentOfInvestor(){
+  let investorAddress = await getEthAddress();
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_INVESTOR,
+        investor.abi,
+        provider
+      );
+      const originationContract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+      
+      let opportunities = await contract.getOpportunityOfInvestor(investorAddress);
+      let totalInvestment = 0;
+      let obj = await getUserSeniorPoolInvestment();
+      let seniorInvestment = obj.stakingAmt;
+      totalInvestment += seniorInvestment;
+      for(let i = 0 ; i<opportunities.length ; i++){
+        let tx = await originationContract.opportunityToId(opportunities[i]);
+        let obj = await getOpportunity(tx);
+
+        const poolContract = new ethers.Contract(
+          obj.opportunityPoolAddress,
+          opportunityPool.abi,
+          provider
+        );
+        let stakingBal = await poolContract.stakingBalance(investorAddress);
+        stakingBal =  ethers.utils.formatUnits(stakingBal.toString(), sixDecimals)
+        totalInvestment += parseFloat(stakingBal);
+        
+      }
+      return totalInvestment;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return 0;
+}
+
+export async function getTotalYieldOfInvestor(){
+  let investorAddress = await getEthAddress();
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_INVESTOR,
+        investor.abi,
+        provider
+      );
+      const originationContract = new ethers.Contract(
+        process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+        opportunityOrigination.abi,
+        provider
+      );
+      
+      let opportunities = await contract.getOpportunityOfInvestor(investorAddress);
+      let totalYield = 0;
+
+      for(let i = 0 ; i<opportunities.length ; i++){
+        let tx = await originationContract.opportunityToId(opportunities[i]);
+        if(tx.opportunityStatus.toString() == "7"){
+          let obj = await getOpportunity(tx);
+
+          const poolContract = new ethers.Contract(
+            obj.opportunityPoolAddress,
+            opportunityPool.abi,
+            provider
+          );
+          let stakingBal = await poolContract.stakingBalance(investorAddress);
+          stakingBal =  ethers.utils.formatUnits(stakingBal.toString(), sixDecimals)
+          let yieldPercentage = await poolContract.juniorYieldPerecentage();
+          yieldPercentage =  ethers.utils.formatUnits(yieldPercentage.toString(), sixDecimals)
+          let opportunityYieldEarned = parseFloat(stakingBal) * parseFloat(yieldPercentage); 
+
+          totalYield += opportunityYieldEarned;
+        }
+        
+      }
+      return totalYield;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return 0;
+}
