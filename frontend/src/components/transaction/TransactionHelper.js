@@ -308,6 +308,22 @@ export async function getOpportunitysOf() {
       for (const op of data) {
         let tx = await contract.opportunityToId(op);
         let obj = await getOpportunity(tx);
+        if (obj.opportunityPoolAddress) {
+          try {
+            const poolContract = new ethers.Contract(
+              obj.opportunityPoolAddress,
+              opportunityPool.abi,
+              provider
+            );
+            let poolBal = await poolContract.poolBalance();
+            obj.poolBalance = ethers.utils.formatUnits(poolBal, sixDecimals);
+            obj.poolDisplayBalance = getDisplayAmount(obj.poolBalance);
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          obj.poolBalance = 0;
+        }
         opportunities.push(obj);
       }
       return opportunities;
@@ -333,10 +349,12 @@ export async function voteOpportunity(id, vote) {
       );
       const transaction1 = await contract.voteOpportunity(id, vote);
       await transaction1.wait();
+      return true;
     }
   } catch (error) {
     console.log(error);
   }
+  return false;
 }
 
 // to fetch opportunity by id
@@ -606,7 +624,7 @@ export async function getUserSeniorPoolInvestment() {
   return undefined;
 }
 
-export async function getBorrowerDetails() {
+export async function getBorrowerDetails(address) {
   try {
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
@@ -617,9 +635,11 @@ export async function getBorrowerDetails() {
         borrowerContract.abi,
         provider
       );
-      const address = await getEthAddress();
-      // if (!address) {
-      // }
+
+      if (!address) {
+        address = await getEthAddress();
+      }
+
       if (address) {
         console.log("getBrDe", await contract.borrowerProfile(address));
         return await contract.borrowerProfile(address);
@@ -733,13 +753,16 @@ export async function getAllUnderwriterOpportunities() {
       );
 
       let underWriter = await getEthAddress();
-      const count = await contract.underwriterToOpportunity(underWriter);
+      const opportunityList = await contract.getUnderWritersOpportunities(
+        underWriter
+      );
+      if (!opportunityList) {
+        return null;
+      }
+
       let opportunities = [];
-
-      for (let i = 0; i < count; i++) {
-        let id = await contract.opportunityIds(i);
-
-        let tx = await contract.opportunityToId(id);
+      for (let i = 0; i < opportunityList.length; i++) {
+        let tx = await contract.opportunityToId(opportunityList[i]);
         if (tx.opportunityStatus.toString() == "0") {
           let obj = getOpportunity(tx);
           opportunities.push(obj);
@@ -751,7 +774,7 @@ export async function getAllUnderwriterOpportunities() {
     console.log(error);
   }
 
-  return 0;
+  return null;
 }
 
 export async function investInSeniorPool(amount) {
@@ -945,7 +968,7 @@ export async function withdrawAllJunior(poolAddress) {
   }
 }
 
-export async function getTotalInvestmentOfInvestor(){
+export async function getTotalInvestmentOfInvestor() {
   let investorAddress = await getEthAddress();
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -960,13 +983,15 @@ export async function getTotalInvestmentOfInvestor(){
         opportunityOrigination.abi,
         provider
       );
-      
-      let opportunities = await contract.getOpportunityOfInvestor(investorAddress);
+
+      let opportunities = await contract.getOpportunityOfInvestor(
+        investorAddress
+      );
       let totalInvestment = 0;
       let obj = await getUserSeniorPoolInvestment();
       let seniorInvestment = obj.stakingAmt;
       totalInvestment += seniorInvestment;
-      for(let i = 0 ; i<opportunities.length ; i++){
+      for (let i = 0; i < opportunities.length; i++) {
         let tx = await originationContract.opportunityToId(opportunities[i]);
         let obj = await getOpportunity(tx);
 
@@ -976,9 +1001,11 @@ export async function getTotalInvestmentOfInvestor(){
           provider
         );
         let stakingBal = await poolContract.stakingBalance(investorAddress);
-        stakingBal =  ethers.utils.formatUnits(stakingBal.toString(), sixDecimals)
+        stakingBal = ethers.utils.formatUnits(
+          stakingBal.toString(),
+          sixDecimals
+        );
         totalInvestment += parseFloat(stakingBal);
-        
       }
       return totalInvestment;
     }
@@ -988,7 +1015,7 @@ export async function getTotalInvestmentOfInvestor(){
   return 0;
 }
 
-export async function getTotalYieldOfInvestor(){
+export async function getTotalYieldOfInvestor() {
   let investorAddress = await getEthAddress();
   try {
     if (typeof window.ethereum !== "undefined") {
@@ -1003,13 +1030,15 @@ export async function getTotalYieldOfInvestor(){
         opportunityOrigination.abi,
         provider
       );
-      
-      let opportunities = await contract.getOpportunityOfInvestor(investorAddress);
+
+      let opportunities = await contract.getOpportunityOfInvestor(
+        investorAddress
+      );
       let totalYield = 0;
 
-      for(let i = 0 ; i<opportunities.length ; i++){
+      for (let i = 0; i < opportunities.length; i++) {
         let tx = await originationContract.opportunityToId(opportunities[i]);
-        if(tx.opportunityStatus.toString() == "7"){
+        if (tx.opportunityStatus.toString() == "7") {
           let obj = await getOpportunity(tx);
 
           const poolContract = new ethers.Contract(
@@ -1018,14 +1047,20 @@ export async function getTotalYieldOfInvestor(){
             provider
           );
           let stakingBal = await poolContract.stakingBalance(investorAddress);
-          stakingBal =  ethers.utils.formatUnits(stakingBal.toString(), sixDecimals)
+          stakingBal = ethers.utils.formatUnits(
+            stakingBal.toString(),
+            sixDecimals
+          );
           let yieldPercentage = await poolContract.juniorYieldPerecentage();
-          yieldPercentage =  ethers.utils.formatUnits(yieldPercentage.toString(), sixDecimals)
-          let opportunityYieldEarned = parseFloat(stakingBal) * parseFloat(yieldPercentage); 
+          yieldPercentage = ethers.utils.formatUnits(
+            yieldPercentage.toString(),
+            sixDecimals
+          );
+          let opportunityYieldEarned =
+            parseFloat(stakingBal) * parseFloat(yieldPercentage);
 
           totalYield += opportunityYieldEarned;
         }
-        
       }
       return totalYield;
     }

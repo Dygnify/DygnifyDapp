@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import UnderwriterCard from "./Components/UnderwriterCard";
-import { getAllUnderReviewOpportunities } from "../../components/transaction/TransactionHelper";
+import { getAllUnderwriterOpportunities } from "../../components/transaction/TransactionHelper";
 
 const BorrowRequest = () => {
   const [opportunities, setOpportunities] = useState([]);
@@ -11,7 +11,7 @@ const BorrowRequest = () => {
   }, []);
 
   async function getUnderReviewOpportunity() {
-    let list = await getAllUnderReviewOpportunities();
+    let list = await getAllUnderwriterOpportunities();
     if (list) {
       setOpportunities(list);
     }

@@ -13,7 +13,7 @@ const OpportunityCardCollapsible = ({ data }) => {
       read.onloadend = function () {
         let opJson = JSON.parse(read.result);
         if (opJson) {
-          setPoolName(opJson.loanName);
+          setPoolName(opJson.loan_name);
         }
       };
     }
@@ -78,7 +78,7 @@ const OpportunityCardCollapsible = ({ data }) => {
             className="w-1/2 text-center flex-row justify-around items-center"
           >
             <DoughnutChart
-              data={[100, 20]}
+              data={[data.actualLoanAmount, data.poolBalance]}
               color={["#5375FE", "#ffffff"]}
               width={200}
               labels={["Capital Requested", "Total Raised"]}
@@ -101,7 +101,10 @@ const OpportunityCardCollapsible = ({ data }) => {
               </div>
 
               <div style={{ fontSize: 28, color: "white" }}>
-                --{process.env.REACT_APP_TOKEN_NAME}
+                {data && data.poolDisplayBalance
+                  ? data.poolDisplayBalance
+                  : "-- "}
+                {process.env.REACT_APP_TOKEN_NAME}
               </div>
             </div>
           </div>
@@ -112,7 +115,7 @@ const OpportunityCardCollapsible = ({ data }) => {
             <div style={{ display: "flex" }} className="flex-col">
               <div className="mb-10">
                 <p className="font-light text-sm">Interest Rate</p>
-                <p className="font-medium text-lg">{data?.loanInterest} %</p>
+                <p className="font-medium text-lg">{data?.loanInterest}</p>
               </div>
               <div>
                 <p className="font-light text-sm">Payment Frequency</p>

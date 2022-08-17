@@ -82,8 +82,8 @@ export default function Details({ handleNext, handlePrev, formData }) {
               ? formik.errors.capital_loss
               : null
           }
-          label="First Capital Loss"
-          placeholder="Enter First Capital Loss (if any)"
+          label="First Loss Capital"
+          placeholder="Enter First Loss Capital Percentage (if any)"
           className="w-full"
         />
 

@@ -126,7 +126,7 @@ const LoanFormModal = ({ handleForm }) => {
       loan_tenure,
       loan_interest,
       payment_frequency,
-      capital_loss,
+      capital_loss: capital_loss ? capital_loss : "0",
     };
     console.log(collateral_document);
     const loan_info = {

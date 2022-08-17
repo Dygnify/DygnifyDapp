@@ -24,6 +24,7 @@ const Overview = () => {
   const [totalBorrowedAmt, setTotalBorrowedAmt] = useState("--");
   const [totalOutstandingAmt, setTotalOutstandingAmt] = useState("--");
   const [totalRepaidAmt, setTotalRepaidAmt] = useState("--");
+  const [totalLoanAmtWithInterest, setTotalLoanAmtWithInterest] = useState(0);
   const [nextDueDate, setNextDueDate] = useState();
   const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
@@ -113,9 +114,13 @@ const Overview = () => {
 
     totalRepaidAmt = totalRepaidAmt ? totalRepaidAmt : 0;
     if (totalRepaidAmt > 0) {
-      setTotalRepaidAmt(getDisplayAmount(totalRepaidAmt));
+      setTotalRepaidAmt({
+        amount: totalRepaidAmt,
+        displayTotalRepaidAmt: getDisplayAmount(totalRepaidAmt),
+      });
     }
     if (totalLoanWithIntAmount) {
+      setTotalLoanAmtWithInterest(totalLoanWithIntAmount);
       setTotalOutstandingAmt(
         getDisplayAmount(totalLoanWithIntAmount - totalRepaidAmt)
       );
@@ -215,7 +220,10 @@ const Overview = () => {
           </div>
           <div style={{ marginRight: 20 }}>
             <DoughnutChart
-              data={[92, 8]}
+              data={[
+                totalLoanAmtWithInterest,
+                totalRepaidAmt.amount ? totalRepaidAmt.amount : 0,
+              ]}
               color={["#5375FE", "#ffffff"]}
               width={200}
               labels={[

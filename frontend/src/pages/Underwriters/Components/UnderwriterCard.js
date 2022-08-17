@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../tools/Button/PrimaryButton";
-import { getBinaryFileData } from "../../../services/fileHelper";
+import {
+  getBinaryFileData,
+  getDataURLFromFile,
+} from "../../../services/fileHelper";
 import { retrieveFiles } from "../../../services/web3storageIPFS";
 
 const UnderwriterCard = ({ data }) => {
@@ -9,7 +12,7 @@ const UnderwriterCard = ({ data }) => {
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState();
   const [poolDetails, setPoolDetails] = useState();
-
+  const [logoImgSrc, setLogoImgSrc] = useState();
   useEffect(() => {
     // fetch the opportunity details from IPFS
     retrieveFiles(data?.opportunityInfo, true).then((res) => {
@@ -19,14 +22,35 @@ const UnderwriterCard = ({ data }) => {
           let opJson = JSON.parse(read.result);
           if (opJson) {
             setCompanyName(opJson.company_name);
-            setPoolName(opJson.loanName);
+            setPoolName(opJson.loan_name);
             setPoolDetails({ ...data, ...opJson });
-            console.log(opJson);
+            getCompanyLogo(
+              opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+            );
           }
         };
       }
     });
   }, []);
+
+  async function getCompanyLogo(cid) {
+    if (!cid) {
+      return;
+    }
+    try {
+      retrieveFiles(cid, true).then((res) => {
+        if (res) {
+          let read = getDataURLFromFile(res);
+          read.onloadend = function () {
+            setLogoImgSrc(read.result);
+            console.log(read.result);
+          };
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div
@@ -41,8 +65,8 @@ const UnderwriterCard = ({ data }) => {
       className="card-body card text-white w-1/3 flex-row items-center"
     >
       <img
-        src="/assets/Dygnify_Image.png"
-        style={{ width: 150, height: 150 }}
+        src={logoImgSrc}
+        style={{ width: 150, height: 150, borderRadius: 75 }}
       />
       <div style={{ marginLeft: 32, width: 400 }}>
         <div style={{ display: "flex", marginTop: -10 }} className="flex-col">

@@ -16,18 +16,23 @@ const PoolDetails = () => {
     firstText: "",
     secondText: "",
   });
+  const [status, setStatus] = useState({
+    approve: false,
+    unsure: false,
+    reject: false,
+  });
 
   useEffect(() => {
     setOpDetails(location.state);
   }, []);
 
   useEffect(() => {
-    loadInfo();
-    loadLoanPurpose();
-    setCompanyDetails(opDetails.companyDetails);
+    if (opDetails) {
+      loadInfo();
+      loadLoanPurpose();
+      setCompanyDetails(opDetails.companyDetails);
+    }
   }, [opDetails]);
-
-  const status = { approve: approveStatus, unsure: false, reject: false };
 
   function loadInfo() {
     if (opDetails) {
@@ -68,11 +73,11 @@ const PoolDetails = () => {
   }
 
   function loadLoanPurpose() {
-    if (!opDetails || !opDetails.loanPurpose) {
+    if (!opDetails || !opDetails.loan_purpose) {
       return;
     }
     const { isSliced, firstText, secondText } = getExtendableTextBreakup(
-      opDetails.loanPurpose,
+      opDetails.loan_purpose,
       200
     );
     if (isSliced) {
@@ -89,16 +94,21 @@ const PoolDetails = () => {
     }
   }
 
-  function updateStatus() {
-    let opStatus = location?.item?.status ?? "";
-    if (opStatus == "1") status.reject = true;
-    else if (opStatus == "2") status.approve = true;
-    else if (opStatus == "3") status.unsure = true;
+  function updateStatus(vote) {
+    if (vote == "1") {
+      setStatus({ approve: false, unsure: false, reject: true });
+    } else if (vote == "2") {
+      setStatus({ approve: true, unsure: false, reject: false });
+    } else if (vote == "3") {
+      setStatus({ approve: false, unsure: true, reject: false });
+    }
   }
 
   async function vote(voteID) {
-    await voteOpportunity(location?.item?.opportunityID ?? "", voteID);
-    updateStatus();
+    const result = await voteOpportunity(opDetails.id, voteID);
+    if (result) {
+      updateStatus(voteID);
+    }
   }
 
   return (
@@ -109,10 +119,10 @@ const PoolDetails = () => {
       >
         <div className="flex-col">
           <div style={{ fontSize: 28 }} className="mb-0">
-            {opDetails?.loanName}
+            {opDetails?.loan_name}
           </div>
           <small style={{ color: "#64748B", fontSize: 14 }}>
-            {opDetails?.company_name}
+            {companyDetails?.companyName}
           </small>
         </div>
         <div className="mr-10">
@@ -259,15 +269,11 @@ const PoolDetails = () => {
           }}
         >
           <div style={{ fontSize: "14px", color: "#64748B" }}>
-            Name of documents - <div>{}</div>
+            Name of documents - {opDetails?.collateral_document_name}
           </div>
           <div>Document descripton</div>
           <div style={{ fontSize: 14, color: "#64748B" }}>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum. Nulla Lorem mollit cupidatat irure.
-            Laborum magna nulla duis ullamco cillum dolor. Voluptate
-            exercitation incididunt aliquip deserunt reprehenderit elit laborum.
+            {opDetails?.collateral_document_description}
           </div>
         </div>
       </div>
@@ -300,11 +306,11 @@ const PoolDetails = () => {
           {companyDetails ? companyDetails.companyBio : ""}
         </div>
       </div>
-      <div className="w-1/2">
+      {/* <div className="w-1/2">
         <div style={{ margin: "10px 0", marginTop: "40px", fontSize: 19 }}>
           KYC Details
         </div>
-      </div>
+      </div> */}
       <div className="w-1/2">
         <div style={{ margin: "10px 0", marginTop: "40px", fontSize: 19 }}>
           KYB Details
