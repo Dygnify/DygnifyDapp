@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import dygToken from "../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json";
 import NFTMinter from "../artifacts/contracts/protocol/old/NFT_minter.sol/NFTMinter.json";
@@ -11,6 +11,7 @@ import opportunityOrigination from "../artifacts/contracts/protocol/OpportunityO
 import seniorPool from "../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 import opportunityPool from "../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import "./Token.css"
+import {getAllUnderReviewOpportunities} from "../components/transaction/TransactionHelper"
 const tokenAddress = "0x7d7FE8dbb260a213322b0dEE20cB1ca2d313EBfE";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 
@@ -55,6 +56,12 @@ function Token() {
   const [opportunityId, setOpportunityId] = useState("");
   const [underWriter, setUnderWriter] = useState("");
   const [opportunityIdForInvest, setOpportunityIdForInvest] = useState("");
+  const [underReviewOp, setUnderReviewOp] = useState([]);
+
+  useEffect(async () => {
+    let op = await getAllUnderReviewOpportunities();
+    setUnderReviewOp(op);
+  }, []);
   
   async function grantAdminRole(contractId, receiver) {
     const admin = "0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775";
@@ -313,7 +320,7 @@ function Token() {
   return (
     <div>
       <header>
-        <br />
+        {/* <br />
         <button onClick={getBalance}>Get Balance</button>
         <button onClick={sendCoins}>Send Coins</button>
         <input
@@ -344,32 +351,54 @@ function Token() {
           type="text"
           onChange={(event) => setNameForAMLCheck(event.target.value)}
         />
-        <button onClick={() => onCheckAML(nameForAMLCheck)}>Check</button>
-        <br />
-        <br />
-        <h3>Opportunity Origination contract</h3>
-        <br />
-        <input
-          type="text"
-          onChange={(event) => setAdmin(event.target.value)}
-          placeholder="Target Address"
-        />
-        <button onClick={() => grantAdminRole(0,admin)}>Change Admin Role</button>
-
-        <br />
-        <input
-          type="text"
-          onChange={(event) => setOpportunityId(event.target.value)}
-          placeholder="opportunity ID"
-        />
-        <br />
-        <input
-          type="text"
-          onChange={(event) => setUnderWriter(event.target.value)}
-          placeholder="UnderWriter Address"
-        />
-        <button onClick={() => assignUnderWriter()}>Assign underWriter</button>
-
+        <button onClick={() => onCheckAML(nameForAMLCheck)}>Check</button> */}
+        <div>
+          <br />
+          <br />
+          <h3>Opportunity Origination contract</h3>
+          <br />
+          <input
+            type="text"
+            onChange={(event) => setAdmin(event.target.value)}
+            placeholder="Target Address"
+          />
+          <button onClick={() => grantAdminRole(0,admin)}>Change Admin Role</button>
+          <div style={{width : "80%"}} >
+            <table style={{width : "100%"}}>
+            <tr >
+              <td style={{backgroundColor:"grey" ,color:"black"}}>Borrower address</td>
+              <td style={{backgroundColor:"grey" ,color:"black"}}>Opportunity id</td>
+            </tr>
+            {
+              underReviewOp.map(
+                item =>{
+                  return(
+                    <>
+                      <tr>
+                        <td>{item.borrower}</td>
+                        <td >{item.id}</td>
+                      </tr>
+                    </>
+                  )
+                }
+              )
+            }
+            </table>
+          </div>
+          <br />
+          <input
+            type="text"
+            onChange={(event) => setOpportunityId(event.target.value)}
+            placeholder="opportunity ID"
+          />
+          <input
+            type="text"
+            onChange={(event) => setUnderWriter(event.target.value)}
+            placeholder="UnderWriter Address"
+            style={{marginLeft : '10px'}}
+          />
+          <button onClick={() => assignUnderWriter()}>Assign underWriter</button>
+        </div>
         <br />
         <br />
         <h3>Senior Pool contract</h3>

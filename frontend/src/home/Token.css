@@ -4,3 +4,6 @@ button{
     margin: 10px;
     padding: 4px;
 }
+table, th, td {
+    border: 1px solid;
+}
