@@ -39,8 +39,7 @@ const EditBorrowerProfile = () => {
   //const [allowSubmit, setAllowSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const [textChange, setTextChange] = useState(false);
-  const [fileChange, setFileChange] = useState(false);
+  const [hasKey, setHasKey] = useState();
   const oldBrJson = location.state;
   const [error, setError] = useState();
 
@@ -68,7 +67,8 @@ const EditBorrowerProfile = () => {
         businessIncorporationFiles &&
         businessAddressFiles &&
         logoFile
-      )
+      ) &&
+      !location.state
     ) {
       return setError(true);
     }
@@ -97,6 +97,7 @@ const EditBorrowerProfile = () => {
     console.log("location*****", location.state);
     if (location.state) {
       setProfileState(location.state);
+      setHasKey(location.state ? "businessLicFile" in location.state : true);
     }
   }, []);
 
@@ -127,7 +128,13 @@ const EditBorrowerProfile = () => {
       bizAddFileName.current.value = AddFile.businessAddDocName;
       bizIdFileName.current.value = IdFile.businessIdDocName;
       bizIncoFileName.current.value = IncoFile.businessIncoDocName;
-      bizLicFileName.current.value = LicFile.businessLicDocName;
+
+      if (hasKey) {
+        bizLicFileName.current.value = LicFile.businessLicDocName;
+
+        businessLicFilesCID = LicFile.businessLicFileCID;
+      }
+
       // setLogoFile(LogoFile);
       // console.log(bizAddFileName.current.value);
       // setBusinessAddressFiles(AddFile);
@@ -137,7 +144,7 @@ const EditBorrowerProfile = () => {
 
       logoFileCID = LogoFile.businessLogoFileCID;
       businessIdFilesCID = IdFile.businessIdFileCID;
-      businessLicFilesCID = LicFile.businessLicFileCID;
+
       businessAddFilesCID = AddFile.businessAddFileCID;
       businessIncoFilesCID = IncoFile.businessIncoFileCID;
     }
@@ -158,6 +165,10 @@ const EditBorrowerProfile = () => {
     try {
       //Insert all the files in one array
       validations();
+
+      let key = false;
+      if (businessLicenseFiles) key = true;
+
       {
         if (
           businessIdentityFiles ||
@@ -206,8 +217,10 @@ const EditBorrowerProfile = () => {
         }
 
         if (
-          (businessLicenseFiles && businessLicenseFiles.length) ||
-          profileState
+          (businessLicenseFiles &&
+            businessLicenseFiles.length &&
+            (hasKey || key)) ||
+          (profileState && (hasKey || key))
         ) {
           businessLicFilesCID = await uploadFilesToIPFS(
             businessLicenseFiles
@@ -263,29 +276,37 @@ const EditBorrowerProfile = () => {
             ? businessIncorporationFiles[0].name
             : profileState.businessIncoFile.businessIncoFileName,
         },
-        businessLicFile: {
-          businessLicDocName: businessLicenseFiles
-            ? bizLicFileName.current.value
-            : profileState
-            ? profileState.businessLicFile.businessLicDocName
-            : null,
-          businessLicFileCID: businessLicenseFiles
-            ? businessLicFilesCID
-            : profileState?.businessLicFile.businessLicFileCID,
-          businessLicFileName: businessLicenseFiles
-            ? businessLicenseFiles[0].name
-            : profileState?.businessLicFile.businessLicFileName,
-        },
+
         website: website.current.value,
         email: email.current.value,
         twitter: twitter.current.value,
         linkedin: linkedin.current.value,
       };
 
+      if ((businessLicenseFiles || profileState) && (hasKey || key)) {
+        const licenseFile = {
+          businessLicFile: {
+            businessLicDocName: businessLicenseFiles
+              ? bizLicFileName.current.value
+              : profileState
+              ? profileState.businessLicFile.businessLicDocName
+              : null,
+            businessLicFileCID: businessLicenseFiles
+              ? businessLicFilesCID
+              : profileState?.businessLicFile.businessLicFileCID,
+            businessLicFileName: businessLicenseFiles
+              ? businessLicenseFiles[0].name
+              : profileState?.businessLicFile.businessLicFileName,
+          },
+        };
+
+        borrowerJsonData = { ...borrowerJsonData, ...licenseFile };
+      }
+
       checkEdited(borrowerJsonData);
-      // console.log(borrowerJsonData);
-      console.log(allowSubmit);
-      if (allowSubmit) {
+      console.log(borrowerJsonData, hasKey, key);
+      console.log(allowSubmit, "error", error);
+      if (allowSubmit && !error) {
         console.log("Inside allow");
 
         let file = makeFileObjects(borrowerJsonData, Math.random());
@@ -391,7 +412,7 @@ const EditBorrowerProfile = () => {
             onChange={onBusinessLicenseFilesUpload}
             reference={bizLicFileName}
             fileName={
-              profileState
+              profileState && hasKey
                 ? profileState.businessLicFile.businessLicFileName
                 : ""
             }
@@ -438,7 +459,11 @@ const EditBorrowerProfile = () => {
             color: "white",
           }}
           className="btn btn-wide btn-outline text-white mr-4"
-          onClick={() => navigate("/borrower_dashboard/borrower_profile")}
+          onClick={() =>
+            navigate("/borrower_dashboard/borrower_profile", {
+              state: oldBrJson,
+            })
+          }
         >
           Exit
         </button>
@@ -458,33 +483,3 @@ const EditBorrowerProfile = () => {
 };
 
 export default EditBorrowerProfile;
-
-// if (brJson.companyName !== oldBrJson.companyName) return companyName;
-// if (brJson.companyRepName !== oldBrJson.companyRepName) return companyName;
-// if (brJson.companyBio !== oldBrJson.companyBio) return companyName;
-
-// function jsonDiff(brJson, oldBrJson) {
-
-//   //Json.parse(brJson)
-//   const result = {};
-//   if (Object.is(brJson, oldBrJson)) {
-//     return undefined;
-//   }
-//   if (!oldBrJson || typeof oldBrJson !== "object") {
-//     return oldBrJson;
-//   }
-//   Object.keys(brJson || {})
-//     .concat(Object.keys(oldBrJson || {}))
-//     .forEach((key) => {
-//       if (
-//         typeof oldBrJson[key] === "object" &&
-//         typeof brJson[key] === "object"
-//       ) {
-//         const value = diff(brJson[key], oldBrJson[key]);
-//         if (value !== undefined) {
-//           result[key] = value;
-//         }
-//       }
-//     });
-//   return result;
-// }

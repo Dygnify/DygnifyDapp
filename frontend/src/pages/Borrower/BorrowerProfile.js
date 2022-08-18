@@ -37,6 +37,7 @@ const BorrowerProfile = () => {
   const location = useLocation();
   const [profileStatus, setProfileStatus] = useState(true);
   const [kycStatus, setKycStatus] = useState(false);
+  const [hasKey, setHaskey] = useState();
   const brJson = location.state;
 
   const brJsonLocationState = useRef();
@@ -46,6 +47,7 @@ const BorrowerProfile = () => {
   useEffect(() => {
     loadBorrowerProfileData();
     if (brJson) fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
+    setHaskey(brJson ? "businessLicFile" in brJson : false);
   }, []);
 
   const handleForm = () => {
@@ -102,7 +104,7 @@ const BorrowerProfile = () => {
             let brJson = JSON.parse(read.result);
             loadBorrowerData(brJson);
             setborrowerJson(brJson);
-            brJsonLocationState.current.value = brJson;
+            setHaskey(brJson ? "businessLicFile" in brJson : false);
             console.log(brJson);
           };
         }
@@ -283,7 +285,7 @@ const BorrowerProfile = () => {
                 <button
                   onClick={() =>
                     navigate("/borrower_dashboard/edit_profile", {
-                      state: borrowerJson,
+                      state: borrowerJson ? borrowerJson : brJson,
                     })
                   }
                   style={{
@@ -520,29 +522,33 @@ const BorrowerProfile = () => {
               <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
                 Business License Proof
               </h6>
-              <DocumentCard
-                docName={
-                  brJson
-                    ? brJson.businessLicFile.businessLicDocName
-                    : borrowerJson
-                    ? borrowerJson.businessLicFile.businessLicDocName
-                    : null
-                }
-                docCid={
-                  brJson
-                    ? brJson.businessLicFile.businessLicFileCID
-                    : borrowerJson
-                    ? borrowerJson.businessLicFile.businessLicFileCID
-                    : null
-                }
-                fileName={
-                  brJson
-                    ? brJson.businessLicFile.businessLicFileName
-                    : borrowerJson
-                    ? borrowerJson.businessLicFile.businessLicFileName
-                    : null
-                }
-              />
+              {hasKey ? (
+                <DocumentCard
+                  docName={
+                    brJson
+                      ? brJson.businessLicFile.businessLicDocName
+                      : borrowerJson
+                      ? borrowerJson.businessLicFile.businessLicDocName
+                      : null
+                  }
+                  docCid={
+                    brJson
+                      ? brJson.businessLicFile.businessLicFileCID
+                      : borrowerJson
+                      ? borrowerJson.businessLicFile.businessLicFileCID
+                      : null
+                  }
+                  fileName={
+                    brJson
+                      ? brJson.businessLicFile.businessLicFileName
+                      : borrowerJson
+                      ? borrowerJson.businessLicFile.businessLicFileName
+                      : null
+                  }
+                />
+              ) : (
+                <DocumentCard docName={"No document added!"} disable={true} />
+              )}
               <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
                 Business Incorporation Proof
               </h6>
