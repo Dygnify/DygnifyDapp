@@ -132,7 +132,7 @@ const Invest = () => {
                 //send data params
                 onClick={() =>
                   path("/investor-dashboardN/viewPool", {
-                    state: { ...seniorPool, kycStatus: kycStatus },
+                    state: { ...item, kycStatus: kycStatus },
                   })
                 }
               />

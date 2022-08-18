@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
-import { getBinaryFileData } from "../../../../services/fileHelper";
+import {
+  getBinaryFileData,
+  getDataURLFromFile,
+} from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 
 const ViewPoolCard = ({ onClick, data, kycStatus }) => {
@@ -9,6 +12,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState(data.poolName);
+  const [logoImgSrc, setLogoImgSrc] = useState();
 
   useEffect(() => {
     // fetch the opportunity details from IPFS
@@ -20,6 +24,9 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
           if (opJson) {
             setCompanyName(opJson.company_name);
             setPoolName(opJson.loan_name);
+            getCompanyLogo(
+              opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+            );
           }
         };
       }
@@ -48,6 +55,24 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
     );
   };
 
+  async function getCompanyLogo(cid) {
+    if (!cid) {
+      return;
+    }
+    try {
+      retrieveFiles(cid, true).then((res) => {
+        if (res) {
+          let read = getDataURLFromFile(res);
+          read.onloadend = function () {
+            setLogoImgSrc(read.result);
+            console.log(read.result);
+          };
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div
       style={{
@@ -61,8 +86,8 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
       className="card-body card text-white w-1/3 flex-row items-center"
     >
       <img
-        src="/assets/Dygnify_Image.png"
-        style={{ width: 150, height: 150 }}
+        src={logoImgSrc ? logoImgSrc : "/assets/Dygnify_Image.png"}
+        style={{ width: 150, height: 150, borderRadius: 75 }}
       />
       <div style={{ marginLeft: 32, width: 400 }}>
         <div style={{ display: "flex", marginTop: -18 }} className="flex-col">

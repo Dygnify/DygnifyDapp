@@ -14,7 +14,10 @@ import Alert from "../Components/Alert";
 import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import LinkedIn from "../SVGIcons/LinkedIn";
-import { getBinaryFileData } from "../../services/fileHelper";
+import {
+  getBinaryFileData,
+  getDataURLFromFile,
+} from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import { getExtendableTextBreakup } from "../../services/displayTextHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
@@ -38,6 +41,7 @@ const ViewPool = () => {
     secondText: "",
   });
   const [selected, setSelected] = useState(null);
+  const [logoImgSrc, setLogoImgSrc] = useState();
 
   const handleDrawdown = () => {
     setSelected(null);
@@ -60,7 +64,6 @@ const ViewPool = () => {
 
   useEffect(() => {
     getUserWalletAddress().then((address) => loadBlockpassWidget(address));
-    console.log(location.state);
     if (location?.state) {
       setPoolData(location.state);
       //setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
@@ -78,33 +81,13 @@ const ViewPool = () => {
       });
 
       // get Pool Transaction Data
-      axiosHttpService(tokenTransactions(poolData.opportunityPoolAddress)).then(
-        (transactionDetails) => {
+      axiosHttpService(tokenTransactions(poolData.opportunityPoolAddress))
+        .then((transactionDetails) => {
           if (transactionDetails && transactionDetails.res) {
             setTransactionData(transactionDetails.res.result);
           }
-        }
-      );
-
-      // get borrower details
-      getBorrowerDetails(poolData.borrower).then((cid) => {
-        console.log(cid);
-        console.log(poolData.borrower);
-        if (cid) {
-          retrieveFiles(cid, true).then((res) => {
-            if (res) {
-              let read = getBinaryFileData(res);
-              read.onloadend = function () {
-                let opJson = JSON.parse(read.result);
-                if (opJson) {
-                  setCompanyDetails(opJson);
-                  console.log(opJson);
-                }
-              };
-            }
-          });
-        }
-      });
+        })
+        .catch((error) => console.log(error));
 
       // fetch the opportunity details from IPFS
       retrieveFiles(poolData.opportunityInfo, true).then((res) => {
@@ -113,11 +96,17 @@ const ViewPool = () => {
           read.onloadend = function () {
             let opJson = JSON.parse(read.result);
             if (opJson) {
-              setPoolName(opJson.loanName);
-
+              setPoolName(opJson.loan_name);
+              setCompanyDetails(opJson.companyDetails);
+              getCompanyLogo(
+                opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+              );
               // get the loan purpose
-              const { isSliced, firstText, secondText } =
-                getExtendableTextBreakup(opJson.loanPurpose, 200);
+              const {
+                isSliced,
+                firstText,
+                secondText,
+              } = getExtendableTextBreakup(opJson.loan_purpose, 200);
 
               if (isSliced) {
                 setLoanPurpose({
@@ -173,7 +162,6 @@ const ViewPool = () => {
             : "--",
         },
       ]);
-      console.log(info);
     }
   }
 
@@ -201,6 +189,25 @@ const ViewPool = () => {
       window.open(url, "_blank");
     }
   };
+
+  async function getCompanyLogo(cid) {
+    if (!cid) {
+      return;
+    }
+    try {
+      retrieveFiles(cid, true).then((res) => {
+        if (res) {
+          let read = getDataURLFromFile(res);
+          read.onloadend = function () {
+            setLogoImgSrc(read.result);
+            console.log(read.result);
+          };
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -503,10 +510,10 @@ const ViewPool = () => {
                   width: 50,
                   borderRadius: 25,
                 }}
-                src="https://picsum.photos/200/300"
+                src={logoImgSrc}
               />
               <div style={{ fontSize: 18, fontWeight: "600" }} className="mb-0">
-                Name of the company
+                {companyDetails?.companyName}
               </div>
             </div>
             {companyDetails && companyDetails.linkedin ? (
