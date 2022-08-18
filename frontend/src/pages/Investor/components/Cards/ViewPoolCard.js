@@ -19,7 +19,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
           let opJson = JSON.parse(read.result);
           if (opJson) {
             setCompanyName(opJson.company_name);
-            setPoolName(opJson.loanName);
+            setPoolName(opJson.loan_name);
           }
         };
       }
