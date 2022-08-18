@@ -66,7 +66,9 @@ const ViewPool = () => {
     getUserWalletAddress().then((address) => loadBlockpassWidget(address));
     if (location?.state) {
       setPoolData(location.state);
-      //setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
+      setKycStatus(
+        location.state?.kycStatus ? location.state?.kycStatus : false
+      );
     }
   }, []);
 
