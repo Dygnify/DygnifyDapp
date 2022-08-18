@@ -2,12 +2,7 @@ import LockedValueChart from "../../../../investor/components/LockedValueChart";
 import GradientButton from "../../../../tools/Button/GradientButton";
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
-export default function Final({
-  handlePrev,
-  finalSubmit,
-  formData,
-  setProcessModal,
-}) {
+export default function Final({ handlePrev, finalSubmit, formData }) {
   const handleClick = () => {
     finalSubmit(formData);
   };
@@ -102,7 +97,7 @@ export default function Final({
         <label
           typeof="submit"
           htmlFor="ProcessModal"
-          onClick={() => setProcessModal(true)}
+          onClick={handleClick}
           style={{
             borderRadius: "100px",
             padding: "12px 24px",

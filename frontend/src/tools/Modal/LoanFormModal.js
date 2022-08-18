@@ -92,7 +92,6 @@ const LoanFormModal = ({
             handlePrev={handlePrev}
             finalSubmit={finalSubmit}
             formData={formData}
-            setProcessModal={setProcessModal}
           />
         );
       default:
@@ -111,7 +110,7 @@ const LoanFormModal = ({
   }
 
   const finalSubmit = async (data) => {
-    setSelected(false);
+    setProcessModal(true);
     setBorrowReqProcess(true);
     let {
       loan_name,
@@ -153,9 +152,10 @@ const LoanFormModal = ({
     );
     loanDetails = { ...loanDetails, collateralHash, loanInfoHash };
     // sending data in backend to create opportunity with hash code
-    console.log("submitsss", loanDetails);
 
-    await createOpportunity(loanDetails);
+    const result = await createOpportunity(loanDetails);
+    console.log(result);
+    console.log("submitsss", loanDetails);
     setProcessed(true);
     setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
     setBorrowReqProcess(false);

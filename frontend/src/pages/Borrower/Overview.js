@@ -29,7 +29,7 @@ const Overview = () => {
   const [nextDueAmount, setNextDueAmount] = useState();
   const [selected, setSelected] = useState(null);
   const [kycSelected, setKycSelected] = useState();
-  const [kycStatus, setKycStatus] = useState();
+  const [kycStatus, setKycStatus] = useState(1);
   const [profileStatus, setProfileStatus] = useState();
   const [borrowReqProcess, setBorrowReqProcess] = useState();
   const [processModal, setProcessModal] = useState();
@@ -61,12 +61,12 @@ const Overview = () => {
 
   const checkForKycAndProfile = async (refId) => {
     try {
-      const result = await axiosHttpService(kycOptions(refId));
+      // const result = await axiosHttpService(kycOptions(refId));
 
-      if (result.res.status === "success") setKycStatus(true);
-      if (result.res.status === "error") {
-        setKycStatus(false);
-      }
+      // if (result.res.status === "success") setKycStatus(true);
+      // if (result.res.status === "error") {
+      //   setKycStatus(false);
+      // }
 
       getBorrowerDetails().then((borrowerCID) => {
         console.log(borrowerCID);

@@ -9,8 +9,8 @@ const ProcessingRequestModal = ({
   const data = {
     success: false,
   };
+  console.log(borrowReqProcess, "inrequest modal");
 
-  const navigate = useNavigate();
   return (
     <>
       <input type="checkbox" id="ProcessModal" className="modal-toggle" />
@@ -39,15 +39,15 @@ const ProcessingRequestModal = ({
             style={{ display: "flex", fontSize: 55, fontWeight: 600 }}
             className="justify-center"
           >
-            {borrowReqProcess ? `Yay!🎉` : "In Progress⏱"}
+            {borrowReqProcess ? "In Progress⏱" : `Yay!🎉`}
           </p>
           <p
             style={{ display: "flex", fontSize: 23, fontWeight: 600 }}
             className="justify-center mb-2"
           >
             {borrowReqProcess
-              ? "Borrow request created successfully."
-              : "Request is in process"}
+              ? "Request is in process"
+              : "Borrow request created successfully."}
           </p>
 
           <div
