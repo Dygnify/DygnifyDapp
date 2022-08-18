@@ -51,12 +51,14 @@ const EditBorrowerProfile = () => {
   let businessAddFilesCID = "";
   let businessIncoFilesCID = "";
 
-  let allowSubmit;
+  let allowSubmit = true;
 
   const checkEdited = (brJson) => {
-    if (JSON.stringify(brJson) === JSON.stringify(oldBrJson)) {
-      return (allowSubmit = false);
-    } //return setAllowSubmit(false);
+    if (location.state) {
+      if (JSON.stringify(brJson) === JSON.stringify(oldBrJson)) {
+        return (allowSubmit = false);
+      } //return setAllowSubmit(false);
+    }
   };
 
   const validations = () => {
