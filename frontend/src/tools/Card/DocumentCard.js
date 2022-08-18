@@ -26,7 +26,11 @@ const DocumentCard = ({ docName, docCid, fileName }) => {
           <p style={{ fontStyle: "italic", color: "#E6E6E6" }}> {docName}</p>
         ) : null}
       </div>
-      <a className="text-blue-700" onClick={viewDoc}>
+      <a
+        className="text-blue-700"
+        style={{ cursor: "pointer" }}
+        onClick={viewDoc}
+      >
         View Document
       </a>
     </div>

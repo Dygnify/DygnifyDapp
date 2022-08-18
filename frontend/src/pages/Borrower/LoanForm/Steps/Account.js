@@ -43,7 +43,7 @@ export default function Account({ formData, handleNext, handleForm }) {
               }
               className="w-1/2 ml-2"
               label="Loan Amount"
-              placeholder="Enter Loan Name"
+              placeholder="Enter Loan Amount in USDC"
             ></TextField>
           </div>
           <div style={{ display: "flex" }}>
@@ -58,7 +58,7 @@ export default function Account({ formData, handleNext, handleForm }) {
               }
               className="w-1/2 mr-2"
               label="Loan Tenure"
-              placeholder="Enter Loan Tenure"
+              placeholder="Enter Loan Tenure in Months"
             ></TextField>
             <TextField
               name="payment_frequency"
@@ -72,7 +72,7 @@ export default function Account({ formData, handleNext, handleForm }) {
               }
               className="w-1/2 ml-2"
               label="Repayment Frequency"
-              placeholder="Enter Repayment Frequency"
+              placeholder="Enter Repayment Frequency in Days"
             ></TextField>
           </div>
           <div style={{ display: "flex" }}>
@@ -87,7 +87,7 @@ export default function Account({ formData, handleNext, handleForm }) {
               }
               className="w-1/2 mr-2"
               label="Loan Interest"
-              placeholder="Enter Loan Interest"
+              placeholder="Enter Loan Interest Percentage"
             ></TextField>
             <div className="w-1/2 ml-2">
               <label class="label">
