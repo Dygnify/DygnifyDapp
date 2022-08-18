@@ -8,7 +8,7 @@ import {
   getSeniorPoolDisplaySharePrice,
   getTotalInvestmentOfInvestor,
   getTotalYieldOfInvestor,
-  getJuniorWithdrawableOp
+  getJuniorWithdrawableOp,
 } from "../../components/transaction/TransactionHelper";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
@@ -20,7 +20,7 @@ import { getDisplayAmount } from "../../services/displayTextHelper";
 const InvestorOverview = () => {
   const [totalInvestment, setTotalInvestment] = useState(0);
   const [totalYield, setTotalYield] = useState(0);
-  const [seniorPool, setSeniorPool] = useState([]);
+  const [seniorPool, setSeniorPool] = useState();
   const [juniorPool, setJuniorPool] = useState([]);
   const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
 
