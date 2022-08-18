@@ -232,20 +232,28 @@ const Overview = () => {
             </div>
           </div>
           <div style={{ marginRight: 20 }}>
-            <DoughnutChart
-              data={[
-                totalLoanAmtWithInterest,
-                totalRepaidAmt.amount ? totalRepaidAmt.amount : 0,
-              ]}
-              color={["#5375FE", "#ffffff"]}
-              width={200}
-              labels={[
-                "Elevation Capital 300USDC",
-                "Elevation Capital 300USDC",
-              ]}
-              borderWidth={[1, 8]}
-              legendStyle={{ display: false }}
-            />
+            {totalLoanAmtWithInterest || totalRepaidAmt.amount ? (
+              <DoughnutChart
+                data={[
+                  totalLoanAmtWithInterest,
+                  totalRepaidAmt.amount ? totalRepaidAmt.amount : 0,
+                ]}
+                color={["#5375FE", "#ffffff"]}
+                width={200}
+                labels={["Total Outstanding", "Total Repaid"]}
+                borderWidth={[1, 8]}
+                legendStyle={{ display: false }}
+              />
+            ) : (
+              <DoughnutChart
+                data={[1]}
+                color={["#64748B"]}
+                width={200}
+                labels={["Total Outstanding", "Total Repaid"]}
+                borderWidth={[1, 8]}
+                legendStyle={{ display: false }}
+              />
+            )}
           </div>
         </div>
         <div

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getIPFSFileURL } from "../../services/web3storageIPFS";
 
-const DocumentCard = ({ docName, docCid, fileName }) => {
+const DocumentCard = ({ docName, docCid, fileName, disable }) => {
   const viewDoc = () => {
     if (!docCid) return null;
     let url = getIPFSFileURL(docCid);
@@ -31,7 +31,7 @@ const DocumentCard = ({ docName, docCid, fileName }) => {
         style={{ cursor: "pointer" }}
         onClick={viewDoc}
       >
-        View Document
+        {disable ? null : "View Document"}
       </a>
     </div>
   );
