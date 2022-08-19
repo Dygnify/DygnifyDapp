@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
 import TransactionsCard from "../../tools/Card/TransactionsCard";
+import Loader from "../../tools/Loading/Loader";
 
 const Transaction = () => {
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     console.log("reached");
+    
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000)
+
     let data = await getTransactionHistory();
+
+    // not getting any response
     setTransactions(data);
+
+    setLoading(false);
+    
     console.log(data);
   }, []);
 
@@ -17,8 +29,11 @@ const Transaction = () => {
       .then((res) => res.json())
       .then((data) => setTransactions(data));
   }, [transactions]);
+
   return (
     <div className="mb-16">
+      {loading && <Loader />}
+      <div className={`${loading ? "filter blur-sm " : ""}`}>
       <h2 className="text-2xl mb-6">Transaction History</h2>
       <div className="collapse mb-3">
         <input type="checkbox" className="peer" />
@@ -42,6 +57,7 @@ const Transaction = () => {
         {transactions.map((item) => (
           <TransactionsCard key={transactions.id} data={item} />
         ))}
+      </div>
       </div>
     </div>
   );

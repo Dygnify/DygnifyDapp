@@ -20,8 +20,12 @@ import GradientButton from "../../tools/Button/GradientButton";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 
+import Loader from "../../tools/Loading/Loader";
+
 const BorrowerProfile = () => {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
 
   const [selected, setSelected] = useState(null);
 
@@ -163,6 +167,9 @@ const BorrowerProfile = () => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
+        
       }
     }
   };
@@ -221,7 +228,10 @@ const BorrowerProfile = () => {
 
   return (
     <>
-      <div className="mb-16 ">
+      
+      <div className="relative mb-16">
+        {loading && <Loader />}
+        <div className={`${loading ? "filter blur-sm" : ""}`}>
         {selected && <KYBModal handleForm={handleForm} />}
         {!profileStatus && (
           <div className="flex-col " style={{ display: "flex" }}>
@@ -578,6 +588,7 @@ const BorrowerProfile = () => {
             </div>
           </>
         ) : null}
+        </div>
       </div>
     </>
   );

@@ -162,6 +162,7 @@ const EditBorrowerProfile = () => {
   };
 
   const uploadBorrowerData = async () => {
+    setLoading(true);
     try {
       //Insert all the files in one array
       validations();
@@ -330,14 +331,22 @@ const EditBorrowerProfile = () => {
       <div className={loading ? "blur-sm" : null}>
         <div className="mb-6">
           {error ? (
-            <h6 style={{ color: "red" }}>
+            <h6 
+              className="text-[#EF4444]" 
+              // style={{ color: "red" }}
+            >
               Please upload all the required details.
             </h6>
           ) : (
             <></>
           )}
           <h2 className="text-xl font-medium">Company Details</h2>
-          <div style={{ display: "flex" }} className="w-full">
+          <div 
+            style={{ 
+              display: "flex", 
+          }} 
+            className="gap-3 w-full mx-0"
+          >
             <FileUploader
               label="Company Logo"
               className="w-1/3"
@@ -351,13 +360,13 @@ const EditBorrowerProfile = () => {
             <TextField
               label="Company Name"
               placeholder="Enter Company Name"
-              className="w-1/3 ml-2"
+              className="w-1/3"
               reference={companyName}
             />
             <TextField
               label="Company Representative Name"
               placeholder="Enter Name"
-              className="w-1/3 ml-2"
+              className="w-1/3"
               reference={companyRepName}
             />
           </div>
@@ -451,14 +460,25 @@ const EditBorrowerProfile = () => {
         </div>
       </div>
 
-      <div className="my-10 justify-center" style={{ display: "flex" }}>
+      <div className="my-10 justify-center flex-row-reverse" style={{ display: "flex" }} >
+
+        {loading ? (
+            <Loading />
+          ) : (
+            <GradientButton
+              className="font-medium ml-4"
+              onClick={uploadBorrowerData}
+            >
+              Save and Exit
+            </GradientButton>
+          )}
         <button
           style={{
             borderRadius: "100px",
             padding: "12px 24px",
             color: "white",
           }}
-          className="btn btn-wide btn-outline text-white mr-4"
+          className="btn btn-wide btn-outline text-white mr-4 focus:outline-[#9281FF]"
           onClick={() =>
             navigate("/borrower_dashboard/borrower_profile", {
               state: oldBrJson,
@@ -467,16 +487,7 @@ const EditBorrowerProfile = () => {
         >
           Exit
         </button>
-        {loading ? (
-          <Loading />
-        ) : (
-          <GradientButton
-            className="font-medium ml-4"
-            onClick={uploadBorrowerData}
-          >
-            Save and Exit
-          </GradientButton>
-        )}
+        
       </div>
     </>
   );
