@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   createOpportunity,
@@ -26,6 +26,7 @@ const LoanFormModal = ({
 }) => {
   const [processed, setProcessed] = useState(false);
   const path = useNavigate();
+
   const [formData, setFormData] = useState({
     loan_name: "",
     loan_type: "0",
@@ -38,6 +39,7 @@ const LoanFormModal = ({
   const [currentStep, setCurrentStep] = useState(1);
   const [company, setCompany] = useState({});
   const [brJson, setBrJson] = useState();
+  const [back, setBack] = useState();
 
   useEffect(() => {
     const fetchJSON = async () => {
@@ -128,7 +130,7 @@ const LoanFormModal = ({
 
     console.log(rest);
     let loanDetails = {
-      loan_type: "0",
+      loan_type,
       loan_amount,
       loan_tenure,
       loan_interest,
@@ -172,7 +174,9 @@ const LoanFormModal = ({
   };
 
   const handlePrev = (newData) => {
+    setBack(formData);
     setCurrentStep((prevCurrentStep) => prevCurrentStep - 1);
+    displayStep(currentStep);
   };
 
   return (

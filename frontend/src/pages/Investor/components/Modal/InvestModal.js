@@ -48,7 +48,7 @@ const InvestModal = ({ isSenior, poolAddress }) => {
           <div style={{ display: "flex" }} className="justify-center my-6">
             <img
               style={{ borderRadius: "50%" }}
-              className="p-4 bg-secondary opacity-80"
+              className="p-4 bg-[#9281FF] opacity-80"
               src="/images/wallet_white.png"
               alt=""
             />
@@ -71,7 +71,7 @@ const InvestModal = ({ isSenior, poolAddress }) => {
             </div>
           </div>
           <div
-            className="flex-col text-sm py-3 px-4 w-full"
+            className="flex-col text-sm py-3 px-5 w-full"
             style={{ display: "flex" }}
           >
             <div
@@ -104,7 +104,7 @@ const InvestModal = ({ isSenior, poolAddress }) => {
             <div class="mb-3">
               <label
                 for="exampleNumber0"
-                class="form-label inline-block mb-0  text-white rounded-box"
+                className="form-label inline-block mb-0 mt-5  text-white rounded-box"
                 style={{ fontSize: 14 }}
               >
                 Enter Amount

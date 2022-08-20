@@ -105,8 +105,6 @@ const InvestorOverview = () => {
 		await updateSummery();
 		const junorPools = await getJuniorWithdrawableOp();
 		setJuniorPool(junorPools);
-
-		setJuniorPoolLoading(false);
 	}, []);
 
 	useEffect(() => {
@@ -153,19 +151,36 @@ const InvestorOverview = () => {
 							style={{ display: "flex", marginRight: 60 }}
 							className="justify-start"
 						>
-							<DoughnutChart
-								data={[80, 20]}
-								color={["#5375FE", "#F790F9"]}
-								labels={["Amount invested", "Yield earned"]}
-								legendStyle={{ display: false }}
-							/>
+							{totalInvestment || totalYield ? (
+								<DoughnutChart
+									data={[
+										totalInvestment,
+										totalYield ? totalYield : 0,
+									]}
+									color={["#5375FE", "#ffffff"]}
+									width={200}
+									labels={[
+										"Total Outstanding",
+										"Total Repaid",
+									]}
+									borderWidth={[1, 8]}
+									legendStyle={{ display: false }}
+								/>
+							) : (
+								<DoughnutChart
+									data={[1]}
+									color={["#64748B"]}
+									width={200}
+									labels={[
+										"Total Outstanding",
+										"Total Repaid",
+									]}
+									borderWidth={[1, 8]}
+									legendStyle={{ display: false }}
+								/>
+							)}
 						</div>
 						{/* Change this total implementation */}
-
-						<div style={{ position: "absolute", marginLeft: 62 }}>
-							<div style={{ color: "#A0ABBB" }}>Total Value</div>
-							<div>380K USDC</div>
-						</div>
 
 						<div
 							style={{ display: "flex", color: "red" }}

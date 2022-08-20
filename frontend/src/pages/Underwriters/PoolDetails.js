@@ -3,6 +3,10 @@ import { useLocation } from "react-router-dom";
 import { voteOpportunity } from "../../components/transaction/TransactionHelper";
 import { getExtendableTextBreakup } from "../../services/displayTextHelper";
 import DocumentCard from "../../tools/Card/DocumentCard";
+import Email from "../SVGIcons/Email";
+import LinkedIn from "../SVGIcons/LinkedIn";
+import Twitter from "../SVGIcons/Twitter";
+import Website from "../SVGIcons/Website";
 
 const PoolDetails = () => {
   const location = useLocation();
@@ -16,6 +20,7 @@ const PoolDetails = () => {
     firstText: "",
     secondText: "",
   });
+
   const [status, setStatus] = useState({
     approve: false,
     unsure: false,
@@ -31,6 +36,7 @@ const PoolDetails = () => {
       loadInfo();
       loadLoanPurpose();
       setCompanyDetails(opDetails.companyDetails);
+      console.log(opDetails.companyDetails);
     }
   }, [opDetails]);
 
@@ -135,6 +141,7 @@ const PoolDetails = () => {
                 borderRadius: "100px",
                 padding: "3px 16px",
                 borderColor: "#10B981",
+                borderWidth: 2,
               }}
               className="ml-3 btn btn-xs btn-outline text-[#10B981] text-xs capitalize"
             >
@@ -151,8 +158,9 @@ const PoolDetails = () => {
                 borderRadius: "100px",
                 padding: "3px 16px",
                 borderColor: "#EF4444",
+                borderWidth: 2,
               }}
-              className="ml-3 btn btn-xs btn-outline text-[#EF4444] text-xs capitalize"
+              className="ml-3 btn-xs btn-outline text-[#EF4444] text-xs capitalize"
             >
               {status.reject ? "Rejected" : "Reject"}
             </button>
@@ -280,7 +288,7 @@ const PoolDetails = () => {
 
       <div
         style={{ display: "flex", marginTop: "50px" }}
-        className="flex-col w-1/2"
+        className="flex-col w-full"
       >
         <div style={{ marginTop: "40px", fontSize: 19 }}>Borrower Details</div>
         <div
@@ -288,18 +296,87 @@ const PoolDetails = () => {
           className="flex-row justify-between mt-5 mb-3"
         >
           <div style={{ fontSize: 16 }} className="mb-0">
-            {companyDetails ? companyDetails.companyName : ""}
+            {companyDetails
+              ? companyDetails.companyName
+              : "Name of the Company"}
           </div>
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              background: "#292C33",
-              display: "flex",
-            }}
-            className="rounded-box items-center justify-center ml-20"
-          >
-            in
+          <div>
+            {companyDetails?.twitter ? (
+              <button
+                id="twitter"
+                style={{
+                  borderRadius: "100px",
+                  padding: "8px 12px",
+                  border: "1px solid #64748B",
+                }}
+                className="ml-3 btn btn-sm btn-outline text-white"
+                // onClick={redirectToURl}
+              >
+                <Twitter />
+                <div style={{ marginLeft: 2, textTransform: "lowercase" }}>
+                  twitter
+                </div>
+              </button>
+            ) : (
+              <></>
+            )}
+            {companyDetails?.linkedin ? (
+              <button
+                id="linkedin"
+                style={{
+                  borderRadius: "100px",
+                  padding: "8px 12px",
+                  border: "1px solid #64748B",
+                }}
+                className="ml-3 btn btn-sm btn-outline text-white"
+                //onClick={redirectToURl}
+              >
+                <LinkedIn />
+                <div style={{ marginLeft: 2, textTransform: "lowercase" }}>
+                  LinkedIn
+                </div>
+              </button>
+            ) : (
+              <></>
+            )}
+            {companyDetails?.email ? (
+              <button
+                id="email"
+                style={{
+                  borderRadius: "100px",
+                  padding: "8px 12px",
+                  border: "1px solid #64748B",
+                }}
+                className="ml-3 btn btn-sm btn-outline text-white"
+                //onClick={redirectForEmail}
+              >
+                <Email />
+                <div style={{ marginLeft: 2, textTransform: "lowercase" }}>
+                  Email
+                </div>
+              </button>
+            ) : (
+              <></>
+            )}
+            {companyDetails?.website ? (
+              <button
+                id="website"
+                style={{
+                  borderRadius: "100px",
+                  padding: "8px 12px",
+                  border: "1px solid #64748B",
+                }}
+                className="ml-3 btn btn-sm btn-outline text-white"
+                //onClick={redirectToURl}
+              >
+                <Website />
+                <div style={{ marginLeft: 2, textTransform: "lowercase" }}>
+                  Website
+                </div>
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div style={{ color: "#D0D5DD" }}>
@@ -376,26 +453,32 @@ const PoolDetails = () => {
               : null
           }
         />
-        <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
-          Business License Proof
-        </h6>
-        <DocumentCard
-          docName={
-            companyDetails
-              ? companyDetails.businessLicFile.businessLicDocName
-              : ""
-          }
-          docCid={
-            companyDetails
-              ? companyDetails.businessLicFile.businessLicFileCID
-              : null
-          }
-          fileName={
-            companyDetails
-              ? companyDetails.businessLicFile.businessLicFileName
-              : null
-          }
-        />
+        {companyDetails && companyDetails.businessLicFile ? (
+          <>
+            <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+              Business License Proof
+            </h6>
+            <DocumentCard
+              docName={
+                companyDetails
+                  ? companyDetails.businessLicFile.businessLicDocName
+                  : ""
+              }
+              docCid={
+                companyDetails
+                  ? companyDetails.businessLicFile.businessLicFileCID
+                  : null
+              }
+              fileName={
+                companyDetails
+                  ? companyDetails.businessLicFile.businessLicFileName
+                  : null
+              }
+            />
+          </>
+        ) : (
+          <></>
+        )}
       </div>
 
       <br />

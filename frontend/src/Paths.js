@@ -1,5 +1,11 @@
 import React from "react";
-import { BrowserRouter, Switch, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Routes,
+  HashRouter,
+} from "react-router-dom";
 import Borrow from "./borrow/Borrow";
 import Home from "./home/Home";
 import Token from "./home/Token";
@@ -64,7 +70,7 @@ import QueriesPoolDetails from "./pages/Borrower/QueriesPoolDetails";
 
 const Paths = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/pool" element={<Home />} />
@@ -129,7 +135,7 @@ const Paths = () => {
           <Route path="edit_profile" element={<EditBorrowerProfile />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
