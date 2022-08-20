@@ -1,17 +1,24 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import GradientButton from "../../../../tools/Button/GradientButton";
 import {
   investInSeniorPool,
   investInJuniorPool,
+  getWalletBal,
 } from "../../../../components/transaction/TransactionHelper";
 
-const InvestModal = ({ isSenior, poolAddress }) => {
-  const data = {
-    poolName: "New Pool",
-    poolLimit: "$450,000.00",
-    estimatedApy: "24%",
-  };
+const InvestModal = ({
+  isSenior,
+  poolAddress,
+  poolName,
+  poolLimit,
+  estimatedAPY,
+}) => {
   const [amount, setAmount] = useState("");
+  const [walletBal, setWalletBal] = useState();
+
+  useEffect(() => {
+    getWalletBal().then((data) => setWalletBal(data));
+  }, []);
 
   async function investSenior() {
     await investInSeniorPool(amount);
@@ -66,7 +73,7 @@ const InvestModal = ({ isSenior, poolAddress }) => {
             >
               <p style={{ display: "flex" }}>Total Balance</p>
               <p style={{ display: "flex" }}>
-                $100,000,000.00 {process.env.REACT_APP_TOKEN_NAME}
+                ${walletBal ? walletBal : 0} {process.env.REACT_APP_TOKEN_NAME}
               </p>
             </div>
           </div>
@@ -79,21 +86,21 @@ const InvestModal = ({ isSenior, poolAddress }) => {
               className="flex-row mb-2 justify-between"
             >
               <p style={{ display: "flex" }}>Pool Name</p>
-              <p style={{ display: "flex" }}>{data?.poolName}</p>
+              <p style={{ display: "flex" }}>{poolName}</p>
             </div>
             <div
               style={{ display: "flex" }}
               className="flex-row mb-2 justify-between"
             >
               <p style={{ display: "flex" }}>Pool Limit</p>
-              <p style={{ display: "flex" }}>{data?.poolLimit}%</p>
+              <p style={{ display: "flex" }}>{poolLimit}</p>
             </div>
             <div
               style={{ display: "flex" }}
               className="flex-row mb-0 justify-between"
             >
               <p style={{ display: "flex" }}>Estimated APY</p>
-              <p style={{ display: "flex" }}>{data?.estimatedApy}</p>
+              <p style={{ display: "flex" }}>{estimatedAPY}</p>
             </div>
           </div>
 
