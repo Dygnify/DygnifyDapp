@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from "react";
 import {
+  getBorrowerDetails,
   getDrawdownOpportunities,
   getOpportunitysOf,
+  getUserWalletAddress,
 } from "../../components/transaction/TransactionHelper";
 import DrawdownCard from "../../tools/Card/DrawdownCard";
 import OpportunityCardCollapsible from "../../tools/Card/OpportunityCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
 import LoanFormModal from "../../tools/Modal/LoanFormModal";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
+import ProcessingRequestModal from "./Components/Modal/ProcessingRequestModal";
+import KycCheckModal from "./Components/Modal/KycCheckModal";
 
 const BorrowList = () => {
   const [data, setData] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [kycStatus, setKycStatus] = useState();
+  const [profileStatus, setProfileStatus] = useState();
+  const [borrowReqProcess, setBorrowReqProcess] = useState();
+  const [processModal, setProcessModal] = useState();
+  const [kycSelected, setKycSelected] = useState();
 
   const handleForm = () => {
     setSelected(null);
+    setKycSelected(null);
   };
 
   useEffect(() => {
@@ -25,6 +37,7 @@ const BorrowList = () => {
       }
     };
     fetchData();
+    getUserWalletAddress().then((address) => checkForKycAndProfile(address));
   }, []);
 
   useEffect(() => {
@@ -43,16 +56,55 @@ const BorrowList = () => {
     }
   }, []);
 
+  const checkForKycAndProfile = async (refId) => {
+    try {
+      const result = await axiosHttpService(kycOptions(refId));
+
+      if (result.res.status === "success") setKycStatus(true);
+      if (result.res.status === "error") {
+        setKycStatus(false);
+      }
+
+      getBorrowerDetails().then((borrowerCID) => {
+        console.log(borrowerCID);
+        if (borrowerCID) setProfileStatus(true);
+        else setProfileStatus(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
-      <DashboardHeader setSelected={setSelected} />
+      <DashboardHeader
+        setSelected={setSelected}
+        kycStatus={kycStatus}
+        profileStatus={profileStatus}
+        setKycSelected={setKycSelected}
+      />
       {selected && (
         <LoanFormModal
-          // key={drawdownList?.id}
-          // data={drawdownList}
+          setBorrowReqProcess={setBorrowReqProcess}
+          setSelected={setSelected}
+          setProcessModal={setProcessModal}
           handleForm={handleForm}
-        ></LoanFormModal>
+        />
       )}
+      {processModal && (
+        <ProcessingRequestModal
+          borrowReqProcess={borrowReqProcess}
+          setSelected={setSelected}
+          setProcessModal={setProcessModal}
+        />
+      )}
+
+      {kycSelected ? (
+        <KycCheckModal kycStatus={kycStatus} profileStatus={profileStatus} />
+      ) : (
+        <></>
+      )}
+
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
         {data.length === 0 ? (
