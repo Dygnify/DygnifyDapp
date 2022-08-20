@@ -8,7 +8,9 @@ import FileUploader from "../Components/FileUploader";
 import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
 import { updateBorrowerDetails } from "../../components/transaction/TransactionHelper";
 import { useLocation, useNavigate } from "react-router-dom";
-import Loading from "../Components/Loading";
+// import Loading from "../Components/Loading";
+
+import Loader from "../../tools/Loading/Loader";
 
 const EditBorrowerProfile = () => {
   const navigate = useNavigate();
@@ -327,8 +329,9 @@ const EditBorrowerProfile = () => {
   };
 
   return (
-    <>
-      <div className={loading ? "blur-sm" : null}>
+    <div className={`${loading ? "relative" : ""}`}>
+      {loading && <Loader />}
+      <div className={loading ? "blur-sm" : ""}>
         <div className="mb-6">
           {error ? (
             <h6 
@@ -460,9 +463,9 @@ const EditBorrowerProfile = () => {
         </div>
       </div>
 
-      <div className="my-10 justify-center flex-row-reverse" style={{ display: "flex" }} >
+      <div className={`my-10 justify-center flex-row-reverse ${loading ? "blur-sm" : ""}`} style={{ display: "flex" }} >
 
-        {loading ? (
+        {/* {loading ? (
             <Loading />
           ) : (
             <GradientButton
@@ -471,7 +474,15 @@ const EditBorrowerProfile = () => {
             >
               Save and Exit
             </GradientButton>
-          )}
+          )} */}
+
+            <GradientButton
+              className="font-medium ml-4"
+              onClick={uploadBorrowerData}
+            >
+              Save and Exit
+            </GradientButton>
+
         <button
           style={{
             borderRadius: "100px",
@@ -489,7 +500,7 @@ const EditBorrowerProfile = () => {
         </button>
         
       </div>
-    </>
+    </div>
   );
 };
 

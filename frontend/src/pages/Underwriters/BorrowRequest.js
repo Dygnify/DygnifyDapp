@@ -2,55 +2,75 @@ import React, { useState, useEffect } from "react";
 
 import UnderwriterCard from "./Components/UnderwriterCard";
 import { getAllUnderwriterOpportunities } from "../../components/transaction/TransactionHelper";
+import Loader from "../../tools/Loading/Loader";
 
 const BorrowRequest = () => {
-  const [opportunities, setOpportunities] = useState([]);
+	const [opportunities, setOpportunities] = useState([]);
 
-  useEffect(async () => {
-    await getUnderReviewOpportunity();
-  }, []);
+	const [loading, setLoading] = useState(true);
 
-  async function getUnderReviewOpportunity() {
-    let list = await getAllUnderwriterOpportunities();
-    if (list) {
-      setOpportunities(list);
-    }
-  }
+	useEffect(async () => {
+		await getUnderReviewOpportunity();
 
-  return (
-    <div>
-      <div className="px-5">
-        <div
-          style={{ display: "flex" }}
-          className="items-center justify-between mb-14 "
-        >
-          <h2
-            className="text-left font-bold text-white"
-            style={{ fontSize: 28, marginLeft: -20 }}
-          >
-            Underwriter's Dashboard
-          </h2>
-        </div>
-      </div>
+		setLoading(false);
+	}, []);
 
-      {opportunities.length === 0 ? (
-        <div style={{ display: "flex" }} className="justify-center">
-          <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
-            No Borrow requests are present at the moment.
-          </div>
-        </div>
-      ) : (
-        <div className="mb-16 ">
-          <div style={{ display: "flex" }} className="gap-4 w-1/2">
-            {opportunities &&
-              opportunities.map((item) => (
-                <UnderwriterCard data={item} key={item.id} />
-              ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+	async function getUnderReviewOpportunity() {
+		let list = await getAllUnderwriterOpportunities();
+		if (list) {
+			setOpportunities(list);
+		}
+	}
+
+	return (
+		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>
+			{loading && <Loader />}
+			<div className={`${loading ? "blur-sm" : ""}`}>
+				<div className="px-5">
+					<div
+						style={{ display: "flex" }}
+						className="items-center justify-between mb-14 "
+					>
+						<h2
+							className="text-left font-bold text-white"
+							style={{ fontSize: 28, marginLeft: -20 }}
+						>
+							Underwriter's Dashboard
+						</h2>
+					</div>
+				</div>
+
+				{opportunities.length === 0 ? (
+					<div style={{ display: "flex" }} className="justify-center">
+						<div
+							style={{
+								color: "#64748B",
+								fontSize: 18,
+								marginTop: 10,
+							}}
+						>
+							No Borrow requests are present at the moment.
+						</div>
+					</div>
+				) : (
+					<div className="mb-16 ">
+						<div
+							style={{ display: "flex" }}
+							className="gap-4 w-1/2"
+						>
+							{opportunities &&
+								opportunities.map((item) => (
+									<UnderwriterCard
+										data={item}
+										key={item.id}
+									/>
+								))}
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default BorrowRequest;

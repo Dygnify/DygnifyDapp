@@ -8,19 +8,21 @@ const TransactionsCard = ({ data }) => {
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState();
 
-  // fetch the opportunity details from IPFS
-  retrieveFiles(data?.opportunityInfo, true).then((res) => {
-    if (res) {
-      let read = getBinaryFileData(res);
-      read.onloadend = function () {
-        let opJson = JSON.parse(read.result);
-        if (opJson) {
-          setCompanyName(opJson.company_name);
-          setPoolName(opJson.loanName);
-        }
-      };
-    }
-  });
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(data?.opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setCompanyName(opJson.companyDetails?.companyName);
+            setPoolName(opJson.loan_name);
+          }
+        };
+      }
+    });
+  }, []);
 
   return (
     <div
@@ -35,7 +37,7 @@ const TransactionsCard = ({ data }) => {
         <p className="w-1/6 text-center">{companyName}</p>
         <p className="w-1/6 text-center">{data?.createdOn}</p>
 
-        {(data?.status == "2" || data?.status >= "4" ) && (
+        {(data?.status == "2" || data?.status >= "4") && (
           <p className="w-1/6 text-center">
             <div
               style={{
