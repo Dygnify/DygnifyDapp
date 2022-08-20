@@ -376,26 +376,32 @@ const PoolDetails = () => {
               : null
           }
         />
-        <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
-          Business License Proof
-        </h6>
-        <DocumentCard
-          docName={
-            companyDetails
-              ? companyDetails.businessLicFile.businessLicDocName
-              : ""
-          }
-          docCid={
-            companyDetails
-              ? companyDetails.businessLicFile.businessLicFileCID
-              : null
-          }
-          fileName={
-            companyDetails
-              ? companyDetails.businessLicFile.businessLicFileName
-              : null
-          }
-        />
+        {companyDetails && companyDetails.businessLicFile ? (
+          <>
+            <h6 style={{ marginTop: 10, marginBottom: 3, color: "#64748B" }}>
+              Business License Proof
+            </h6>
+            <DocumentCard
+              docName={
+                companyDetails
+                  ? companyDetails.businessLicFile.businessLicDocName
+                  : ""
+              }
+              docCid={
+                companyDetails
+                  ? companyDetails.businessLicFile.businessLicFileCID
+                  : null
+              }
+              fileName={
+                companyDetails
+                  ? companyDetails.businessLicFile.businessLicFileName
+                  : null
+              }
+            />
+          </>
+        ) : (
+          <></>
+        )}
       </div>
 
       <br />
