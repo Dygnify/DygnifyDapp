@@ -20,6 +20,10 @@ const BorrowList = () => {
 	const [opportunities, setOpportunities] = useState([]);
 	const [selected, setSelected] = useState(null);
 
+	const [loading, setLoading] = useState();
+	const [kycStatus, setKycStatus] = useState();
+	const [profileStatus, setProfileStatus] = useState();
+
 	const handleForm = () => {
 		setSelected(null);
 	};

@@ -105,6 +105,7 @@ const InvestorOverview = () => {
 		await updateSummery();
 		const junorPools = await getJuniorWithdrawableOp();
 		setJuniorPool(junorPools);
+		setJuniorPoolLoading(false);
 	}, []);
 
 	useEffect(() => {
