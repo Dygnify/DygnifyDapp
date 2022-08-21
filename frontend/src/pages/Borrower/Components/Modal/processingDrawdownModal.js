@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProcessingFundsModal = ({ investProcessing }) => {
+const ProcessingDrawdownModal = ({ investProcessing }) => {
   console.log(investProcessing, "in fund process modal");
   return (
     <>
@@ -140,4 +140,4 @@ const ProcessingFundsModal = ({ investProcessing }) => {
   );
 };
 
-export default ProcessingFundsModal;
+export default ProcessingDrawdownModal;

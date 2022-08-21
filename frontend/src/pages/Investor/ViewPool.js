@@ -22,6 +22,7 @@ import { retrieveFiles } from "../../services/web3storageIPFS";
 import { getExtendableTextBreakup } from "../../services/displayTextHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
 import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
+import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 
 const ViewPool = () => {
   const location = useLocation();
@@ -42,6 +43,8 @@ const ViewPool = () => {
   });
   const [selected, setSelected] = useState(null);
   const [logoImgSrc, setLogoImgSrc] = useState();
+  const [processFundModal, setProcessFundModal] = useState();
+  const [investProcessing, setInvestProcessing] = useState();
 
   const handleDrawdown = () => {
     setSelected(null);
@@ -104,11 +107,8 @@ const ViewPool = () => {
                 opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
               );
               // get the loan purpose
-              const {
-                isSliced,
-                firstText,
-                secondText,
-              } = getExtendableTextBreakup(opJson.loan_purpose, 200);
+              const { isSliced, firstText, secondText } =
+                getExtendableTextBreakup(opJson.loan_purpose, 200);
 
               if (isSliced) {
                 setLoanPurpose({
@@ -219,8 +219,17 @@ const ViewPool = () => {
             handleDrawdown={handleDrawdown}
             isSenior={false}
             poolAddress={poolData.opportunityPoolAddress}
+            setProcessFundModal={setProcessFundModal}
+            setInvestProcessing={setInvestProcessing}
           />
         ) : null}
+
+        {processFundModal ? (
+          <ProcessingFundsModal investProcessing={investProcessing} />
+        ) : (
+          <></>
+        )}
+
         <div
           className="flex-row justify-between items-center"
           style={{ display: "flex" }}
