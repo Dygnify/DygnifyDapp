@@ -88,13 +88,18 @@ const InvestModal = ({
               <p style={{ display: "flex" }}>Pool Name</p>
               <p style={{ display: "flex" }}>{poolName}</p>
             </div>
-            <div
-              style={{ display: "flex" }}
-              className="flex-row mb-2 justify-between"
-            >
-              <p style={{ display: "flex" }}>Pool Limit</p>
-              <p style={{ display: "flex" }}>{poolLimit}</p>
-            </div>
+            {poolLimit ? (
+              <div
+                style={{ display: "flex" }}
+                className="flex-row mb-2 justify-between"
+              >
+                <p style={{ display: "flex" }}>Pool Limit</p>
+                <p style={{ display: "flex" }}>{poolLimit}</p>
+              </div>
+            ) : (
+              <></>
+            )}
+
             <div
               style={{ display: "flex" }}
               className="flex-row mb-0 justify-between"

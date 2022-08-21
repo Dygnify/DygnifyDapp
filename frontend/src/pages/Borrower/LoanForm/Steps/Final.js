@@ -15,111 +15,110 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
 
   return (
     <div style={{ display: "flex" }} className="flex-col gap-4">
-      <div style={{display: "flex"}} className="flex-col gap-3">
-		<div className="">
-			<h4
-			className="text-primary
+      <div style={{ display: "flex" }} className="flex-col gap-3">
+        <div className="">
+          <h4
+            className="text-primary
 				font-bold
 				text-xl
 
 				mb-2"
-			style={{ color: "#9281FF" }}
-			>
-			Loan Details
-			</h4>
+            style={{ color: "#9281FF" }}
+          >
+            Loan Details
+          </h4>
 
-			<div style={{display: "flex"}} className="justify-between">
-				<div style={{display: "flex"}} className="flex-col gap-1">
-					<div className="font-[500] text-lg">
-				        <span className=" text-[#A0ABBB]">
-							Pool Name 
-						</span>
-						<span className="pl-4 text-[#fff]">{formData.loan_name}</span>
-					</div>
+          <div style={{ display: "flex" }} className="justify-between">
+            <div style={{ display: "flex" }} className="flex-col gap-1">
+              <div className="font-[500] text-lg">
+                <span className=" text-[#A0ABBB]">Pool Name</span>
+                <span className="pl-4 text-[#fff]">{formData.loan_name}</span>
+              </div>
 
-					<div className="font-[500] text-lg">
-				        <span className=" text-[#A0ABBB]">
-							Loan Tenure 
-						</span>
-						<span className="pl-4 text-[#fff]">{formData.loan_tenure}</span>
-					</div>
+              <div className="font-[500] text-lg">
+                <span className=" text-[#A0ABBB]">Loan Tenure</span>
+                <span className="pl-4 text-[#fff]">{formData.loan_tenure}</span>
+              </div>
 
-					<div className="font-[500] text-lg">
-				        <span className=" text-[#A0ABBB]">
-							Loan Interest 
-						</span>
-						<span className="pl-4 text-[#fff]">{formData.loan_interest}</span>
-					</div>
-				</div>
+              <div className="font-[500] text-lg">
+                <span className=" text-[#A0ABBB]">Loan Interest</span>
+                <span className="pl-4 text-[#fff]">
+                  {formData.loan_interest}
+                </span>
+              </div>
+            </div>
 
-				<div style={{display: "flex"}} className="flex-col gap-1">
-					<div className="font-[500] text-lg">
-				        <span className=" text-[#A0ABBB]">
-							Loan amount 
-						</span>
-						<span className="pl-4 text-[#fff]">{formData.loan_amount}</span>
-					</div>
+            <div style={{ display: "flex" }} className="flex-col gap-1">
+              <div className="font-[500] text-lg">
+                <span className=" text-[#A0ABBB]">Loan amount</span>
+                <span className="pl-4 text-[#fff]">{formData.loan_amount}</span>
+              </div>
 
-					<div className="font-[500] text-lg">
-				        <span className=" text-[#A0ABBB]">
-							Repayment frequency 
-						</span>
-						<span className="pl-4 text-[#fff]">{formData.payment_frequency}</span>
-					</div>
+              <div className="font-[500] text-lg">
+                <span className=" text-[#A0ABBB]">Repayment frequency</span>
+                <span className="pl-4 text-[#fff]">
+                  {formData.payment_frequency}
+                </span>
+              </div>
 
-					<div className="font-[500] text-lg">
-						<p className="font-[500] text-[#A0ABBB]">
-							Loan Type{" "}
-							<span className="pl-4 text-[#fff]">{formData.loan_type == 1 ? "Term Loan" : "Bullet Loan"}</span>
-						</p>
-					</div>
-				</div>			
+              <div className="font-[500] text-lg">
+                <p className="font-[500] text-[#A0ABBB]">
+                  Loan Type{" "}
+                  <span className="pl-4 text-[#fff]">
+                    {formData.loan_type == 1 ? "Term Loan" : "Bullet Loan"}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
 
-			</div>
+          <div
+            style={{ display: "flex" }}
+            className="font-[500] text-lg mt-[0.1rem]"
+          >
+            <span className="w-[15%] text-[#A0ABBB]">Loan Purpose</span>
+            <span className="w-[85%] pl-4 text-[#fff]">
+              {formData.loan_purpose}
+            </span>
+          </div>
+        </div>
 
-			<div style={{display: "flex"}} className="font-[500] text-lg mt-[0.1rem]">
-				<span className="w-[15%] text-[#A0ABBB]">
-					Loan Purpose
-				</span>
-				<span className="w-[85%] pl-4 text-[#fff]">{formData.loan_purpose}</span>
-			</div>
-		</div>
+        <div className="">
+          <h4
+            className="text-primary font-[500] text-xl mb-2"
+            style={{ color: "#9281FF" }}
+          >
+            Collateral
+          </h4>
 
-		<div className="">
-			<h4
-			className="text-primary font-[500] text-xl mb-2"
-			style={{ color: "#9281FF" }}
-			>
-			Collateral
-			</h4>
+          <div style={{ display: "flex" }} className="justify-between mb-2">
+            <div className="font-[500] text-lg">
+              <span className=" text-[#A0ABBB]">Collateral document Name</span>
+              <span className="pl-4 text-[#fff]">
+                {formData.collateral_document_name}
+              </span>
+            </div>
 
-			<div style={{ display: "flex" }} className="justify-between mb-2">
-				<div className="font-[500] text-lg">
-					<span className=" text-[#A0ABBB]">
-						Collateral document Name
-					</span>
-					<span className="pl-4 text-[#fff]">{formData.collateral_document_name}</span>
-				</div>
+            <div className="font-[500] text-lg">
+              <span className=" text-[#A0ABBB]">Collateral File</span>
+              <span className="pl-4 text-[#fff]">
+                {formData.collateral_document[0]?.name}
+              </span>
+            </div>
+          </div>
 
-				<div className="font-[500] text-lg">
-					<span className=" text-[#A0ABBB]">
-						Collateral File
-					</span>
-					<span className="pl-4 text-[#fff]">{formData.collateral_document[0]?.name}</span>
-				</div>
-				
-         	</div>
-
-			
-
-			<div style={{display: "flex"}} className="flex-col font-[500] text-lg mt-[0.1rem]">
-				<span className="text-[#A0ABBB]">
-					Collateral Document Description{" "}
-				</span>
-				<span className="text-[#fff]">{formData.collateral_document_description}</span>
-			</div>
-
-		</div>
+          <div
+            style={{ display: "flex" }}
+            className="flex-col font-[500] text-lg mt-[0.1rem]"
+          >
+            <span className="text-[#A0ABBB]">
+              Collateral Document Description{" "}
+            </span>
+            <span className="text-[#fff]">
+              {formData.collateral_document_description}
+            </span>
+          </div>
+        </div>
       </div>
       <div className="text-center">
         <input
@@ -156,7 +155,7 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
           </label>
         </div>
 
-        <button
+        <label
           typeof="submit"
           htmlFor="ProcessModal"
           onClick={handleClick}
@@ -166,12 +165,14 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
             color: "white",
           }}
           className={`btn btn-wide  capitalize font-medium border-none ${
-            checked ? "bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF]" : ""
+            checked
+              ? "bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF]"
+              : ""
           }`}
           disabled={!checked}
         >
           Submit
-        </button>
+        </label>
       </div>
 
       <div style={{ display: "flex" }} className=" justify-center">
