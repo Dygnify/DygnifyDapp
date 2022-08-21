@@ -474,7 +474,8 @@ export async function getAllActiveOpportunities() {
           );
           let poolBal = await poolContract.poolBalance();
           let obj = getOpportunity(opportunity);
-          obj.isFull = poolBal >= obj.loanAmount;
+          poolBal = ethers.utils.formatUnits(poolBal, sixDecimals);
+          obj.isFull = poolBal >= obj.actualLoanAmount;
           opportunities.push(obj);
         }
       }
