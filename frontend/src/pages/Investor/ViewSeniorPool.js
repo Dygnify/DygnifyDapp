@@ -45,7 +45,7 @@ const ViewSeniorPool = () => {
       setEstimatedAPY(
         location.state.estimatedAPY ? location.state.estimatedAPY : defaultAPY
       );
-      //    setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
+      setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
     }
   }, []);
 
