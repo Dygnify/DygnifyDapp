@@ -22,6 +22,7 @@ import { retrieveFiles } from "../../services/web3storageIPFS";
 import { getExtendableTextBreakup } from "../../services/displayTextHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
 import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
+import Loader from "../../tools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 
 const ViewPool = () => {
@@ -46,6 +47,8 @@ const ViewPool = () => {
   const [processFundModal, setProcessFundModal] = useState();
   const [investProcessing, setInvestProcessing] = useState();
 
+  const [loading, setLoading] = useState(true);
+
   const handleDrawdown = () => {
     setSelected(null);
   };
@@ -66,7 +69,9 @@ const ViewPool = () => {
   };
 
   useEffect(() => {
-    getUserWalletAddress().then((address) => loadBlockpassWidget(address));
+    getUserWalletAddress()
+      .then((address) => loadBlockpassWidget(address))
+      .finally(() => setLoading(false));
     if (location?.state) {
       setPoolData(location.state);
       setKycStatus(
@@ -114,7 +119,7 @@ const ViewPool = () => {
                 setLoanPurpose({
                   firstText: firstText,
                   secondText: secondText,
-                  isSlied: isSliced,
+                  isSliced: isSliced,
                 });
               } else {
                 setLoanPurpose({
@@ -212,13 +217,17 @@ const ViewPool = () => {
   }
 
   return (
-    <>
-      <div>
+    <div>
+      {loading && <Loader />}
+      <div className={`${loading ? "blur-sm" : ""}`}>
         {selected ? (
           <InvestModal
             handleDrawdown={handleDrawdown}
             isSenior={false}
-            poolAddress={poolData.opportunityPoolAddress}
+            poolAddress={poolData?.opportunityPoolAddress}
+            poolName={poolName}
+            poolLimit={poolData?.opportunityAmount}
+            estimatedAPY={poolData?.loanInterest}
             setProcessFundModal={setProcessFundModal}
             setInvestProcessing={setInvestProcessing}
           />
@@ -315,14 +324,20 @@ const ViewPool = () => {
               <div>
                 {loanPurpose.firstText}
                 <a
-                  style={{ fontWeight: 600, cursor: "pointer" }}
+                  style={{
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
                   onClick={() => setExpand(true)}
                 >
-                  {expand ? null : "view more"}
+                  {expand ? null : "... view more"}
                 </a>
                 {expand ? <div>{loanPurpose.secondText}</div> : null}
                 <a
-                  style={{ fontWeight: 600, cursor: "pointer" }}
+                  style={{
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
                   onClick={() => setExpand(false)}
                 >
                   {expand ? "view less" : null}
@@ -438,7 +453,12 @@ const ViewPool = () => {
                     padding: "40px 0",
                   }}
                 >
-                  <div style={{ fontSize: 14, color: "#A0ABBB" }}>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      color: "#A0ABBB",
+                    }}
+                  >
                     {e.label}
                   </div>
                   <div style={{ fontSize: 20 }}>{e.value}</div>
@@ -457,7 +477,12 @@ const ViewPool = () => {
                     padding: "40px 0",
                   }}
                 >
-                  <div style={{ fontSize: 14, color: "#A0ABBB" }}>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      color: "#A0ABBB",
+                    }}
+                  >
                     {e.label}
                   </div>
                   <div style={{ fontSize: 20 }}>{e.value}</div>
@@ -557,7 +582,7 @@ const ViewPool = () => {
         <br />
         <br />
       </div>
-    </>
+    </div>
   );
 };
 

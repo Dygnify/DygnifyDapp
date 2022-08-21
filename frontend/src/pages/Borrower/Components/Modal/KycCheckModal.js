@@ -55,6 +55,7 @@ const KycCheckModal = ({ kycStatus, profileStatus }) => {
               borderColor: "#64748B",
               alignSelf: "center",
               marginTop: 60,
+              marginInline: "auto"
             }}
             onClick={() =>
               navigate(

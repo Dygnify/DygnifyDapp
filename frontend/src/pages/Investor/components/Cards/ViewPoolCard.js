@@ -33,7 +33,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
     });
   }, []);
 
-  const StatusButton = ({ label, isFullStatus }) => {
+  const StatusButton = ({ isFullStatus }) => {
     return (
       <div
         className="rounded-box  text-[#000000] items-center justify-center"
@@ -50,7 +50,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
           }`,
         }}
       >
-        <div>{label}</div>
+        <div>{isFullStatus ? "Full" : "Open"}</div>
       </div>
     );
   };
@@ -123,7 +123,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
             Status
           </p>
 
-          <StatusButton label="Open" isFullStatus={isFull} />
+          <StatusButton isFullStatus={isFull} />
         </div>
         <div style={{ marginTop: 32 }}>
           <PrimaryButton onClick={onClick}>View Pool</PrimaryButton>

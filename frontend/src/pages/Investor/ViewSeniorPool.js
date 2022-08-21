@@ -12,6 +12,8 @@ import {
   getWalletBal,
 } from "../../components/transaction/TransactionHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
+import Loader from "../../tools/Loading/Loader";
+import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 
 const ViewSeniorPool = () => {
   const location = useLocation();
@@ -24,16 +26,21 @@ const ViewSeniorPool = () => {
   const [estimatedAPY, setEstimatedAPY] = useState(defaultAPY);
   const [poolAmount, setPoolAmount] = useState(defaultPoolAmount);
   const [selected, setSelected] = useState(null);
+  const [processingModal, setProcessingModal] = useState(null);
 
   const [kycStatus, setKycStatus] = useState();
   const [error, setError] = useState();
+
+  const [loading, setLoading] = useState(true);
 
   const handleDrawdown = () => {
     setSelected(null);
   };
 
   useEffect(() => {
-    getUserWalletAddress().then((address) => loadBlockpassWidget(address));
+    getUserWalletAddress()
+      .then((address) => loadBlockpassWidget(address))
+      .finally(() => setLoading(false));
   }, []);
 
   const loadBlockpassWidget = (address) => {
@@ -81,93 +88,107 @@ const ViewSeniorPool = () => {
   }, []);
 
   return (
-    <>
-      {selected ? (
-        <InvestModal handleDrawdown={handleDrawdown} isSenior={true} />
-      ) : null}
+    <div>
+      {loading && <Loader />}
+      <div className={`${loading ? "blur-sm" : ""}`}>
+        {selected ? (
+          <InvestModal
+            handleDrawdown={handleDrawdown}
+            isSenior={true}
+            poolName={poolName}
+            estimatedAPY={estimatedAPY}
+          />
+        ) : null}
 
-      <div style={{ fontSize: 28 }} className="mb-0">
-        {poolName}
-      </div>
-
-      <div
-        className="flex-row justify-between items w-full"
-        style={{ display: "flex" }}
-      >
-        <div style={{ display: "flex" }} className="flex-col w-1/2 ">
-          <div
-            style={{ display: "flex" }}
-            className="flex-row justify-between mt-10 mb-3"
-          >
-            <div style={{ fontSize: 19 }} className="mb-0">
-              Pool Overview
-            </div>
-          </div>
-          <div>{poolDescription}</div>
+        <div style={{ fontSize: 28 }} className="mb-0">
+          {poolName}
         </div>
-        <div className="w-1/2">
-          <div
-            style={{
-              background: `linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)`,
-            }}
-            className="rounded-box p-5 mt-10 ml-24"
-          >
-            <div
-              style={{ display: "flex" }}
-              className="flex-row justify-between pb-2"
-            >
-              <h2 style={{ fontSize: 19 }}>Estimated APY.</h2>
-              <h2 style={{ fontSize: 28 }}>{estimatedAPY}%</h2>
-            </div>
-            <div
-              style={{ display: "flex" }}
-              className="flex-row justify-between pb-2"
-            >
-              <h2 style={{ fontSize: 19 }}>Total Pool Balance</h2>
-              <h2 style={{ fontSize: 28 }}>{poolAmount}</h2>
-            </div>
 
-            <label
-              htmlFor={kycStatus ? "InvestModal" : ""}
-              id={kycStatus ? "" : "blockpass-kyc-connect"}
+        <div
+          className="flex-row justify-between items w-full"
+          style={{ display: "flex" }}
+        >
+          <div style={{ display: "flex" }} className="flex-col w-1/2 ">
+            <div
+              style={{ display: "flex" }}
+              className="flex-row justify-between mt-10 mb-3"
+            >
+              <div style={{ fontSize: 19 }} className="mb-0">
+                Pool Overview
+              </div>
+            </div>
+            <div>{poolDescription}</div>
+          </div>
+          <div className="w-1/2">
+            <div
               style={{
-                borderRadius: "100px",
-                padding: "12px 24px",
-                color: "white",
+                background: `linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)`,
               }}
-              className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
-              onClick={() => {
-                if (kycStatus) return setSelected(true);
-                else return null;
-              }}
+              className="rounded-box p-5 mt-10 ml-24"
             >
-              {kycStatus ? "Invest" : "Complete your KYC"}
-            </label>
+              <div
+                style={{ display: "flex" }}
+                className="flex-row justify-between pb-2"
+              >
+                <h2 style={{ fontSize: 19 }}>Estimated APY.</h2>
+                <h2 style={{ fontSize: 28 }}>{estimatedAPY}%</h2>
+              </div>
+              <div
+                style={{ display: "flex" }}
+                className="flex-row justify-between pb-2"
+              >
+                <h2 style={{ fontSize: 19 }}>Total Pool Balance</h2>
+                <h2 style={{ fontSize: 28 }}>{poolAmount}</h2>
+              </div>
+
+              <label
+                htmlFor={kycStatus ? "InvestModal" : ""}
+                id={kycStatus ? "" : "blockpass-kyc-connect"}
+                style={{
+                  borderRadius: "100px",
+                  padding: "12px 24px",
+                  color: "white",
+                }}
+                className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
+                onClick={() => {
+                  if (kycStatus) return setSelected(true);
+                  else return null;
+                }}
+              >
+                {kycStatus ? "Invest" : "Complete your KYC"}
+              </label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div style={{ marginTop: "50px", fontSize: 19, marginBottom: "20px" }}>
-        Recent Activity
-      </div>
-      {transactionData.length > 0 ? (
-        <div className="w-1/2">
-          {transactionData ? (
-            transactionData.map((item) => (
-              <TransactionCard
-                key={transactionData.blockHash}
-                data={item}
-                address={process.env.REACT_APP_SENIORPOOL}
-              />
-            ))
-          ) : (
-            <></>
-          )}
+        <div
+          style={{
+            marginTop: "50px",
+            fontSize: 19,
+            marginBottom: "20px",
+          }}
+        >
+          Recent Activity
         </div>
-      ) : (
-        <p>Transaction details are not available at this moment</p>
-      )}
-    </>
+        {transactionData.length > 0 ? (
+          <div className="w-1/2">
+            {transactionData ? (
+              transactionData.map((item) => (
+                <TransactionCard
+                  key={transactionData.blockHash}
+                  data={item}
+                  address={process.env.REACT_APP_SENIORPOOL}
+                />
+              ))
+            ) : (
+              <></>
+            )}
+          </div>
+        ) : (
+          <p>Transaction details are not available at this moment</p>
+        )}
+      </div>
+    </div>
   );
 };
 

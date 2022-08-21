@@ -30,28 +30,31 @@ const FileUploader = ({
         </label>
         <div
           style={{
+            // outline: "2px solid lightcoral",
             display: "flex",
             padding: "6px 4px",
             borderWidth: 2,
             border: "2px dashed #3A3C43",
             borderRadius: "8px",
           }}
-          className=" flex-row bg-[#24272F] items-center gap-4"
+          className=" flex-row bg-[#24272F] items-center "
         >
-          <div
+          <input type="button"
             className="bg-[#30333A]"
             onClick={handleClick}
             style={{
               borderRadius: "37px",
               color: "white",
-              padding: "4.5px 20px",
+              padding: "5px 20px",
               cursor: "pointer",
               fontSize: 14,
             }}
-          >
-            Choose file
-          </div>
-          <div style={{ color: "#c7cad1", fontStyle: "italic" }}>
+            value="Choose file"
+            
+          />
+            {/* Choose file
+          </button> */}
+          <div style={{ marginInline: "0.5em", color: "#c7cad1", fontStyle: "italic" }}>
             {fileUploadedName ? fileUploadedName : fileName}
           </div>
         </div>

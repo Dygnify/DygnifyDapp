@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import GradientButton from "../Button/GradientButton";
+import { getWalletBal } from "../../components/transaction/TransactionHelper";
 
 const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
+  const [walletBal, setWalletBal] = useState();
+  useEffect(() => {
+    getWalletBal().then((data) => setWalletBal(data));
+  }, []);
+
   return (
     <div>
       <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
@@ -43,7 +49,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
                 Total Balance
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
+                {walletBal} {process.env.REACT_APP_TOKEN_NAME}
               </p>
             </div>
             {/* <small
@@ -59,7 +65,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
                 Pool Name
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.opportunity_name}
+                {data?.poolName}
               </p>
             </div>
             <div style={{ display: "flex" }} className="mb-2">

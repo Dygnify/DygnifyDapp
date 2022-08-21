@@ -1,16 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DrawdownModal from "../Modal/DrawdownModal";
 import { drawdown } from "../../components/transaction/TransactionHelper";
+import { getBinaryFileData } from "../../services/fileHelper";
+import { retrieveFiles } from "../../services/web3storageIPFS";
 
-const DrawdownCard = ({ data }) => {
+const DrawdownCard = ({ data, loadDrawdownList }) => {
   const [selected, setSelected] = useState(null);
+  const [poolName, setPoolName] = useState();
+
   const handleDrawdown = () => {
     setSelected(null);
   };
   const onDrawdown = async () => {
     await drawdown(data?.opportunityPoolAddress);
     setSelected(null);
+    loadDrawdownList(true);
   };
+
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(data?.opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setPoolName(opJson.loan_name);
+          }
+        };
+      }
+    });
+  }, []);
+
   return (
     <div
       style={{ boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)` }}
@@ -23,7 +44,7 @@ const DrawdownCard = ({ data }) => {
         }}
         className="card-body"
       >
-        <h2 className="card-title mb-4">{data?.opportunity_name}</h2>
+        <h2 className="card-title mb-4">{poolName}</h2>
         <div className="text-sm">
           <div style={{ display: "flex" }} className="mb-2">
             <p style={{ display: "flex" }} className="justify-start">
@@ -31,14 +52,6 @@ const DrawdownCard = ({ data }) => {
             </p>
             <p style={{ display: "flex" }} className="justify-end">
               {data?.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
-            </p>
-          </div>
-          <div style={{ display: "flex" }} className="mb-2">
-            <p style={{ display: "flex" }} className="justify-start">
-              Due Date
-            </p>
-            <p style={{ display: "flex" }} className="justify-end">
-              22/7/2022
             </p>
           </div>
           <div style={{ display: "flex" }} className="mb-2">
@@ -68,9 +81,9 @@ const DrawdownCard = ({ data }) => {
         {selected && (
           <DrawdownModal
             key={data?.id}
-            data={data}
+            data={{ ...data, poolName }}
             handleDrawdown={handleDrawdown}
-            onDrawdown = {onDrawdown}
+            onDrawdown={onDrawdown}
           ></DrawdownModal>
         )}
       </div>

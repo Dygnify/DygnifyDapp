@@ -9,24 +9,23 @@ import DrawdownCard from "../../tools/Card/DrawdownCard";
 import OpportunityCardCollapsible from "../../tools/Card/OpportunityCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
 import LoanFormModal from "../../tools/Modal/LoanFormModal";
+import Loader from "../../tools/Loading/Loader";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
-import ProcessingRequestModal from "./Components/Modal/ProcessingRequestModal";
+import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 
 const BorrowList = () => {
   const [data, setData] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
   const [selected, setSelected] = useState(null);
+
+  const [loading, setLoading] = useState();
   const [kycStatus, setKycStatus] = useState();
   const [profileStatus, setProfileStatus] = useState();
-  const [borrowReqProcess, setBorrowReqProcess] = useState();
-  const [processModal, setProcessModal] = useState();
-  const [kycSelected, setKycSelected] = useState();
 
   const handleForm = () => {
     setSelected(null);
-    setKycSelected(null);
   };
 
   useEffect(() => {
@@ -35,9 +34,10 @@ const BorrowList = () => {
       if (op && op.length) {
         setData(op);
       }
+
+      setLoading(false);
     };
     fetchData();
-    getUserWalletAddress().then((address) => checkForKycAndProfile(address));
   }, []);
 
   useEffect(() => {
@@ -77,34 +77,14 @@ const BorrowList = () => {
 
   return (
     <div>
-      <DashboardHeader
-        setSelected={setSelected}
-        kycStatus={kycStatus}
-        profileStatus={profileStatus}
-        setKycSelected={setKycSelected}
-      />
+      <DashboardHeader setSelected={setSelected} />
       {selected && (
         <LoanFormModal
-          setBorrowReqProcess={setBorrowReqProcess}
-          setSelected={setSelected}
-          setProcessModal={setProcessModal}
+          // key={drawdownList?.id}
+          // data={drawdownList}
           handleForm={handleForm}
-        />
+        ></LoanFormModal>
       )}
-      {processModal && (
-        <ProcessingRequestModal
-          borrowReqProcess={borrowReqProcess}
-          setSelected={setSelected}
-          setProcessModal={setProcessModal}
-        />
-      )}
-
-      {kycSelected ? (
-        <KycCheckModal kycStatus={kycStatus} profileStatus={profileStatus} />
-      ) : (
-        <></>
-      )}
-
       <div className="mb-16">
         <h2 className="mb-2 text-xl">Drawdown Funds</h2>
         {data.length === 0 ? (

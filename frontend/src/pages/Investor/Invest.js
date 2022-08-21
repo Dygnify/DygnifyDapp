@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ViewPoolCard from "./components/Cards/ViewPoolCard";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,6 +11,7 @@ import { getBinaryFileData } from "../../services/fileHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
+import Loader from "../../tools/Loading/Loader";
 
 const Invest = () => {
   const path = useNavigate();
@@ -18,6 +19,15 @@ const Invest = () => {
   const [seniorPool, setSeniorPool] = useState();
 
   const [kycStatus, setKycStatus] = useState();
+
+  const [seniorPoolLoading, setSeniorPoolLoading] = useState(true);
+  const [juniorPoolLoading, setJuniorPoolLoading] = useState(true);
+  const cardData = useRef({
+    opportunityInfo: "",
+    opportunityAmount: "",
+    loanInterest: "",
+    isFull: "",
+  });
 
   useEffect(() => {
     getUserWalletAddress().then((address) => checkForKyc(address));
@@ -44,10 +54,12 @@ const Invest = () => {
       getAllActiveOpportunities().then((juniorPool) => {
         if (juniorPool && juniorPool.length) {
           setJuniorPools(juniorPool);
+          setJuniorPoolLoading(false);
         }
       });
     } catch (error) {
       console.log(error);
+      setJuniorPoolLoading(false);
     }
   }, []);
 
@@ -68,11 +80,19 @@ const Invest = () => {
             seniorInvestmentData.poolDescription = spJson.poolDescription;
             seniorInvestmentData.isFull = false;
             setSeniorPool(seniorInvestmentData);
+            setSeniorPoolLoading(false);
           }
         };
       }
     });
   }, []);
+
+  const loadingCard = (
+    <ViewPoolCard
+      onClick={() => console.log("card for loading")}
+      data={cardData.current}
+    />
+  );
 
   return (
     <>
@@ -94,51 +114,86 @@ const Invest = () => {
         <h2 style={{ fontSize: 24 }} className=" mb-5">
           Senior pools
         </h2>
-        {seniorPool ? (
-          <div style={{ display: "flex" }} className="gap-4 w-1/2">
-            <ViewPoolCard
-              onClick={() =>
-                path("/investor-dashboardN/viewSeniorPool", {
-                  state: { ...seniorPool, kycStatus: kycStatus },
-                })
-              }
-              data={seniorPool}
-            />
-          </div>
-        ) : (
-          <div style={{ display: "flex" }} className="justify-center">
-            <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
-              No senior pool investments are available.
+
+        <div className="">
+          {seniorPoolLoading && (
+            <div className="relative inline-block">
+              <Loader />
+              <div className="blur-sm">{loadingCard}</div>
             </div>
-          </div>
-        )}
+          )}
+          {seniorPool ? (
+            <div style={{ display: "flex" }} className="gap-4 w-1/2">
+              <ViewPoolCard
+                onClick={() =>
+                  path("/investor-dashboardN/viewSeniorPool", {
+                    state: {
+                      ...seniorPool,
+                      kycStatus: kycStatus,
+                    },
+                  })
+                }
+                data={seniorPool}
+              />
+            </div>
+          ) : (
+            <div style={{ display: "flex" }} className="justify-center">
+              <div
+                style={{
+                  color: "#64748B",
+                  fontSize: 18,
+                  marginTop: 10,
+                }}
+              >
+                {seniorPoolLoading
+                  ? ""
+                  : "No senior pool investments are available."}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className="mb-16">
         <h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
           Junior pools
         </h2>
-        {juniorPools.length === 0 ? (
-          <div style={{ display: "flex" }} className="justify-center">
-            <div style={{ color: "#64748B", fontSize: 18, marginTop: 10 }}>
-              No junior pool investments are available.
+
+        <div className={`relative ${juniorPoolLoading ? "h-[18rem]" : ""}`}>
+          {juniorPoolLoading && <Loader />}
+          {juniorPools.length === 0 ? (
+            <div style={{ display: "flex" }} className="justify-center ">
+              <div
+                style={{
+                  color: "#64748B",
+                  fontSize: 18,
+                  marginTop: 10,
+                }}
+              >
+                {juniorPoolLoading
+                  ? ""
+                  : "No junior pool investments are available."}
+              </div>
             </div>
-          </div>
-        ) : (
-          <div style={{ display: "flex" }} className=" gap-4 w-1/2">
-            {juniorPools.map((item) => (
-              <ViewPoolCard
-                data={item}
-                key={item.id}
-                //send data params
-                onClick={() =>
-                  path("/investor-dashboardN/viewPool", {
-                    state: { ...item, kycStatus: kycStatus },
-                  })
-                }
-              />
-            ))}
-          </div>
-        )}
+          ) : (
+            <div style={{ display: "grid" }} className="grid-cols-2 gap-4">
+              {juniorPools.map((item) => (
+                <ViewPoolCard
+                  data={item}
+                  key={item.id}
+                  //send data params
+                  onClick={() =>
+                    path("/investor-dashboardN/viewPool", {
+                      state: {
+                        ...item,
+                        kycStatus: kycStatus,
+                      },
+                    })
+                  }
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

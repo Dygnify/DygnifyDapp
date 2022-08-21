@@ -1,6 +1,24 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { getBinaryFileData } from "../../services/fileHelper";
+import { retrieveFiles } from "../../services/web3storageIPFS";
 const DueDateCard = ({ data }) => {
+  const [poolName, setPoolName] = useState(data.poolName);
+
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(data?.opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setPoolName(opJson.loan_name);
+          }
+        };
+      }
+    });
+  }, []);
+
   return (
     <div
       style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
@@ -10,22 +28,21 @@ const DueDateCard = ({ data }) => {
         style={{ display: "flex" }}
         className="collapse-title text-md font-light justify-around w-full"
       >
-        <p className="w-1/4 text-center">{data?.opportunity_name}</p>
+        <p className="w-1/4 text-center">{poolName}</p>
         <p className="w-1/4 text-center">
-          {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
+          {data?.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
         </p>
         <p className="w-1/4 text-center">
-          {data?.principal_amount + data?.interest_amount}{" "}
-          {process.env.REACT_APP_TOKEN_NAME}{" "}
-          <sup
+          {data?.repaymentDisplayAmount} {process.env.REACT_APP_TOKEN_NAME}{" "}
+          {/* <sup
             style={{ backgroundColor: "#323A46", borderRadius: "50%" }}
             className="ml-1 tooltip p-2"
             data-tip={`Principle - ${data?.principal_amount} ${process.env.REACT_APP_TOKEN_NAME}, Interest - ${data?.interest_amount} ${process.env.REACT_APP_TOKEN_NAME}`}
           >
             <button>i</button>
-          </sup>
+          </sup> */}
         </p>
-        <p className="w-1/4 text-center">{data?.repayment_date}</p>
+        <p className="w-1/4 text-center">{data?.nextDueDate}</p>
       </div>
     </div>
   );
