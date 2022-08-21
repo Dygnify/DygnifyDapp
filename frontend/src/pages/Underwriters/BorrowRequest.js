@@ -55,8 +55,8 @@ const BorrowRequest = () => {
 				) : (
 					<div className="mb-16 ">
 						<div
-							style={{ display: "flex" }}
-							className="gap-4 w-1/2"
+							style={{ display: "grid" }}
+							className="gap-4 grid-cols-2"
 						>
 							{opportunities &&
 								opportunities.map((item) => (
