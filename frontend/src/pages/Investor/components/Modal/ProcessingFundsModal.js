@@ -1,6 +1,4 @@
 import React from "react";
-import GradientButton from "../../../tools/Button/GradientButton";
-import PrimaryButton from "../../../tools/Button/PrimaryButton";
 
 const ProcessingFundsModal = () => {
   const data = {

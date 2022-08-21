@@ -149,9 +149,7 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
 
 				<div className="">
 					<h4
-						className="text-primary font-[500] 
-						text-lg
-						2xl:text-xl mb-2"
+						className="text-primary font-[500] text-xl mb-2"
 						style={{ color: "#9281FF" }}
 					>
 						Collateral
