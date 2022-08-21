@@ -175,7 +175,7 @@ const Invest = () => {
               </div>
             </div>
           ) : (
-            <div style={{ display: "flex" }} className=" gap-4 w-full">
+            <div style={{ display: "grid" }} className="grid-cols-2 gap-4">
               {juniorPools.map((item) => (
                 <ViewPoolCard
                   data={item}

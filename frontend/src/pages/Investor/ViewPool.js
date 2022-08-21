@@ -119,7 +119,7 @@ const ViewPool = () => {
                 setLoanPurpose({
                   firstText: firstText,
                   secondText: secondText,
-                  isSlied: isSliced,
+                  isSliced: isSliced,
                 });
               } else {
                 setLoanPurpose({
