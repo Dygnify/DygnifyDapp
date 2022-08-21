@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import DoughnutChart from "../../pages/Components/DoughnutChart";
@@ -6,18 +6,20 @@ import DoughnutChart from "../../pages/Components/DoughnutChart";
 const OpportunityCardCollapsible = ({ data }) => {
   const [poolName, setPoolName] = useState();
 
-  // fetch the opportunity details from IPFS
-  retrieveFiles(data?.opportunityInfo, true).then((res) => {
-    if (res) {
-      let read = getBinaryFileData(res);
-      read.onloadend = function () {
-        let opJson = JSON.parse(read.result);
-        if (opJson) {
-          setPoolName(opJson.loan_name);
-        }
-      };
-    }
-  });
+  useEffect(() => {
+    // fetch the opportunity details from IPFS
+    retrieveFiles(data?.opportunityInfo, true).then((res) => {
+      if (res) {
+        let read = getBinaryFileData(res);
+        read.onloadend = function () {
+          let opJson = JSON.parse(read.result);
+          if (opJson) {
+            setPoolName(opJson.loan_name);
+          }
+        };
+      }
+    });
+  }, []);
 
   function getStatus(index) {
     let status = "";
