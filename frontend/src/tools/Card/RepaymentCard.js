@@ -4,10 +4,11 @@ import RepaymentModal from "../Modal/RepaymentModal";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 
-const RepaymentCard = ({ data }) => {
+const RepaymentCard = ({ data, loadRepaymentList }) => {
   const [selected, setSelected] = useState(null);
   const handleRepayment = async () => {
     setSelected(null);
+    loadRepaymentList(true);
   };
   const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
@@ -27,6 +28,7 @@ const RepaymentCard = ({ data }) => {
       }
     });
   }, []);
+
   return (
     <div
       style={{ boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)` }}

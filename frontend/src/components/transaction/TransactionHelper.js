@@ -504,7 +504,10 @@ export async function getDrawdownOpportunities() {
       for (const opportunity of data) {
         let tx = await contract.opportunityToId(opportunity);
 
-        if (!tx.opportunityPoolAddress) {
+        if (
+          !tx.opportunityPoolAddress ||
+          tx.opportunityStatus.toString() != "5"
+        ) {
           continue;
         }
 
