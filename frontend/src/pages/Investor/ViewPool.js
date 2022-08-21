@@ -321,7 +321,7 @@ const ViewPool = () => {
                   }}
                   onClick={() => setExpand(true)}
                 >
-                  {expand ? null : "view more"}
+                  {expand ? null : "... view more"}
                 </a>
                 {expand ? <div>{loanPurpose.secondText}</div> : null}
                 <a
