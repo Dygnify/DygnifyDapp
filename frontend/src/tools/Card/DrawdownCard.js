@@ -4,7 +4,7 @@ import { drawdown } from "../../components/transaction/TransactionHelper";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 
-const DrawdownCard = ({ data }) => {
+const DrawdownCard = ({ data, loadDrawdownList }) => {
   const [selected, setSelected] = useState(null);
   const [poolName, setPoolName] = useState();
 
@@ -14,6 +14,7 @@ const DrawdownCard = ({ data }) => {
   const onDrawdown = async () => {
     await drawdown(data?.opportunityPoolAddress);
     setSelected(null);
+    loadDrawdownList(true);
   };
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const DrawdownCard = ({ data }) => {
         {selected && (
           <DrawdownModal
             key={data?.id}
-            data={data}
+            data={{ ...data, poolName }}
             handleDrawdown={handleDrawdown}
             onDrawdown={onDrawdown}
           ></DrawdownModal>

@@ -36,6 +36,7 @@ const Overview = () => {
   const [borrowReqProcess, setBorrowReqProcess] = useState();
   const [processModal, setProcessModal] = useState();
   const [loading, setLoading] = useState(true);
+  const [loadDrawdownList, setLoadDrawdownList] = useState();
 
   const handleForm = () => {
     setSelected(null);
@@ -53,7 +54,7 @@ const Overview = () => {
     };
     fetchData();
     getUserWalletAddress().then((address) => checkForKycAndProfile(address));
-  }, []);
+  }, [loadDrawdownList]);
 
   function sortByProperty(property) {
     return function (a, b) {
@@ -367,7 +368,11 @@ const Overview = () => {
           ) : (
             <div style={{ display: "flex" }} className=" gap-4">
               {drawdownList.map((item) => (
-                <DrawdownCard key={item.id} data={item} />
+                <DrawdownCard
+                  key={item.id}
+                  data={item}
+                  loadDrawdownList={setLoadDrawdownList}
+                />
               ))}
             </div>
           )}
