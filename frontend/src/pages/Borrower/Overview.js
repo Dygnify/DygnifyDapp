@@ -19,7 +19,7 @@ import { getDisplayAmount } from "../../services/displayTextHelper";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
-import ProcessingDrawdownModal from "./Components/Modal/ProcessingDrawdownModal";
+import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 
 const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
@@ -38,7 +38,7 @@ const Overview = () => {
   const [processModal, setProcessModal] = useState();
   const [loading, setLoading] = useState(true);
   const [loadDrawdownList, setLoadDrawdownList] = useState();
-
+  const [loadRepaymentList, setLoadRepaymentList] = useState();
   const [processDrawdown, setProcessDrawdown] = useState();
   const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 
@@ -109,7 +109,7 @@ const Overview = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [loadRepaymentList]);
 
   useEffect(() => {
     // set total borrowed amount
@@ -352,7 +352,11 @@ const Overview = () => {
           ) : (
             <div style={{ display: "flex" }} className="gap-4">
               {repaymentList.map((item) => (
-                <RepaymentCard key={item.id} data={item} />
+                <RepaymentCard
+                  key={item.id}
+                  data={item}
+                  loadRepaymentList={setLoadRepaymentList}
+                />
               ))}
             </div>
           )}
