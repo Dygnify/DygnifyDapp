@@ -20,6 +20,8 @@ import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 
+import { useNavigate } from "react-router-dom";
+
 const Overview = () => {
 	const [drawdownList, setDrawdownList] = useState([]);
 	const [repaymentList, setRepaymentList] = useState([]);
@@ -37,6 +39,7 @@ const Overview = () => {
 	const [processModal, setProcessModal] = useState();
 
 	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
 
 	const handleForm = () => {
 		setSelected(null);
@@ -49,8 +52,6 @@ const Overview = () => {
 			if (opportunities && opportunities.length) {
 				setDrawdownList(opportunities);
 			}
-
-			setLoading(false);
 		};
 		fetchData();
 		getUserWalletAddress().then((address) =>
@@ -79,7 +80,12 @@ const Overview = () => {
 			getBorrowerDetails().then((borrowerCID) => {
 				console.log(borrowerCID);
 				if (borrowerCID) setProfileStatus(true);
-				else setProfileStatus(false);
+				else {
+					setProfileStatus(false);
+					navigate("/borrower_dashboard/edit_profile");
+				}
+
+				setLoading(false);
 			});
 		} catch (error) {
 			console.log(error);
@@ -140,7 +146,7 @@ const Overview = () => {
 	return (
 		<>
 			{loading && <Loader />}
-			<div className={`${loading ? "relative blur-sm" : ""}`}>
+			<div className={`${loading ? "blur-sm" : ""}`}>
 				<DashboardHeader
 					setSelected={setSelected}
 					kycStatus={kycStatus}
