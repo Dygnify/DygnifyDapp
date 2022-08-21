@@ -37,7 +37,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
           <div style={{ display: "flex" }} className="justify-center my-6">
             <img
               style={{ borderRadius: "50%" }}
-              className="p-4 bg-base-500 opacity-80"
+              className="p-4 bg-[#9281FF] opacity-80"
               src="/images/wallet_white.png"
               alt=""
             />
@@ -61,7 +61,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
               {data?.loan_amount} USDT
             </small> */}
           </div>
-          <div className="text-sm py-3 px-4">
+          <div className="text-sm py-3 px-5">
             <div style={{ display: "flex" }} className="mb-2">
               <p style={{ display: "flex" }} className="justify-start">
                 Pool Name
@@ -91,7 +91,11 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
             className="modal-action mx-4 mt-2 mb-4 justify-center"
             style={{ display: "flex" }}
           >
-            <GradientBtnForModal className={"w-full"} onClick={onDrawdown}>
+            <GradientBtnForModal
+              className={"w-full"}
+              htmlFor={"DrawdownProcessModal"}
+              onClick={onDrawdown}
+            >
               Drawdown Funds
             </GradientBtnForModal>
           </div>

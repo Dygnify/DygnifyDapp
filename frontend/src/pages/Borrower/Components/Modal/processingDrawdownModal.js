@@ -1,10 +1,18 @@
 import React from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
-const ProcessingDrawdownModal = ({ investProcessing }) => {
-  console.log(investProcessing, "in fund process modal");
+const ProcessingDrawdownModal = ({ processDrawdown }) => {
+  console.log(processDrawdown, "in fund process modal");
+
+  const navigate = useNavigate();
+
   return (
     <>
-      <input type="checkbox" id="InvestProcessModal" className="modal-toggle" />
+      <input
+        type="checkbox"
+        id="DrawdownProcessModal"
+        className="modal-toggle"
+      />
       <div
         style={{ backdropFilter: "brightness(40%) blur(8px)" }}
         className="modal"
@@ -14,7 +22,7 @@ const ProcessingDrawdownModal = ({ investProcessing }) => {
           className="modal-box w-1/3 max-w-5xl p-0"
         >
           <label
-            for="InvestProcessModal"
+            for="DrawdownProcessModal"
             className="btn btn-ghost absolute right-2 top-2 pb-2"
             // onClick={() => handleDrawdown()}
           >
@@ -24,31 +32,36 @@ const ProcessingDrawdownModal = ({ investProcessing }) => {
             style={{ borderBottom: "2px solid #292C33" }}
             className="font-bold text-lg py-3 px-4"
           >
-            Invest
+            Drawdown
           </h3>
           <p
             style={{ display: "flex", fontSize: 55, fontWeight: 600 }}
             className="justify-center"
           >
-            {!investProcessing ? `Yay!🎉` : "In Progress⏱"}
+            {!processDrawdown ? `Yay!🎉` : "In Progress⏱"}
           </p>
           <p
             style={{ display: "flex", fontSize: 23, fontWeight: 600 }}
             className="justify-center mb-2"
           >
-            {investProcessing
-              ? "Investment is in progress"
-              : "Investment was successful"}
+            {processDrawdown
+              ? "Drawdown is in progress"
+              : "Drawdown done successfully"}
           </p>
-          {!investProcessing ? (
+          {processDrawdown ? (
             <p
               className="justify-center"
               style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
             >
-              {`You successfully withdrew ${`20000 USDC`} from poolname`}
+              {`Drawdown of ${`20000 USDC`} from pool ${`poolname`} is in progress.`}
             </p>
           ) : (
-            <></>
+            <p
+              className="justify-center"
+              style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
+            >
+              {`You successfully drawdown ${`20000 USDC`} from pool ${`poolname`} `}
+            </p>
           )}
           <div
             className="text-sm py-3 px-4 rounder-box items-center "
@@ -80,7 +93,7 @@ const ProcessingDrawdownModal = ({ investProcessing }) => {
                   >
                     Status
                   </small>
-                  {investProcessing ? (
+                  {processDrawdown ? (
                     <p style={{ fontSize: 14, color: "#FBBF24" }}>Processing</p>
                   ) : (
                     <p style={{ fontSize: 14, color: "#58BD7D" }}>Completed</p>
@@ -110,7 +123,7 @@ const ProcessingDrawdownModal = ({ investProcessing }) => {
                     color: "#777E91",
                   }}
                 >
-                  Contract Address
+                  Receipient's wallet address
                 </small>
                 <p style={{ fontSize: 14, color: "white" }}>
                   0msaae8979faweawqt977asfsaf8798
@@ -131,6 +144,7 @@ const ProcessingDrawdownModal = ({ investProcessing }) => {
               alignSelf: "center",
               display: "flex",
             }}
+            onClick={() => navigate("/borrower_dashboard/transaction")}
           >
             <p>View Transaction</p>
           </div>

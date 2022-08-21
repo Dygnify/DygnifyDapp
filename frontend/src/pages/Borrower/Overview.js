@@ -19,6 +19,7 @@ import { getDisplayAmount } from "../../services/displayTextHelper";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
+import ProcessingDrawdownModal from "./Components/Modal/ProcessingDrawdownModal";
 
 const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
@@ -37,6 +38,9 @@ const Overview = () => {
   const [processModal, setProcessModal] = useState();
   const [loading, setLoading] = useState(true);
   const [loadDrawdownList, setLoadDrawdownList] = useState();
+
+  const [processDrawdown, setProcessDrawdown] = useState();
+  const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 
   const handleForm = () => {
     setSelected(null);
@@ -372,9 +376,17 @@ const Overview = () => {
                   key={item.id}
                   data={item}
                   loadDrawdownList={setLoadDrawdownList}
+                  setOpenProcessDrawdown={setOpenProcessDrawdown}
+                  setProcessDrawdown={setProcessDrawdown}
                 />
               ))}
             </div>
+          )}
+
+          {openProcessDrawdown ? (
+            <ProcessingDrawdownModal processDrawdown={processDrawdown} />
+          ) : (
+            <></>
           )}
         </div>
         <div className="mb-16">
