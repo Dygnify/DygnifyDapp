@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import GradientBtnForModal from "../Button/GradientBtnForModal";
 import GradientButton from "../Button/GradientButton";
+
 import { getWalletBal } from "../../components/transaction/TransactionHelper";
 
 const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
@@ -85,10 +87,13 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
               </p>
             </div>
           </div>
-          <div className="modal-action mx-4 mt-2 mb-4">
-            <GradientButton className="w-full" onClick={onDrawdown}>
+          <div
+            className="modal-action mx-4 mt-2 mb-4 justify-center"
+            style={{ display: "flex" }}
+          >
+            <GradientBtnForModal className={"w-full"} onClick={onDrawdown}>
               Drawdown Funds
-            </GradientButton>
+            </GradientBtnForModal>
           </div>
         </div>
       </div>
