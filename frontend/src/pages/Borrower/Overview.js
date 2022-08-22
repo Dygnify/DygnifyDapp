@@ -272,7 +272,7 @@ const Overview = () => {
                   marginLeft: 20,
                 }}
               >
-                {totalRepaidAmt}
+                {totalRepaidAmt?.displayTotalRepaidAmt}
               </div>
             </div>
             <div style={{ marginRight: 20 }}>
