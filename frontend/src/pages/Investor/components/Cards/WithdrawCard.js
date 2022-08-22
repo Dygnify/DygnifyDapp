@@ -2,23 +2,30 @@ import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import PrimaryButton from "../../../../tools/Button/PrimaryButton";
-import {withdrawAllJunior} from "../../../../components/transaction/TransactionHelper"
+import {
+  withdrawAllJunior,
+  withdrawSeniorPoolInvestment,
+} from "../../../../components/transaction/TransactionHelper";
 
-const WithdrawCard = ({ data, setSelected }) => {
+const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
   const {
     opportunityInfo,
     opportunityAmount,
     estimatedAPY,
     capitalInvested,
     withdrawableAmt,
-    opportunityPoolAddress
+    opportunityPoolAddress,
   } = data;
 
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState(data.poolName);
 
-  async function withdrawJunior(){
-    await withdrawAllJunior(opportunityPoolAddress)
+  async function withdrawJunior() {
+    await withdrawAllJunior(opportunityPoolAddress);
+  }
+
+  async function withdrawSeniorPool() {
+    await withdrawSeniorPoolInvestment();
   }
 
   useEffect(() => {
