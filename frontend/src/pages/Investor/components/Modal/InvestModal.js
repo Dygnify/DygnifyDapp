@@ -12,6 +12,8 @@ const InvestModal = ({
 	poolName,
 	poolLimit,
 	estimatedAPY,
+	setProcessFundModal,
+	setInvestProcessing,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
@@ -21,11 +23,19 @@ const InvestModal = ({
 	}, []);
 
 	async function investSenior() {
+		setProcessFundModal(true);
+		setInvestProcessing(true);
 		await investInSeniorPool(amount);
+		setInvestProcessing(false);
+		console.log("done");
 	}
 
 	async function investJunior() {
+		setProcessFundModal(true);
+		setInvestProcessing(true);
+
 		await investInJuniorPool(poolAddress, amount);
+		setInvestProcessing(false);
 	}
 
 	return (
@@ -164,14 +174,20 @@ const InvestModal = ({
 						className="modal-action mx-4 mt-2 mb-4 justify-center"
 						style={{ display: "flex" }}
 					>
-						<GradientButton
-							className="w-full"
+						<label
+							htmlFor="InvestProcessModal"
+							style={{
+								borderRadius: "100px",
+								padding: "12px 24px",
+								color: "white",
+							}}
+							className={`btn w-full bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
 							onClick={() =>
 								isSenior ? investSenior() : investJunior()
 							} //if condition not true then investJunior will execute
 						>
 							Invest
-						</GradientButton>
+						</label>
 					</div>
 				</div>
 			</div>

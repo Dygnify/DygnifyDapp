@@ -4,10 +4,11 @@ import RepaymentModal from "../Modal/RepaymentModal";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 
-const RepaymentCard = ({ data }) => {
+const RepaymentCard = ({ data, loadRepaymentList }) => {
   const [selected, setSelected] = useState(null);
   const handleRepayment = async () => {
     setSelected(null);
+    loadRepaymentList(true);
   };
   const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
@@ -21,12 +22,13 @@ const RepaymentCard = ({ data }) => {
         read.onloadend = function () {
           let opJson = JSON.parse(read.result);
           if (opJson) {
-            setPoolName(opJson.loanName);
+            setPoolName(opJson.loan_name);
           }
         };
       }
     });
   }, []);
+
   return (
     <div
       style={{ boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)` }}
@@ -50,17 +52,25 @@ const RepaymentCard = ({ data }) => {
             </p>
           </div>
           <div style={{ display: "flex" }} className="mb-2">
-            { 
-              data?.isOverDue ?
-                <p style={{ display: "flex", color: "#EF4444" }} className="justify-start">
-                  Overdue Amount
-                </p>
-              :
-                <p style={{ display: "flex" }} className="justify-start">
-                  Due Amount
-                </p>
-            }
-            <p style={{ display: "flex", color: `${data?.isOverDue ? "#EF4444" : "white"}` }} className="justify-end">
+            {data?.isOverDue ? (
+              <p
+                style={{ display: "flex", color: "#EF4444" }}
+                className="justify-start"
+              >
+                Overdue Amount
+              </p>
+            ) : (
+              <p style={{ display: "flex" }} className="justify-start">
+                Due Amount
+              </p>
+            )}
+            <p
+              style={{
+                display: "flex",
+                color: `${data?.isOverDue ? "#EF4444" : "white"}`,
+              }}
+              className="justify-end"
+            >
               {data?.repaymentDisplayAmount} {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
@@ -93,7 +103,7 @@ const RepaymentCard = ({ data }) => {
             key={data?.id}
             data={selected}
             handleRepayment={handleRepayment}
-            poolName = {poolName}
+            poolName={poolName}
           ></RepaymentModal>
         )}
       </div>

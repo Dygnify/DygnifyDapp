@@ -19,6 +19,7 @@ import { getDisplayAmount } from "../../services/displayTextHelper";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
+import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 
 const Overview = () => {
   const [drawdownList, setDrawdownList] = useState([]);
@@ -36,6 +37,10 @@ const Overview = () => {
   const [borrowReqProcess, setBorrowReqProcess] = useState();
   const [processModal, setProcessModal] = useState();
   const [loading, setLoading] = useState(true);
+  const [loadDrawdownList, setLoadDrawdownList] = useState();
+  const [loadRepaymentList, setLoadRepaymentList] = useState();
+  const [processDrawdown, setProcessDrawdown] = useState();
+  const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 
   const handleForm = () => {
     setSelected(null);
@@ -53,7 +58,7 @@ const Overview = () => {
     };
     fetchData();
     getUserWalletAddress().then((address) => checkForKycAndProfile(address));
-  }, []);
+  }, [loadDrawdownList]);
 
   function sortByProperty(property) {
     return function (a, b) {
@@ -104,7 +109,7 @@ const Overview = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [loadRepaymentList]);
 
   useEffect(() => {
     // set total borrowed amount
@@ -267,7 +272,7 @@ const Overview = () => {
                   marginLeft: 20,
                 }}
               >
-                {totalRepaidAmt}
+                {totalRepaidAmt?.displayTotalRepaidAmt}
               </div>
             </div>
             <div style={{ marginRight: 20 }}>
@@ -347,7 +352,11 @@ const Overview = () => {
           ) : (
             <div style={{ display: "flex" }} className="gap-4">
               {repaymentList.map((item) => (
-                <RepaymentCard key={item.id} data={item} />
+                <RepaymentCard
+                  key={item.id}
+                  data={item}
+                  loadRepaymentList={setLoadRepaymentList}
+                />
               ))}
             </div>
           )}
@@ -367,9 +376,21 @@ const Overview = () => {
           ) : (
             <div style={{ display: "flex" }} className=" gap-4">
               {drawdownList.map((item) => (
-                <DrawdownCard key={item.id} data={item} />
+                <DrawdownCard
+                  key={item.id}
+                  data={item}
+                  loadDrawdownList={setLoadDrawdownList}
+                  setOpenProcessDrawdown={setOpenProcessDrawdown}
+                  setProcessDrawdown={setProcessDrawdown}
+                />
               ))}
             </div>
+          )}
+
+          {openProcessDrawdown ? (
+            <ProcessingDrawdownModal processDrawdown={processDrawdown} />
+          ) : (
+            <></>
           )}
         </div>
         <div className="mb-16">

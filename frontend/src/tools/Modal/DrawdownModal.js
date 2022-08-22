@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import GradientBtnForModal from "../Button/GradientBtnForModal";
 import GradientButton from "../Button/GradientButton";
 
+import { getWalletBal } from "../../components/transaction/TransactionHelper";
+
 const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
+  const [walletBal, setWalletBal] = useState();
+  useEffect(() => {
+    getWalletBal().then((data) => setWalletBal(data));
+  }, []);
+
   return (
     <div>
       <input type="checkbox" id="drawdown-modal" className="modal-toggle" />
@@ -29,7 +37,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
           <div style={{ display: "flex" }} className="justify-center my-6">
             <img
               style={{ borderRadius: "50%" }}
-              className="p-4 bg-base-500 opacity-80"
+              className="p-4 bg-[#9281FF] opacity-80"
               src="/images/wallet_white.png"
               alt=""
             />
@@ -43,7 +51,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
                 Total Balance
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.loan_amount} {process.env.REACT_APP_TOKEN_NAME}
+                {walletBal} {process.env.REACT_APP_TOKEN_NAME}
               </p>
             </div>
             {/* <small
@@ -53,13 +61,13 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
               {data?.loan_amount} USDT
             </small> */}
           </div>
-          <div className="text-sm py-3 px-4">
+          <div className="text-sm py-3 px-5">
             <div style={{ display: "flex" }} className="mb-2">
               <p style={{ display: "flex" }} className="justify-start">
                 Pool Name
               </p>
               <p style={{ display: "flex" }} className="justify-end">
-                {data?.opportunity_name}
+                {data?.poolName}
               </p>
             </div>
             <div style={{ display: "flex" }} className="mb-2">
@@ -79,10 +87,17 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
               </p>
             </div>
           </div>
-          <div className="modal-action mx-4 mt-2 mb-4">
-            <GradientButton className="w-full" onClick={onDrawdown}>
+          <div
+            className="modal-action mx-4 mt-2 mb-4 justify-center"
+            style={{ display: "flex" }}
+          >
+            <GradientBtnForModal
+              className={"w-full"}
+              htmlFor={"DrawdownProcessModal"}
+              onClick={onDrawdown}
+            >
               Drawdown Funds
-            </GradientButton>
+            </GradientBtnForModal>
           </div>
         </div>
       </div>

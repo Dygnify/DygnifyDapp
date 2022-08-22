@@ -26,21 +26,35 @@ const ViewSeniorPool = () => {
   const [estimatedAPY, setEstimatedAPY] = useState(defaultAPY);
   const [poolAmount, setPoolAmount] = useState(defaultPoolAmount);
   const [selected, setSelected] = useState(null);
-  const [processingModal, setProcessingModal] = useState(null);
-
-  const [kycStatus, setKycStatus] = useState();
-  const [error, setError] = useState();
-
+  const [processFundModal, setProcessFundModal] = useState();
+  const [investProcessing, setInvestProcessing] = useState();
+  const [kycStatus, setKycStatus] = useState(1);
   const [loading, setLoading] = useState(true);
 
   const handleDrawdown = () => {
     setSelected(null);
   };
+  useEffect(() => {
+    if (location.state) {
+      setPoolName(
+        location.state.poolName ? location.state.poolName : defaultPoolName
+      );
+      setPoolDescription(
+        location.state.poolDescription ? location.state.poolDescription : ""
+      );
+      setEstimatedAPY(
+        location.state.estimatedAPY ? location.state.estimatedAPY : defaultAPY
+      );
+      setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
+    }
+  }, []);
 
   useEffect(() => {
-    getUserWalletAddress()
-      .then((address) => loadBlockpassWidget(address))
-      .finally(() => setLoading(false));
+    if (!kycStatus) {
+      getUserWalletAddress()
+        .then((address) => loadBlockpassWidget(address))
+        .finally(() => setLoading(false));
+    } else setLoading(false);
   }, []);
 
   const loadBlockpassWidget = (address) => {
@@ -72,21 +86,6 @@ const ViewSeniorPool = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (location.state) {
-      setPoolName(
-        location.state.poolName ? location.state.poolName : defaultPoolName
-      );
-      setPoolDescription(
-        location.state.poolDescription ? location.state.poolDescription : ""
-      );
-      setEstimatedAPY(
-        location.state.estimatedAPY ? location.state.estimatedAPY : defaultAPY
-      );
-      setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
-    }
-  }, []);
-
   return (
     <div>
       {loading && <Loader />}
@@ -97,9 +96,15 @@ const ViewSeniorPool = () => {
             isSenior={true}
             poolName={poolName}
             estimatedAPY={estimatedAPY}
+            setProcessFundModal={setProcessFundModal}
+            setInvestProcessing={setInvestProcessing}
           />
         ) : null}
-
+        {processFundModal ? (
+          <ProcessingFundsModal investProcessing={investProcessing} />
+        ) : (
+          <></>
+        )}
         <div style={{ fontSize: 28 }} className="mb-0">
           {poolName}
         </div>
