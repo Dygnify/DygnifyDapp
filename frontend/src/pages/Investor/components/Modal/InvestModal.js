@@ -126,7 +126,7 @@ const InvestModal = ({
             class="flex justify-center"
             style={{ display: "flex", marginTop: -6 }}
           >
-            <div class="mb-3">
+            <div class="mb-3 w-full relative">
               <label
                 for="exampleNumber0"
                 className="form-label inline-block mb-0 mt-5  text-white rounded-box"
@@ -136,28 +136,34 @@ const InvestModal = ({
               </label>
               <input
                 type="number"
-                class="
+                style={{ appearance: "textfield" }}
+                className="
         form-control
         block
-        w-96
+        w-full
         h-57
-        px-3
-        py-1.5
+        pl-3
+        pr-[3.5rem]
+        py-3
         text-base
         font-normal
         text-white
-        bg-base-100 bg-clip-padding
+        bg-[#24272F] bg-clip-padding
         border border-solid border-[#3A3C43] 
         rounded
         transition
         ease-in-out
         m-0
+        placeholder:font-medium
         focus:text-white focus:bg-base-100 focus:border-base-300 focus:outline-none
       "
                 id="exampleNumber0"
                 placeholder="0.0"
                 onChange={(event) => setAmount(event.target.value)}
               />
+              <span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
+                USDC
+              </span>
             </div>
           </div>
 

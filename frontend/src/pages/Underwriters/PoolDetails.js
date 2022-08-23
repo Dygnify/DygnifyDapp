@@ -150,11 +150,11 @@ const PoolDetails = () => {
 								onClick={() => vote("2")}
 								style={{
 									borderRadius: "100px",
-									padding: "3px 16px",
+									padding: "0.1em 1em",
 									borderColor: "#10B981",
 									borderWidth: 2,
 								}}
-								className="ml-3 btn btn-xs btn-outline text-[#10B981] text-xs capitalize"
+								className="ml-3 btn btn-xs btn-outline text-[#10B981] text-xs  capitalize font-normal disabled:text-white disabled:bg-[#10B981]"
 							>
 								{status.approve ? "Approved" : "Approve"}
 							</button>
@@ -171,7 +171,7 @@ const PoolDetails = () => {
 									borderColor: "#EF4444",
 									borderWidth: 2,
 								}}
-								className="ml-3 btn-xs btn-outline text-[#EF4444] text-xs capitalize"
+								className="ml-3 btn-xs btn-outline text-[#EF4444] text-xs capitalize disabled:text-white disabled:bg-[#EF4444]"
 							>
 								{status.reject ? "Rejected" : "Reject"}
 							</button>
