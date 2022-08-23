@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import GradientButton from "../../tools/Button/GradientButton";
+import GradientButton from "../../uiTools/Button/GradientButton";
 
 const DashboardHeader = ({
 	setSelected,
@@ -18,9 +18,7 @@ const DashboardHeader = ({
 			</h2>
 			<label
 				htmlFor={
-					!kycStatus || !profileStatus
-						? "kycAlertModal"
-						: `loanForm-modal`
+					!kycStatus || !profileStatus ? "kycAlertModal" : `loanForm-modal`
 				}
 				style={{
 					borderRadius: "100px",
@@ -30,8 +28,7 @@ const DashboardHeader = ({
 				}}
 				className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
 				onClick={() => {
-					if (!kycStatus || !profileStatus)
-						return setKycSelected(true);
+					if (!kycStatus || !profileStatus) return setKycSelected(true);
 					setSelected(true);
 				}}
 			>

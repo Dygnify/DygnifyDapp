@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { voteOpportunity } from "../../components/transaction/TransactionHelper";
 import { getExtendableTextBreakup } from "../../services/displayTextHelper";
-import DocumentCard from "../../tools/Card/DocumentCard";
+import DocumentCard from "../../uiTools/Card/DocumentCard";
 import Email from "../SVGIcons/Email";
 import LinkedIn from "../SVGIcons/LinkedIn";
 import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
-import Loader from "../../tools/Loading/Loader";
+import Loader from "../../uiTools/Loading/Loader";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -64,9 +64,7 @@ const PoolDetails = () => {
 				},
 				{
 					label: "Interest Rate",
-					value: opDetails.loanInterest
-						? opDetails.loanInterest
-						: "--",
+					value: opDetails.loanInterest ? opDetails.loanInterest : "--",
 				},
 				{
 					label: "Payment Tenure",
@@ -216,9 +214,7 @@ const PoolDetails = () => {
 									>
 										{expand ? null : "... view more"}
 									</a>
-									{expand ? (
-										<div>{loanPurpose.secondText}</div>
-									) : null}
+									{expand ? <div>{loanPurpose.secondText}</div> : null}
 									<a
 										style={{
 											fontWeight: 600,
@@ -264,10 +260,8 @@ const PoolDetails = () => {
 											className="justify-center w-1/3 flex-col items-center "
 											style={{
 												display: "flex",
-												borderRight:
-													"0.5px solid   #292C33",
-												borderBottom:
-													"0.5px solid   #292C33",
+												borderRight: "0.5px solid   #292C33",
+												borderBottom: "0.5px solid   #292C33",
 												padding: "40px 0",
 											}}
 										>
@@ -279,9 +273,7 @@ const PoolDetails = () => {
 											>
 												{e.label}
 											</div>
-											<div style={{ fontSize: 20 }}>
-												{e.value}
-											</div>
+											<div style={{ fontSize: 20 }}>{e.value}</div>
 										</div>
 									);
 								})
@@ -311,8 +303,7 @@ const PoolDetails = () => {
 						}}
 					>
 						<div style={{ fontSize: "14px", color: "#64748B" }}>
-							Name of documents -{" "}
-							{opDetails?.collateral_document_name}
+							Name of documents - {opDetails?.collateral_document_name}
 						</div>
 						<div>Document descripton</div>
 						<div style={{ fontSize: 14, color: "#64748B" }}>
@@ -467,20 +458,17 @@ const PoolDetails = () => {
 					<DocumentCard
 						docName={
 							companyDetails
-								? companyDetails.businessIdFile
-										.businessIdDocName
+								? companyDetails.businessIdFile.businessIdDocName
 								: ""
 						}
 						docCid={
 							companyDetails
-								? companyDetails.businessIdFile
-										.businessIdFileCID
+								? companyDetails.businessIdFile.businessIdFileCID
 								: null
 						}
 						fileName={
 							companyDetails
-								? companyDetails.businessIdFile
-										.businessIdFileName
+								? companyDetails.businessIdFile.businessIdFileName
 								: null
 						}
 					/>
@@ -497,20 +485,17 @@ const PoolDetails = () => {
 					<DocumentCard
 						docName={
 							companyDetails
-								? companyDetails.businessAddFile
-										.businessAddDocName
+								? companyDetails.businessAddFile.businessAddDocName
 								: ""
 						}
 						docCid={
 							companyDetails
-								? companyDetails.businessAddFile
-										.businessAddFileCID
+								? companyDetails.businessAddFile.businessAddFileCID
 								: null
 						}
 						fileName={
 							companyDetails
-								? companyDetails.businessAddFile
-										.businessAddFileName
+								? companyDetails.businessAddFile.businessAddFileName
 								: null
 						}
 					/>
@@ -526,20 +511,17 @@ const PoolDetails = () => {
 					<DocumentCard
 						docName={
 							companyDetails
-								? companyDetails.businessIncoFile
-										.businessIncoDocName
+								? companyDetails.businessIncoFile.businessIncoDocName
 								: ""
 						}
 						docCid={
 							companyDetails
-								? companyDetails.businessIncoFile
-										.businessIncoFileCID
+								? companyDetails.businessIncoFile.businessIncoFileCID
 								: null
 						}
 						fileName={
 							companyDetails
-								? companyDetails.businessIncoFile
-										.businessIncoFileName
+								? companyDetails.businessIncoFile.businessIncoFileName
 								: null
 						}
 					/>
@@ -557,20 +539,17 @@ const PoolDetails = () => {
 							<DocumentCard
 								docName={
 									companyDetails
-										? companyDetails.businessLicFile
-												.businessLicDocName
+										? companyDetails.businessLicFile.businessLicDocName
 										: ""
 								}
 								docCid={
 									companyDetails
-										? companyDetails.businessLicFile
-												.businessLicFileCID
+										? companyDetails.businessLicFile.businessLicFileCID
 										: null
 								}
 								fileName={
 									companyDetails
-										? companyDetails.businessLicFile
-												.businessLicFileName
+										? companyDetails.businessLicFile.businessLicFileName
 										: null
 								}
 							/>

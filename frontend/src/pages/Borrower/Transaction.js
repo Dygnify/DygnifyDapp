@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
-import TransactionsCard from "../../tools/Card/TransactionsCard";
-import Loader from "../../tools/Loading/Loader";
+import TransactionsCard from "../../uiTools/Card/TransactionsCard";
+import Loader from "../../uiTools/Loading/Loader";
 
 const Transaction = () => {
 	const [transactions, setTransactions] = useState([]);

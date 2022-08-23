@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PoolCard from "./components/Cards/PoolCard";
-import GradientButton from "../../tools/Button/GradientButton";
+import GradientButton from "../../uiTools/Button/GradientButton";
 import {
 	getAllWithdrawableOpportunities,
 	getUserSeniorPoolInvestment,
@@ -16,7 +16,7 @@ import LineChart from "./components/LineChart";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { getDisplayAmount } from "../../services/displayTextHelper";
-import Loader from "../../tools/Loading/Loader";
+import Loader from "../../uiTools/Loading/Loader";
 
 const InvestorOverview = () => {
 	const [totalInvestment, setTotalInvestment] = useState(0);
@@ -44,60 +44,45 @@ const InvestorOverview = () => {
 			.then((data) => {
 				setSeniorPoolInvestment(data);
 			})
-			.catch((error) =>
-				console.log("Failed to get senior pool investment")
-			)
+			.catch((error) => console.log("Failed to get senior pool investment"))
 			.finally(() => setSeniorPoolLoading(false));
 	}, []);
 
 	useEffect(() => {
 		if (seniorPoolInvestment) {
 			// fetch data from IPFS
-			retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then(
-				(res) => {
-					if (res) {
-						let read = getBinaryFileData(res);
-						read.onloadend = async function () {
-							try {
-								let spJson = JSON.parse(read.result);
-								if (spJson) {
-									let seniorInvestmentData = {};
-									seniorInvestmentData.poolName =
-										spJson.poolName;
-									seniorInvestmentData.opportunityAmount =
-										getDisplayAmount(
-											await getWalletBal(
-												process.env.REACT_APP_SENIORPOOL
-											)
-										);
+			retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
+				if (res) {
+					let read = getBinaryFileData(res);
+					read.onloadend = async function () {
+						try {
+							let spJson = JSON.parse(read.result);
+							if (spJson) {
+								let seniorInvestmentData = {};
+								seniorInvestmentData.poolName = spJson.poolName;
+								seniorInvestmentData.opportunityAmount = getDisplayAmount(
+									await getWalletBal(process.env.REACT_APP_SENIORPOOL)
+								);
 
-									let totalInvestment =
-										seniorPoolInvestment.stakingAmt +
-										seniorPoolInvestment.withdrawableAmt;
-									seniorInvestmentData.capitalInvested =
-										getDisplayAmount(totalInvestment);
-									const { sharePrice, displaySharePrice } =
-										await getSeniorPoolDisplaySharePrice(
-											spJson.estimatedAPY
-										);
-									seniorInvestmentData.estimatedAPY =
-										displaySharePrice;
-									seniorInvestmentData.yieldGenerated =
-										getDisplayAmount(
-											parseFloat(
-												(totalInvestment * sharePrice) /
-													100
-											)
-										);
-									setSeniorPool(seniorInvestmentData);
-								}
-							} catch (error) {
-								console.log(error);
+								let totalInvestment =
+									seniorPoolInvestment.stakingAmt +
+									seniorPoolInvestment.withdrawableAmt;
+								seniorInvestmentData.capitalInvested =
+									getDisplayAmount(totalInvestment);
+								const { sharePrice, displaySharePrice } =
+									await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
+								seniorInvestmentData.estimatedAPY = displaySharePrice;
+								seniorInvestmentData.yieldGenerated = getDisplayAmount(
+									parseFloat((totalInvestment * sharePrice) / 100)
+								);
+								setSeniorPool(seniorInvestmentData);
 							}
-						};
-					}
+						} catch (error) {
+							console.log(error);
+						}
+					};
 				}
-			);
+			});
 		}
 	}, [seniorPoolInvestment]);
 
@@ -154,16 +139,10 @@ const InvestorOverview = () => {
 						>
 							{totalInvestment || totalYield ? (
 								<DoughnutChart
-									data={[
-										totalInvestment,
-										totalYield ? totalYield : 0,
-									]}
+									data={[totalInvestment, totalYield ? totalYield : 0]}
 									color={["#5375FE", "#ffffff"]}
 									width={200}
-									labels={[
-										"Total Outstanding",
-										"Total Repaid",
-									]}
+									labels={["Total Outstanding", "Total Repaid"]}
 									borderWidth={[1, 8]}
 									legendStyle={{ display: false }}
 								/>
@@ -172,10 +151,7 @@ const InvestorOverview = () => {
 									data={[1]}
 									color={["#64748B"]}
 									width={200}
-									labels={[
-										"Total Outstanding",
-										"Total Repaid",
-									]}
+									labels={["Total Outstanding", "Total Repaid"]}
 									borderWidth={[1, 8]}
 									legendStyle={{ display: false }}
 								/>
@@ -196,13 +172,8 @@ const InvestorOverview = () => {
 							>
 								Total Amount Invested
 							</div>
-							<div
-								style={{ fontSize: 28, color: "white" }}
-								className="mb-10"
-							>
-								{totalInvestment === 0
-									? "- -"
-									: totalInvestment}
+							<div style={{ fontSize: 28, color: "white" }} className="mb-10">
+								{totalInvestment === 0 ? "- -" : totalInvestment}
 							</div>
 							<div
 								style={{
@@ -252,8 +223,8 @@ const InvestorOverview = () => {
 								margin: "50px 0",
 							}}
 						>
-							No senior pool investments stats available. Explore
-							opportunities here.
+							No senior pool investments stats available. Explore opportunities
+							here.
 						</div>
 					</div>
 				)}
@@ -270,18 +241,15 @@ const InvestorOverview = () => {
 								margin: "50px 0 ",
 							}}
 						>
-							No junior pool investments stats available. Explore
-							opportunities here.
+							No junior pool investments stats available. Explore opportunities
+							here.
 						</div>
 					</div>
 				) : (
 					<div className="mb-16">
 						<div style={{ display: "flex" }} className=" gap-4">
 							{juniorPool.map((juniorPoolData) => (
-								<PoolCard
-									key={juniorPoolData.id}
-									data={juniorPoolData}
-								/>
+								<PoolCard key={juniorPoolData.id} data={juniorPoolData} />
 							))}
 						</div>
 					</div>

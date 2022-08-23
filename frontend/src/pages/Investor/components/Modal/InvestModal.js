@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import GradientButton from "../../../../tools/Button/GradientButton";
+import GradientButton from "../../../../uiTools/Button/GradientButton";
 import {
 	investInSeniorPool,
 	investInJuniorPool,
@@ -62,10 +62,7 @@ const InvestModal = ({
 					>
 						Invest
 					</h3>
-					<div
-						style={{ display: "flex" }}
-						className="justify-center my-6"
-					>
+					<div style={{ display: "flex" }} className="justify-center my-6">
 						<img
 							style={{ borderRadius: "50%" }}
 							className="p-4 bg-[#9281FF] opacity-80"
@@ -86,8 +83,7 @@ const InvestModal = ({
 						>
 							<p style={{ display: "flex" }}>Total Balance</p>
 							<p style={{ display: "flex" }}>
-								${walletBal ? walletBal : 0}{" "}
-								{process.env.REACT_APP_TOKEN_NAME}
+								${walletBal ? walletBal : 0} {process.env.REACT_APP_TOKEN_NAME}
 							</p>
 						</div>
 					</div>
@@ -160,9 +156,7 @@ const InvestModal = ({
       "
 								id="exampleNumber0"
 								placeholder="0.0"
-								onChange={(event) =>
-									setAmount(event.target.value)
-								}
+								onChange={(event) => setAmount(event.target.value)}
 							/>
 							<span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
 								USDC
@@ -182,9 +176,7 @@ const InvestModal = ({
 								color: "white",
 							}}
 							className={`btn w-full bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
-							onClick={() =>
-								isSenior ? investSenior() : investJunior()
-							} //if condition not true then investJunior will execute
+							onClick={() => (isSenior ? investSenior() : investJunior())} //if condition not true then investJunior will execute
 						>
 							Invest
 						</label>

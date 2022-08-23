@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import DocumentCard from "../../tools/Card/DocumentCard";
+import DocumentCard from "../../uiTools/Card/DocumentCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import {
@@ -16,11 +16,10 @@ import LinkedIn from "../SVGIcons/LinkedIn";
 import Email from "../SVGIcons/Email";
 import Website from "../SVGIcons/Website";
 import Edits from "../SVGIcons/Edits";
-import GradientButton from "../../tools/Button/GradientButton";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 
-import Loader from "../../tools/Loading/Loader";
+import Loader from "../../uiTools/Loading/Loader";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -50,8 +49,7 @@ const BorrowerProfile = () => {
 
 	useEffect(() => {
 		loadBorrowerProfileData();
-		if (brJson)
-			fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
+		if (brJson) fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
 		setHaskey(brJson ? "businessLicFile" in brJson : false);
 	}, []);
 
@@ -241,19 +239,13 @@ const BorrowerProfile = () => {
 								className="flex-row justify-between items-start"
 								style={{ display: "flex" }}
 							>
-								<h2 className="mb-6 text-2xl font-medium">
-									Borrower Profile
-								</h2>
+								<h2 className="mb-6 text-2xl font-medium">Borrower Profile</h2>
 								<div
 									style={{ display: "flex", marginRight: 15 }}
 									className="flex-row justify-center items-center"
 								>
 									<button
-										onClick={() =>
-											navigate(
-												"/borrower_dashboard/edit_profile"
-											)
-										}
+										onClick={() => navigate("/borrower_dashboard/edit_profile")}
 										style={{
 											borderRadius: "100px",
 											padding: "8px 16px",
@@ -261,9 +253,7 @@ const BorrowerProfile = () => {
 										}}
 										className="btn btn-sm btn-outline text-white "
 									>
-										<div style={{ marginRight: 2 }}>
-											Create Profile
-										</div>
+										<div style={{ marginRight: 2 }}>Create Profile</div>
 										<Edits />
 									</button>
 								</div>
@@ -296,9 +286,7 @@ const BorrowerProfile = () => {
 										style={{ display: "flex" }}
 										className="flex-col justify-center ml-4"
 									>
-										<h4 style={{ fontSize: 23 }}>
-											{companyName}
-										</h4>
+										<h4 style={{ fontSize: 23 }}>{companyName}</h4>
 										<p
 											style={{
 												fontSize: 19,
@@ -315,14 +303,9 @@ const BorrowerProfile = () => {
 								>
 									<button
 										onClick={() =>
-											navigate(
-												"/borrower_dashboard/edit_profile",
-												{
-													state: borrowerJson
-														? borrowerJson
-														: brJson,
-												}
-											)
+											navigate("/borrower_dashboard/edit_profile", {
+												state: borrowerJson ? borrowerJson : brJson,
+											})
 										}
 										style={{
 											borderRadius: "100px",
@@ -331,9 +314,7 @@ const BorrowerProfile = () => {
 										}}
 										className="btn btn-sm btn-outline text-white "
 									>
-										<div style={{ marginRight: 3 }}>
-											Edit Profile
-										</div>
+										<div style={{ marginRight: 3 }}>Edit Profile</div>
 										<Edits />
 									</button>
 								</div>
@@ -367,13 +348,11 @@ const BorrowerProfile = () => {
 											Complete your KYC
 										</div>
 										<div style={{ lineHeight: "19px" }}>
-											For Individuals - KYC verification
-											includes verification of Identity
-											Details and document verification
-											such as utility bills as proof of
-											address. Verifying your details
-											ensures that you have a smooth and
-											secure experience with us.
+											For Individuals - KYC verification includes verification
+											of Identity Details and document verification such as
+											utility bills as proof of address. Verifying your details
+											ensures that you have a smooth and secure experience with
+											us.
 										</div>
 									</label>
 								) : (
@@ -411,17 +390,11 @@ const BorrowerProfile = () => {
 								className="w-full justify-between items-center mb-6"
 							>
 								<div className="w-1/2">
-									<h5
-										className="text-lg"
-										style={{ fontSize: 23 }}
-									>
+									<h5 className="text-lg" style={{ fontSize: 23 }}>
 										Socials
 									</h5>
 								</div>
-								<div
-									style={{ display: "flex" }}
-									className="w-1/2 justify-end"
-								>
+								<div style={{ display: "flex" }} className="w-1/2 justify-end">
 									{twitter ? (
 										<button
 											id="twitter"
@@ -434,9 +407,7 @@ const BorrowerProfile = () => {
 											onClick={redirectToURl}
 										>
 											<Twitter />
-											<div style={{ marginLeft: 2 }}>
-												twitter
-											</div>
+											<div style={{ marginLeft: 2 }}>twitter</div>
 										</button>
 									) : (
 										<></>
@@ -453,9 +424,7 @@ const BorrowerProfile = () => {
 											onClick={redirectToURl}
 										>
 											<LinkedIn />
-											<div style={{ marginLeft: 2 }}>
-												LinkedIn
-											</div>
+											<div style={{ marginLeft: 2 }}>LinkedIn</div>
 										</button>
 									) : (
 										<></>
@@ -472,9 +441,7 @@ const BorrowerProfile = () => {
 											onClick={redirectForEmail}
 										>
 											<Email />
-											<div style={{ marginLeft: 2 }}>
-												Email
-											</div>
+											<div style={{ marginLeft: 2 }}>Email</div>
 										</button>
 									) : (
 										<></>
@@ -491,9 +458,7 @@ const BorrowerProfile = () => {
 											onClick={redirectToURl}
 										>
 											<Website />
-											<div style={{ marginLeft: 2 }}>
-												Website
-											</div>
+											<div style={{ marginLeft: 2 }}>Website</div>
 										</button>
 									) : (
 										<></>
@@ -501,10 +466,7 @@ const BorrowerProfile = () => {
 								</div>
 							</div>
 							<div className="mb-6">
-								<h5
-									className="text-lg"
-									style={{ fontSize: "23px" }}
-								>
+								<h5 className="text-lg" style={{ fontSize: "23px" }}>
 									Bio
 								</h5>
 								<p
@@ -540,29 +502,23 @@ const BorrowerProfile = () => {
 								<DocumentCard
 									docName={
 										brJson
-											? brJson.businessIdFile
-													.businessIdDocName
+											? brJson.businessIdFile.businessIdDocName
 											: borrowerJson
-											? borrowerJson.businessIdFile
-													.businessIdDocName
+											? borrowerJson.businessIdFile.businessIdDocName
 											: ""
 									}
 									docCid={
 										brJson
-											? brJson.businessIdFile
-													.businessIdFileCID
+											? brJson.businessIdFile.businessIdFileCID
 											: borrowerJson
-											? borrowerJson.businessIdFile
-													.businessIdFileCID
+											? borrowerJson.businessIdFile.businessIdFileCID
 											: null
 									}
 									fileName={
 										brJson
-											? brJson.businessIdFile
-													.businessIdFileName
+											? brJson.businessIdFile.businessIdFileName
 											: borrowerJson
-											? borrowerJson.businessIdFile
-													.businessIdFileName
+											? borrowerJson.businessIdFile.businessIdFileName
 											: null
 									}
 								/>
@@ -579,29 +535,23 @@ const BorrowerProfile = () => {
 								<DocumentCard
 									docName={
 										brJson
-											? brJson.businessAddFile
-													.businessAddDocName
+											? brJson.businessAddFile.businessAddDocName
 											: borrowerJson
-											? borrowerJson.businessAddFile
-													.businessAddDocName
+											? borrowerJson.businessAddFile.businessAddDocName
 											: null
 									}
 									docCid={
 										brJson
-											? brJson.businessAddFile
-													.businessAddFileCID
+											? brJson.businessAddFile.businessAddFileCID
 											: borrowerJson
-											? borrowerJson.businessAddFile
-													.businessAddFileCID
+											? borrowerJson.businessAddFile.businessAddFileCID
 											: null
 									}
 									fileName={
 										brJson
-											? brJson.businessAddFile
-													.businessAddFileName
+											? brJson.businessAddFile.businessAddFileName
 											: borrowerJson
-											? borrowerJson.businessAddFile
-													.businessAddFileName
+											? borrowerJson.businessAddFile.businessAddFileName
 											: null
 									}
 								/>
@@ -618,37 +568,28 @@ const BorrowerProfile = () => {
 									<DocumentCard
 										docName={
 											brJson
-												? brJson.businessLicFile
-														.businessLicDocName
+												? brJson.businessLicFile.businessLicDocName
 												: borrowerJson
-												? borrowerJson.businessLicFile
-														.businessLicDocName
+												? borrowerJson.businessLicFile.businessLicDocName
 												: null
 										}
 										docCid={
 											brJson
-												? brJson.businessLicFile
-														.businessLicFileCID
+												? brJson.businessLicFile.businessLicFileCID
 												: borrowerJson
-												? borrowerJson.businessLicFile
-														.businessLicFileCID
+												? borrowerJson.businessLicFile.businessLicFileCID
 												: null
 										}
 										fileName={
 											brJson
-												? brJson.businessLicFile
-														.businessLicFileName
+												? brJson.businessLicFile.businessLicFileName
 												: borrowerJson
-												? borrowerJson.businessLicFile
-														.businessLicFileName
+												? borrowerJson.businessLicFile.businessLicFileName
 												: null
 										}
 									/>
 								) : (
-									<DocumentCard
-										docName={"No document added!"}
-										disable={true}
-									/>
+									<DocumentCard docName={"No document added!"} disable={true} />
 								)}
 								<h6
 									style={{
@@ -662,29 +603,23 @@ const BorrowerProfile = () => {
 								<DocumentCard
 									docName={
 										brJson
-											? brJson.businessIncoFile
-													.businessIncoDocName
+											? brJson.businessIncoFile.businessIncoDocName
 											: borrowerJson
-											? borrowerJson.businessIncoFile
-													.businessIncoDocName
+											? borrowerJson.businessIncoFile.businessIncoDocName
 											: null
 									}
 									docCid={
 										brJson
-											? brJson.businessIncoFile
-													.businessIncoFileCID
+											? brJson.businessIncoFile.businessIncoFileCID
 											: borrowerJson
-											? borrowerJson.businessIncoFile
-													.businessIncoFileCID
+											? borrowerJson.businessIncoFile.businessIncoFileCID
 											: null
 									}
 									fileName={
 										brJson
-											? brJson.businessIncoFile
-													.businessIncoFileName
+											? brJson.businessIncoFile.businessIncoFileName
 											: borrowerJson
-											? borrowerJson.businessIncoFile
-													.businessIncoFileName
+											? borrowerJson.businessIncoFile.businessIncoFileName
 											: null
 									}
 								/>

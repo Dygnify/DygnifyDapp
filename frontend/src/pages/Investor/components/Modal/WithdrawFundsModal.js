@@ -1,5 +1,5 @@
 import React from "react";
-import PrimaryButton from "../../../../tools/Button/PrimaryButton";
+import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 
 const WithdrawFundsModal = () => {
 	const data = {
@@ -10,11 +10,7 @@ const WithdrawFundsModal = () => {
 	};
 	return (
 		<>
-			<input
-				type="checkbox"
-				id="WithdrawModal"
-				className="modal-toggle"
-			/>
+			<input type="checkbox" id="WithdrawModal" className="modal-toggle" />
 			<div
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
 				className="modal"
@@ -36,10 +32,7 @@ const WithdrawFundsModal = () => {
 					>
 						Withdraw Funds
 					</h3>
-					<div
-						style={{ display: "flex" }}
-						className="justify-center my-6"
-					>
+					<div style={{ display: "flex" }} className="justify-center my-6">
 						<img
 							style={{ borderRadius: "50%" }}
 							className="p-4 bg-secondary opacity-80"
@@ -60,8 +53,7 @@ const WithdrawFundsModal = () => {
 						>
 							<p style={{ display: "flex" }}>Total Balance</p>
 							<p style={{ display: "flex" }}>
-								$100,000,000.00{" "}
-								{process.env.REACT_APP_TOKEN_NAME}
+								$100,000,000.00 {process.env.REACT_APP_TOKEN_NAME}
 							</p>
 						</div>
 					</div>
@@ -82,9 +74,7 @@ const WithdrawFundsModal = () => {
 							className="flex-row mb-1 justify-between"
 						>
 							<p style={{ display: "flex" }}>Amount Invested</p>
-							<p style={{ display: "flex" }}>
-								{data?.amountInvested}%
-							</p>
+							<p style={{ display: "flex" }}>{data?.amountInvested}%</p>
 						</div>
 
 						<div
@@ -92,20 +82,14 @@ const WithdrawFundsModal = () => {
 							className="mb-1 flex-row justify-between"
 						>
 							<p style={{ display: "flex" }}>Estimated APY</p>
-							<p style={{ display: "flex" }}>
-								{data?.estimatedApy}
-							</p>
+							<p style={{ display: "flex" }}>{data?.estimatedApy}</p>
 						</div>
 						<div
 							style={{ display: "flex" }}
 							className="mb-0 flex-row justify-between"
 						>
-							<p style={{ display: "flex" }}>
-								Available for withdrawal
-							</p>
-							<p style={{ display: "flex" }}>
-								{data?.availableForWithdrawal}
-							</p>
+							<p style={{ display: "flex" }}>Available for withdrawal</p>
+							<p style={{ display: "flex" }}>{data?.availableForWithdrawal}</p>
 						</div>
 					</div>
 

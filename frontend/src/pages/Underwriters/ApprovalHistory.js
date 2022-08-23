@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Underwriters/Components/TransactionsCard";
 import { getApprovalHistory } from "../../components/transaction/TransactionHelper";
-import Loader from "../../tools/Loading/Loader";
+import Loader from "../../uiTools/Loading/Loader";
 
 const ApprovalHistory = () => {
 	const [transactions, setTransactions] = useState([]);
@@ -48,9 +48,7 @@ const ApprovalHistory = () => {
 								className="collapse-title text-md font-normal justify-around w-full"
 							>
 								<p className="w-1/6 text-center">Pool Name</p>
-								<p className="w-1/6 text-center">
-									Company Name
-								</p>
+								<p className="w-1/6 text-center">Company Name</p>
 								<p className="w-1/6 text-center">Created On</p>
 								<p className="w-1/6 text-center">Decision</p>
 							</div>
@@ -58,10 +56,7 @@ const ApprovalHistory = () => {
 						<div>
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard
-											key={transactions.id}
-											data={item}
-										/>
+										<TransactionsCard key={transactions.id} data={item} />
 								  ))
 								: null}
 						</div>

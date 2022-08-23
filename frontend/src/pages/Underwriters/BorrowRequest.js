@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import UnderwriterCard from "./Components/UnderwriterCard";
 import { getAllUnderwriterOpportunities } from "../../components/transaction/TransactionHelper";
-import Loader from "../../tools/Loading/Loader";
+import Loader from "../../uiTools/Loading/Loader";
 
 const BorrowRequest = () => {
 	const [opportunities, setOpportunities] = useState([]);
@@ -54,16 +54,10 @@ const BorrowRequest = () => {
 					</div>
 				) : (
 					<div className="mb-16 ">
-						<div
-							style={{ display: "grid" }}
-							className="gap-4 grid-cols-2"
-						>
+						<div style={{ display: "grid" }} className="gap-4 grid-cols-2">
 							{opportunities &&
 								opportunities.map((item) => (
-									<UnderwriterCard
-										data={item}
-										key={item.id}
-									/>
+									<UnderwriterCard data={item} key={item.id} />
 								))}
 						</div>
 					</div>

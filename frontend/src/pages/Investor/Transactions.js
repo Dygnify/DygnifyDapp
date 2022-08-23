@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
 import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
-import Loader from "../../tools/Loading/Loader";
+import Loader from "../../uiTools/Loading/Loader";
 
 const Transactions = () => {
 	const [transactions, setTransactions] = useState([]);
@@ -47,23 +47,16 @@ const Transactions = () => {
 							>
 								<p className="w-1/6 text-center">Pool</p>
 								<p className="w-1/6 text-center">Date</p>
-								<p className="w-1/6 text-center">
-									Transaction Type
-								</p>
+								<p className="w-1/6 text-center">Transaction Type</p>
 								<p className="w-1/6 text-center">Amount</p>
 								<p className="w-1/6 text-center">Status</p>
-								<p className="w-1/6 text-center">
-									View on Explorer
-								</p>
+								<p className="w-1/6 text-center">View on Explorer</p>
 							</div>
 						</div>
 						<div>
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard
-											key={transactions.id}
-											data={item}
-										/>
+										<TransactionsCard key={transactions.id} data={item} />
 								  ))
 								: null}
 						</div>
