@@ -19,7 +19,7 @@ import { getDisplayAmount } from "../../services/displayTextHelper";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
-import ProcessingDrawdownModal from "./Components/Modal/ProcessingDrawdownModal";
+import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 import ProcessingRepaymentModal from "./Components/Modal/ProcessingRepaymentModal";
 
 const Overview = () => {
