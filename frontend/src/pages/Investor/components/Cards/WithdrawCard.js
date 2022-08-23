@@ -14,19 +14,10 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
     estimatedAPY,
     capitalInvested,
     withdrawableAmt,
-    opportunityPoolAddress,
   } = data;
 
   const [companyName, setCompanyName] = useState();
   const [poolName, setPoolName] = useState(data.poolName);
-
-  async function withdrawJunior() {
-    await withdrawAllJunior(opportunityPoolAddress);
-  }
-
-  async function withdrawSeniorPool() {
-    await withdrawSeniorPoolInvestment();
-  }
 
   useEffect(() => {
     // fetch the opportunity details from IPFS
@@ -125,7 +116,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
           <label
             htmlFor="WithdrawModal"
             disable={false}
-            onClick={withdrawJunior}
+            onClick={() => setSelected({ ...data, poolName, isSeniorPool })}
             style={{
               borderRadius: "100px",
               padding: "12px 24px",

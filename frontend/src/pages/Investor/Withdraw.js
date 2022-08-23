@@ -20,6 +20,7 @@ const Withdraw = () => {
   const [juniorPools, setJuniorPools] = useState([]);
   const [selected, setSelected] = useState();
   const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
+  const [walletBal, setWalletBal] = useState();
 
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +35,10 @@ const Withdraw = () => {
       })
       .catch((error) => console.log("Failed to get senior pool investment"))
       .finally(() => setLoading(false));
+
+    getWalletBal().then((data) => {
+      setWalletBal(getDisplayAmount(data));
+    });
   }, []);
 
   useEffect(() => {
@@ -94,7 +99,13 @@ const Withdraw = () => {
       {loading && <Loader />}
       <div className={`${loading ? "blur-sm" : ""}`}>
         <div className="px-5">
-          {selected && <WithdrawFundsModal handleForm={handleForm} />}
+          {selected && (
+            <WithdrawFundsModal
+              handleForm={handleForm}
+              userWalletBal={walletBal}
+              data={selected}
+            />
+          )}
           <div
             style={{ display: "flex" }}
             className="items-center justify-between mb-14 "
