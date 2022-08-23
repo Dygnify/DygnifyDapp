@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
-import PrimaryButton from "../../../../tools/Button/PrimaryButton";
-import {
-	withdrawAllJunior,
-	withdrawSeniorPoolInvestment,
-} from "../../../../components/transaction/TransactionHelper";
 
 const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
 	const {

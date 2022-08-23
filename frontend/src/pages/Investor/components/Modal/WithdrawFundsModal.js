@@ -1,5 +1,10 @@
-import React from "react";
-import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
+import React, { useState } from "react";
+import {
+	withdrawAllJunior,
+	withdrawSeniorPoolInvestment,
+} from "../../../../components/transaction/TransactionHelper";
+
+import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 
 const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
 	const [amount, setAmount] = useState("");
