@@ -14,6 +14,7 @@ const InvestModal = ({
 	estimatedAPY,
 	setProcessFundModal,
 	setInvestProcessing,
+	setSelected,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
@@ -26,6 +27,7 @@ const InvestModal = ({
 		setProcessFundModal(true);
 		setInvestProcessing(true);
 		await investInSeniorPool(amount);
+		setSelected(null);
 		setInvestProcessing(false);
 		console.log("done");
 	}
@@ -35,6 +37,7 @@ const InvestModal = ({
 		setInvestProcessing(true);
 
 		await investInJuniorPool(poolAddress, amount);
+		setSelected(null);
 		setInvestProcessing(false);
 	}
 
@@ -159,7 +162,7 @@ const InvestModal = ({
 								onChange={(event) => setAmount(event.target.value)}
 							/>
 							<span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
-								USDC
+								{process.env.REACT_APP_TOKEN_NAME}
 							</span>
 						</div>
 					</div>

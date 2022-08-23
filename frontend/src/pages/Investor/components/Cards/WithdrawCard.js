@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
-import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
-import { withdrawAllJunior } from "../../../../components/transaction/TransactionHelper";
+import PrimaryButton from "../../../../tools/Button/PrimaryButton";
+import {
+	withdrawAllJunior,
+	withdrawSeniorPoolInvestment,
+} from "../../../../components/transaction/TransactionHelper";
 
-const WithdrawCard = ({ data, setSelected }) => {
+const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
 	const {
 		opportunityInfo,
 		opportunityAmount,
 		estimatedAPY,
 		capitalInvested,
 		withdrawableAmt,
-		opportunityPoolAddress,
 	} = data;
 
 	const [companyName, setCompanyName] = useState();
 	const [poolName, setPoolName] = useState(data.poolName);
-
-	async function withdrawJunior() {
-		await withdrawAllJunior(opportunityPoolAddress);
-	}
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
@@ -118,7 +116,7 @@ const WithdrawCard = ({ data, setSelected }) => {
 					<label
 						htmlFor="WithdrawModal"
 						disable={false}
-						onClick={withdrawJunior}
+						onClick={() => setSelected({ ...data, poolName, isSeniorPool })}
 						style={{
 							borderRadius: "100px",
 							padding: "12px 24px",

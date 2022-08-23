@@ -1,13 +1,18 @@
 import React from "react";
 import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 
-const WithdrawFundsModal = () => {
-	const data = {
-		poolName: "New Pool",
-		amountInvested: "200K USDC",
-		estimatedApy: "24%",
-		availableForWithdrawal: "248K USDC",
-	};
+const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
+	const [amount, setAmount] = useState("");
+
+	async function withdrawJunior() {
+		await withdrawAllJunior(data.opportunityPoolAddress);
+		handleForm();
+	}
+
+	async function withdrawSeniorPool() {
+		await withdrawSeniorPoolInvestment(amount);
+		handleForm();
+	}
 	return (
 		<>
 			<input type="checkbox" id="WithdrawModal" className="modal-toggle" />
@@ -22,7 +27,6 @@ const WithdrawFundsModal = () => {
 					<label
 						for="WithdrawModal"
 						className="btn btn-ghost absolute right-2 top-2 pb-2"
-						// onClick={() => handleDrawdown()}
 					>
 						✕
 					</label>
@@ -35,7 +39,7 @@ const WithdrawFundsModal = () => {
 					<div style={{ display: "flex" }} className="justify-center my-6">
 						<img
 							style={{ borderRadius: "50%" }}
-							className="p-4 bg-secondary opacity-80"
+							className="p-4 bg-[#9281FF] opacity-80"
 							src="/images/wallet_white.png"
 							alt=""
 						/>
@@ -52,13 +56,11 @@ const WithdrawFundsModal = () => {
 							className="flex-row justify-between"
 						>
 							<p style={{ display: "flex" }}>Total Balance</p>
-							<p style={{ display: "flex" }}>
-								$100,000,000.00 {process.env.REACT_APP_TOKEN_NAME}
-							</p>
+							<p style={{ display: "flex" }}>{userWalletBal}</p>
 						</div>
 					</div>
 					<div
-						className="text-sm py-3 px-4 flex-col"
+						className="text-sm py-3 px-5 flex-col"
 						style={{ display: "flex" }}
 					>
 						<div
@@ -74,7 +76,7 @@ const WithdrawFundsModal = () => {
 							className="flex-row mb-1 justify-between"
 						>
 							<p style={{ display: "flex" }}>Amount Invested</p>
-							<p style={{ display: "flex" }}>{data?.amountInvested}%</p>
+							<p style={{ display: "flex" }}>{data?.capitalInvested}</p>
 						</div>
 
 						<div
@@ -82,14 +84,14 @@ const WithdrawFundsModal = () => {
 							className="mb-1 flex-row justify-between"
 						>
 							<p style={{ display: "flex" }}>Estimated APY</p>
-							<p style={{ display: "flex" }}>{data?.estimatedApy}</p>
+							<p style={{ display: "flex" }}>{data?.estimatedAPY}</p>
 						</div>
 						<div
 							style={{ display: "flex" }}
 							className="mb-0 flex-row justify-between"
 						>
 							<p style={{ display: "flex" }}>Available for withdrawal</p>
-							<p style={{ display: "flex" }}>{data?.availableForWithdrawal}</p>
+							<p style={{ display: "flex" }}>{data?.withdrawableAmt}</p>
 						</div>
 					</div>
 
@@ -107,7 +109,9 @@ const WithdrawFundsModal = () => {
 							</label>
 							<input
 								type="number"
-								style={{ appearance: "textfield" }}
+								style={{
+									appearance: "textfield",
+								}}
 								class="
         form-control
         block
@@ -129,18 +133,30 @@ const WithdrawFundsModal = () => {
       "
 								id="exampleNumber0"
 								placeholder="0.0"
+								onChange={(event) => setAmount(event.target.value)}
 							/>
 
 							<span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
-								USDC
+								{process.env.REACT_APP_TOKEN_NAME}
 							</span>
 						</div>
 					</div>
 
-					<div className="modal-action mx-4 mt-2 mb-4">
-						<PrimaryButton width="w-full" disable={true}>
+					<div
+						className="modal-action mx-4 mt-2 mb-4 justify-center"
+						style={{ display: "flex" }}
+					>
+						<GradientBtnForModal
+							className="w-full"
+							disable={true}
+							onClick={() => {
+								if (data) {
+								}
+								data.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
+							}}
+						>
 							Withdraw Funds
-						</PrimaryButton>
+						</GradientBtnForModal>
 					</div>
 				</div>
 			</div>

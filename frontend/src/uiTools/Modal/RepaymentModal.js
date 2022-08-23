@@ -4,16 +4,27 @@ import {
   repayment,
   getWalletBal,
 } from "../../components/transaction/TransactionHelper";
+import GradientBtnForModal from "../Button/GradientBtnForModal";
 
-const RepaymentModal = ({ data, handleRepayment, poolName }) => {
+const RepaymentModal = ({
+  data,
+  handleRepayment,
+  poolName,
+  setOpenProcessRepayment,
+  setProcessRepayment,
+}) => {
   const [walletBal, setWalletBal] = useState();
   useEffect(() => {
     getWalletBal().then((data) => setWalletBal(data));
   }, []);
 
   async function onRepayment() {
+    setOpenProcessRepayment(true);
+    setProcessRepayment(true);
     await repayment(data.opportunityPoolAddress);
     handleRepayment();
+
+    //setProcessRepayment(false);
   }
 
   return (
@@ -43,7 +54,7 @@ const RepaymentModal = ({ data, handleRepayment, poolName }) => {
           <div style={{ display: "flex" }} className="justify-center my-6">
             <img
               style={{ borderRadius: "50%" }}
-              className="p-4 bg-secondary opacity-80"
+              className="p-4 bg-[#9281FF] opacity-80"
               src="/images/wallet_white.png"
               alt=""
             />
@@ -61,7 +72,7 @@ const RepaymentModal = ({ data, handleRepayment, poolName }) => {
               </p>
             </div>
           </div>
-          <div className="text-sm py-3 px-4">
+          <div className="text-sm py-3 px-5">
             <div style={{ display: "flex" }} className="mb-2">
               <p style={{ display: "flex" }} className="justify-start">
                 Pool Name
@@ -102,10 +113,18 @@ const RepaymentModal = ({ data, handleRepayment, poolName }) => {
               </p>
             </div>
           </div>
-          <div className="modal-action mx-4 mt-2 mb-4">
-            <GradientButton className="w-full" onClick={onRepayment}>
+
+          <div
+            className="modal-action mx-4 mt-2 mb-4 justify-center"
+            style={{ display: "flex" }}
+          >
+            <GradientBtnForModal
+              className={"w-full"}
+              htmlFor={"RepaymentProcessModal"}
+              onClick={onRepayment}
+            >
               Make Repayment
-            </GradientButton>
+            </GradientBtnForModal>
           </div>
         </div>
       </div>

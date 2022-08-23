@@ -53,7 +53,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
 								? formik.errors.collateral_document
 								: null
 						}
-						label="Upload Collateral Image"
+						label="Upload Collateral Document"
 						className="w-1/2 ml-2"
 					/>
 				</div>

@@ -615,10 +615,35 @@ export async function getUserSeniorPoolInvestment() {
             ethers.utils.formatUnits(data.stakingAmt, sixDecimals)
           ),
           withdrawableAmt: parseFloat(
-            ethers.utils.formatUnits(data.withdrawableAmt),
-            sixDecimals
+            ethers.utils.formatUnits(data.withdrawableAmt, sixDecimals)
           ),
         };
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return undefined;
+}
+
+export async function withdrawSeniorPoolInvestment(amount) {
+  try {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      console.log({ signer });
+      const contract = new ethers.Contract(
+        process.env.REACT_APP_SENIORPOOL,
+        seniorPool.abi,
+        signer
+      );
+
+      amount = ethers.utils.parseUnits(amount, sixDecimals);
+      if (amount && amount > 0) {
+        let transaction = await contract.withdrawWithLP(amount);
+        await transaction.wait();
       }
     }
   } catch (error) {

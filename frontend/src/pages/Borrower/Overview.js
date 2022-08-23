@@ -19,6 +19,7 @@ import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
+import ProcessingRepaymentModal from "./Components/Modal/ProcessingRepaymentModal";
 
 const Overview = () => {
 	const [drawdownList, setDrawdownList] = useState([]);
@@ -40,10 +41,19 @@ const Overview = () => {
 	const [loadRepaymentList, setLoadRepaymentList] = useState();
 	const [processDrawdown, setProcessDrawdown] = useState();
 	const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
+	const [openProcessRepayment, setOpenProcessRepayment] = useState();
+	const [processRepayment, setProcessRepayment] = useState();
 
 	const handleForm = () => {
 		setSelected(null);
 		setKycSelected(null);
+	};
+
+	const cutProcessModal = () => {
+		console.log("kadl");
+		setSelected(null);
+		setProcessModal(null);
+		setOpenProcessDrawdown(null);
 	};
 
 	useEffect(() => {
@@ -167,6 +177,7 @@ const Overview = () => {
 					<ProcessingRequestModal
 						borrowReqProcess={borrowReqProcess}
 						setSelected={setSelected}
+						handleDrawdown={cutProcessModal}
 						setProcessModal={setProcessModal}
 					/>
 				)}
@@ -355,9 +366,15 @@ const Overview = () => {
 									key={item.id}
 									data={item}
 									loadRepaymentList={setLoadRepaymentList}
+									setOpenProcessRepayment={setOpenProcessRepayment}
+									setProcessRepayment={setProcessRepayment}
 								/>
 							))}
 						</div>
+					)}
+
+					{openProcessRepayment && (
+						<ProcessingRepaymentModal processRepayment={processRepayment} />
 					)}
 				</div>
 				<div className="mb-16">
@@ -387,7 +404,10 @@ const Overview = () => {
 					)}
 
 					{openProcessDrawdown ? (
-						<ProcessingDrawdownModal processDrawdown={processDrawdown} />
+						<ProcessingDrawdownModal
+							processDrawdown={processDrawdown}
+							handleDrawdown={cutProcessModal}
+						/>
 					) : (
 						<></>
 					)}

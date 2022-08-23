@@ -230,6 +230,7 @@ const ViewPool = () => {
 						estimatedAPY={poolData?.loanInterest}
 						setProcessFundModal={setProcessFundModal}
 						setInvestProcessing={setInvestProcessing}
+						setSelected={setSelected}
 					/>
 				) : null}
 
