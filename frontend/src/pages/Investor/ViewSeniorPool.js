@@ -98,6 +98,7 @@ const ViewSeniorPool = () => {
             estimatedAPY={estimatedAPY}
             setProcessFundModal={setProcessFundModal}
             setInvestProcessing={setInvestProcessing}
+            setSelected={setSelected}
           />
         ) : null}
         {processFundModal ? (

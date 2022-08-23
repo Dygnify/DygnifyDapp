@@ -19,10 +19,11 @@ const DrawdownCard = ({
   const onDrawdown = async () => {
     setOpenProcessDrawdown(true);
     setProcessDrawdown(true);
+
     await drawdown(data?.opportunityPoolAddress);
-    setSelected(null);
     loadDrawdownList(true);
     setProcessDrawdown(false);
+    setSelected(null);
   };
 
   useEffect(() => {

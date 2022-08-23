@@ -4,7 +4,12 @@ import RepaymentModal from "../Modal/RepaymentModal";
 import { getBinaryFileData } from "../../services/fileHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 
-const RepaymentCard = ({ data, loadRepaymentList }) => {
+const RepaymentCard = ({
+  data,
+  loadRepaymentList,
+  setOpenProcessRepayment,
+  setProcessRepayment,
+}) => {
   const [selected, setSelected] = useState(null);
   const handleRepayment = async () => {
     setSelected(null);
@@ -104,7 +109,9 @@ const RepaymentCard = ({ data, loadRepaymentList }) => {
             data={selected}
             handleRepayment={handleRepayment}
             poolName={poolName}
-          ></RepaymentModal>
+            setOpenProcessRepayment={setOpenProcessRepayment}
+            setProcessRepayment={setProcessRepayment}
+          />
         )}
       </div>
     </div>
