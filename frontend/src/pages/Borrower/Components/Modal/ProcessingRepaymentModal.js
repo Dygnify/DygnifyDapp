@@ -1,8 +1,8 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
-  console.log(processDrawdown, "in fund process modal");
+const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
+  console.log(processRepayment, "in fund process modal");
 
   const navigate = useNavigate();
 
@@ -10,7 +10,7 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
     <>
       <input
         type="checkbox"
-        id="DrawdownProcessModal"
+        id="RepaymentProcessModal"
         className="modal-toggle"
       />
       <div
@@ -22,9 +22,9 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
           className="modal-box w-1/3 max-w-5xl p-0"
         >
           <label
-            for="DrawdownProcessModal"
+            for="RepaymentProcessModal"
             className="btn btn-ghost absolute right-2 top-2 pb-2"
-            onClick={() => handleDrawdown()}
+            onClick={() => handleRepayment()}
           >
             ✕
           </label>
@@ -32,35 +32,40 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
             style={{ borderBottom: "2px solid #292C33" }}
             className="font-bold text-lg py-3 px-4"
           >
-            Drawdown
+            Repayment
           </h3>
           <p
-            style={{ display: "flex", fontSize: 55, fontWeight: 600 }}
+            style={{
+              display: "flex",
+              fontSize: 55,
+              fontWeight: 600,
+              margin: "25px 0px",
+            }}
             className="justify-center"
           >
-            {!processDrawdown ? `Yay!🎉` : "In Progress⏱"}
+            {!processRepayment ? `Yay!🎉` : "In Progress⏱"}
           </p>
           <p
             style={{ display: "flex", fontSize: 23, fontWeight: 600 }}
             className="justify-center mb-2"
           >
-            {processDrawdown
-              ? "Drawdown is in progress"
-              : "Drawdown done successfully"}
+            {processRepayment
+              ? "Repayment is in progress"
+              : "Repayment done successfully"}
           </p>
-          {processDrawdown ? (
+          {processRepayment ? (
             <p
               className="justify-center"
               style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
             >
-              {`Drawdown of ${`20000 USDC`} from pool ${`poolname`} is in progress.`}
+              {`Repayment of ${`20000 USDC`} from pool ${`poolname`} is in progress.`}
             </p>
           ) : (
             <p
               className="justify-center"
               style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
             >
-              {`You successfully drawdown ${`20000 USDC`} from pool ${`poolname`} `}
+              {`You successfully repaid ${`20000 USDC`} from pool ${`poolname`} `}
             </p>
           )}
           <div
@@ -93,7 +98,7 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
                   >
                     Status
                   </small>
-                  {processDrawdown ? (
+                  {processRepayment ? (
                     <p style={{ fontSize: 14, color: "#FBBF24" }}>Processing</p>
                   ) : (
                     <p style={{ fontSize: 14, color: "#58BD7D" }}>Completed</p>
@@ -154,4 +159,4 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
   );
 };
 
-export default ProcessingDrawdownModal;
+export default ProcessingRepaymentModal;
