@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Stack, Link } from "@mui/material";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import {
 	requestAccount,
 	isConnected,
 } from "../../components/navbar/NavBarHelper";
-import PrimaryButton from "../../uiTools/Button/PrimaryButton";
 import WalletWhiteSmall from "../SVGIcons/WalletWhiteSmall";
 import { useLocation } from "react-router-dom";
+import LogoImage from "../../assets/logo.png";
 
 const Header = () => {
 	const [status, setStatus] = useState(false);
@@ -46,7 +45,7 @@ const Header = () => {
 				<div>
 					<img
 						style={{ width: "150px", height: "80px", objectFit: "contain" }}
-						src="/assets/logo.png"
+						src={LogoImage}
 						alt="company logo"
 					/>
 				</div>

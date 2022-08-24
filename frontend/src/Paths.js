@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes, HashRouter } from "react-router-dom";
 import Token from "./home/Token";
 
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
 import Overview from "./pages/Borrower/Overview";
 import BorrowList from "./pages/Borrower/BorrowList";

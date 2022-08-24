@@ -5,6 +5,7 @@ import {
 } from "../../../../components/transaction/TransactionHelper";
 
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
+import WalletImage from "../../../../assets/wallet_white.png";
 
 const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
 	const [amount, setAmount] = useState("");
@@ -45,7 +46,7 @@ const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
 						<img
 							style={{ borderRadius: "50%" }}
 							className="p-4 bg-[#9281FF] opacity-80"
-							src="/images/wallet_white.png"
+							src={WalletImage}
 							alt=""
 						/>
 					</div>

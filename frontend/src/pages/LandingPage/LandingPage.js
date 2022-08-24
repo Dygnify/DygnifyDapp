@@ -1,7 +1,9 @@
 import React from "react";
-import GradientButton from "../uiTools/Button/GradientButton";
-import Header from "./Layout/Header";
+import GradientButton from "../../uiTools/Button/GradientButton";
+import Header from "../Layout/Header";
 import { useNavigate } from "react-router-dom";
+import BorrowImage from "../../assets/Borrow.png";
+import InvestImage from "../../assets/Invest.png";
 
 const LandingPage = () => {
 	const path = useNavigate();
@@ -69,7 +71,7 @@ const LandingPage = () => {
 					className="w-1/2 flex-col justify-center items-center"
 					style={{ display: "flex" }}
 				>
-					<img src="./assets/Invest.png" />
+					<img src={InvestImage} />
 					<h6
 						style={{
 							fontWeight: 600,
@@ -96,7 +98,7 @@ const LandingPage = () => {
 					className="w-1/2 flex-col justify-center items-center"
 					style={{ display: "flex" }}
 				>
-					<img src="./assets/Borrow.png" />
+					<img src={BorrowImage} />
 					<h6
 						style={{
 							fontWeight: 600,

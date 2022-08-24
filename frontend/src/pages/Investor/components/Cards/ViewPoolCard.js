@@ -7,6 +7,8 @@ import {
 } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 
+import DygnifyImage from "../../../../assets/Dygnify_Image.png";
+
 const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
@@ -86,7 +88,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 			className="card-body card text-white w-1/3 flex-row items-center"
 		>
 			<img
-				src={logoImgSrc ? logoImgSrc : "/assets/Dygnify_Image.png"}
+				src={logoImgSrc ? logoImgSrc : DygnifyImage}
 				style={{ width: 150, height: 150, borderRadius: 75 }}
 			/>
 			<div style={{ marginLeft: 32, width: 400 }}>

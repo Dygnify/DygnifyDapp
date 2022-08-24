@@ -2,9 +2,9 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { amlCheck } from "../../services/OFACAxiosOptions.js";
 import axiosHttpService from "../../services/axioscall";
+import SandTimer from "../../../assets/sand-timer.gif";
 
 const REACT_APP_OFAC_MIN_SCORE = "90";
-const REACT_APP_NAYAONE_SANDPIT_KEY = "c4064533-8be7-4b6f-883f-f8650911085e";
 
 const Processing = ({ handleClick, fullName }) => {
 	async function onCheckAML() {
@@ -54,7 +54,7 @@ const Processing = ({ handleClick, fullName }) => {
 			>
 				<img
 					style={{ width: "110px", height: "70px", objectFit: "contain" }}
-					src="./sand-timer.gif"
+					src={SandTimer}
 					alt=""
 				/>
 			</Box>

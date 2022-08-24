@@ -3,8 +3,8 @@ import { Box, Button, Typography, Stack, Divider, Card } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getOpportunityAt } from "../../components/transaction/TransactionHelper";
-import { ExtractIPFSdataFromHash } from "../../services/PinataIPFSOptions";
 import { retrieveFiles } from "../../services/web3storageIPFS";
+import LogoImage from "../../assets/logo.png";
 
 
 const ApprovedOpportunities = () => {
@@ -55,7 +55,7 @@ const ApprovedOpportunities = () => {
                 <Box>
                     <img
                         style={{ width: "150px", height: "80px", objectFit: "contain" }}
-                        src="/assets/logo.png"
+                        src={LogoImage}
                         alt="company logo"
                     />
                 </Box>

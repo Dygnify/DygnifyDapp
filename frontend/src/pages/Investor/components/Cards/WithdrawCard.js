@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
+import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 
 const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
 	const {
@@ -42,10 +43,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
 			}}
 			className="card-body card text-white w-1/3 flex-row items-center"
 		>
-			<img
-				src="/assets/Dygnify_Image.png"
-				style={{ width: 150, height: 150 }}
-			/>
+			<img src={DygnifyImage} style={{ width: 150, height: 150 }} />
 			<div style={{ marginLeft: 32, width: 400 }}>
 				<div style={{ display: "flex", marginTop: -10 }} className="flex-col">
 					<p className="card-title mb-0" style={{ fontSize: 23 }}>
