@@ -17,14 +17,22 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: {
+    version: "0.8.4",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  },
   paths: {
-    artifacts: '../frontend/src/artifacts',
+    artifacts: "../frontend/src/artifacts",
   },
   networks: {
     polygon_mumbai: {
       url: process.env.POLYGON_TESTNET_URL,
-      accounts: [`${process.env.PRIVATE_KEY}`]
-    }
-  }
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
+  },
 };
