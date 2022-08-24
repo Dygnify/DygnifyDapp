@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
-import RepaymentModal from "../../../../uiTools/Modal/RepaymentModal";
+import RepaymentModal from "../Modal/RepaymentModal";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 

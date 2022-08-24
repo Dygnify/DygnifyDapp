@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
 	repayment,
 	getWalletBal,
-} from "../../components/transaction/TransactionHelper";
-import GradientBtnForModal from "../Button/GradientBtnForModal";
-import WalletImage from "../../assets/wallet_white.png";
+} from "../../../../components/transaction/TransactionHelper";
+import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
+import WalletImage from "../../../../assets/wallet_white.png";
 
 const RepaymentModal = ({
 	data,

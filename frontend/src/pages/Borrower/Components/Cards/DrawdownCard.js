@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import DrawdownModal from "../../../../uiTools/Modal/DrawdownModal";
+import DrawdownModal from "../Modal/DrawdownModal";
 import { drawdown } from "../../../../components/transaction/TransactionHelper";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
-import TransactionsCard from "../../uiTools/Card/TransactionsCard";
+import TransactionsCard from "./Components/Cards/TransactionsCard";
 import Loader from "../../uiTools/Loading/Loader";
 
 const Transaction = () => {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import GradientBtnForModal from "../Button/GradientBtnForModal";
+import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 
-import { getWalletBal } from "../../components/transaction/TransactionHelper";
-import WalletImage from "../../assets/wallet_white.png";
+import { getWalletBal } from "../../../../components/transaction/TransactionHelper";
+import WalletImage from "../../../../assets/wallet_white.png";
 
 const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 	const [walletBal, setWalletBal] = useState();
