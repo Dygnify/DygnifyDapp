@@ -34,8 +34,8 @@ const Overview = () => {
 	const [kycSelected, setKycSelected] = useState();
 	const [kycStatus, setKycStatus] = useState();
 	const [profileStatus, setProfileStatus] = useState();
-	const [borrowReqProcess, setBorrowReqProcess] = useState();
-	const [processModal, setProcessModal] = useState();
+	const [borrowReqProcess, setBorrowReqProcess] = useState(false);
+	const [processModal, setProcessModal] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [loadDrawdownList, setLoadDrawdownList] = useState();
 	const [loadRepaymentList, setLoadRepaymentList] = useState();
@@ -179,6 +179,7 @@ const Overview = () => {
 						setSelected={setSelected}
 						handleDrawdown={cutProcessModal}
 						setProcessModal={setProcessModal}
+						processModal={processModal}
 					/>
 				)}
 

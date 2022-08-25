@@ -209,24 +209,24 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
 					</label>
 				</div>
 
-				<label
-					typeof="submit"
-					htmlFor="ProcessModal"
+				<button
+					// typeof="submit"
+					// htmlFor="ProcessModal"
 					onClick={handleClick}
 					style={{
 						borderRadius: "100px",
 						padding: "12px 24px",
 						color: "white",
 					}}
-					className={`btn btn-wide  capitalize font-medium border-none ${
-						checked
-							? "bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF]"
-							: ""
-					}`}
+					className={`btn btn-wide  capitalize font-medium border-none  
+					bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF]
+					disabled:opacity-40
+							
+					`}
 					disabled={!checked}
 				>
 					Submit
-				</label>
+				</button>
 			</div>
 
 			<div style={{ display: "flex" }} className=" justify-center">
