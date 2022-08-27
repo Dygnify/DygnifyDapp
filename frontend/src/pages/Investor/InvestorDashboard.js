@@ -27,7 +27,7 @@ const InvestorDashboardNew = () => {
 
 					<div
 						className={`py-4 drawer-content text-white ${
-							linkStatus ? "blur-sm lg:blur-none" : ""
+							linkStatus ? "blur-lg lg:blur-none" : ""
 						}`}
 					>
 						<div className="px-4 sm:px-6 md:px-8 lg:px-4 xl:px-8">
@@ -43,7 +43,7 @@ const InvestorDashboardNew = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="menu p-4 overflow-y-auto w-60  text-white">
+						<ul className="menu p-4 overflow-y-auto w-60  text-white bg-darkmode-900">
 							<li>
 								<Link to="/investor-dashboard">Overview</Link>
 							</li>
