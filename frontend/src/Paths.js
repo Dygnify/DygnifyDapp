@@ -6,7 +6,7 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
 import Overview from "./pages/Borrower/Overview";
 import BorrowList from "./pages/Borrower/BorrowList";
-import InvestorDashboardNew from "./pages/Investor/InvestorDashboardNew";
+import InvestorDashboard from "./pages/Investor/InvestorDashboard";
 
 import InvestorOverview from "./pages/Investor/InvestorOverview";
 import Invest from "./pages/Investor/Invest";
@@ -40,15 +40,15 @@ const Paths = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/token" element={<Token />} />
 
-          {/* // rename */}
-          <Route path="/investor-dashboardN" element={<InvestorDashboardNew />}>
-            <Route index element={<InvestorOverview />} />
-            <Route path="invest" element={<Invest />} />
-            <Route path="withdraw" element={<Withdraw />} />
-            <Route path="transaction" element={<Transactions />} />
-            <Route path="viewPool" element={<ViewPool />} />
-            <Route path="viewSeniorPool" element={<ViewSeniorPool />} />
-          </Route>
+				{/* // rename */}
+				<Route path="/investor-dashboard" element={<InvestorDashboard />}>
+					<Route index element={<InvestorOverview />} />
+					<Route path="invest" element={<Invest />} />
+					<Route path="withdraw" element={<Withdraw />} />
+					<Route path="transaction" element={<Transactions />} />
+					<Route path="viewPool" element={<ViewPool />} />
+					<Route path="viewSeniorPool" element={<ViewSeniorPool />} />
+				</Route>
 
           <Route
             path="/underwriterDashboard"
