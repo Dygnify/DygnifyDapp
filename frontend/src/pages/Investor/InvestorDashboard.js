@@ -27,7 +27,7 @@ const InvestorDashboardNew = () => {
 
 					<div
 						className={`py-4 drawer-content text-white ${
-							linkStatus ? "blur-lg lg:blur-none" : ""
+							linkStatus ? "blur-sm lg:blur-none" : ""
 						}`}
 					>
 						<div className="px-4 sm:px-6 md:px-8 lg:px-4 xl:px-8">
@@ -45,16 +45,44 @@ const InvestorDashboardNew = () => {
 						></label>
 						<ul className="menu p-4 overflow-y-auto w-60  text-white bg-darkmode-900">
 							<li>
-								<Link to="/investor-dashboard">Overview</Link>
+								<Link
+									to="/investor-dashboard"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									Overview
+								</Link>
 							</li>
 							<li>
-								<Link to="/investor-dashboard/invest">Invest</Link>
+								<Link
+									to="/investor-dashboard/invest"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									Invest
+								</Link>
 							</li>
 							<li>
-								<Link to="/investor-dashboard/withdraw">Withdraw</Link>
+								<Link
+									to="/investor-dashboard/withdraw"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									Withdraw
+								</Link>
 							</li>
 							<li>
-								<Link to="/investor-dashboard/transaction">Transaction</Link>
+								<Link
+									to="/investor-dashboard/transaction"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									Transaction
+								</Link>
 							</li>
 						</ul>
 					</div>
