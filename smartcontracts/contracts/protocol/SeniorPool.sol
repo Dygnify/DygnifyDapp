@@ -183,7 +183,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
             }
         }
         if (availableForWithdrawal[msg.sender] > 0) {
-            withdrawableAmount.add(availableForWithdrawal[msg.sender]);
+            withdrawableAmount += availableForWithdrawal[msg.sender];
         }
 
         return (withdrawableAmount, stakingAmount);
