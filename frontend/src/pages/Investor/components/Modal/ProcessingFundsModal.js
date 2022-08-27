@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+
+//for get data import from paths--
+import { UserContext } from "../../../../Paths"; //
+//
 
 const ProcessingFundsModal = ({ investProcessing }) => {
+  //for get data using useContext--
+  const { state, dispatch } = useContext(UserContext); //
+  //
+
   console.log(investProcessing, "in fund process modal");
   return (
     <>
@@ -45,7 +53,7 @@ const ProcessingFundsModal = ({ investProcessing }) => {
               className="justify-center"
               style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
             >
-              {`You successfully withdrew ${`20000 USDC`} from poolname`}
+              {`You successfully withdrew ${state}USDC from poolname`}
             </p>
           ) : (
             <></>

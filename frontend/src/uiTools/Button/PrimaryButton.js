@@ -25,6 +25,7 @@ const PrimaryButton = ({
       onClick={disable ? null : onClick}
       htmlFor={htmlFor}
       className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-medium flex fill-white  items-center justify-center "
+      // className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-medium flex w-72 fill-white  items-center justify-center "
       
       // style={{ borderRadius: "100px", padding: "12px 24px", color: "white" }}
       // className={`${

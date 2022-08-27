@@ -6,6 +6,7 @@ import {
   getDataURLFromFile,
 } from "../../../services/fileHelper";
 import { retrieveFiles } from "../../../services/web3storageIPFS";
+import dollarIcon from "../../../assets/Dollar-icon.svg";
 
 const UnderwriterCard = ({ data }) => {
   const path = useNavigate();
@@ -66,7 +67,7 @@ const UnderwriterCard = ({ data }) => {
           src={logoImgSrc}
           className="w-28 h-28 rounded-full lg:w-36 lg:h-36 lg:my-auto"
         />
-        <div className="mt-7 lg:hidden">
+        <div className="mt-7 -space-y-1 lg:hidden ">
           <p className="font-medium text-2xl">{poolName}</p>
           <p className="text-xl font-light">{companyName}</p>
         </div>
@@ -74,15 +75,19 @@ const UnderwriterCard = ({ data }) => {
       {/* section-2 */}
       <div className="col-span-6 xl:-ml-4">
         {/* section-2-1  */}
-        <div className="mt-5 px-4 lg:pr-5 lg:pl-1">
-          <div className="hidden lg:block lg:my-7">
+        <div className="mt-5 px-4 lg:pr-5 lg:pl-1 ">
+          <div className="hidden -space-y-1 lg:block lg:my-7 ">
             <p className="font-medium text-2xl">{poolName}</p>
             <p className="text-xl font-light">{companyName}</p>
           </div>
           <div className="flex justify-between space-y-1 font-medium">
             <p>Pool Size</p>
-            <p>
-              {data.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
+            <p className="flex gap-1 justify-center">
+              <p className="w-6 h-6">
+                <img src={dollarIcon} alt="" />
+              </p>
+              {data.opportunityAmount}
+              {process.env.REACT_APP_TOKEN_NAME}
             </p>
           </div>
           <div className="flex justify-between space-y-1  font-medium ">
@@ -94,8 +99,9 @@ const UnderwriterCard = ({ data }) => {
             <p>{data.createdOn}</p>
           </div>
         </div>
-        {/* sectin-2-2  */}
+        {/* sectin-2-2*/}
         <div className="grid mt-2 mb-3 mx-1 lg:pt-2 lg:-ml-1">
+          {/* add (place-items-center) for button center */}
           <PrimaryButton
             disable={false}
             onClick={() =>
