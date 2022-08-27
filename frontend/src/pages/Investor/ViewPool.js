@@ -83,6 +83,7 @@ const ViewPool = () => {
 	useEffect(() => {
 		if (poolData) {
 			loadInfo();
+			console.log(poolData);
 			// get pool balance
 			getWalletBal(poolData.opportunityPoolAddress).then((amt) => {
 				if (amt) {
