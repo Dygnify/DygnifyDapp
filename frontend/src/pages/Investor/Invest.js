@@ -126,7 +126,7 @@ const Invest = () => {
 						<div style={{ display: "flex" }} className="gap-4 w-1/2">
 							<ViewPoolCard
 								onClick={() =>
-									path("/investor-dashboardN/viewSeniorPool", {
+									path("/investor-dashboard/viewSeniorPool", {
 										state: {
 											...seniorPool,
 											kycStatus: kycStatus,
@@ -182,7 +182,7 @@ const Invest = () => {
 									key={item.id}
 									//send data params
 									onClick={() =>
-										path("/investor-dashboardN/viewPool", {
+										path("/investor-dashboard/viewPool", {
 											state: {
 												...item,
 												kycStatus: kycStatus,
