@@ -37,14 +37,14 @@ contract OpportunityOrigination is
         );
     }
 
-    function getTotalOpportunities() external view override returns (uint256) {
+    function getTotalOpportunities() external override view returns (uint256) {
         return opportunityIds.length;
     }
 
     function getOpportunityOf(address _borrower)
         external
-        view
         override
+        view
         returns (bytes32[] memory)
     {
         require(address(_borrower) != address(0), "invalid borrower address");
@@ -78,7 +78,6 @@ contract OpportunityOrigination is
             _paymentFrequencyInDays > 0,
             "Payment Frequency Must be greater than 0"
         );
-        require(_capitalLoss > 0, "Capital Loss Must be greater than 0");
 
         bytes32 id = keccak256(abi.encodePacked(_collateralDocument));
         require(
@@ -155,15 +154,13 @@ contract OpportunityOrigination is
             _status
         );
 
-        if(_status == uint8(OpportunityStatus.Approved) ){
+        if (_status == uint8(OpportunityStatus.Approved)) {
             mintCollateral(_opportunityId);
             createOpportunityPool(_opportunityId);
         }
     }
 
-    function mintCollateral(bytes32 _opportunityId)
-        private
-    {
+    function mintCollateral(bytes32 _opportunityId) private {
         require(
             isOpportunity[_opportunityId] == true,
             "Opportunity ID doesn't exist"
@@ -305,9 +302,9 @@ contract OpportunityOrigination is
     {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         require(
-            uint8(opportunityToId[id].opportunityStatus) ==
+            uint8(opportunityToId[id].opportunityStatus) >=
                 uint8(OpportunityStatus.Active),
-            "Opportunity must be active"
+            "Opportunity must be active/drawndown/repaid"
         );
         address poolAddress = opportunityToId[id].opportunityPoolAddress;
         require(

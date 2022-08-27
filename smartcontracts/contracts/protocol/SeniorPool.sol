@@ -11,6 +11,7 @@ import "./DygnifyConfig.sol";
 import "./BaseUpgradeablePausable.sol";
 import "./OpportunityOrigination.sol";
 import "./OpportunityPool.sol";
+import "./ConfigOptions.sol";
 
 /// @title SeniorPool
 /// @author DNyanesh Warade
@@ -78,8 +79,8 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
         lpToken = LPToken(dygnifyConfig.lpTokenAddress());
-        investmentLockinInMonths = dygnifyConfig.getSeniorPoolMockinMonths();
-        sharePrice = 10**18;
+        investmentLockinInMonths = dygnifyConfig.getSeniorPoolLockinMonths();
+        sharePrice = 0;
     }
 
     function _authorizeUpgrade(address newImplementation) internal override {}
@@ -100,8 +101,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         seniorPoolBal = seniorPoolBal + amount;
         usdcToken.transferFrom(msg.sender, address(this), amount);
         address minter = msg.sender;
-        uint256 lpTokenAmount = getNumShares(amount);
-        lpToken.mint(minter, lpTokenAmount);
+        lpToken.mint(minter, amount);
         emit Stake(msg.sender, amount);
     }
 
@@ -145,40 +145,12 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         uint256 withdrawlAmount = opportunityPool.withdrawAll(1); //hardcoded val of 1 need to be converted into variable
 
         seniorPoolBal = seniorPoolBal + withdrawlAmount;
-        uint256 totalProfit = usdcToLp(opportunityPool.getSeniorProfit());
+        uint256 totalProfit = opportunityPool.getSeniorProfit();
 
         uint256 _totalShares = lpToken.totalShares();
-        uint256 delta = totalProfit.mul(10**18).div(_totalShares);
+        uint256 delta = totalProfit.mul(lpMantissa()).div(_totalShares);
 
         sharePrice = sharePrice.add(delta);
-    }
-
-    function lPMantissa() internal pure returns (uint256) {
-        return uint256(10)**uint256(18);
-    }
-
-    function usdcMantissa() internal pure returns (uint256) {
-        return uint256(10)**uint256(6);
-    }
-
-    function usdcToLp(uint256 amount) internal pure returns (uint256) {
-        return amount.mul(lPMantissa()).div(usdcMantissa());
-    }
-
-    function lpToUSDC(uint256 amount) internal pure returns (uint256) {
-        return amount.div(lPMantissa().div(usdcMantissa()));
-    }
-
-    function getNumShares(uint256 amount) public view returns (uint256) {
-        return usdcToLp(amount).mul(lPMantissa()).div(sharePrice);
-    }
-
-    function getUSDCAmountFromShares(uint256 lpAmount)
-        internal
-        view
-        returns (uint256)
-    {
-        return lpToUSDC(lpAmount.mul(sharePrice).div(lPMantissa()));
     }
 
     function approveUSDC(address user) public onlyAdmin {
@@ -272,5 +244,28 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         uint256 usdcAmount = getUSDCAmountFromShares(amount);
         usdcToken.transfer(msg.sender, usdcAmount);
         emit Unstake(msg.sender, amount);
+    }
+
+    function totalShares() internal view returns (uint256) {
+        require(
+            address(lpToken) != address(0),
+            "Senior Pool Contract not initialized properly"
+        );
+        return lpToken.totalShares();
+    }
+
+    function lpMantissa() internal pure returns (uint256) {
+        return uint256(10)**uint256(6);
+    }
+
+    function getUSDCAmountFromShares(uint256 amount)
+        internal
+        view
+        returns (uint256)
+    {
+        if (sharePrice > 0) {
+            return amount.mul(sharePrice).div(lpMantissa());
+        }
+        return amount;
     }
 }

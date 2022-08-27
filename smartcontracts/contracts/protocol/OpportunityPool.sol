@@ -99,6 +99,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
         lpToken = LPToken(dygnifyConfig.lpTokenAddress());
         _setRoleAdmin(SENIOR_POOL_ROLE, ADMIN_ROLE);
+        _setupRole(SENIOR_POOL_ROLE, dygnifyConfig.seniorPoolAddress());
         _setRoleAdmin(BORROWER_ROLE, ADMIN_ROLE);
         _setRoleAdmin(POOL_LOCKER_ROLE, ADMIN_ROLE);
         _setupRole(POOL_LOCKER_ROLE, owner);
@@ -209,11 +210,18 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
                 .depositedAmount
                 .add(amount);
-            
+
             stakingBalance[msg.sender] = stakingBalance[msg.sender].add(amount);
             isStaking[msg.sender] = true;
-            if(investor.isExistInInvestor(msg.sender, opportunityID) == false){
+            if (
+                investor.isExistInInvestor(msg.sender, opportunityID) == false
+            ) {
                 investor.addOpportunity(msg.sender, opportunityID);
+            }
+            if (
+                totalAmountAfterDeposit >= juniorSubpoolDetails.totalDepositable
+            ) {
+                seniorSubpoolDetails.isPoolLocked = true;
             }
         }
 
@@ -393,10 +401,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 seniorSubpoolDetails.depositedAmount > 0,
                 "balance of senior subpool is zero currently"
             );
-            require(
-                seniorSubpoolDetails.yieldGenerated > 0,
-                "yield generated of senior subpool is zero currently"
-            );
+
             amount = seniorSubpoolDetails.depositedAmount.add(
                 seniorSubpoolDetails.yieldGenerated
             );
@@ -442,7 +447,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             if (juniorSubpoolDetails.overdueGenerated > 0) {
                 uint256 overdueGathered = (
                     juniorOverduePerecentage.mul(stakingBalance[msg.sender])
-                ).div(10**6);
+                )
+                    .div(10**6);
                 amount = amount.add(overdueGathered);
                 juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
                     .overdueGenerated
@@ -489,20 +495,20 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint256 _seniorYieldPerecentage = loanInterest
             .div(100)
             .mul(
-                one.sub(dygnifyConfig.getDygnifyFee()).sub(
-                    dygnifyConfig.getJuniorSubpoolFee()
-                )
+            one.sub(dygnifyConfig.getDygnifyFee()).sub(
+                dygnifyConfig.getJuniorSubpoolFee()
             )
+        )
             .div(10**6);
         uint256 _juniorYieldPerecentage = loanInterest
             .div(100)
             .mul(
-                one.sub(dygnifyConfig.getDygnifyFee()).add(
-                    dygnifyConfig.getJuniorSubpoolFee().mul(
-                        dygnifyConfig.getLeverageRatio()
-                    )
+            one.sub(dygnifyConfig.getDygnifyFee()).add(
+                dygnifyConfig.getJuniorSubpoolFee().mul(
+                    dygnifyConfig.getLeverageRatio()
                 )
             )
+        )
             .div(10**6);
         return (_seniorYieldPerecentage, _juniorYieldPerecentage);
     }
@@ -519,10 +525,12 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
         uint256 _seniorOverDuePerecentage = (
             seniorInvestment.mul(seniorYieldPerecentage)
-        ).div(yield);
+        )
+            .div(yield);
         uint256 _juniorOverDuePerecentage = (
             juniorInvestment.mul(juniorYieldPerecentage)
-        ).div(yield);
+        )
+            .div(yield);
         return (_seniorOverDuePerecentage, _juniorOverDuePerecentage);
     }
 
