@@ -103,7 +103,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         _setRoleAdmin(BORROWER_ROLE, ADMIN_ROLE);
         _setRoleAdmin(POOL_LOCKER_ROLE, ADMIN_ROLE);
         _setupRole(POOL_LOCKER_ROLE, owner);
-
+        address borrower = opportunityOrigination.getBorrower(_opportunityID);
+        _setupRole(BORROWER_ROLE, borrower);
         opportunityID = _opportunityID;
         opportunityInfo = _opportunityInfo;
         loanType = _loanType;
@@ -221,7 +222,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             if (
                 totalAmountAfterDeposit >= juniorSubpoolDetails.totalDepositable
             ) {
-                seniorSubpoolDetails.isPoolLocked = true;
+                seniorSubpoolDetails.isPoolLocked = false;
             }
         }
 
@@ -327,7 +328,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint256 currentTime = block.timestamp;
         uint256 currentRepaymentDue = nextRepaymentTime();
         uint256 overDueFee;
-        if (currentTime <= currentRepaymentDue) {} else {
+        if (currentTime > currentRepaymentDue) {
             uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
                 86400
             );
@@ -385,6 +386,10 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         require(
             _subpoolId <= uint8(Subpool.SeniorSubpool),
             "SubpoolID : out of range"
+        );
+        require(
+            opportunityOrigination.isRepaid(opportunityID) == true,
+            "Funds in opportunity haven't drawdown yet."
         );
         uint256 amount;
 
@@ -462,6 +467,30 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return amount;
     }
 
+    function getUserWithdrawableAmount() external view returns (uint256) {
+        require(
+            isStaking[msg.sender] == true && stakingBalance[msg.sender] > 0,
+            "zero amount to deposited."
+        );
+        uint256 amount = 0;
+        if (opportunityOrigination.isRepaid(opportunityID) == true) {
+            uint256 yieldGatherd = juniorYieldPerecentage
+                .mul(stakingBalance[msg.sender])
+                .div(10**6);
+
+            amount = stakingBalance[msg.sender].add(yieldGatherd);
+
+            if (juniorSubpoolDetails.overdueGenerated > 0) {
+                uint256 overdueGathered = (
+                    juniorOverduePerecentage.mul(stakingBalance[msg.sender])
+                )
+                    .div(10**6);
+                amount = amount.add(overdueGathered);
+            }
+        }
+        return amount;
+    }
+
     function getRepaymentAmount() public view returns (uint256) {
         require(
             repaymentCounter <= totalRepayments,
@@ -476,7 +505,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint256 currentTime = block.timestamp;
         uint256 currentRepaymentDue = nextRepaymentTime();
         uint256 overDueFee;
-        if (currentTime <= currentRepaymentDue) {} else {
+        if (currentTime > currentRepaymentDue) {
             uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
                 86400
             );

@@ -295,6 +295,11 @@ contract OpportunityOrigination is
         else return false;
     }
 
+    function getBorrower(bytes32 id) external view returns (address) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        return opportunityToId[id].borrower;
+    }
+
     function getOpportunityPoolAddress(bytes32 id)
         external
         view
