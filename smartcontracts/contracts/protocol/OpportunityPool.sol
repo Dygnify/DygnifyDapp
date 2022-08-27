@@ -446,7 +446,6 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 .sub(yieldGatherd);
 
             isStaking[msg.sender] = false;
-            stakingBalance[msg.sender] = 0;
             amount = stakingBalance[msg.sender].add(yieldGatherd);
 
             if (juniorSubpoolDetails.overdueGenerated > 0) {
@@ -460,6 +459,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                     .sub(overdueGathered);
             }
             investor.removeOpportunity(msg.sender, opportunityID);
+            stakingBalance[msg.sender] = 0;
         }
 
         poolBalance = poolBalance.sub(amount);
