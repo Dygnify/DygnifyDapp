@@ -3,7 +3,10 @@ import { useLocation } from "react-router-dom";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import TransactionCard from "./components/Cards/TransactionCard";
 import axiosHttpService from "../../services/axioscall";
-import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
+import {
+	tokenTransactions,
+	tokenTransactionsFromCovalent,
+} from "../../services/blockchainTransactionDataOptions";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Alert from "../Components/Alert";
 import InvestModal from "./components/Modal/InvestModal";
@@ -73,13 +76,14 @@ const ViewSeniorPool = () => {
 	};
 
 	useEffect(() => {
-		axiosHttpService(tokenTransactions(process.env.REACT_APP_SENIORPOOL)).then(
-			(transactionDetails) => {
-				if (transactionDetails && transactionDetails.res) {
-					setTransactionData(transactionDetails.res.result);
-				}
+		axiosHttpService(
+			tokenTransactionsFromCovalent(process.env.REACT_APP_SENIORPOOL)
+		).then((transactionDetails) => {
+			console.log("**********", transactionDetails.res.data.items);
+			if (transactionDetails && transactionDetails.res.data.items) {
+				setTransactionData(transactionDetails.res.data.items);
 			}
-		);
+		});
 
 		getWalletBal(process.env.REACT_APP_SENIORPOOL).then((amt) => {
 			setPoolAmount(getDisplayAmount(amt));
@@ -176,12 +180,12 @@ const ViewSeniorPool = () => {
 				>
 					Recent Activity
 				</div>
-				{transactionData.length > 0 ? (
+				{transactionData && transactionData.length > 0 ? (
 					<div className="w-1/2">
 						{transactionData ? (
 							transactionData.map((item) => (
 								<TransactionCard
-									key={transactionData.blockHash}
+									key={item.tx_hash}
 									data={item}
 									address={process.env.REACT_APP_SENIORPOOL}
 								/>
