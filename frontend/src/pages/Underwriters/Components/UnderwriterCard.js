@@ -55,30 +55,38 @@ const UnderwriterCard = ({ data }) => {
 
 	return (
 		<div
-			style={{
-				background: `linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%`,
-				boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)`,
-			}}
-			className=" text-white rounded-2xl grid grid-1  overflow-hidden  pt-7 lg:pt-0 lg:grid-cols-10 xl:pr-2"
+			// style={{
+			// 	background: `linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%`,
+			// 	boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)`,
+			// }}
+			className="my-gradient text-white max-w-lg md:max-w-full rounded-2xl grid  grid-1 overflow-hidden  pt-7 lg:pt-0 lg:grid-cols-10  xl:pr-2 2xl:gap-3"
 		>
 			{/* section-1 */}
 			<div className="flex-row flex space-x-5 px-4 col-span-4 lg:pl-6 lg:pr-1">
 				<img
 					src={logoImgSrc}
-					className="w-28 h-28 rounded-full lg:w-32 lg:h-32 xl:w-36  xl:h-36 lg:my-auto"
+					className="w-28 h-28 lg:my-auto rounded-full xl:w-36  xl:h-36 "
 				/>
 				<div className="mt-7 -space-y-1 lg:hidden ">
-					<p className="font-medium text-2xl">{poolName}</p>
-					<p className="text-xl font-light">{companyName}</p>
+					<p className="font-medium text-2xl">
+						{poolName ? poolName : "Name of Pool"}
+					</p>
+					<p className="font-light text-sm">
+						{companyName ? companyName : "Name of Company"}
+					</p>
 				</div>
 			</div>
 			{/* section-2 */}
 			<div className="col-span-6 xl:-ml-4">
 				{/* section-2-1  */}
-				<div className="mt-5 px-4 lg:pr-5 lg:pl-1 ">
+				<div className="mt-5 px-4 lg:pr-4 lg:pl-1 ">
 					<div className="hidden -space-y-1 lg:block lg:my-7 ">
-						<p className="font-medium text-2xl">{poolName}</p>
-						<p className="text-xl font-light">{companyName}</p>
+						<p className="font-medium text-2xl">
+							{poolName ? poolName : "Name of Pool"}
+						</p>
+						<p className="font-light text-sm">
+							{companyName ? companyName : "Name of Company"}
+						</p>
 					</div>
 					<div className="flex justify-between space-y-1 font-medium">
 						<p>Pool Size</p>
@@ -100,7 +108,7 @@ const UnderwriterCard = ({ data }) => {
 					</div>
 				</div>
 				{/* sectin-2-2*/}
-				<div className="grid mt-2 mb-3 mx-1 lg:pt-2 lg:-ml-1">
+				<div className="flex mt-5 justify-center mb-5 px-4 lg:pr-4 lg:pl-1   ">
 					{/* add (place-items-center) for button center */}
 					<PrimaryButton
 						disable={false}
