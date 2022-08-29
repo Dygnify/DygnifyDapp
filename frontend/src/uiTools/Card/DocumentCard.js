@@ -21,7 +21,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
       className="justify-between mb-2"
     >
       <div>
-        <p>{docName ? null : "View Document"}</p>
+        <p>{docName ? null : "view document"}</p>
         {docName ? (
           <p style={{ fontStyle: "italic", color: "#E6E6E6" }}> {docName}</p>
         ) : null}
@@ -31,7 +31,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
         style={{ cursor: "pointer" }}
         onClick={viewDoc}
       >
-        {disable ? null : "View Document"}
+        {disable ? null : "view document"}
       </a>
     </div>
   );

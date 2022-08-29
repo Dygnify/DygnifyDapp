@@ -9,6 +9,9 @@ import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import Loader from "../../uiTools/Loading/Loader";
 
+import { retrieveFiles } from "../../services/web3storageIPFS";
+import { getDataURLFromFile } from "../../services/fileHelper";
+
 const PoolDetails = () => {
 	const location = useLocation();
 	const [expand, setExpand] = useState(false);
@@ -29,6 +32,28 @@ const PoolDetails = () => {
 	});
 
 	const [loading, setLoading] = useState(false);
+	//
+	const [logoImgSrc, setLogoImgSrc] = useState(""); //
+
+	const fetchPoolLogo = (imgcid) => {
+		if (imgcid) {
+			try {
+				retrieveFiles(imgcid, true).then((imgFile) => {
+					if (imgFile) {
+						let read = getDataURLFromFile(imgFile);
+						read.onloadend = function () {
+							setLogoImgSrc(read.result);
+						};
+					} else {
+						// set the empty logo image
+					}
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
+	//
 
 	useEffect(() => {
 		setOpDetails(location.state);
@@ -39,7 +64,9 @@ const PoolDetails = () => {
 			loadInfo();
 			loadLoanPurpose();
 			setCompanyDetails(opDetails.companyDetails);
-			console.log(opDetails.companyDetails);
+			fetchPoolLogo(
+				opDetails.companyDetails.companyLogoFile.businessLogoFileCID
+			);
 		}
 	}, [opDetails]);
 
@@ -123,424 +150,323 @@ const PoolDetails = () => {
 
 		setLoading(false);
 	}
-
 	return (
 		<div className={`${loading ? "" : ""}`}>
-			{loading && <Loader x="shift" />}
+			{loading && <Loader />}
+			{/* main container  */}
 			<div className={`${loading ? "blur-sm" : ""}`}>
-				{/* main container  */}
-				<div>
-					{/*section-1*/}
-					<div className="flex flex-col justify-start gap-3">
-						{/* section-1-1 --profile  */}
-						<div className="flex items-center gap-6 ">
-							<div>
-								<img className="w-20 h-20 rounded-full bg-white"></img>
-							</div>
-							<div>
-								<div className="font-medium text-2xl -mb-1">
-									{opDetails?.loan_name}
-								</div>
-								<div className="font-semibold text-slate-500">
-									{companyDetails?.companyName}
-								</div>
-							</div>
+				{/*section-1*/}
+				<div className=" w-4 h-2 bg-red-500 md:bg-green-500 lg:bg-blue-400 xl:bg-black"></div>
+				<div className="flex flex-col gap-6 overflow-hidden flex-wrap md:flex-row md:justify-between  ">
+					{/* section-1-1 --profile  */}
+					<div className="flex items-center gap-6 ">
+						<div>
+							<img src={logoImgSrc} className="w-20 h-20 rounded-full"></img>
 						</div>
-						{/* section-1-2 --buttons */}
-						<div className="flex justify-around">
-							{status.approve ||
-							!(status.approve || status.reject || status.unsure) ? (
-								<button
-									disabled={status.approve}
-									onClick={() => vote("2")}
-									style={{
-										borderColor: "#10B981",
-									}}
-									className="ml-0 rounded-full h-12 w-[29%]  overflow-hidden border-2 border-[#10B981] btn btn-xs btn-outline text-[#10B981] text-base  capitalize font-medium"
-								>
-									{status.approve ? "Approved" : "Approve"}
-								</button>
-							) : null}
-
-							{status.reject ||
-							!(status.approve || status.reject || status.unsure) ? (
-								<button
-									disabled={status.reject}
-									onClick={() => vote("1")}
-									style={{
-										borderColor: "#EF4444",
-									}}
-									className="rounded-full h-12 w-[29%]  overflow-hidden  border-2 border-[#EF4444] btn btn-xs btn-outline text-[#EF4444] text-base  capitalize font-medium"
-								>
-									{status.reject ? "Rejected" : "Reject"}
-								</button>
-							) : null}
-							{status.unsure ||
-							!(status.approve || status.reject || status.unsure) ? (
-								<button
-									disabled={status.unsure}
-									onClick={() => vote("3")}
-									style={{
-										borderRadius: "100px",
-										padding: "3px 16px",
-									}}
-									className="mr-0 rounded-full h-12 w-[29%]  overflow-hidden  border-2 border-white btn btn-xs btn-outline text-white text-base  capitalize font-medium"
-								>
-									Unsure
-								</button>
-							) : null}
-						</div>
-						<div className="flex items-center justify-center text-slate-400 font-medium cursor-pointer -mt-3">
-							<div>Ask for more details</div>
-						</div>
-					</div>
-					{/* section-2  --Deals overview*/}
-					<div className="flex-row justify-between items w-full felx">
-						<div className="flex flex-col">
-							<div className="flex-row justify-between mt-10 mb-3 flex">
-								<div className="mb-0 text-lg font-medium">Deals Overview</div>
+						<div>
+							<div className="font-medium text-2xl -mb-1">
+								{opDetails?.loan_name}
 							</div>
-							<div style={{ color: "#D0D5DD" }}>
-								{loanPurpose.isSliced ? (
-									<div>
-										{loanPurpose.firstText}
-										<a
-											style={{
-												fontWeight: 600,
-												cursor: "pointer",
-											}}
-											onClick={() => setExpand(true)}
-										>
-											{expand ? null : "... view more"}
-										</a>
-										{expand ? <div>{loanPurpose.secondText}</div> : null}
-										<a
-											style={{
-												fontWeight: 600,
-												cursor: "pointer",
-											}}
-											onClick={() => setExpand(false)}
-										>
-											{expand ? "view less" : null}
-										</a>
-									</div>
-								) : (
-									<div className="font-light text-lg">
-										{loanPurpose.firstText}{" "}
-									</div>
-								)}
+							<div className="font-semibold text-slate-500">
+								{companyDetails?.companyName}
 							</div>
 						</div>
 					</div>
+					{/* section-1-2 --buttons */}
+					<div className="flex  justify-around  gap-5 md:justify-end md:gap-2 ">
+						{status.approve ||
+						!(status.approve || status.reject || status.unsure) ? (
+							<button
+								disabled={status.approve}
+								// onClick={() => vote("2")}
+								className="rounded-full h-12 w-[29%]  transition ease-linear duration-500 overflow-hidden border-2 border-[#10B981] btn btn-xs btn-outline text-[#10B981] text-base  capitalize font-medium md:px-14 "
+							>
+								{status.approve ? "Approved" : "Approve"}
+							</button>
+						) : null}
 
-					{/* section-3 --Deal Terms  */}
+						{status.reject ||
+						!(status.approve || status.reject || status.unsure) ? (
+							<button
+								disabled={status.reject}
+								// onClick={() => vote("1")}
+								className="rounded-full h-12 w-[29%] transition ease-linear duration-500 overflow-hidden  border-2 border-[#EF4444] btn btn-xs btn-outline text-[#EF4444] text-base  capitalize font-medium md:px-14"
+							>
+								{status.reject ? "Rejected" : "Reject"}
+							</button>
+						) : null}
+						{/* {status.unsure ||
+						!(status.approve || status.reject || status.unsure) ? (
+							<button
+								disabled={status.unsure}
+								onClick={() => vote("3")}
 
-					<div className="flex-col w-full flex">
-						<div className="flex-row justify-between mt-10 mb-3 flex">
-							<div className="mb-0 text-lg font-medium">Deals terms</div>
-						</div>
-
-						<div className="rounded-box w-auto bg-[#20232A] overflow-hidden border-t-2 border-b-2 border-[#292C33] ">
-							<div className="grid grid-cols-2 ">
-								{info ? (
-									info.map((e, i) => {
-										return (
-											<div className="justify-center flex flex-col items-center  border-r-2 border-b-2 border-[#292C33] py-10">
-												<div className="font-medium text-[#A0ABBB]">
-													{e.label}
-												</div>
-												<div className="font-medium text-xl ">{e.value}</div>
-											</div>
-										);
-									})
-								) : (
-									<></>
-								)}
-							</div>
-						</div>
+								className="mr-0 rounded-full h-12 w-[29%] transition ease-linear duration-500 overflow-hidden  border-2 border-white btn btn-xs btn-outline text-white text-base  capitalize font-medium"
+							>
+								Unsure
+							</button>
+						) : null} */}
 					</div>
-					{/* collateral  */}
-					<div style={{ margin: "20px 0" }}>
-						<div
-							style={{
-								margin: "10px 0",
-								marginTop: "40px",
-								fontSize: 19,
-							}}
-						>
-							Collateral
-						</div>
-						<div
-							className="w-full"
-							style={{
-								background: "#20232A",
-								borderRadius: "12px",
-								padding: "10px",
-							}}
-						>
-							<div style={{ fontSize: "14px", color: "#64748B" }}>
-								Name of documents - {opDetails?.collateral_document_name}
-							</div>
-							<div>Document descripton</div>
-							<div style={{ fontSize: 14, color: "#64748B" }}>
-								{opDetails?.collateral_document_description}
-							</div>
-						</div>
-					</div>
-
-					<div
-						style={{ display: "flex", marginTop: "50px" }}
-						className="flex-col w-full"
-					>
-						<div style={{ marginTop: "40px", fontSize: 19 }}>
-							Borrower Details
-						</div>
-						<div
-							style={{ display: "flex" }}
-							className="flex-row justify-between mt-5 mb-3"
-						>
-							<div style={{ fontSize: 16 }} className="mb-0">
-								{companyDetails
-									? companyDetails.companyName
-									: "Name of the Company"}
-							</div>
-							<div>
-								{companyDetails?.twitter ? (
-									<button
-										id="twitter"
-										style={{
-											borderRadius: "100px",
-											padding: "8px 12px",
-											border: "1px solid #64748B",
-										}}
-										className="ml-3 btn btn-sm btn-outline text-white"
-										// onClick={redirectToURl}
-									>
-										<Twitter />
-										<div
-											style={{
-												marginLeft: 2,
-												textTransform: "lowercase",
-											}}
-										>
-											twitter
-										</div>
-									</button>
-								) : (
-									<></>
-								)}
-								{companyDetails?.linkedin ? (
-									<button
-										id="linkedin"
-										style={{
-											borderRadius: "100px",
-											padding: "8px 12px",
-											border: "1px solid #64748B",
-										}}
-										className="ml-3 btn btn-sm btn-outline text-white"
-										//onClick={redirectToURl}
-									>
-										<LinkedIn />
-										<div
-											style={{
-												marginLeft: 2,
-												textTransform: "lowercase",
-											}}
-										>
-											LinkedIn
-										</div>
-									</button>
-								) : (
-									<></>
-								)}
-								{companyDetails?.email ? (
-									<button
-										id="email"
-										style={{
-											borderRadius: "100px",
-											padding: "8px 12px",
-											border: "1px solid #64748B",
-										}}
-										className="ml-3 btn btn-sm btn-outline text-white"
-										//onClick={redirectForEmail}
-									>
-										<Email />
-										<div
-											style={{
-												marginLeft: 2,
-												textTransform: "lowercase",
-											}}
-										>
-											Email
-										</div>
-									</button>
-								) : (
-									<></>
-								)}
-								{companyDetails?.website ? (
-									<button
-										id="website"
-										style={{
-											borderRadius: "100px",
-											padding: "8px 12px",
-											border: "1px solid #64748B",
-										}}
-										className="ml-3 btn btn-sm btn-outline text-white"
-										//onClick={redirectToURl}
-									>
-										<Website />
-										<div
-											style={{
-												marginLeft: 2,
-												textTransform: "lowercase",
-											}}
-										>
-											Website
-										</div>
-									</button>
-								) : (
-									<></>
-								)}
-							</div>
-						</div>
-						<div style={{ color: "#D0D5DD" }}>
-							{companyDetails ? companyDetails.companyBio : ""}
-						</div>
-					</div>
-					{/* <div className="w-1/2">
-		<div style={{ margin: "10px 0", marginTop: "40px", fontSize: 19 }}>
-		  KYC Details
-		</div>
-	  </div> */}
-					<div className="w-1/2">
-						<div
-							style={{
-								margin: "10px 0",
-								marginTop: "40px",
-								fontSize: 19,
-							}}
-						>
-							KYB Details
-						</div>
-						<h6
-							style={{
-								marginTop: 10,
-								marginBottom: 3,
-								color: "#64748B",
-							}}
-						>
-							Business Identify Proof
-						</h6>
-						<DocumentCard
-							docName={
-								companyDetails
-									? companyDetails.businessIdFile.businessIdDocName
-									: ""
-							}
-							docCid={
-								companyDetails
-									? companyDetails.businessIdFile.businessIdFileCID
-									: null
-							}
-							fileName={
-								companyDetails
-									? companyDetails.businessIdFile.businessIdFileName
-									: null
-							}
-						/>
-
-						<h6
-							style={{
-								marginTop: 10,
-								marginBottom: 3,
-								color: "#64748B",
-							}}
-						>
-							Business Address Proof
-						</h6>
-						<DocumentCard
-							docName={
-								companyDetails
-									? companyDetails.businessAddFile.businessAddDocName
-									: ""
-							}
-							docCid={
-								companyDetails
-									? companyDetails.businessAddFile.businessAddFileCID
-									: null
-							}
-							fileName={
-								companyDetails
-									? companyDetails.businessAddFile.businessAddFileName
-									: null
-							}
-						/>
-						<h6
-							style={{
-								marginTop: 10,
-								marginBottom: 3,
-								color: "#64748B",
-							}}
-						>
-							Business Incorporation Proof
-						</h6>
-						<DocumentCard
-							docName={
-								companyDetails
-									? companyDetails.businessIncoFile.businessIncoDocName
-									: ""
-							}
-							docCid={
-								companyDetails
-									? companyDetails.businessIncoFile.businessIncoFileCID
-									: null
-							}
-							fileName={
-								companyDetails
-									? companyDetails.businessIncoFile.businessIncoFileName
-									: null
-							}
-						/>
-						{companyDetails && companyDetails.businessLicFile ? (
-							<>
-								<h6
-									style={{
-										marginTop: 10,
-										marginBottom: 3,
-										color: "#64748B",
-									}}
-								>
-									Business License Proof
-								</h6>
-								<DocumentCard
-									docName={
-										companyDetails
-											? companyDetails.businessLicFile.businessLicDocName
-											: ""
-									}
-									docCid={
-										companyDetails
-											? companyDetails.businessLicFile.businessLicFileCID
-											: null
-									}
-									fileName={
-										companyDetails
-											? companyDetails.businessLicFile.businessLicFileName
-											: null
-									}
+					{/* <div className="flex items-center justify-center text-slate-400 font-medium cursor-pointer -mt-3 gap-2">
+						Ask for more details
+						<span>
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 18 18"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M15.667 0.666992H2.33366C1.41449 0.666992 0.666992 1.41449 0.666992 2.33366V12.3337C0.666992 13.2528 1.41449 14.0003 2.33366 14.0003H4.83366V17.1395L10.0645 14.0003H15.667C16.5862 14.0003 17.3337 13.2528 17.3337 12.3337V2.33366C17.3337 1.41449 16.5862 0.666992 15.667 0.666992ZM15.667 12.3337H9.60283L6.50033 14.1945V12.3337H2.33366V2.33366H15.667V12.3337Z"
+									fill="#A0ABBB"
 								/>
-							</>
+							</svg>
+						</span>
+					</div> */}
+				</div>
+				{/* section-2  --Deals overview*/}
+				<div className="flex-row justify-between w-full felx">
+					{/* section-2-1 --heading */}
+
+					<div className="mt-10 mb-3 text-lg font-medium">Deal Overview</div>
+
+					{/* Section-2-2 --text */}
+					<div className="text-[#D0D5DD]  tracking-wide font-light text-lg">
+						{loanPurpose.isSliced ? (
+							<div>
+								{loanPurpose.firstText}
+								<a
+									style={{
+										fontWeight: 600,
+										cursor: "pointer",
+									}}
+									onClick={() => setExpand(true)}
+								>
+									{expand ? null : "... view more"}
+								</a>
+								{expand ? <div>{loanPurpose.secondText}</div> : null}
+								<a
+									style={{
+										fontWeight: 600,
+										cursor: "pointer",
+									}}
+									onClick={() => setExpand(false)}
+								>
+									{expand ? "view less" : null}
+								</a>
+							</div>
+						) : (
+							<div className="font-light text-lg">{loanPurpose.firstText}</div>
+						)}
+					</div>
+				</div>
+
+				{/* section-3 --Deal Terms */}
+				<div className="flex-col w-full flex">
+					{/* section-3-1 --heading  */}
+					<div className="flex-row justify-between mt-10 mb-3 flex">
+						<div className="mb-0 text-lg font-medium">Deals terms</div>
+					</div>
+					{/* section-3-2 --item  */}
+					<div className="rounded-box w-auto bg-[#292C33] overflow-hidden">
+						<div className="grid grid-cols-2 gap-[2px] my-0.5">
+							{info ? (
+								info.map((e, i) => {
+									return (
+										<div className="flex justify-center flex-col items-center bg-[#20232A] py-10">
+											<div className="font-normal text-base text-center text-[#A0ABBB]">
+												{e.label}
+											</div>
+											<div className="font-medium text-xl text-center">
+												{e.value}
+											</div>
+										</div>
+									);
+								})
+							) : (
+								<></>
+							)}
+						</div>
+					</div>
+				</div>
+				{/*section-4  --Collateral*/}
+				<div>
+					<div className="text-lg font-medium mt-10 mb-3">Collateral</div>
+					<div className="w-full bg-[#20232A] rounded-xl p-3">
+						<div className="text-[#A0ABBB] font-medium text-lg">
+							Name of documents - {opDetails?.collateral_document_name}
+						</div>
+						<div className="text-lg font-medium mb-1">Document descripton</div>
+						<div className="text-[#D0D5DD]  tracking-wide font-light text-lg px-1 mr-1 pr-6 items-start ">
+							{opDetails?.collateral_document_description}
+						</div>
+					</div>
+				</div>
+
+				{/* section-5 --Borrower Details  */}
+				<div className="flex flex-col w-full">
+					<div className="flex items-center gap-2 text-lg font-medium mt-10">
+						<img src={logoImgSrc} className="w-16 h-16 rounded-full"></img>
+						Borrower Details
+					</div>
+					{/* section-5-1 --social media*/}
+					<div className=" flex flex-row-reverse  justify-between mt-5">
+						{companyDetails?.twitter ? (
+							<button
+								id="twitter"
+								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  lowercase flex pb-5"
+								// onClick={redirectToURl}
+							>
+								<Twitter /> twitter
+							</button>
+						) : (
+							<></>
+						)}
+						{companyDetails?.linkedin ? (
+							<button
+								id="linkedin"
+								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
+
+								//onClick={redirectToURl}
+							>
+								<LinkedIn />
+								LinkedIn
+							</button>
+						) : (
+							<></>
+						)}
+						{companyDetails?.email ? (
+							<button
+								id="email"
+								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
+								//onClick={redirectForEmail}
+							>
+								<Email />
+								Email
+							</button>
+						) : (
+							<></>
+						)}
+						{companyDetails?.website ? (
+							<button
+								id="website"
+								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
+
+								//onClick={redirectToURl}
+							>
+								<Website />
+								Website
+							</button>
 						) : (
 							<></>
 						)}
 					</div>
+					{/* section-5-2 --Companyname*/}
 
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
+					<div className="text-lg font-medium mt-10">
+						{companyDetails
+							? companyDetails.companyName
+							: "Name of the Company"}
+					</div>
+					{/* section-5-2 --Companybio*/}
+					<div className="text-[#D0D5DD]  tracking-wide font-light text-lg  items-start">
+						{companyDetails ? companyDetails.companyBio : ""}
+					</div>
 				</div>
+				{/*section-6  --KYB detaial  */}
+				<div className="w-full my-3 mt-10 text-lg font-medium">
+					<div>KYB Details</div>
+					<h6 className="text-[#64748B] mt-10 mb-0.5">
+						Business Identify Proof
+					</h6>
+					<DocumentCard
+						docName={
+							companyDetails
+								? companyDetails.businessIdFile.businessIdDocName
+								: ""
+						}
+						docCid={
+							companyDetails
+								? companyDetails.businessIdFile.businessIdFileCID
+								: null
+						}
+						fileName={
+							companyDetails
+								? companyDetails.businessIdFile.businessIdFileName
+								: null
+						}
+					/>
+
+					<h6 className="text-[#64748B]  mb-0.5">Business Address Proof</h6>
+					<DocumentCard
+						docName={
+							companyDetails
+								? companyDetails.businessAddFile.businessAddDocName
+								: ""
+						}
+						docCid={
+							companyDetails
+								? companyDetails.businessAddFile.businessAddFileCID
+								: null
+						}
+						fileName={
+							companyDetails
+								? companyDetails.businessAddFile.businessAddFileName
+								: null
+						}
+					/>
+					<h6 className="text-[#64748B]  mb-0.5">
+						Business Incorporation Proof
+					</h6>
+					<DocumentCard
+						docName={
+							companyDetails
+								? companyDetails.businessIncoFile.businessIncoDocName
+								: ""
+						}
+						docCid={
+							companyDetails
+								? companyDetails.businessIncoFile.businessIncoFileCID
+								: null
+						}
+						fileName={
+							companyDetails
+								? companyDetails.businessIncoFile.businessIncoFileName
+								: null
+						}
+					/>
+					{companyDetails && companyDetails.businessLicFile ? (
+						<>
+							<h6 className="text-[#64748B]  mb-0.5">Business License Proof</h6>
+							<DocumentCard
+								docName={
+									companyDetails
+										? companyDetails.businessLicFile.businessLicDocName
+										: ""
+								}
+								docCid={
+									companyDetails
+										? companyDetails.businessLicFile.businessLicFileCID
+										: null
+								}
+								fileName={
+									companyDetails
+										? companyDetails.businessLicFile.businessLicFileName
+										: null
+								}
+							/>
+						</>
+					) : (
+						<></>
+					)}
+				</div>
+
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
 			</div>
 		</div>
 	);
