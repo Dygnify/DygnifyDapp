@@ -177,59 +177,36 @@ const InvestorOverview = () => {
 						<LineChart />
 					</div>
 				</div>
-				<div style={{ fontSize: 23 }} className="mt-5 mb-3">
-					<h1>Your Investments</h1>
 
-					<div>
-						<h2 style={{ fontSize: 24 }} className=" mb-5">
-							Senior Pool
-						</h2>
+				<div className="flex flex-col gap-5 mt-[4em] md:mt-[5em]">
+					<h1 className="text-2xl md:text-3xl font-semibold">
+						Your Investments
+					</h1>
+
+					<div className="mb-4">
+						<h2 className="text-3xl md:text-4xl mb-4">Senior Pool</h2>
 						{seniorPool ? (
-							<div className="mb-16 w-1/2 ">
-								<div style={{ display: "flex" }} className="gap-4">
-									<PoolCard data={seniorPool} />
-								</div>
-							</div>
+							<PoolCard data={seniorPool} />
 						) : (
-							<div style={{ display: "flex" }} className="justify-center">
-								<div
-									style={{
-										color: "#64748B",
-										fontSize: 18,
-										margin: "50px 0",
-									}}
-								>
-									No senior pool investments stats available. Explore
-									opportunities here.
-								</div>
+							<div>
+								No senior pool investments stats available. Explore
+								opportunities here.
 							</div>
 						)}
 					</div>
 
 					<div>
-						<h2 style={{ fontSize: 24 }} className=" mb-5">
-							Junior Pool
-						</h2>
+						<h2 className="text-3xl md:text-4xl mb-4">Junior Pool</h2>
 						{juniorPool.length === 0 ? (
-							<div style={{ display: "flex" }} className="justify-center">
-								<div
-									style={{
-										color: "#64748B",
-										fontSize: 18,
-										margin: "50px 0 ",
-									}}
-								>
-									No junior pool investments stats available. Explore
-									opportunities here.
-								</div>
+							<div>
+								No junior pool investments stats available. Explore
+								opportunities here.
 							</div>
 						) : (
-							<div className="mb-16">
-								<div style={{ display: "flex" }} className=" gap-4">
-									{juniorPool.map((juniorPoolData) => (
-										<PoolCard key={juniorPoolData.id} data={juniorPoolData} />
-									))}
-								</div>
+							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw] sm:items-center md:items-start">
+								{juniorPool.map((juniorPoolData) => (
+									<PoolCard key={juniorPoolData.id} data={juniorPoolData} />
+								))}
 							</div>
 						)}
 					</div>
