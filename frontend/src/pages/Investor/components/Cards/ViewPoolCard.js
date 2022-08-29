@@ -100,9 +100,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 					<div className="flex gap-1">
 						<p className="text-lg font-medium">Pool Size</p>
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">
-							{opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
-						</p>
+						<p className="text-lg font-medium">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex">

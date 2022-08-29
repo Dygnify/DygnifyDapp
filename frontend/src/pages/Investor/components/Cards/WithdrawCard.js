@@ -4,7 +4,7 @@ import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
-const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
+const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	const {
 		opportunityInfo,
 		opportunityAmount,
@@ -65,9 +65,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
 						<p className="text-lg font-medium">Pool Size</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">
-							{opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
-						</p>
+						<p className="text-lg font-medium">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex gap-1">
@@ -94,9 +92,11 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected }) => {
 
 				<div>
 					<button
-						htmlFor="WithdrawModal"
 						disable={false}
-						onClick={() => setSelected({ ...data, poolName, isSeniorPool })}
+						onClick={() => {
+							setSelected({ ...data, poolName, isSeniorPool });
+							setShowModal(true);
+						}}
 						style={{
 							borderRadius: "100px",
 							padding: "12px 24px",

@@ -65,9 +65,7 @@ const PoolCard = ({ data }) => {
 						<p className="text-lg font-medium">Pool Size</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">
-							{opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
-						</p>
+						<p className="text-lg font-medium">{opportunityAmount}</p>
 					</div>
 					<div className="flex gap-1">
 						<p className="text-lg font-medium">Capital Invested</p>
@@ -78,8 +76,7 @@ const PoolCard = ({ data }) => {
 					<div className="flex gap-1">
 						<p className="text-lg font-medium">Estimated APY</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{estimatedAPY}</p>
+						<p className="text-lg font-medium ml-auto">{estimatedAPY}</p>
 					</div>
 					<div className="flex gap-1">
 						<p className="text-lg font-medium">Yield Generated</p>
