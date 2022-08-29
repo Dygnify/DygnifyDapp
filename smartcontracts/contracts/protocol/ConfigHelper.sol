@@ -124,4 +124,15 @@ library ConfigHelper {
                 uint256(ConfigOptions.Addresses.InvestorContract)
             );
     }
+
+    function dygnifyTreasuryAddress(DygnifyConfig config)
+        internal
+        view
+        returns (address)
+    {
+        return
+            config.getAddress(
+                uint256(ConfigOptions.Addresses.DygnifyTreasury)
+            );
+    }
 }

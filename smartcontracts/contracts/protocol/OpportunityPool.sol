@@ -369,6 +369,13 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             .overdueGenerated
             .add(seniorOverduePerecentage.mul(overDueFee).div(10**6));
 
+        // sending fund in dygnifyTreasury
+        uint256 dygnifyTreasury;
+        uint256 profit = emiAmount.sub(amountWithoutEMI);
+        dygnifyTreasury = profit.mul(dygnifyConfig.getDygnifyFee()).div(10**6);
+        dygnifyTreasury += overDueFee.mul(dygnifyConfig.getDygnifyFee()).div(10**6);
+        usdcToken.safeTransferFrom(address(this), dygnifyConfig.dygnifyTreasuryAddress(), dygnifyTreasury);
+
         amount = amount.add(overDueFee);
         poolBalance = poolBalance.add(amount);
         repaymentCounter = repaymentCounter.add(1);
