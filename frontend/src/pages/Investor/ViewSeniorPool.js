@@ -87,9 +87,9 @@ const ViewSeniorPool = () => {
 	}, []);
 
 	return (
-		<div>
+		<div className="">
 			{loading && <Loader />}
-			<div className={`${loading ? "blur-sm" : ""}`}>
+			<div className={`${loading ? "blur-sm" : ""} outline outline-[coral]`}>
 				{selected ? (
 					<InvestModal
 						handleDrawdown={handleDrawdown}

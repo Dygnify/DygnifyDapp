@@ -60,6 +60,7 @@ const Overview = () => {
 		const fetchData = async () => {
 			let opportunities = await getDrawdownOpportunities();
 			if (opportunities && opportunities.length) {
+				console.log("************", opportunities);
 				setDrawdownList(opportunities);
 			}
 

@@ -115,7 +115,6 @@ const Invest = () => {
 						)}
 						{seniorPool ? (
 							<ViewPoolCard
-								className="sm:w-[30rem] lg:w-[40rem]"
 								onClick={() =>
 									path("/investor-dashboard/viewSeniorPool", {
 										state: {
@@ -152,10 +151,9 @@ const Invest = () => {
 								</p>
 							</div>
 						) : (
-							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[2rem] sm:items-center md:items-start">
+							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
 								{juniorPools.map((item) => (
 									<ViewPoolCard
-										className="sm:w-[30rem] md:w-[47%] lg:w-[40rem] xl:w-[48%] 2xl:w-[min(40rem,48%)]"
 										data={item}
 										key={item.id}
 										onClick={() =>
