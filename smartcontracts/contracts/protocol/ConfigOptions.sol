@@ -13,7 +13,8 @@ library ConfigOptions {
         PoolImplAddress,
         CollateralToken,
         OpportunityOrigination,
-        InvestorContract
+        InvestorContract,
+        DygnifyTreasury
     }
 
     enum Numbers {

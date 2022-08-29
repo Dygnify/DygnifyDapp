@@ -105,20 +105,21 @@ const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
 						class="flex justify-center"
 						style={{ display: "flex", marginTop: -6 }}
 					>
-						<div class="mb-3 w-full relative">
-							<label
-								for="exampleNumber0"
-								class="form-label inline-block mb-0  text-white rounded-box"
-								style={{ fontSize: 14 }}
-							>
-								Enter Amount
-							</label>
-							<input
-								type="number"
-								style={{
-									appearance: "textfield",
-								}}
-								class="
+						{data.isSeniorPool ? (
+							<div class="mb-3 w-full relative">
+								<label
+									for="exampleNumber0"
+									class="form-label inline-block mb-0  text-white rounded-box"
+									style={{ fontSize: 14 }}
+								>
+									Enter Amount
+								</label>
+								<input
+									type="number"
+									style={{
+										appearance: "textfield",
+									}}
+									class="
         form-control
         block
         w-full
@@ -137,15 +138,18 @@ const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
         m-0
         focus:text-white focus:bg-base-100 focus:border-base-300 focus:outline-none
       "
-								id="exampleNumber0"
-								placeholder="0.0"
-								onChange={(event) => setAmount(event.target.value)}
-							/>
+									id="exampleNumber0"
+									placeholder="0.0"
+									onChange={(event) => setAmount(event.target.value)}
+								/>
 
-							<span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
-								{process.env.REACT_APP_TOKEN_NAME}
-							</span>
-						</div>
+								<span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
+									{process.env.REACT_APP_TOKEN_NAME}
+								</span>
+							</div>
+						) : (
+							<></>
+						)}
 					</div>
 
 					<div
