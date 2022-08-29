@@ -114,9 +114,9 @@ const InvestorOverview = () => {
 				</div>
 
 				{/* parent div */}
-				<div className="flex flex-col md:flex-row gap-6 2xl:justify-around">
+				<div className="flex flex-col md:flex-row gap-6">
 					{/* child 1 */}
-					<div className="flex flex-col gap-4 bg-gradient-to-br from-[#282828] to-[#00000028] px-4 py-4 rounded-xl md:flex-row sm:px-[4vw] md:pl-2 md:pr-[1.5vw] md:gap-3 lg:px-[1vw] xl:px-[1vw] xl:gap-8 md:w-1/2 2xl:w-[40rem] 2xl:items-center">
+					<div className="flex flex-col gap-4 bg-gradient-to-br from-[#282828] to-[#00000028] px-4 py-4 rounded-xl md:flex-row sm:px-[4vw] md:pl-2 md:pr-[1.5vw] md:gap-3 lg:px-[1vw] xl:px-[1vw] xl:gap-8 md:w-1/2 2xl:items-center 2xl:justify-around">
 						<div className="flex flex-col items-center gap-2 md:items-start">
 							<h2 className="text-lg font-bold text-[#64748B] sm:text-2xl md:text-xl 2xl:text-2xl">
 								Yield Earned
@@ -146,7 +146,7 @@ const InvestorOverview = () => {
 						</div>
 						{/* Change this total implementation */}
 
-						<div className="flex flex-col gap-3 md:ml-auto justify-center">
+						<div className="flex flex-col gap-3 justify-center">
 							<div className="flex items-center md:flex-col md:items-start">
 								<p className="text-base text-[#64748B] sm:text-lg xl:text-xl 2xl:text-2xl">
 									Total amount invested
@@ -170,7 +170,7 @@ const InvestorOverview = () => {
 					</div>
 
 					{/* child 2 */}
-					<div className="bg-gradient-to-br from-[#282828] to-[#00000028] md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:w-[40rem] 2xl:justify-center xl:px-6 ">
+					<div className="bg-gradient-to-br from-[#282828] to-[#00000028] md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
 						<p className="text-xl font-semibold sm:text-2xl md:text-xl lg:text-2xl xl:text-3xl sm:px-4">
 							Growth of investment on reinvesting everything for
 						</p>
