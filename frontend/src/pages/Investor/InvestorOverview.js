@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PoolCard from "./components/Cards/PoolCard";
-import GradientButton from "../../uiTools/Button/GradientButton";
+import GradientButtonHeader from "../../uiTools/Button/GradientButtonHeader";
 import {
 	getAllWithdrawableOpportunities,
 	getUserSeniorPoolInvestment,
@@ -98,164 +98,119 @@ const InvestorOverview = () => {
 	}, [juniorPoolLoading, seniorPoolLoading]);
 
 	return (
-		<div className="relative">
+		<div className="lg:relative">
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
-				<div className="px-5">
-					<div
-						style={{ display: "flex" }}
-						className="items-center justify-between mb-14 "
+				<div className="flex items-center mb-8">
+					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl w-[50%]">
+						Investor's Dashboard,
+					</h2>
+					<GradientButtonHeader
+						onClick={() => path("/investor-dashboard/invest")}
+						className="ml-auto"
 					>
-						<h2
-							className="text-left font-bold text-white select-none"
-							style={{ fontSize: 28, marginLeft: -20 }}
-						>
-							Investor Dashboard
-						</h2>
-						<GradientButton
-							onClick={() => path("/investor-dashboardN/invest")}
-							className={"w-40"}
-						>
-							+ Invest
-						</GradientButton>
-					</div>
+						+ Invest
+					</GradientButtonHeader>
 				</div>
 
-				<div
-					className="flex-row items-center w-full gap-2"
-					style={{ display: "flex" }}
-				>
-					<div
-						className="flex-row rounded-box justify-between items-center bg-[#191D23] w-1/2 "
-						style={{
-							display: "flex",
-							padding: "32px 46px",
-							height: 278,
-						}}
-					>
-						<div
-							style={{ display: "flex", marginRight: 60 }}
-							className="justify-start"
-						>
-							{totalInvestment || totalYield ? (
-								<DoughnutChart
-									data={[totalInvestment, totalYield ? totalYield : 0]}
-									color={["#5375FE", "#ffffff"]}
-									width={200}
-									labels={["Total Outstanding", "Total Repaid"]}
-									borderWidth={[1, 8]}
-									legendStyle={{ display: false }}
-								/>
-							) : (
-								<DoughnutChart
-									data={[1]}
-									color={["#64748B"]}
-									width={200}
-									labels={["Total Outstanding", "Total Repaid"]}
-									borderWidth={[1, 8]}
-									legendStyle={{ display: false }}
-								/>
-							)}
+				{/* parent div */}
+				<div className="flex flex-col md:flex-row gap-6">
+					{/* child 1 */}
+					<div className="flex flex-col gap-4 bg-gradient-to-br from-[#282828] to-[#00000028] px-4 py-4 rounded-xl md:flex-row sm:px-[4vw] md:pl-2 md:pr-[1.5vw] md:gap-3 lg:px-[1vw] xl:px-[1vw] xl:gap-8 md:w-1/2 2xl:items-center 2xl:justify-around">
+						<div className="flex flex-col items-center gap-2 md:items-start">
+							<h2 className="text-lg font-bold text-[#64748B] sm:text-2xl md:text-xl 2xl:text-2xl">
+								Yield Earned
+							</h2>
+
+							<div className="">
+								{totalInvestment || totalYield ? (
+									<DoughnutChart
+										data={[totalInvestment, totalYield ? totalYield : 0]}
+										color={["#5375FE", "#ffffff"]}
+										width={200}
+										labels={["Total Outstanding", "Total Repaid"]}
+										borderWidth={[1, 8]}
+										legendStyle={{ display: false }}
+									/>
+								) : (
+									<DoughnutChart
+										data={[1]}
+										color={["#64748B"]}
+										width={200}
+										labels={["Total Outstanding", "Total Repaid"]}
+										borderWidth={[1, 8]}
+										legendStyle={{ display: false }}
+									/>
+								)}
+							</div>
 						</div>
 						{/* Change this total implementation */}
 
-						<div
-							style={{ display: "flex", color: "red" }}
-							className="flex-col justify-center"
-						>
-							<div
-								style={{
-									fontSize: 14,
-									fontWeight: 400,
-									color: "#777E91",
-								}}
-							>
-								Total Amount Invested
-							</div>
-							<div style={{ fontSize: 28, color: "white" }} className="mb-10">
-								{totalInvestment === 0 ? "- -" : totalInvestment}
-							</div>
-							<div
-								style={{
-									fontSize: 14,
-									fontWeight: 400,
-									color: "#777E91",
-								}}
-							>
-								Total Yield Earned
+						<div className="flex flex-col gap-3 justify-center">
+							<div className="flex items-center md:flex-col md:items-start">
+								<p className="text-base text-[#64748B] sm:text-lg xl:text-xl 2xl:text-2xl">
+									Total amount invested
+								</p>
+
+								<div className="ml-auto text-2xl md:ml-0 xl:text-3xl 2xl:text-4xl">
+									{totalInvestment === 0 ? "- -" : totalInvestment + "USDC"}
+								</div>
 							</div>
 
-							<div style={{ fontSize: 28, color: "white" }}>
-								{totalYield === 0 ? "- -" : totalYield}
+							<div className="flex items-center md:flex-col md:items-start">
+								<p className="text-base text-[#64748B] sm:text-lg xl:text-xl 2xl:text-2xl">
+									Total Yield Earned
+								</p>
+
+								<div className="ml-auto text-2xl md:ml-0 xl:3xl 2xl:text-4xl">
+									{totalYield === 0 ? "- -" : totalYield + "USDC"}
+								</div>
 							</div>
 						</div>
 					</div>
-					<div
-						className="justify-center items-center rounded-box bg-[#191D23] w-1/2  "
-						style={{
-							display: "flex",
-							padding: "15px 10px",
-							paddingLeft: 30,
-							height: 278,
-						}}
-					>
+
+					{/* child 2 */}
+					<div className="bg-gradient-to-br from-[#282828] to-[#00000028] md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
+						<p className="text-xl font-semibold sm:text-2xl md:text-xl lg:text-2xl xl:text-3xl sm:px-4">
+							Growth of investment on reinvesting everything for
+						</p>
 						<LineChart />
 					</div>
 				</div>
-				<div style={{ fontSize: 23 }} className="mt-5 mb-3">
-					Your Investments
-				</div>
-				<h2 style={{ fontSize: 24 }} className=" mb-5">
-					Senior Pool
-				</h2>
-				{seniorPool ? (
-					<div className="mb-16 w-1/2 ">
-						<div style={{ display: "flex" }} className="gap-4">
-							<PoolCard data={seniorPool} />
-						</div>
-					</div>
-				) : (
-					<div style={{ display: "flex" }} className="justify-center">
-						<div
-							style={{
-								color: "#64748B",
-								fontSize: 18,
-								margin: "50px 0",
-							}}
-						>
-							No senior pool investments stats available. Explore opportunities
-							here.
-						</div>
-					</div>
-				)}
 
-				<h2 style={{ fontSize: 24 }} className=" mb-5">
-					Junior Pool
-				</h2>
-				{juniorPool.length === 0 ? (
-					<div style={{ display: "flex" }} className="justify-center">
-						<div
-							style={{
-								color: "#64748B",
-								fontSize: 18,
-								margin: "50px 0 ",
-							}}
-						>
-							No junior pool investments stats available. Explore opportunities
-							here.
-						</div>
+				<div className="flex flex-col gap-5 mt-[4em] md:mt-[5em]">
+					<h1 className="text-2xl md:text-3xl font-semibold">
+						Your Investments
+					</h1>
+
+					<div className="mb-4">
+						<h2 className="text-3xl md:text-4xl mb-4">Senior Pool</h2>
+						{seniorPool ? (
+							<PoolCard data={seniorPool} />
+						) : (
+							<div>
+								No senior pool investments stats available. Explore
+								opportunities here.
+							</div>
+						)}
 					</div>
-				) : (
-					<div className="mb-16">
-						<div style={{ display: "flex" }} className=" gap-4">
-							{juniorPool.map((juniorPoolData) => (
-								<PoolCard key={juniorPoolData.id} data={juniorPoolData} />
-							))}
-						</div>
+
+					<div>
+						<h2 className="text-3xl md:text-4xl mb-4">Junior Pool</h2>
+						{juniorPool.length === 0 ? (
+							<div>
+								No junior pool investments stats available. Explore
+								opportunities here.
+							</div>
+						) : (
+							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw] sm:items-center md:items-start">
+								{juniorPool.map((juniorPoolData) => (
+									<PoolCard key={juniorPoolData.id} data={juniorPoolData} />
+								))}
+							</div>
+						)}
 					</div>
-				)}
-				<br />
-				<br />
+				</div>
 			</div>
 		</div>
 	);

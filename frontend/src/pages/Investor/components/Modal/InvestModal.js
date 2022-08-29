@@ -1,10 +1,14 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import {
 	investInSeniorPool,
 	investInJuniorPool,
 	getWalletBal,
 } from "../../../../components/transaction/TransactionHelper";
 import WalletImage from "../../../../assets/wallet_white.png";
+
+//for send data import from paths--
+import { UserContext } from "../../../../Paths"; //
+//
 
 const InvestModal = ({
 	isSenior,
@@ -18,6 +22,11 @@ const InvestModal = ({
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
+
+	//for send data using useContext--
+	const { state, dispatch } = useContext(UserContext); //
+	dispatch({ type: "USER", payload: amount }); //
+	//
 
 	useEffect(() => {
 		getWalletBal().then((data) => setWalletBal(data));
@@ -42,7 +51,7 @@ const InvestModal = ({
 	}
 
 	return (
-		<>
+		<div className="">
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
 			<div
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
@@ -186,7 +195,7 @@ const InvestModal = ({
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 
