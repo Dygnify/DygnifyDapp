@@ -16,6 +16,10 @@ contract LPToken is Initializable, AccessControlUpgradeable, ERC20Upgradeable {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
+    function decimals() public virtual override view returns (uint8) {
+        return 6;
+    }
+
     function mint(address _to, uint256 amount) public {
         require(hasRole(OWNER, msg.sender), "Caller is not a Owner");
         totalShares = totalShares + amount;
