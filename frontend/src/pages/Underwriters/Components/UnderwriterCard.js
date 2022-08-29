@@ -22,9 +22,9 @@ const UnderwriterCard = ({ data }) => {
 				read.onloadend = function () {
 					let opJson = JSON.parse(read.result);
 					if (opJson) {
-						setCompanyName(opJson.companyDetails.companyName); //opJson.companyDetails.companyName //opJson.company_name
 						setPoolName(opJson.loan_name);
 						setPoolDetails({ ...data, ...opJson });
+						setCompanyName(opJson.companyDetails?.companyName);
 						getCompanyLogo(
 							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
 						);

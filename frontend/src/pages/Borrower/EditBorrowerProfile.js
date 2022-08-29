@@ -32,8 +32,10 @@ const EditBorrowerProfile = () => {
 	const [kycFiles, setKYCFiles] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
 	const [businessAddressFiles, setBusinessAddressFiles] = useState();
-	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
-		useState();
+	const [
+		businessIncorporationFiles,
+		setBusinessIncorporationFiles,
+	] = useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
 	const [profileState, setProfileState] = useState();
@@ -312,7 +314,7 @@ const EditBorrowerProfile = () => {
 			if (allowSubmit && !error) {
 				console.log("Inside allow");
 
-				let file = makeFileObjects(borrowerJsonData, Math.random());
+				let file = makeFileObjects(borrowerJsonData, "borrower.json");
 				let borrowerDataCID = await storeFiles(file);
 				// Save this CID in the blockchain
 				console.log("DURING save", borrowerDataCID);

@@ -10,7 +10,7 @@ import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
-const ViewPoolCard = ({ onClick, data, kycStatus, className }) => {
+const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
 	const [companyName, setCompanyName] = useState();
@@ -75,7 +75,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus, className }) => {
 					"linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%)",
 				boxShadow: "inset -1px -1px 1px rgba(185, 185, 185, 0.1)",
 			}}
-			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row ${className}`}
+			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%]`}
 		>
 			<div className="flex items-center gap-6">
 				<img
@@ -86,14 +86,14 @@ const ViewPoolCard = ({ onClick, data, kycStatus, className }) => {
 
 				<div className="lg:hidden">
 					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dignify</p>
+					<p className="text-lg">{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
 					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dignify</p>
+					<p className="text-lg">{companyName}</p>
 				</div>
 
 				<div className="flex flex-col gap-1">
@@ -121,7 +121,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus, className }) => {
 
 				<div className="">
 					<PrimaryButton
-						className="w-[100%] md:w-[70%] md:mx-auto lg:w-[100%]"
+						className="w-[100%] sm:w-[60%] mx-auto md:w-[70%] md:mx-auto xl:w-[100%] 2xl:w-[60%]"
 						onClick={onClick}
 					>
 						View Pool

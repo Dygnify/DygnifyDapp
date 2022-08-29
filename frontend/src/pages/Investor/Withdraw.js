@@ -18,7 +18,7 @@ import Loader from "../../uiTools/Loading/Loader";
 const Withdraw = () => {
 	const [seniorPool, setSeniorPool] = useState();
 	const [juniorPools, setJuniorPools] = useState([]);
-	const [selected, setSelected] = useState();
+	const [selected, setSelected] = useState(true);
 	const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
 	const [walletBal, setWalletBal] = useState();
 
@@ -95,84 +95,50 @@ const Withdraw = () => {
 		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
-				<div className="px-5">
-					{selected && (
-						<WithdrawFundsModal
-							handleForm={handleForm}
-							userWalletBal={walletBal}
-							data={selected}
-						/>
-					)}
-					<div
-						style={{ display: "flex" }}
-						className="items-center justify-between mb-14 "
-					>
-						<h2
-							className="text-left font-bold text-white"
-							style={{ fontSize: 28, marginLeft: -20 }}
-						>
-							Withdraw
-						</h2>
-						<label
-							htmlFor="InvestModal"
-							style={{
-								borderRadius: "100px",
-								padding: "12px 15px",
-								color: "white",
-								marginRight: 8,
-							}}
-							className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
-							onClick={() => setSelected(true)}
-						>
-							+Invest
-						</label>
-					</div>
+				<div className="">
+					<h2 className="text-xl md:text-2xl lg:text-3xl font-medium">
+						Withdraw
+					</h2>
 				</div>
-				{seniorPool ? (
-					<div className="mb-16 ">
-						<h2 style={{ fontSize: 24 }} className=" mb-5">
-							Senior pools
-						</h2>
-						<div style={{ display: "flex" }} className="gap-4 w-1/2">
+
+				<div className="mt-8">
+					{seniorPool ? (
+						<div className="mb-16 flex flex-col gap-5">
+							<h2 className="text-2xl md:text-3xl lg:text-4xl font-medium">
+								Senior pool
+							</h2>
+
 							<WithdrawCard
 								data={seniorPool}
 								isSeniorPool={true}
 								setSelected={setSelected}
 							/>
 						</div>
-					</div>
-				) : (
-					""
-				)}
+					) : (
+						""
+					)}
 
-				{juniorPools.length === 0 ? (
-					<div style={{ display: "flex" }} className="justify-center">
-						<div
-							style={{
-								color: "#64748B",
-								fontSize: 18,
-								marginTop: 10,
-							}}
-						>
-							No stats are available. Explore opportunities here.
+					{juniorPools.length === 0 ? (
+						<div className="text-neutral-500 text-lg text-center">
+							<p>No stats are available. Explore opportunities here.</p>
 						</div>
-					</div>
-				) : (
-					<div className="mb-16">
-						<h2 className="text-xl mb-5" style={{ fontSize: 24 }}>
-							Junior pools
-						</h2>
-						<div style={{ display: "flex" }} className=" gap-4">
-							{juniorPools.map((item) => (
-								<WithdrawCard
-									data={item}
-									isSeniorPool={false}
-									setSelected={setSelected}
-								/>
-							))}
+					) : (
+						<div className="mb-16 flex flex-col gap-5">
+							<h2 className="text-2xl md:text-3xl lg:text-4xl font-medium">
+								Junior pools
+							</h2>
+							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
+								{juniorPools.map((item) => (
+									<WithdrawCard
+										data={item}
+										isSeniorPool={false}
+										setSelected={setSelected}
+									/>
+								))}
+							</div>
 						</div>
-					</div>
-				)}
+					)}
+				</div>
 			</div>
 		</div>
 	);

@@ -33,6 +33,14 @@ library ConfigHelper {
         return config.getAddress(uint256(ConfigOptions.Addresses.LPToken));
     }
 
+    function seniorPoolAddress(DygnifyConfig config)
+        internal
+        view
+        returns (address)
+    {
+        return config.getAddress(uint256(ConfigOptions.Addresses.SeniorPool));
+    }
+
     function poolImplAddress(DygnifyConfig config)
         internal
         view
@@ -67,7 +75,7 @@ library ConfigHelper {
         return config.getNumber(uint256(ConfigOptions.Numbers.OverDueFee));
     }
 
-    function getSeniorPoolMockinMonths(DygnifyConfig config)
+    function getSeniorPoolLockinMonths(DygnifyConfig config)
         internal
         view
         returns (uint256)
@@ -114,6 +122,17 @@ library ConfigHelper {
         return
             config.getAddress(
                 uint256(ConfigOptions.Addresses.InvestorContract)
+            );
+    }
+
+    function dygnifyTreasuryAddress(DygnifyConfig config)
+        internal
+        view
+        returns (address)
+    {
+        return
+            config.getAddress(
+                uint256(ConfigOptions.Addresses.DygnifyTreasury)
             );
     }
 }
