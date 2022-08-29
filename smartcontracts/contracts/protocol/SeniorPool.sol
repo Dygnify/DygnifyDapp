@@ -142,15 +142,15 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         );
         OpportunityPool opportunityPool = OpportunityPool(poolAddress);
 
+        //calculate the shareprice
+        uint256 totalProfit = opportunityPool.getSeniorProfit();
+        uint256 _totalShares = lpToken.totalShares();
+        uint256 delta = totalProfit.mul(lpMantissa()).div(_totalShares);
+        sharePrice = sharePrice.add(delta);
+
         uint256 withdrawlAmount = opportunityPool.withdrawAll(1); //hardcoded val of 1 need to be converted into variable
 
         seniorPoolBal = seniorPoolBal + withdrawlAmount;
-        uint256 totalProfit = opportunityPool.getSeniorProfit();
-
-        uint256 _totalShares = lpToken.totalShares();
-        uint256 delta = totalProfit.mul(lpMantissa()).div(_totalShares);
-
-        sharePrice = sharePrice.add(delta);
     }
 
     function approveUSDC(address user) public onlyAdmin {
@@ -181,6 +181,9 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
             } else {
                 stakingAmount += arr[i].amount;
             }
+        }
+        if (availableForWithdrawal[msg.sender] > 0) {
+            withdrawableAmount += availableForWithdrawal[msg.sender];
         }
 
         return (withdrawableAmount, stakingAmount);
@@ -263,9 +266,6 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         view
         returns (uint256)
     {
-        if (sharePrice > 0) {
-            return amount.mul(sharePrice).div(lpMantissa());
-        }
-        return amount;
+        return amount.add(amount.mul(sharePrice).div(lpMantissa()));
     }
 }

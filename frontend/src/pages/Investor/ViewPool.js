@@ -82,7 +82,9 @@ const ViewPool = () => {
 
 	useEffect(() => {
 		if (poolData) {
+			console.log("************", poolData);
 			loadInfo();
+			console.log(poolData);
 			// get pool balance
 			getWalletBal(poolData.opportunityPoolAddress).then((amt) => {
 				if (amt) {
@@ -112,8 +114,11 @@ const ViewPool = () => {
 								opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
 							);
 							// get the loan purpose
-							const { isSliced, firstText, secondText } =
-								getExtendableTextBreakup(opJson.loan_purpose, 200);
+							const {
+								isSliced,
+								firstText,
+								secondText,
+							} = getExtendableTextBreakup(opJson.loan_purpose, 200);
 
 							if (isSliced) {
 								setLoanPurpose({
