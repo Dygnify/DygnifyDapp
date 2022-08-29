@@ -188,9 +188,11 @@ const InvestorOverview = () => {
 						{seniorPool ? (
 							<PoolCard data={seniorPool} />
 						) : (
-							<div>
-								No senior pool investments stats available. Explore
-								opportunities here.
+							<div className="text-center">
+								<p className="text-neutral-500 text-lg">
+									No senior pool investments stats available. Explore
+									opportunities here.
+								</p>
 							</div>
 						)}
 					</div>
@@ -198,9 +200,11 @@ const InvestorOverview = () => {
 					<div>
 						<h2 className="text-3xl md:text-4xl mb-4">Junior Pool</h2>
 						{juniorPool.length === 0 ? (
-							<div>
-								No junior pool investments stats available. Explore
-								opportunities here.
+							<div className="text-center">
+								<p className="text-neutral-500 text-lg">
+									No junior pool investments stats available. Explore
+									opportunities here.
+								</p>
 							</div>
 						) : (
 							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw] sm:items-center md:items-start">

@@ -108,7 +108,7 @@ const Invest = () => {
 
 					<div className="">
 						{seniorPoolLoading && (
-							<div className="relative inline-block">
+							<div className="relative">
 								<Loader />
 								<div className="blur-sm">{loadingCard}</div>
 							</div>
