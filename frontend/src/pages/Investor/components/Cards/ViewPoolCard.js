@@ -86,14 +86,14 @@ const ViewPoolCard = ({ onClick, data, kycStatus, className }) => {
 
 				<div className="lg:hidden">
 					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dignify</p>
+					<p className="text-lg">{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
 					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dignify</p>
+					<p className="text-lg">{companyName}</p>
 				</div>
 
 				<div className="flex flex-col gap-1">
