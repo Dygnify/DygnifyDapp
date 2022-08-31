@@ -5,6 +5,7 @@ import {
 	getWalletBal,
 } from "../../../../components/transaction/TransactionHelper";
 import WalletImage from "../../../../assets/wallet_white.png";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 //for send data import from paths--
 import { UserContext } from "../../../../Paths"; //
@@ -22,6 +23,10 @@ const InvestModal = ({
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
+	const [error, setError] = useState({
+		err: false,
+		msg: "",
+	});
 
 	//for send data using useContext--
 	const { state, dispatch } = useContext(UserContext); //
@@ -50,152 +55,127 @@ const InvestModal = ({
 		setInvestProcessing(false);
 	}
 
+	const handleAmount = (e) => {
+		const value = e.target.value;
+
+		const defaultErr = {
+			err: false,
+			msg: "",
+		};
+
+		const errObj = {
+			err: true,
+			msg: "Insufficient USDC to initiate transfer",
+		};
+
+		if (walletBal) {
+			if (+value > +walletBal) {
+				setError(errObj);
+			} else {
+				setError(defaultErr);
+			}
+		}
+
+		setAmount(value);
+	};
+
 	return (
-		<div>
+		<>
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
-			<div
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
-				className="modal"
-			>
-				<div
-					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-					className="modal-box w-1/3 max-w-5xl p-0 "
-				>
-					<label
-						for="InvestModal"
-						className="btn btn-ghost absolute right-2 top-2 pb-2"
-						// onClick={() => handleDrawdown()}
-					>
-						✕
-					</label>
-					<h3
-						style={{ borderBottom: "2px solid #292C33" }}
-						className="font-bold text-lg py-3 px-4"
-					>
-						Invest
-					</h3>
-					<div style={{ display: "flex" }} className="justify-center my-6">
+			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
+				<div className="bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
+						<h3 className="font-semibold text-xl">Invest</h3>
+
+						<label
+							for="InvestModal"
+							// onClick={() => handleDrawdown()}
+							className=" hover:text-primary-600 text-xl"
+						>
+							✕
+						</label>
+					</div>
+
+					<div className="px-4 md:px-8 mt-[4em] md:mt-6 flex flex-col gap-8">
 						<img
-							style={{ borderRadius: "50%" }}
-							className="p-4 bg-[#9281FF] opacity-80"
 							src={WalletImage}
+							style={{ aspectRatio: 1 / 1 }}
+							className="w-[4rem] mx-auto p-4 bg-purple-500 rounded-[50%]"
 							alt=""
 						/>
-					</div>
-					<div
-						style={{
-							backgroundColor: "#292C33",
-							borderRadius: "4px",
-						}}
-						className="mx-4 mb-3 py-4 px-4 text-base "
-					>
-						<div
-							style={{ display: "flex" }}
-							className="flex-row justify-between"
-						>
-							<p style={{ display: "flex" }}>Total Balance</p>
-							<p style={{ display: "flex" }}>
-								${walletBal ? walletBal : 0} {process.env.REACT_APP_TOKEN_NAME}
+
+						<div className="py-4 px-3 flex gap-1 bg-darkmode-500 rounded-md">
+							<p className="font-semibold text-[1.125rem]">Total Balance</p>
+
+							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<p className="font-semibold text-[1.125rem]">
+								{walletBal ? walletBal : 0}
 							</p>
 						</div>
 					</div>
-					<div
-						className="flex-col text-sm py-3 px-5 w-full"
-						style={{ display: "flex" }}
-					>
-						<div
-							style={{ display: "flex" }}
-							className="flex-row mb-2 justify-between"
-						>
-							<p style={{ display: "flex" }}>Pool Name</p>
-							<p style={{ display: "flex" }}>{poolName}</p>
+
+					<div className="px-4 md:px-8 mt-8 flex flex-col gap-1">
+						<div className="flex justify-between">
+							<p className="font-semibold">Pool Name</p>
+							<p className="font-semibold">{poolName}</p>
 						</div>
+
 						{poolLimit ? (
-							<div
-								style={{ display: "flex" }}
-								className="flex-row mb-2 justify-between"
-							>
-								<p style={{ display: "flex" }}>Pool Limit</p>
-								<p style={{ display: "flex" }}>{poolLimit}</p>
+							<div className="flex gap-1">
+								<p className="font-semibold">Pool Limit</p>
+
+								<img src={DollarImage} className="ml-auto w-[1rem]" />
+								<p className="font-semibold">{poolLimit}</p>
 							</div>
 						) : (
 							<></>
 						)}
 
-						<div
-							style={{ display: "flex" }}
-							className="flex-row mb-0 justify-between"
-						>
-							<p style={{ display: "flex" }}>Estimated APY</p>
-							<p style={{ display: "flex" }}>{estimatedAPY}</p>
+						<div className="flex justify-between">
+							<p className="font-semibold">Estimated APY</p>
+							<p className="font-semibold">{estimatedAPY}%</p>
 						</div>
 					</div>
 
-					<div
-						class="flex justify-center"
-						style={{ display: "flex", marginTop: -6 }}
-					>
-						<div class="mb-3 w-full relative">
-							<label
-								for="exampleNumber0"
-								className="form-label inline-block mb-0 mt-5  text-white rounded-box"
-								style={{ fontSize: 14 }}
-							>
-								Enter Amount
-							</label>
-							<input
-								type="number"
-								style={{ appearance: "textfield" }}
-								className="
-        form-control
-        block
-        w-full
-        h-57
-        pl-3
-        pr-[3.5rem]
-        py-3
-        text-base
-        font-normal
-        text-white
-        bg-[#24272F] bg-clip-padding
-        border border-solid border-[#3A3C43] 
-        rounded
-        transition
-        ease-in-out
-        m-0
-        placeholder:font-medium
-        focus:text-white focus:bg-base-100 focus:border-base-300 focus:outline-none
-      "
-								id="exampleNumber0"
-								placeholder="0.0"
-								onChange={(event) => setAmount(event.target.value)}
-							/>
-							<span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
-								{process.env.REACT_APP_TOKEN_NAME}
-							</span>
-						</div>
+					<div className="relative px-4 md:px-8 mt-8 flex flex-col gap-1">
+						<label for="investModalAmount" className="font-semibold">
+							Enter Amount
+						</label>
+						<input
+							type="number"
+							id="investModalAmount"
+							placeholder="0.0"
+							onChange={handleAmount}
+							value={amount}
+							className="bg-darkmode-700 border-2 border-darkmode-50 outline-none p-2 pr-14 rounded-md placeholder:text-neutral-500 placeholder:font-semibold"
+						/>
+						<span className="absolute right-7 md:right-11 text-neutral-500 top-10 font-semibold">
+							{process.env.REACT_APP_TOKEN_NAME}
+						</span>
+
+						{error.err && (
+							<p className="text-[0.875rem] text-error-500">{error.msg}</p>
+						)}
 					</div>
 
-					<div
-						className="modal-action mx-4 mt-2 mb-4 justify-center"
-						style={{ display: "flex" }}
-					>
+					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<label
-							htmlFor="InvestProcessModal"
-							style={{
-								borderRadius: "100px",
-								padding: "12px 24px",
-								color: "white",
-							}}
-							className={`btn w-full bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none`}
-							onClick={() => (isSenior ? investSenior() : investJunior())} //if condition not true then investJunior will execute
+							htmlFor={`${error.err ? "" : "InvestProcessModal"}`}
+							onClick={() => {
+								if (!error.err) isSenior ? investSenior() : investJunior();
+							}} //if condition not true then investJunior will execute
+							className={`block ${
+								error.err
+									? "bg-neutral-400 cursor-not-allowed"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none`}
 						>
 							Invest
 						</label>
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

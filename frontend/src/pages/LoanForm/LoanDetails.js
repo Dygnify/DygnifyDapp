@@ -154,7 +154,7 @@ const LoanDetails = ({ handleNext, formData }) => {
                 </Button>
             </form>
 
-        </div >
+        </div>
     );
 };
 

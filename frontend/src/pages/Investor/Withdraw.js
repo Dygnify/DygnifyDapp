@@ -21,6 +21,7 @@ const Withdraw = () => {
 	const [selected, setSelected] = useState(true);
 	const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
 	const [walletBal, setWalletBal] = useState();
+	const [showModal, setShowModal] = useState(false);
 
 	const [loading, setLoading] = useState(true);
 
@@ -95,6 +96,16 @@ const Withdraw = () => {
 		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
+				{selected && (
+					<WithdrawFundsModal
+						showModal={showModal}
+						handleForm={handleForm}
+						userWalletBal={walletBal}
+						data={selected}
+						setShowModal={setShowModal}
+					/>
+				)}
+
 				<div className="">
 					<h2 className="text-xl md:text-2xl lg:text-3xl font-medium">
 						Withdraw
@@ -112,6 +123,7 @@ const Withdraw = () => {
 								data={seniorPool}
 								isSeniorPool={true}
 								setSelected={setSelected}
+								setShowModal={setShowModal}
 							/>
 						</div>
 					) : (
@@ -133,6 +145,7 @@ const Withdraw = () => {
 										data={item}
 										isSeniorPool={false}
 										setSelected={setSelected}
+										setShowModal={setShowModal}
 									/>
 								))}
 							</div>

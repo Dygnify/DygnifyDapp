@@ -54,13 +54,7 @@ const UnderwriterCard = ({ data }) => {
 	}
 
 	return (
-		<div
-			// style={{
-			// 	background: `linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%`,
-			// 	boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)`,
-			// }}
-			className="my-gradient text-white max-w-lg md:max-w-full rounded-2xl grid  grid-1 overflow-hidden  pt-7 lg:pt-0 lg:grid-cols-10  xl:pr-2 2xl:gap-3"
-		>
+		<div className="my-gradient text-white max-w-lg md:max-w-full rounded-2xl grid  grid-1 overflow-hidden  pt-7 lg:pt-0 lg:grid-cols-10  xl:pr-2 2xl:gap-3">
 			{/* section-1 */}
 			<div className="flex-row flex space-x-5 px-4 col-span-4 lg:pl-6 lg:pr-1">
 				<img
@@ -107,7 +101,7 @@ const UnderwriterCard = ({ data }) => {
 						<p>{data.createdOn}</p>
 					</div>
 				</div>
-				{/* sectin-2-2*/}
+				{/* section-2-2*/}
 				<div className="flex mt-5 justify-center mb-5 px-4 lg:pr-4 lg:pl-1   ">
 					{/* add (place-items-center) for button center */}
 					<PrimaryButton

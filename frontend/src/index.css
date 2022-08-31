@@ -11,3 +11,26 @@
   background-image: linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%);
   box-shadow: 1px 1px 1px rgba(185, 185, 185, 0.1);
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; 
+}
+
+input[type=number] {
+    -moz-appearance:textfield; 
+}
+
+.approved-btn {
+  background-image: linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%);
+}
+
+.rejected-btn {
+  background-image: linear-gradient(97.67deg, #E73838 1.07%, #FFBABA 100%);
+}
+
+.unsured-btn {
+  background-image: linear-gradient(276.08deg, rgba(255, 255, 255, 0.04) 2.02%, rgba(255, 255, 255, 0.4) 2.03%, #FFFFFF 99.33%);
+
+}
