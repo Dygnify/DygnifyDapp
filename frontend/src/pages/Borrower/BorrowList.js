@@ -13,7 +13,6 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
-import sortByProperty from "../Helpers/ArrayHelperFunctions";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -41,20 +40,25 @@ const BorrowList = () => {
 	}, []);
 
 	useEffect(() => {
-		try {
-			const fetchData = async () => {
-				let opportunityList = await getOpportunitysOf();
+		getOpportunitysOf()
+			.then((opportunityList) => {
 				if (opportunityList && opportunityList.length) {
 					opportunityList.sort(sortByProperty("epochCreationDate"));
 					setOpportunities(opportunityList);
 				}
 				console.log(opportunityList);
-			};
-			fetchData();
-		} catch (error) {
-			console.log(error);
-		}
+			})
+			.catch((error) => console.log(error));
 	}, []);
+
+	function sortByProperty(property) {
+		return function (a, b) {
+			if (a[property] < b[property]) return 1;
+			else if (a[property] > b[property]) return -1;
+
+			return 0;
+		};
+	}
 
 	const checkForKycAndProfile = async (refId) => {
 		try {
