@@ -13,6 +13,7 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
+import sortByProperty from "../Helpers/ArrayHelperFunctions";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -43,8 +44,8 @@ const BorrowList = () => {
 		try {
 			const fetchData = async () => {
 				let opportunityList = await getOpportunitysOf();
-				console.log("*****", opportunityList);
 				if (opportunityList && opportunityList.length) {
+					opportunityList.sort(sortByProperty("epochCreationDate"));
 					setOpportunities(opportunityList);
 				}
 				console.log(opportunityList);
