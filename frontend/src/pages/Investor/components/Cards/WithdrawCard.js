@@ -33,14 +33,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	}, []);
 
 	return (
-		<div
-			style={{
-				backgroundImage:
-					"linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%)",
-				boxShadow: "inset -1px -1px 1px rgba(185, 185, 185, 0.1)",
-			}}
-			className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%]"
-		>
+		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%] my-gradient">
 			<div className="flex items-center gap-6">
 				<img
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
