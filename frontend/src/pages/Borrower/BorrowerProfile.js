@@ -94,27 +94,28 @@ const BorrowerProfile = () => {
 		});
 
 		const fetchData = async () => {
-			let borrowerCID = await getBorrowerDetails();
-			console.log("CID", borrowerCID);
-
-			if (!borrowerCID) {
-				setLoading(false);
-				return setProfileStatus(false);
-			}
-			if (borrowerCID) {
-				let data = await retrieveFiles(borrowerCID, true);
-
-				if (data) {
-					let read = getBinaryFileData(data);
-					read.onloadend = function () {
-						let brJson = JSON.parse(read.result);
-						loadBorrowerData(brJson);
-						setborrowerJson(brJson);
-						setHaskey(brJson ? "businessLicFile" in brJson : false);
-						console.log(brJson);
-					};
-				}
-			}
+			getBorrowerDetails()
+				.then((borrowerCID) => {
+					if (!borrowerCID) {
+						setLoading(false);
+						return setProfileStatus(false);
+					}
+					retrieveFiles(borrowerCID, true)
+						.then((data) => {
+							if (data) {
+								let read = getBinaryFileData(data);
+								read.onloadend = function () {
+									let brJson = JSON.parse(read.result);
+									loadBorrowerData(brJson);
+									setborrowerJson(brJson);
+									setHaskey(brJson ? "businessLicFile" in brJson : false);
+									console.log(brJson);
+								};
+							}
+						})
+						.catch((e) => console.log(e));
+				})
+				.catch((e) => console.log(e));
 		};
 
 		if (!location.state) fetchData();

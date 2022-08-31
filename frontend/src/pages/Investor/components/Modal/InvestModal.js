@@ -51,7 +51,7 @@ const InvestModal = ({
 	}
 
 	return (
-		<div className="">
+		<div>
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
 			<div
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
