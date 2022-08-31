@@ -20,7 +20,6 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 import ProcessingRepaymentModal from "./Components/Modal/ProcessingRepaymentModal";
-import sortByProperty from "../Helpers/ArrayHelperFunctions";
 
 const Overview = () => {
 	const [drawdownList, setDrawdownList] = useState([]);
@@ -70,6 +69,15 @@ const Overview = () => {
 		fetchData();
 		getUserWalletAddress().then((address) => checkForKycAndProfile(address));
 	}, [loadDrawdownList]);
+
+	function sortByProperty(property) {
+		return function (a, b) {
+			if (a[property] < b[property]) return 1;
+			else if (a[property] > b[property]) return -1;
+
+			return 0;
+		};
+	}
 
 	const checkForKycAndProfile = async (refId) => {
 		try {
