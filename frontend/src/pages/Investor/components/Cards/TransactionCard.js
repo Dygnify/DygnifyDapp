@@ -13,7 +13,7 @@ const TransactionCard = ({ data, address }) => {
 	const [date, setDate] = useState();
 
 	function getUserAddress() {
-		if (data.from == address) {
+		if (data.from.toUpperCase() === address.toUpperCase()) {
 			setUserAddress(getTrimmedWalletAddress(data.to));
 			setIsWithdraw(true);
 		} else {
