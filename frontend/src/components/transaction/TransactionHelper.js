@@ -287,6 +287,7 @@ function getOpportunity(opportunity) {
 	obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
 
 	obj.createdOn = convertDate(opportunity.createdOn);
+	obj.epochCreationDate = opportunity.createdOn.toString();
 
 	return obj;
 }

@@ -14,6 +14,11 @@ import {
 import { getDisplayAmount } from "../../services/displayTextHelper";
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
+import DygnifyImage from "../../assets/Dygnify_Image.png";
+import LinkedIn from "../SVGIcons/LinkedIn";
+import Website from "../SVGIcons/Website";
+import Twitter from "../SVGIcons/Twitter";
+import UpArrow from "../SVGIcons/UpArrow";
 
 const ViewSeniorPool = () => {
 	const location = useLocation();
@@ -89,7 +94,7 @@ const ViewSeniorPool = () => {
 	return (
 		<div className="">
 			{loading && <Loader />}
-			<div className={`${loading ? "blur-sm" : ""} outline outline-[coral]`}>
+			<div className={`${loading ? "blur-sm" : ""}`}>
 				{selected ? (
 					<InvestModal
 						handleDrawdown={handleDrawdown}
@@ -106,93 +111,94 @@ const ViewSeniorPool = () => {
 				) : (
 					<></>
 				)}
-				<div style={{ fontSize: 28 }} className="mb-0">
-					{poolName}
+				<div className=" flex items-center">
+					<div className="flex items-center gap-3 md:gap-5">
+						<img
+							src={DygnifyImage}
+							style={{ aspectRatio: "1/1" }}
+							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
+						/>
+
+						<div>
+							<p className="text-lg font-semibold">{poolName}</p>
+						</div>
+					</div>
 				</div>
 
-				<div
-					className="flex-row justify-between items w-full"
-					style={{ display: "flex" }}
-				>
-					<div style={{ display: "flex" }} className="flex-col w-1/2 ">
-						<div
-							style={{ display: "flex" }}
-							className="flex-row justify-between mt-10 mb-3"
-						>
-							<div style={{ fontSize: 19 }} className="mb-0">
+				<div className="mt-[2.5em] md:mt-[3.5em] flex flex-col gap-[1.5em] md:flex-row md:items-start xl:gap-[5em] 2xl:gap-[8em]">
+					<div className="md:w-[60%] ">
+						<div className="flex items-center mb-4">
+							<h2 className="text-xl font-semibold md:text-2xl">
 								Pool Overview
+							</h2>
+						</div>
+
+						<div className="text-neutral-200">{poolDescription}</div>
+					</div>
+
+					<div
+						style={{
+							backgroundImage:
+								" linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)",
+						}}
+						className="rounded-md px-4 py-6 border border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem]"
+					>
+						<div className="flex">
+							<div className="flex flex-col justify-start">
+								<p className="text-neutral-200 font-bold text-md mb-2">
+									Estimated APY.
+								</p>
+								<p className="text-neutral-200 font-bold text-md">
+									Total Pool Balance
+								</p>
+							</div>
+
+							<div className="ml-auto flex flex-col justify-start">
+								<p className=" font-semibold text-xl mb-1">{estimatedAPY}%</p>
+								<p className="font-semibold text-xl">
+									{poolAmount} {process.env.REACT_APP_TOKEN_NAME}
+								</p>
 							</div>
 						</div>
-						<div>{poolDescription}</div>
-					</div>
-					<div className="w-1/2">
-						<div
-							style={{
-								background: `linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)`,
+
+						<label
+							htmlFor={kycStatus ? "InvestModal" : ""}
+							id={kycStatus ? "" : "blockpass-kyc-connect"}
+							onClick={() => {
+								if (kycStatus) return setSelected(true);
+								else return null;
 							}}
-							className="rounded-box p-5 mt-10 ml-24"
+							style={{
+								backgroundImage:
+									"linear-gradient(81.75deg, #4B74FF 0%, #9281FF 100%)",
+							}}
+							className="cursor-pointer text-center py-2 rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%]"
 						>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row justify-between pb-2"
-							>
-								<h2 style={{ fontSize: 19 }}>Estimated APY.</h2>
-								<h2 style={{ fontSize: 28 }}>{estimatedAPY}%</h2>
-							</div>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row justify-between pb-2"
-							>
-								<h2 style={{ fontSize: 19 }}>Total Pool Balance</h2>
-								<h2 style={{ fontSize: 28 }}>{poolAmount}</h2>
-							</div>
+							{kycStatus ? "Invest" : "Complete your KYC"}
+						</label>
+					</div>
+				</div>
 
-							<label
-								htmlFor={kycStatus ? "InvestModal" : ""}
-								id={kycStatus ? "" : "blockpass-kyc-connect"}
-								style={{
-									borderRadius: "100px",
-									padding: "12px 24px",
-									color: "white",
-								}}
-								className={`btn btn-wide bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
-								onClick={() => {
-									if (kycStatus) return setSelected(true);
-									else return null;
-								}}
-							>
-								{kycStatus ? "Invest" : "Complete your KYC"}
-							</label>
+				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
+					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
+					{transactionData.length > 0 ? (
+						<div className="mt-6 flex flex-col gap-3">
+							{transactionData ? (
+								transactionData.map((item) => (
+									<TransactionCard
+										key={transactionData.blockHash}
+										data={item}
+										address={process.env.REACT_APP_SENIORPOOL}
+									/>
+								))
+							) : (
+								<></>
+							)}
 						</div>
-					</div>
+					) : (
+						<p>Transaction details are not available at this moment</p>
+					)}
 				</div>
-
-				<div
-					style={{
-						marginTop: "50px",
-						fontSize: 19,
-						marginBottom: "20px",
-					}}
-				>
-					Recent Activity
-				</div>
-				{transactionData.length > 0 ? (
-					<div className="w-1/2">
-						{transactionData ? (
-							transactionData.map((item) => (
-								<TransactionCard
-									key={transactionData.blockHash}
-									data={item}
-									address={process.env.REACT_APP_SENIORPOOL}
-								/>
-							))
-						) : (
-							<></>
-						)}
-					</div>
-				) : (
-					<p>Transaction details are not available at this moment</p>
-				)}
 			</div>
 		</div>
 	);
