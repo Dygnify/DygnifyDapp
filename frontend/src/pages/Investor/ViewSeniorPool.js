@@ -121,27 +121,8 @@ const ViewSeniorPool = () => {
 
 						<div>
 							<p className="text-lg font-semibold">{poolName}</p>
-							<p className="text-neutral-500">{/* company name here */}</p>
 						</div>
 					</div>
-
-					{/* social links */}
-					{/* <div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4">
-						<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
-							<LinkedIn className="w-6" />
-							<p className="hidden md:block font-medium">LinkedIn</p>
-						</div>
-
-						<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
-							<Website className="w-6 " />
-							<p className="hidden md:block font-medium">Website</p>
-						</div>
-
-						<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
-							<Twitter className="w-6" />
-							<p className="hidden md:block font-medium">Twitter</p>
-						</div>
-					</div> */}
 				</div>
 
 				<div className="mt-[2.5em] md:mt-[3.5em] flex flex-col gap-[1.5em] md:flex-row md:items-start xl:gap-[5em] 2xl:gap-[8em]">
@@ -150,9 +131,6 @@ const ViewSeniorPool = () => {
 							<h2 className="text-xl font-semibold md:text-2xl">
 								Pool Overview
 							</h2>
-							{/* <div className="ml-auto flex gap-2 items-center px-3 py-1 rounded-[1.5em] bg-darkmode-500 cursor-pointer">
-								View Details <UpArrow />
-							</div> */}
 						</div>
 
 						<div className="text-neutral-200">{poolDescription}</div>
