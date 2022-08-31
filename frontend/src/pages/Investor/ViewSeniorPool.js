@@ -121,14 +121,12 @@ const ViewSeniorPool = () => {
 
 						<div>
 							<p className="text-lg font-semibold">{poolName}</p>
-							<p className="text-neutral-500">
-								{/* company name here */}Dygnify
-							</p>
+							<p className="text-neutral-500">{/* company name here */}</p>
 						</div>
 					</div>
 
 					{/* social links */}
-					<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4">
+					{/* <div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4">
 						<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
 							<LinkedIn className="w-6" />
 							<p className="hidden md:block font-medium">LinkedIn</p>
@@ -143,7 +141,7 @@ const ViewSeniorPool = () => {
 							<Twitter className="w-6" />
 							<p className="hidden md:block font-medium">Twitter</p>
 						</div>
-					</div>
+					</div> */}
 				</div>
 
 				<div className="mt-[2.5em] md:mt-[3.5em] flex flex-col gap-[1.5em] md:flex-row md:items-start xl:gap-[5em] 2xl:gap-[8em]">
@@ -152,9 +150,9 @@ const ViewSeniorPool = () => {
 							<h2 className="text-xl font-semibold md:text-2xl">
 								Pool Overview
 							</h2>
-							<div className="ml-auto flex gap-2 items-center px-3 py-1 rounded-[1.5em] bg-darkmode-500 cursor-pointer">
+							{/* <div className="ml-auto flex gap-2 items-center px-3 py-1 rounded-[1.5em] bg-darkmode-500 cursor-pointer">
 								View Details <UpArrow />
-							</div>
+							</div> */}
 						</div>
 
 						<div className="text-neutral-200">{poolDescription}</div>
@@ -165,7 +163,7 @@ const ViewSeniorPool = () => {
 							backgroundImage:
 								" linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)",
 						}}
-						className="rounded-md px-4 py-6 border border-[#363637] flex flex-col gap-6 md:w-[25rem] "
+						className="rounded-md px-4 py-6 border border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem]"
 					>
 						<div className="flex">
 							<div className="flex flex-col justify-start">
@@ -203,32 +201,26 @@ const ViewSeniorPool = () => {
 					</div>
 				</div>
 
-				<div
-					style={{
-						marginTop: "50px",
-						fontSize: 19,
-						marginBottom: "20px",
-					}}
-				>
-					Recent Activity
+				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
+					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
+					{transactionData.length > 0 ? (
+						<div className="mt-6 flex flex-col gap-3">
+							{transactionData ? (
+								transactionData.map((item) => (
+									<TransactionCard
+										key={transactionData.blockHash}
+										data={item}
+										address={process.env.REACT_APP_SENIORPOOL}
+									/>
+								))
+							) : (
+								<></>
+							)}
+						</div>
+					) : (
+						<p>Transaction details are not available at this moment</p>
+					)}
 				</div>
-				{transactionData.length > 0 ? (
-					<div className="w-1/2">
-						{transactionData ? (
-							transactionData.map((item) => (
-								<TransactionCard
-									key={transactionData.blockHash}
-									data={item}
-									address={process.env.REACT_APP_SENIORPOOL}
-								/>
-							))
-						) : (
-							<></>
-						)}
-					</div>
-				) : (
-					<p>Transaction details are not available at this moment</p>
-				)}
 			</div>
 		</div>
 	);

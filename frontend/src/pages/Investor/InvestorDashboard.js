@@ -43,7 +43,7 @@ const InvestorDashboardNew = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="menu p-4 overflow-y-auto w-60  text-white bg-darkmode-900">
+						<ul className="menu p-4 overflow-y-auto w-60  text-white bg-darkmode-900 lg:bg-transparent">
 							<li>
 								<Link
 									to="/investor-dashboard"
