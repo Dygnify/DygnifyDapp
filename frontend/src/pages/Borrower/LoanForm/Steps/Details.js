@@ -9,19 +9,26 @@ import { CollateralDetailsValidationSchema } from "../../../LoanForm/validations
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
 export default function Details({ handleNext, handlePrev, formData }) {
+	
 	const formik = useFormik({
 		initialValues: {
-			collateral_document_name: "",
-			collateral_document: "",
-			collateral_document_description: "",
-			capital_loss: "",
+			collateral_document_name: `${formData.collateral_document_name?formData.collateral_document_name:""}`,
+		   	collateral_document: `${formData.collateral_document?formData.collateral_document:""}`,
+			collateral_document_description: `${formData.collateral_document_description?formData.collateral_document_description:""}`,
+			capital_loss: `${formData.capital_loss?formData.capital_loss:""}`,
 		},
 		validationSchema: CollateralDetailsValidationSchema,
 		onSubmit: (values) => {
-			console.log(values);
+			if(!formik.values.collateral_document[0].name){
+				formik.values.collateral_document=formData.collateral_document;
+			}
+			console.log("clicked..",values);
 			handleNext(values, true);
 		},
 	});
+	// console.log(formik.values.collateral_document[0].name);
+			
+	
 	return (
 		<div className="bg-[#20232A]  w-full mb-2" style={{ borderRadius: "17px" }}>
 			<form onSubmit={formik.handleSubmit}>
@@ -55,6 +62,8 @@ export default function Details({ handleNext, handlePrev, formData }) {
 						}
 						label="Upload Collateral Document"
 						className="w-1/2 ml-2"
+						fileName={formData.collateral_document?formData.collateral_document[0].name:""}
+						
 					/>
 				</div>
 				<TextArea
