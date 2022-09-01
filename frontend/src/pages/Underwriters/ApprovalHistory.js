@@ -17,21 +17,15 @@ const ApprovalHistory = () => {
 		console.log(list);
 		setTransactions(list);
 	}
-
+	
 	return (
 		<div className={`mb-16 ${loading ? "relative h-[80vh]" : ""}`}>
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
-				<h2 className="text-2xl mb-6">Transaction History</h2>
+				<h2 className="text-2xl mb-2 md:mb-10 md:-mt-1">Approval history,</h2>
 				{transactions.length == 0 ? (
-					<div style={{ display: "flex" }} className="justify-center">
-						<div
-							style={{
-								color: "#64748B",
-								fontSize: 18,
-								marginTop: 10,
-							}}
-						>
+					<div className="felx justify-center">
+						<div className="text-[#64748B] text-xl mt-3">
 							No Borrow requests are present at the moment.
 						</div>
 					</div>
@@ -39,21 +33,16 @@ const ApprovalHistory = () => {
 					<div>
 						<div className="collapse mb-3">
 							<input type="checkbox" className="peer" />
-							<div
-								style={{
-									display: "flex",
-									borderTop: "1px solid #20232A",
-									borderBottom: "1px solid #20232A",
-								}}
-								className="collapse-title text-md font-normal justify-around w-full"
-							>
-								<p className="w-1/6 text-center">Pool Name</p>
-								<p className="w-1/6 text-center">Company Name</p>
-								<p className="w-1/6 text-center">Created On</p>
-								<p className="w-1/6 text-center">Decision</p>
+							<div className="flex collapse-title  border-t-2 border-b-2 border-t-[#20232A] border-b-[#20232A]  justify-between w-full items-center font-bold flex-wrap pr-1 pl-1 md:pr-3">
+								<p className="w-1/3 md:w-1/6 text-center">Pool Name</p>
+								<p className="w-1/3 md:w-1/6 text-center ">Company Name</p>
+								<p className="w-1/3 md:w-1/6 text-center  hidden md:block">
+									Created On
+								</p>
+								<p className="w-1/3 md:w-1/6 text-center">Decision</p>
 							</div>
 						</div>
-						<div>
+						<div className="space-y-3">
 							{transactions
 								? transactions.map((item) => (
 										<TransactionsCard key={transactions.id} data={item} />

@@ -8,7 +8,7 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
 		finalSubmit(formData);
 	};
 
-	console.log(formData);
+	console.log("clicked...", formData);
 
 	return (
 		<div style={{ display: "flex" }} className="flex-col gap-4">
@@ -184,7 +184,15 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
 					id="terms"
 				/>
 				&nbsp;
-				<label htmlFor="terms"> I agree to all terms and condition </label>
+				<label htmlFor="terms"> I agree to all </label>
+				<a
+					onClick={() => {
+						window.open("https://www.dygnify.com/privacy-policy", "_blank");
+					}}
+					className="font-extralight text-sm underline decoration-1 underline-offset-1 cursor-pointer"
+				>
+					terms and condition
+				</a>
 			</div>
 
 			<div

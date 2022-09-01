@@ -7,7 +7,13 @@ import {
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 
-const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
+const WithdrawFundsModal = ({
+	userWalletBal,
+	handleForm,
+	data,
+	showModal,
+	setShowModal,
+}) => {
 	const [amount, setAmount] = useState("");
 
 	async function withdrawJunior() {
@@ -21,7 +27,12 @@ const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
 	}
 	return (
 		<>
-			<input type="checkbox" id="WithdrawModal" className="modal-toggle" />
+			<input
+				type="checkbox"
+				id="WithdrawModal"
+				className="modal-toggle"
+				checked={showModal}
+			/>
 			<div
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
 				className="modal"
@@ -30,12 +41,13 @@ const WithdrawFundsModal = ({ userWalletBal, handleForm, data }) => {
 					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
 					className="modal-box w-1/3 max-w-5xl p-0"
 				>
-					<label
+					<button
 						for="WithdrawModal"
 						className="btn btn-ghost absolute right-2 top-2 pb-2"
+						onClick={() => setShowModal(false)}
 					>
 						✕
-					</label>
+					</button>
 					<h3
 						style={{ borderBottom: "2px solid #292C33" }}
 						className="font-bold text-lg py-3 px-4"

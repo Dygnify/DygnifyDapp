@@ -2,13 +2,16 @@ import React from "react";
 
 const arrow = (
 	<svg
+		width="11"
+		height="17"
+		viewBox="0 0 11 17"
+		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
-		width="32"
-		height="32"
-		viewBox="0 0 24 24"
 	>
-		<path fill="none" d="M0 0h24v24H0V0z" />
-		<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z" />
+		<path
+			d="M0.5 14.3824L6.75 8.50006L0.5 2.6177L1.75 0.264763L10.5 8.50006L1.75 16.7354L0.5 14.3824Z"
+			fill="white"
+		/>
 	</svg>
 );
 
@@ -25,7 +28,7 @@ const PrimaryButton = ({
 		<button
 			onClick={disable ? null : onClick}
 			htmlFor={htmlFor}
-			className={`bg-gradient-to-r  w-full lg:w-80 bg-[#5375FE] rounded-full py-[0.5rem] font-medium flex fill-white  items-center justify-center ${className}`}
+			className={`bg-gradient-to-r  w-full lg:w-80 bg-[#5375FE] rounded-full py-[0.5rem] font-medium flex fill-white gap-2 items-center justify-center ${className}`}
 		>
 			{children}
 			{arrow}

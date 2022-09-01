@@ -70,12 +70,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 	}
 	return (
 		<div
-			style={{
-				backgroundImage:
-					"linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%)",
-				boxShadow: "inset -1px -1px 1px rgba(185, 185, 185, 0.1)",
-			}}
-			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%]`}
+			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%] my-gradient`}
 		>
 			<div className="flex items-center gap-6">
 				<img
@@ -100,9 +95,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 					<div className="flex gap-1">
 						<p className="text-lg font-medium">Pool Size</p>
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">
-							{opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
-						</p>
+						<p className="text-lg font-medium">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex">

@@ -2,145 +2,82 @@ import React, { useContext } from "react";
 
 //for get data import from paths--
 import { UserContext } from "../../../../Paths"; //
-//
 
 const ProcessingFundsModal = ({ investProcessing }) => {
 	//for get data using useContext--
 	const { state, dispatch } = useContext(UserContext); //
-	//
 
 	console.log(investProcessing, "in fund process modal");
+
 	return (
 		<div className="">
 			<input type="checkbox" id="InvestProcessModal" className="modal-toggle" />
-			<div
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
-				className="modal"
-			>
-				<div
-					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-					className="modal-box w-1/3 max-w-5xl p-0"
-				>
-					<label
-						for="InvestProcessModal"
-						className="btn btn-ghost absolute right-2 top-2 pb-2"
-						// onClick={() => handleDrawdown()}
-					>
-						✕
-					</label>
-					<h3
-						style={{ borderBottom: "2px solid #292C33" }}
-						className="font-bold text-lg py-3 px-4"
-					>
-						Invest
-					</h3>
-					<p
-						style={{ display: "flex", fontSize: 55, fontWeight: 600 }}
-						className="justify-center"
-					>
-						{!investProcessing ? `Yay!🎉` : "In Progress⏱"}
-					</p>
-					<p
-						style={{ display: "flex", fontSize: 23, fontWeight: 600 }}
-						className="justify-center mb-2"
-					>
-						{investProcessing
-							? "Investment is in progress"
-							: "Investment was successful"}
-					</p>
-					{!investProcessing ? (
-						<p
-							className="justify-center"
-							style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
+			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg px-4">
+				<div className="bg-darkmode-800 w-[100%] sm:w-[85%] md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[45rem] pb-6 rounded-xl md:pb-8">
+					<div className="md:px-8 flex px-4 py-3 text-2xl font-semibold border-b border-neutral-500">
+						<h3>Invest</h3>
+
+						<label
+							for="InvestProcessModal"
+							// onClick={() => handleDrawdown()}
+							className="ml-auto cursor-pointer"
 						>
-							{`You successfully withdrew ${state}USDC from poolname`}
-						</p>
-					) : (
-						<></>
-					)}
-					<div
-						className="text-sm py-3 px-4 rounder-box items-center "
-						style={{
-							width: 400,
-							height: 169,
-							marginLeft: 24,
-							borderRadius: 12,
-							borderWidth: 1,
-							borderColor: "#64748B",
-							alignSelf: "center",
-						}}
-					>
-						<div
-							class="flex-col grid grid-cols-1 divide-y-2  justify-center divide-[#292C33] "
-							style={{ display: "flex" }}
-						>
-							<div
-								className="flex-row justify-between pt-0"
-								style={{ display: "flex" }}
-							>
-								<div style={{ display: "flex" }} className="flex-col">
-									<small
-										style={{
-											fontSize: 14,
-											fontWeight: 400,
-											color: "#777E91",
-										}}
-									>
-										Status
-									</small>
-									{investProcessing ? (
-										<p style={{ fontSize: 14, color: "#FBBF24" }}>Processing</p>
-									) : (
-										<p style={{ fontSize: 14, color: "#58BD7D" }}>Completed</p>
-									)}
-								</div>
-								<div style={{ display: "flex" }} className="flex-col">
-									<small
-										style={{
-											fontSize: 14,
-											fontWeight: 400,
-											color: "#777E91",
-										}}
-									>
-										Transaction ID
-									</small>
-									<p style={{ fontSize: 14, color: "white" }}>
-										0msaae8979faweawqt977
-									</p>
-								</div>
-							</div>
-							<div>
-								<br />
-								<small
-									style={{
-										fontSize: 14,
-										fontWeight: 400,
-										color: "#777E91",
-									}}
-								>
-									Contract Address
-								</small>
-								<p style={{ fontSize: 14, color: "white" }}>
-									0msaae8979faweawqt977asfsaf8798
-								</p>
-							</div>
-						</div>
+							✕
+						</label>
 					</div>
 
-					<div
-						className="modal-action mx-4 mt-2 mb-4 text-sm py-3 px-4 items-center justify-center"
-						style={{
-							width: 400,
-							height: 45,
-							marginLeft: 24,
-							borderRadius: 100,
-							borderWidth: 1,
-							borderColor: "#64748B",
-							alignSelf: "center",
-							display: "flex",
-						}}
-					>
-						<p>View Transaction</p>
+					<div className="px-4 md:px-8 mt-6">
+						<div className=" flex flex-col  gap-4 text-center">
+							<p className="text-5xl font-bold">
+								{!investProcessing ? `Yay! 🎉` : "In Progress ⏱"}
+							</p>
+
+							<p className="text-xl font-semibold mt-1">
+								{investProcessing
+									? "Investment is in progress"
+									: "Investment was successful"}
+							</p>
+
+							{!investProcessing ? (
+								<p className="font-semibold text-base">
+									You successfully withdrew
+									<span className="text-success-500">
+										{" "}
+										{state}100 USDC
+									</span>{" "}
+									from poolname
+								</p>
+							) : (
+								<></>
+							)}
+						</div>
+
+						<div className="mt-3 border border-neutral-500 px-4 py-4 rounded-lg flex flex-col gap-4">
+							<div className="flex flex-col gap-1">
+								<p className="text-neutral-400">Status</p>
+								{investProcessing ? (
+									<p className="text-warning-400 font-semibold">Processing</p>
+								) : (
+									<p className="text-success-500 font-semibold">Completed</p>
+								)}
+							</div>
+
+							<div className="flex flex-col gap-1">
+								<p className="text-neutral-400">Transaction ID</p>
+								<p className="font-semibold">0msaae8979faweawqt977</p>
+							</div>
+
+							<div className="flex flex-col gap-1">
+								<p className="text-neutral-400">Contract Address</p>
+								<p className="font-semibold">0msaae8979faweawqt977asfsaf8798</p>
+							</div>
+						</div>
+
+						<div className="border-2 border-neutral-500 rounded-[1.8em] mt-8">
+							<p className="cursor-pointer font-semibold py-3 text-center">
+								View Transaction
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>

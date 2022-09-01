@@ -5,89 +5,60 @@ import { getBinaryFileData } from "../../../services/fileHelper";
 import { retrieveFiles } from "../../../services/web3storageIPFS";
 
 const TransactionsCard = ({ data }) => {
-  const [companyName, setCompanyName] = useState();
-  const [poolName, setPoolName] = useState();
+	const [companyName, setCompanyName] = useState();
+	const [poolName, setPoolName] = useState();
 
-  useEffect(() => {
-    // fetch the opportunity details from IPFS
-    retrieveFiles(data?.opportunityInfo, true).then((res) => {
-      if (res) {
-        let read = getBinaryFileData(res);
-        read.onloadend = function () {
-          let opJson = JSON.parse(read.result);
-          if (opJson) {
-            setCompanyName(opJson.companyDetails?.companyName);
-            setPoolName(opJson.loan_name);
-          }
-        };
-      }
-    });
-  }, []);
+	useEffect(() => {
+		// fetch the opportunity details from IPFS
+		retrieveFiles(data?.opportunityInfo, true).then((res) => {
+			if (res) {
+				let read = getBinaryFileData(res);
+				read.onloadend = function () {
+					let opJson = JSON.parse(read.result);
+					if (opJson) {
+						setCompanyName(opJson.companyDetails?.companyName);
+						setPoolName(opJson.loan_name);
+					}
+				};
+			}
+		});
+	}, []);
 
-  return (
-    <div
-      style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
-      className=" mb-2"
-    >
-      <div
-        style={{ display: "flex" }}
-        className="collapse-title text-md font-light justify-around w-full"
-      >
-        <p className="w-1/6 text-center">{poolName}</p>
-        <p className="w-1/6 text-center">{companyName}</p>
-        <p className="w-1/6 text-center">{data?.createdOn}</p>
+	return (
+		<div className="flex collapse-title font-light justify-between w-full flex-wrap overflow-hidden bg-[#20232A] rounded-xl mb-2 items-center pl-1 pr-1 md:pr-3">
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-center ">
+				{poolName}
+			</p>
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-center">
+				{companyName}
+			</p>
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-center hidden md:block">
+				{data?.createdOn}
+			</p>
 
-        {(data?.status == "2" || data?.status >= "4") && (
-          <p className="w-1/6 text-center">
-            <div
-              style={{
-                borderRadius: "35px",
-                padding: "5px 8px",
-                background:
-                  "linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)",
-                border: "none",
-              }}
-              className="btn btn-xs btn-success"
-            >
-              Approved
-            </div>
-          </p>
-        )}
-        {data?.status == "1" && (
-          <p className="w-1/6 text-center">
-            <div
-              style={{
-                borderRadius: "35px",
-                padding: "5px 8px",
-                background:
-                  "linear-gradient(97.67deg, #E73838 1.07%, #FFBABA 100%)",
-                border: "none",
-              }}
-              className="btn btn-xs btn-error"
-            >
-              Rejected
-            </div>
-          </p>
-        )}
-        {data?.status == "3" && (
-          <p className="w-1/6 text-center">
-            <div
-              style={{
-                borderRadius: "35px",
-                padding: "5px 8px",
-                background:
-                  "linear-gradient(276.08deg, rgba(255, 255, 255, 0.04) 2.02%, rgba(255, 255, 255, 0.4) 2.03%, #FFFFFF 99.33%)",
-                border: "none",
-              }}
-              className="btn btn-xs btn-warning"
-            >
-              Unsure
-            </div>
-          </p>
-        )}
-      </div>
-    </div>
-  );
+			{(data?.status == "2" || data?.status >= "4") && (
+				<p className="w-1/3 md:w-1/6 text-center">
+					<div className="btn btn-xs btn-success approved-btn border-none px-3.5 text-base pb-7 pt-0.5 rounded-full capitalize">
+						Approved
+					</div>
+				</p>
+			)}
+			{data?.status == "1" && (
+				<p className="w-1/3 md:w-1/6 text-center ">
+					<div className="btn btn-xs btn-success rejected-btn border-none px-3.5 text-base pb-7 pt-0.5 rounded-full capitalize">
+						Rejected
+					</div>
+				</p>
+			)}
+			{data?.status == "3" && (
+				<p className="w-1/3 md:w-1/6 text-center ">
+					<div className="btn btn-xs btn-success unsured-btn border-none px-3.5 text-base pb-7 pt-0.5 rounded-full capitalize">
+						Unsure
+					</div>
+				</p>
+			)}
+		</div>
+	);
 };
 
 export default TransactionsCard;

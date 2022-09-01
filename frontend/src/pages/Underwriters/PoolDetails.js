@@ -150,24 +150,27 @@ const PoolDetails = () => {
 
 		setLoading(false);
 	}
+
 	return (
 		<div className={`${loading ? "" : ""}`}>
 			{loading && <Loader />}
 			{/* main container  */}
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				{/*section-1*/}
-				<div className=" w-4 h-2 bg-red-500 md:bg-green-500 lg:bg-blue-400 xl:bg-black"></div>
 				<div className="flex flex-col gap-6 overflow-hidden flex-wrap md:flex-row md:justify-between  ">
 					{/* section-1-1 --profile  */}
 					<div className="flex items-center gap-6 ">
 						<div>
-							<img src={logoImgSrc} className="w-20 h-20 rounded-full"></img>
+							<img
+								src={logoImgSrc}
+								className="w-20 h-20 rounded-full lg:w-24 lg:h-24 xl:w-28  xl:h-28"
+							></img>
 						</div>
 						<div>
-							<div className="font-medium text-2xl -mb-1">
+							<div className="font-medium text-2xl -mb-1 xl:text-3xl">
 								{opDetails?.loan_name}
 							</div>
-							<div className="font-semibold text-slate-500">
+							<div className="font-normal text-slate-500 xl:text-xl xl:font-light">
 								{companyDetails?.companyName}
 							</div>
 						</div>
@@ -178,8 +181,12 @@ const PoolDetails = () => {
 						!(status.approve || status.reject || status.unsure) ? (
 							<button
 								disabled={status.approve}
-								// onClick={() => vote("2")}
-								className="rounded-full h-12 w-[29%]  transition ease-linear duration-500 overflow-hidden border-2 border-[#10B981] btn btn-xs btn-outline text-[#10B981] text-base  capitalize font-medium md:px-14 "
+								onClick={() => vote("2")}
+								className={
+									!status.approve
+										? "rounded-full h-12 w-[29%]  transition ease-linear duration-500 overflow-hidden border-2 border-[#10B981] btn btn-xs btn-outline text-[#10B981] text-base  capitalize font-medium md:px-14"
+										: "rounded-3xl py-1 px-2 approved-btn capitalize text-[#000000]  md:h-8 md:mr-10"
+								}
 							>
 								{status.approve ? "Approved" : "Approve"}
 							</button>
@@ -189,8 +196,12 @@ const PoolDetails = () => {
 						!(status.approve || status.reject || status.unsure) ? (
 							<button
 								disabled={status.reject}
-								// onClick={() => vote("1")}
-								className="rounded-full h-12 w-[29%] transition ease-linear duration-500 overflow-hidden  border-2 border-[#EF4444] btn btn-xs btn-outline text-[#EF4444] text-base  capitalize font-medium md:px-14"
+								onClick={() => vote("1")}
+								className={
+									!status.reject
+										? "rounded-full h-12 w-[29%] transition ease-linear duration-500 overflow-hidden  border-2 border-[#EF4444] btn btn-xs btn-outline text-[#EF4444] text-base  capitalize font-medium md:px-14"
+										: "rounded-3xl py-1 px-2 rejected-btn capitalize text-[#000000]  md:h-8 md:mr-10"
+								}
 							>
 								{status.reject ? "Rejected" : "Reject"}
 							</button>
@@ -237,20 +248,22 @@ const PoolDetails = () => {
 							<div>
 								{loanPurpose.firstText}
 								<a
-									style={{
-										fontWeight: 600,
-										cursor: "pointer",
-									}}
+									className=" font-semibold cursor-pointer"
+									// style={{
+									// 	fontWeight: 600,
+									// 	cursor: "pointer",
+									// }}
 									onClick={() => setExpand(true)}
 								>
 									{expand ? null : "... view more"}
 								</a>
 								{expand ? <div>{loanPurpose.secondText}</div> : null}
 								<a
-									style={{
-										fontWeight: 600,
-										cursor: "pointer",
-									}}
+									className=" font-semibold cursor-pointer"
+									// style={{
+									// 	fontWeight: 600,
+									// 	cursor: "pointer",
+									// }}
 									onClick={() => setExpand(false)}
 								>
 									{expand ? "view less" : null}
@@ -270,7 +283,7 @@ const PoolDetails = () => {
 					</div>
 					{/* section-3-2 --item  */}
 					<div className="rounded-box w-auto bg-[#292C33] overflow-hidden">
-						<div className="grid grid-cols-2 gap-[2px] my-0.5">
+						<div className="grid grid-cols-2 gap-[2px] my-0.5 md:my-0 md:grid-cols-3 xl:grid-cols-6">
 							{info ? (
 								info.map((e, i) => {
 									return (
@@ -306,12 +319,15 @@ const PoolDetails = () => {
 
 				{/* section-5 --Borrower Details  */}
 				<div className="flex flex-col w-full">
-					<div className="flex items-center gap-2 text-lg font-medium mt-10">
-						<img src={logoImgSrc} className="w-16 h-16 rounded-full"></img>
+					<div className="flex items-center gap-2 text-lg font-medium mt-10 ">
+						<img
+							src={logoImgSrc}
+							className="w-16 h-16 rounded-full md:hidden"
+						></img>
 						Borrower Details
 					</div>
 					{/* section-5-1 --social media*/}
-					<div className=" flex flex-row-reverse  justify-between mt-5">
+					<div className=" flex flex-row-reverse  justify-between mt-5 md:hidden">
 						{companyDetails?.twitter ? (
 							<button
 								id="twitter"
@@ -363,19 +379,77 @@ const PoolDetails = () => {
 						)}
 					</div>
 					{/* section-5-2 --Companyname*/}
+					<div className="md:flex md:justify-between md:items-center md:mt-2 md:mb-3 ">
+						<div className="text-lg font-medium mt-10 md:flex md:items-center gap-4 md:mt-0">
+							<img
+								src={logoImgSrc}
+								className="w-16 h-16 rounded-full hidden md:block"
+							></img>
 
-					<div className="text-lg font-medium mt-10">
-						{companyDetails
-							? companyDetails.companyName
-							: "Name of the Company"}
+							{companyDetails
+								? companyDetails.companyName
+								: "Name of the Company"}
+						</div>
+						<div className=" md:flex md:flex-row-reverse gap-4 md:justify-between hidden">
+							{companyDetails?.twitter ? (
+								<button
+									id="twitter"
+									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  lowercase flex pb-5"
+									// onClick={redirectToURl}
+								>
+									<Twitter /> twitter
+								</button>
+							) : (
+								<></>
+							)}
+							{companyDetails?.linkedin ? (
+								<button
+									id="linkedin"
+									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
+
+									//onClick={redirectToURl}
+								>
+									<LinkedIn />
+									LinkedIn
+								</button>
+							) : (
+								<></>
+							)}
+							{companyDetails?.email ? (
+								<button
+									id="email"
+									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
+									//onClick={redirectForEmail}
+								>
+									<Email />
+									Email
+								</button>
+							) : (
+								<></>
+							)}
+							{companyDetails?.website ? (
+								<button
+									id="website"
+									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
+
+									//onClick={redirectToURl}
+								>
+									<Website />
+									Website
+								</button>
+							) : (
+								<></>
+							)}
+						</div>
 					</div>
+
 					{/* section-5-2 --Companybio*/}
 					<div className="text-[#D0D5DD]  tracking-wide font-light text-lg  items-start">
 						{companyDetails ? companyDetails.companyBio : ""}
 					</div>
 				</div>
 				{/*section-6  --KYB detaial  */}
-				<div className="w-full my-3 mt-10 text-lg font-medium">
+				<div className="w-full my-3 mt-10 text-lg font-medium xl:w-1/2">
 					<div>KYB Details</div>
 					<h6 className="text-[#64748B] mt-10 mb-0.5">
 						Business Identify Proof

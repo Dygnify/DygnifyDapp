@@ -24,6 +24,8 @@ import { getDisplayAmount } from "../../services/displayTextHelper";
 import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
+import DygnifyImage from "../../assets/Dygnify_Image.png";
+import UpArrow from "../SVGIcons/UpArrow";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -114,11 +116,8 @@ const ViewPool = () => {
 								opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
 							);
 							// get the loan purpose
-							const {
-								isSliced,
-								firstText,
-								secondText,
-							} = getExtendableTextBreakup(opJson.loan_purpose, 200);
+							const { isSliced, firstText, secondText } =
+								getExtendableTextBreakup(opJson.loan_purpose, 200);
 
 							if (isSliced) {
 								setLoanPurpose({
@@ -245,32 +244,32 @@ const ViewPool = () => {
 					<></>
 				)}
 
-				<div
-					className="flex-row justify-between items-center"
-					style={{ display: "flex" }}
-				>
-					<div className="flex-col">
-						<div style={{ fontSize: 28 }} className="mb-0">
-							{poolName}
+				<div className=" flex items-center">
+					<div className="flex items-center gap-3 md:gap-5">
+						<img
+							src={DygnifyImage}
+							style={{ aspectRatio: "1/1" }}
+							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
+						/>
+
+						<div>
+							<p className="text-lg font-semibold">{poolName}</p>
+							<p className="text-neutral-500">
+								{companyDetails ? companyDetails.companyName : ""}
+							</p>
 						</div>
-						<small style={{ color: "#64748B", fontSize: 14 }}>
-							{companyDetails ? companyDetails.companyName : ""}
-						</small>
 					</div>
-					<div className="mr-10">
+
+					{/* social links */}
+					<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4">
 						{companyDetails && companyDetails.linkedin ? (
 							<button
 								id="linkedin"
-								style={{
-									borderRadius: "100px",
-									padding: "3px 16px",
-									border: "1px solid #64748B",
-								}}
-								className="ml-3 btn btn-xs btn-outline text-white"
 								onClick={redirectToURl}
+								className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer"
 							>
-								<LinkedIn />
-								<div style={{ marginLeft: 2 }}>LinkedIn</div>
+								<LinkedIn className="w-6" />
+								<p className="hidden md:block font-medium">LinkedIn</p>
 							</button>
 						) : (
 							<></>
@@ -279,16 +278,11 @@ const ViewPool = () => {
 						{companyDetails && companyDetails.website ? (
 							<button
 								id="website"
-								style={{
-									borderRadius: "100px",
-									padding: "3px 16px",
-									border: "1px solid #64748B",
-								}}
-								className="ml-3 btn btn-xs btn-outline text-white"
 								onClick={redirectToURl}
+								className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer"
 							>
-								<Website />
-								<div style={{ marginLeft: 2 }}>Website</div>
+								<Website className="w-6" />
+								<p className="hidden md:block font-medium">Website</p>
 							</button>
 						) : (
 							<></>
@@ -296,16 +290,11 @@ const ViewPool = () => {
 						{companyDetails && companyDetails.twitter ? (
 							<button
 								id="twitter"
-								style={{
-									borderRadius: "100px",
-									padding: "3px 16px",
-									border: "1px solid #64748B",
-								}}
-								className="ml-3 btn btn-xs btn-outline text-white"
 								onClick={redirectToURl}
+								className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer"
 							>
-								<Twitter />
-								<div style={{ marginLeft: 2 }}>twitter</div>
+								<Twitter className="w-6" />
+								<p className="hidden md:block font-medium">Twitter</p>
 							</button>
 						) : (
 							<></>
@@ -313,123 +302,108 @@ const ViewPool = () => {
 					</div>
 				</div>
 
-				<div
-					className="flex-row justify-between items w-full"
-					style={{ display: "flex" }}
-				>
-					<div style={{ display: "flex" }} className="flex-col w-1/2 ">
-						<div
-							style={{ display: "flex" }}
-							className="flex-row justify-between mt-10 mb-3"
-						>
-							<div style={{ fontSize: 19, fontWeight: "600" }} className="mb-0">
+				<div className="mt-[2.5em] md:mt-[3.5em] flex flex-col gap-[1.5em] md:flex-row md:items-start xl:gap-[5em] 2xl:gap-[8em]">
+					<div className="md:w-[60%]">
+						<div className="flex items-center mb-4">
+							<h2 className="text-xl font-semibold md:text-2xl">
 								Deals Overview
-							</div>
+							</h2>
+							{/* <div className="ml-auto flex gap-2 items-center px-3 py-1 rounded-[1.5em] bg-darkmode-500 cursor-pointer">
+								View Details <UpArrow />
+							</div> */}
 						</div>
+
 						{loanPurpose.isSliced ? (
-							<div>
+							<div className="text-neutral-200">
 								{loanPurpose.firstText}
 								<a
-									style={{
-										fontWeight: 600,
-										cursor: "pointer",
-									}}
 									onClick={() => setExpand(true)}
+									className="cursor-pointer font-semibold"
 								>
-									{expand ? null : "... view more"}
+									{expand ? null : " ...view more"}
 								</a>
-								{expand ? <div>{loanPurpose.secondText}</div> : null}
+								{expand ? <span>{loanPurpose.secondText}</span> : null}
 								<a
-									style={{
-										fontWeight: 600,
-										cursor: "pointer",
-									}}
 									onClick={() => setExpand(false)}
+									className="cursor-pointer font-semibold"
 								>
-									{expand ? "view less" : null}
+									{expand ? " view less" : null}
 								</a>
 							</div>
 						) : (
-							<div>{loanPurpose.firstText} </div>
+							<div className="text-neutral-200">{loanPurpose.firstText} </div>
 						)}
 					</div>
-					<div className="w-1/2 flex-col  " style={{ display: "flex" }}>
-						<div
-							style={{
-								background: `linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)`,
-							}}
-							className="rounded-box p-5 mt-10 ml-24 "
-						>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row justify-between pb-2 "
-							>
-								<h2 style={{ fontSize: 19, marginBottom: 2 }}>
-									Estimated APY.
-								</h2>
-								<h2 style={{ fontSize: 28 }}>
-									{poolData ? poolData.loanInterest : "--"}
-								</h2>
-							</div>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row justify-between pb-2"
-							>
-								<h2 style={{ fontSize: 19 }}>Pool Limit</h2>
-								<h2 style={{ fontSize: 28 }}>
-									{poolData ? poolData.opportunityAmount : "--"}
-								</h2>
-							</div>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row justify-between pb-2"
-							>
-								<h2 style={{ fontSize: 19 }}>Total supplied</h2>
-								<h2 style={{ fontSize: 28 }}>{poolBal ? poolBal : "--"}</h2>
-							</div>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row justify-between pb-2"
-							>
-								<h2 style={{ fontSize: 19 }}>Payment terms</h2>
-								<h2 style={{ fontSize: 28 }}>
-									{poolData ? poolData.loanTenure : "--"}
-								</h2>
-							</div>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row justify-between pb-2"
-							>
-								<h2 style={{ fontSize: 19 }}>Payment frequency</h2>
-								<h2 style={{ fontSize: 28 }}>
-									{poolData ? poolData.paymentFrequencyInDays : "--"}
-								</h2>
-							</div>
 
-							<label
-								htmlFor={kycStatus ? "InvestModal" : ""}
-								id={kycStatus ? "" : "blockpass-kyc-connect"}
-								style={{
-									borderRadius: "100px",
-									padding: "12px 24px",
-									color: "white",
-									marginTop: 20,
-								}}
-								className={`btn w-full bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none `}
-								onClick={() => {
-									if (kycStatus) return setSelected(true);
-									else return null;
-								}}
-							>
-								{kycStatus ? "Invest" : "Complete your KYC"}
-							</label>
+					<div
+						style={{
+							backgroundImage:
+								" linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)",
+						}}
+						className="rounded-md px-4 py-6 border border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem]"
+					>
+						<div className="flex">
+							<div className="flex flex-col justify-start">
+								<p className="text-neutral-200 font-bold text-md mb-2">
+									Estimated APY.
+								</p>
+
+								<p className="text-neutral-200 font-bold text-md mb-2">
+									Pool Limit
+								</p>
+
+								<p className="text-neutral-200 font-bold text-md mb-2">
+									Total supplied
+								</p>
+
+								<p className="text-neutral-200 font-bold text-md mb-2">
+									Payment terms
+								</p>
+								<p className="text-neutral-200 font-bold text-md mb-2">
+									Payment frequency
+								</p>
+							</div>
+							<div className="ml-auto flex flex-col justify-start">
+								<p className="font-semibold text-xl mb-1">
+									{poolData ? poolData.loanInterest : "--"}
+								</p>
+
+								<p className="font-semibold text-xl mb-1">
+									{poolData ? poolData.opportunityAmount : "--"}
+								</p>
+								<p className="font-semibold text-xl mb-1">
+									{poolBal ? poolBal : "--"}
+								</p>
+								<p className="font-semibold text-xl mb-1">
+									{poolData ? poolData.loanTenure : "--"}
+								</p>
+								<p className="font-semibold text-xl mb-1">
+									{poolData ? poolData.paymentFrequencyInDays : "--"}
+								</p>
+							</div>
 						</div>
+
+						<label
+							htmlFor={kycStatus ? "InvestModal" : ""}
+							id={kycStatus ? "" : "blockpass-kyc-connect"}
+							onClick={() => {
+								if (kycStatus) return setSelected(true);
+								else return null;
+							}}
+							style={{
+								backgroundImage:
+									"linear-gradient(81.75deg, #4B74FF 0%, #9281FF 100%)",
+							}}
+							className="cursor-pointer text-center py-2 rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%]"
+						>
+							{kycStatus ? "Invest" : "Complete your KYC"}
+						</label>
 					</div>
 				</div>
 
 				{/* Deal Terms */}
 
-				<div style={{ display: "flex" }} className="flex-col w-1/2">
+				{/* <div style={{ display: "flex" }} className="flex-col w-1/2">
 					<div
 						style={{ display: "flex" }}
 						className="flex-row justify-between mt-10 mb-3"
@@ -496,97 +470,85 @@ const ViewPool = () => {
 							})}
 						</div>
 					</div>
+				</div> */}
+
+				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
+					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
+
+					<div className="mt-6 flex flex-col gap-3">
+						{transactionData.length ? (
+							<>
+								{transactionData.map((item) => (
+									<TransactionCard
+										key={transactionData.blockHash}
+										data={item}
+										address={poolData.opportunityPoolAddress}
+									/>
+								))}
+							</>
+						) : (
+							<p>Transaction details are not available at this moment</p>
+						)}
+					</div>
 				</div>
 
-				<div
-					style={{
-						marginTop: "50px",
-						fontSize: 19,
-						marginBottom: "20px",
-						fontWeight: "600",
-					}}
-				>
-					Recent Activity
-				</div>
+				<div className="mt-[5em] md:w-[58%]">
+					<h2 className="text-xl font-semibold md:text-2xl mb-6">
+						Borrower Details
+					</h2>
 
-				<div className="w-1/2">
-					{transactionData.length ? (
-						<>
-							{transactionData.map((item) => (
-								<TransactionCard
-									key={transactionData.blockHash}
-									data={item}
-									address={poolData.opportunityPoolAddress}
+					<div>
+						<div className=" flex items-center">
+							<div className="flex items-center gap-3 md:gap-5">
+								<img
+									src={logoImgSrc}
+									style={{ aspectRatio: "1/1" }}
+									className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
 								/>
-							))}
-						</>
-					) : (
-						<p>Transaction details are not available at this moment</p>
-					)}
-				</div>
 
-				<div
-					style={{
-						marginTop: "50px",
-						fontSize: 19,
-						marginBottom: 10,
-						fontWeight: "600",
-					}}
-				>
-					Borrower Details
-				</div>
+								<div>
+									<p className="text-lg font-semibold">
+										{companyDetails?.companyName}
+									</p>
+								</div>
+							</div>
 
-				<div style={{ display: "flex" }} className="flex-col w-1/2">
-					<div
-						style={{ display: "flex" }}
-						className="flex-row justify-between  mb-3"
-					>
-						<div
-							style={{ display: "flex" }}
-							className="flex-row gap-4 items-center"
-						>
-							<img
-								style={{
-									background: "red",
-									height: 50,
-									width: 50,
-									borderRadius: 25,
-								}}
-								src={logoImgSrc}
-							/>
-							<div style={{ fontSize: 18, fontWeight: "600" }} className="mb-0">
-								{companyDetails?.companyName}
+							<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4">
+								{companyDetails && companyDetails.linkedin ? (
+									<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
+										<LinkedIn className="w-6" />
+										<p className="hidden md:block font-medium">LinkedIn</p>
+									</div>
+								) : (
+									<></>
+								)}
+
+								{companyDetails && companyDetails.website ? (
+									<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
+										<Website className="w-6 " />
+										<p className="hidden md:block font-medium">Website</p>
+									</div>
+								) : (
+									<></>
+								)}
+
+								{companyDetails && companyDetails.twitter ? (
+									<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
+										<Twitter className="w-6" />
+										<p className="hidden md:block font-medium">Twitter</p>
+									</div>
+								) : (
+									<></>
+								)}
 							</div>
 						</div>
-						{companyDetails && companyDetails.linkedin ? (
-							<div
-								style={{
-									width: 36,
-									height: 36,
-									background: "#292C33",
-									display: "flex",
-								}}
-								className="rounded-box items-center justify-center ml-20"
-							>
-								in
-							</div>
-						) : (
-							<></>
-						)}
-					</div>
-					<div>
-						{companyDetails ? (
-							companyDetails.companyBio
-						) : (
-							<p>Unable to fetch company profile</p>
-						)}
+						<div className="mt-4 text-neutral-200">
+							{companyDetails
+								? companyDetails.companyBio
+								: "Unable to fetch company profile"}
+						</div>
 					</div>
 				</div>
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
 			</div>
 		</div>
 	);
