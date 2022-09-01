@@ -563,6 +563,38 @@ const BorrowerProfile = () => {
 										color: "#64748B",
 									}}
 								>
+									Business Incorporation Proof
+								</h6>
+								<DocumentCard
+									docName={
+										brJson
+											? brJson.businessIncoFile.businessIncoDocName
+											: borrowerJson
+											? borrowerJson.businessIncoFile.businessIncoDocName
+											: null
+									}
+									docCid={
+										brJson
+											? brJson.businessIncoFile.businessIncoFileCID
+											: borrowerJson
+											? borrowerJson.businessIncoFile.businessIncoFileCID
+											: null
+									}
+									fileName={
+										brJson
+											? brJson.businessIncoFile.businessIncoFileName
+											: borrowerJson
+											? borrowerJson.businessIncoFile.businessIncoFileName
+											: null
+									}
+								/>
+								<h6
+									style={{
+										marginTop: 10,
+										marginBottom: 3,
+										color: "#64748B",
+									}}
+								>
 									Business License Proof
 								</h6>
 								{hasKey ? (
@@ -592,38 +624,6 @@ const BorrowerProfile = () => {
 								) : (
 									<DocumentCard docName={"No document added!"} disable={true} />
 								)}
-								<h6
-									style={{
-										marginTop: 10,
-										marginBottom: 3,
-										color: "#64748B",
-									}}
-								>
-									Business Incorporation Proof
-								</h6>
-								<DocumentCard
-									docName={
-										brJson
-											? brJson.businessIncoFile.businessIncoDocName
-											: borrowerJson
-											? borrowerJson.businessIncoFile.businessIncoDocName
-											: null
-									}
-									docCid={
-										brJson
-											? brJson.businessIncoFile.businessIncoFileCID
-											: borrowerJson
-											? borrowerJson.businessIncoFile.businessIncoFileCID
-											: null
-									}
-									fileName={
-										brJson
-											? brJson.businessIncoFile.businessIncoFileName
-											: borrowerJson
-											? borrowerJson.businessIncoFile.businessIncoFileName
-											: null
-									}
-								/>
 							</div>
 						</>
 					) : null}
