@@ -21,14 +21,10 @@ interface IOpportunityPool {
     function initialize(
         DygnifyConfig _dygnifyConfig,
         bytes32 _opportunityID,
-        string calldata _opportunityInfo,
-        uint8 _loanType,
         uint256 _loanAmount,
         uint256 _loanTenureInDays,
         uint256 _loanInterest,
-        uint256 _paymentFrequencyInDays,
-        string calldata _collateralDocument,
-        uint256 _capitalLoss
+        uint256 _paymentFrequencyInDays
     ) external;
 
     function deposit(uint8 _subpoolId, uint256 amount) external;

@@ -24,14 +24,10 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     LPToken public lpToken;
 
     bytes32 public opportunityID;
-    uint8 public loanType;
     uint256 public loanAmount;
-    string public opportunityInfo;
     uint256 public loanTenureInDays;
     uint256 public loanInterest;
     uint256 public paymentFrequencyInDays;
-    string public collateralDocument;
-    uint256 public capitalLoss;
     uint256 public poolBalance;
     uint256 public repaymentStartTime;
     uint256 public repaymentCounter;
@@ -74,14 +70,10 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     function initialize(
         DygnifyConfig _dygnifyConfig,
         bytes32 _opportunityID,
-        string memory _opportunityInfo,
-        uint8 _loanType,
         uint256 _loanAmount,
         uint256 _loanTenureInDays,
         uint256 _loanInterest,
-        uint256 _paymentFrequencyInDays,
-        string memory _collateralDocument,
-        uint256 _capitalLoss
+        uint256 _paymentFrequencyInDays
     ) external override initializer {
         require(
             address(_dygnifyConfig) != address(0),
@@ -106,14 +98,10 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         address borrower = opportunityOrigination.getBorrower(_opportunityID);
         _setupRole(BORROWER_ROLE, borrower);
         opportunityID = _opportunityID;
-        opportunityInfo = _opportunityInfo;
-        loanType = _loanType;
         loanAmount = _loanAmount;
         loanTenureInDays = _loanTenureInDays;
         loanInterest = _loanInterest;
         paymentFrequencyInDays = _paymentFrequencyInDays;
-        collateralDocument = _collateralDocument;
-        capitalLoss = _capitalLoss;
         repaymentCounter = 1;
 
         if (dygnifyConfig.getFlag(_opportunityID) == false) {
@@ -320,9 +308,6 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             opportunityOrigination.isDrawdown(opportunityID) == true,
             "Funds in opportunity haven't drawdown yet."
         );
-        if (repaymentCounter == totalRepayments) {
-            opportunityOrigination.markRepaid(opportunityID);
-        }
         uint256 amount = emiAmount;
         totalRepaidAmount += emiAmount;
         uint256 currentTime = block.timestamp;
@@ -381,6 +366,12 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         repaymentCounter = repaymentCounter.add(1);
 
         usdcToken.safeTransferFrom(msg.sender, address(this), amount);
+        
+        if (repaymentCounter == totalRepayments) {
+            opportunityOrigination.markRepaid(opportunityID);
+            uint seniorPoolAmount = seniorSubpoolDetails.overdueGenerated + seniorSubpoolDetails.yieldGenerated + seniorSubpoolDetails.depositedAmount;
+            usdcToken.transfer(dygnifyConfig.seniorPoolAddress(), seniorPoolAmount);
+        }
     }
 
     // this function will withdraw all the available amount of executor including yield and overdue profit

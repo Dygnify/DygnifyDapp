@@ -21,6 +21,7 @@ interface IOpportunityOrigination {
     struct Opportunity {
         bytes32 opportunityID;
         address borrower;
+        string opportunityName;
         string opportunityInfo;
         LoanType loanType;
         uint256 loanAmount;
@@ -34,6 +35,19 @@ interface IOpportunityOrigination {
         uint256 createdOn;
     }
 
+    struct CreateOpportunity {
+        address borrower;
+        string opportunityName;
+        string opportunityInfo;
+        LoanType loanType;
+        uint256 loanAmount;
+        uint256 loanTenureInDays;
+        uint256 loanInterest;
+        uint256 paymentFrequencyInDays;
+        string collateralDocument;
+        uint256 capitalLoss;
+    }
+
     function getTotalOpportunities() external view returns (uint256);
 
     function getOpportunityOf(address _borrower)
@@ -42,15 +56,7 @@ interface IOpportunityOrigination {
         returns (bytes32[] memory);
 
     function createOpportunity(
-        address _borrower,
-        string calldata _opportunityInfo,
-        uint8 _loanType,
-        uint256 _loanAmount,
-        uint256 _loanTenureInDays,
-        uint256 _loanInterest,
-        uint256 _paymentFrequencyInDays,
-        string calldata _collateralDocument,
-        uint256 _capitalLoss
+        CreateOpportunity memory _opportunityData
     ) external;
 
     function assignUnderwriters(bytes32 _opportunityId, address _underwriter)
