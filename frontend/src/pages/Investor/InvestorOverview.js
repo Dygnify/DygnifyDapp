@@ -103,7 +103,7 @@ const InvestorOverview = () => {
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				<div className="flex items-center mb-8">
 					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl w-[50%]">
-						Investor's Dashboard,
+						Investor's Dashboard
 					</h2>
 					<GradientButtonHeader
 						onClick={() => path("/investor-dashboard/invest")}
