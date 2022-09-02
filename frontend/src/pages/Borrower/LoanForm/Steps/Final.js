@@ -1,8 +1,18 @@
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 import { useState } from "react";
 
-export default function Final({ handlePrev, finalSubmit, formData }) {
+export default function Final({
+	handlePrev,
+	finalSubmit,
+	formData,
+	setCheckBox,
+	checkBox,
+}) {
 	const [checked, setChecked] = useState(false);
+
+	if (!checked && checkBox) {
+		setChecked(true);
+	}
 
 	const handleClick = () => {
 		finalSubmit(formData);
@@ -179,6 +189,7 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
 					type="checkbox"
 					checked={checked}
 					onChange={() => {
+						setCheckBox(checkBox ? false : true);
 						setChecked((prev) => !prev);
 					}}
 					id="terms"
@@ -189,7 +200,7 @@ export default function Final({ handlePrev, finalSubmit, formData }) {
 					onClick={() => {
 						window.open("https://www.dygnify.com/privacy-policy", "_blank");
 					}}
-					className="font-extralight text-sm underline decoration-1 underline-offset-1 cursor-pointer"
+					className=" underline decoration-1 underline-offset-1 cursor-pointer text-[#6047FF]"
 				>
 					terms and condition
 				</a>
