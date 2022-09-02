@@ -634,4 +634,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     function unpauseDrawdown() public onlyAdmin {
         isDrawdownsPaused = false;
     }
+    
+    function getOpportunityName()external view returns(string memory){
+        return opportunityOrigination.getOpportunityNameOf(opportunityID);
+    }
 }
