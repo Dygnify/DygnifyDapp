@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
 import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
 import Loader from "../../uiTools/Loading/Loader";
+import axiosHttpService from "../../services/axioscall";
+import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
+import { getUserWalletAddress } from "../../components/transaction/TransactionHelper";
 
 const Transactions = () => {
 	const [transactions, setTransactions] = useState([]);
-
-	const [history, setHistory] = useState([]);
 
 	const [loading, setLoading] = useState(true);
 
@@ -14,19 +15,13 @@ const Transactions = () => {
 		setTimeout(() => {
 			setLoading(false);
 		}, 300);
-		let data = await getTransactionHistory();
-
-		// not getting any response
-		setTransactions(data);
-		setLoading(false);
-		console.log(data);
+		//getUserWalletAddress().then((address) => console.log(address));
+		const ret = await axiosHttpService(
+			tokenTransactions("0x959215a40Edc898C3aA7371f8a262f9f6acAC0df")
+		);
+		setTransactions(ret.res.result);
+		console.log(ret.res.result, "sadfaaaaaaaaa");
 	}, []);
-
-	// useEffect(() => {
-	//   fetch("/transactions.json")
-	//     .then((res) => res.json())
-	//     .then((data) => setTransactions(data));
-	// }, [transactions]);
 
 	return (
 		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>

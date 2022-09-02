@@ -94,27 +94,28 @@ const BorrowerProfile = () => {
 		});
 
 		const fetchData = async () => {
-			let borrowerCID = await getBorrowerDetails();
-			console.log("CID", borrowerCID);
-
-			if (!borrowerCID) {
-				setLoading(false);
-				return setProfileStatus(false);
-			}
-			if (borrowerCID) {
-				let data = await retrieveFiles(borrowerCID, true);
-
-				if (data) {
-					let read = getBinaryFileData(data);
-					read.onloadend = function () {
-						let brJson = JSON.parse(read.result);
-						loadBorrowerData(brJson);
-						setborrowerJson(brJson);
-						setHaskey(brJson ? "businessLicFile" in brJson : false);
-						console.log(brJson);
-					};
-				}
-			}
+			getBorrowerDetails()
+				.then((borrowerCID) => {
+					if (!borrowerCID) {
+						setLoading(false);
+						return setProfileStatus(false);
+					}
+					retrieveFiles(borrowerCID, true)
+						.then((data) => {
+							if (data) {
+								let read = getBinaryFileData(data);
+								read.onloadend = function () {
+									let brJson = JSON.parse(read.result);
+									loadBorrowerData(brJson);
+									setborrowerJson(brJson);
+									setHaskey(brJson ? "businessLicFile" in brJson : false);
+									console.log(brJson);
+								};
+							}
+						})
+						.catch((e) => console.log(e));
+				})
+				.catch((e) => console.log(e));
 		};
 
 		if (!location.state) fetchData();
@@ -562,6 +563,38 @@ const BorrowerProfile = () => {
 										color: "#64748B",
 									}}
 								>
+									Business Incorporation Proof
+								</h6>
+								<DocumentCard
+									docName={
+										brJson
+											? brJson.businessIncoFile.businessIncoDocName
+											: borrowerJson
+											? borrowerJson.businessIncoFile.businessIncoDocName
+											: null
+									}
+									docCid={
+										brJson
+											? brJson.businessIncoFile.businessIncoFileCID
+											: borrowerJson
+											? borrowerJson.businessIncoFile.businessIncoFileCID
+											: null
+									}
+									fileName={
+										brJson
+											? brJson.businessIncoFile.businessIncoFileName
+											: borrowerJson
+											? borrowerJson.businessIncoFile.businessIncoFileName
+											: null
+									}
+								/>
+								<h6
+									style={{
+										marginTop: 10,
+										marginBottom: 3,
+										color: "#64748B",
+									}}
+								>
 									Business License Proof
 								</h6>
 								{hasKey ? (
@@ -591,38 +624,6 @@ const BorrowerProfile = () => {
 								) : (
 									<DocumentCard docName={"No document added!"} disable={true} />
 								)}
-								<h6
-									style={{
-										marginTop: 10,
-										marginBottom: 3,
-										color: "#64748B",
-									}}
-								>
-									Business Incorporation Proof
-								</h6>
-								<DocumentCard
-									docName={
-										brJson
-											? brJson.businessIncoFile.businessIncoDocName
-											: borrowerJson
-											? borrowerJson.businessIncoFile.businessIncoDocName
-											: null
-									}
-									docCid={
-										brJson
-											? brJson.businessIncoFile.businessIncoFileCID
-											: borrowerJson
-											? borrowerJson.businessIncoFile.businessIncoFileCID
-											: null
-									}
-									fileName={
-										brJson
-											? brJson.businessIncoFile.businessIncoFileName
-											: borrowerJson
-											? borrowerJson.businessIncoFile.businessIncoFileName
-											: null
-									}
-								/>
 							</div>
 						</>
 					) : null}

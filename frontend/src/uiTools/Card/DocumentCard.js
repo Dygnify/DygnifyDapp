@@ -14,7 +14,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 		<div className="justify-between mb-2 bg-[#20232A] rounded-lg flex px-4 py-3">
 			<div>
 				<p>{docName ? null : "view document"}</p>
-				{docName ? <p className="italic bg-[#E6E6E6]"> {docName}</p> : null}
+				{docName ? <p className="italic"> {docName}</p> : null}
 			</div>
 			<a className="text-blue-700 cursor-pointer" onClick={viewDoc}>
 				{disable ? null : "view document"}
