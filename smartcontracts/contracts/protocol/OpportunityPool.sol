@@ -36,6 +36,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public amountWithoutEMI;
     uint256 public dailyInterestRate;
     uint256 public totalRepaidAmount;
+    uint256 public constant oneYearInDays = 360;
 
     uint256 public seniorYieldPerecentage;
     uint256 public juniorYieldPerecentage;
@@ -124,13 +125,15 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             block.timestamp +
             loanTenureInSec;
 
+        uint256 monthlyInterest = loanInterest.div(oneYearInDays);    
+
         uint256 total_Repayment = loanAmount.add(
-            loanAmount.mul(loanInterest.div(100)).div(10**6)
+            loanAmount.mul(monthlyInterest.div(100)).div(10**6)
         );
         emiAmount = total_Repayment.div(
             loanTenureInDays.div(paymentFrequencyInDays)
         );
-        uint256 effectiveInterest = loanInterest.add(
+        uint256 effectiveInterest = monthlyInterest.add(
             dygnifyConfig.getOverDueFee()
         );
         dailyInterestRate = effectiveInterest.div(loanTenureInDays);
