@@ -53,18 +53,20 @@ const ProcessingFundsModal = ({ investProcessing }) => {
 						</div>
 
 						<div className="mt-3 border border-neutral-500 px-4 py-4 rounded-lg flex flex-col gap-4">
-							<div className="flex flex-col gap-1">
-								<p className="text-neutral-400">Status</p>
-								{investProcessing ? (
-									<p className="text-warning-400 font-semibold">Processing</p>
-								) : (
-									<p className="text-success-500 font-semibold">Completed</p>
-								)}
-							</div>
+							<div className="flex flex-col gap-4 md:flex-row">
+								<div className="flex flex-col gap-1">
+									<p className="text-neutral-400">Status</p>
+									{investProcessing ? (
+										<p className="text-warning-400 font-semibold">Processing</p>
+									) : (
+										<p className="text-success-500 font-semibold">Completed</p>
+									)}
+								</div>
 
-							<div className="flex flex-col gap-1">
-								<p className="text-neutral-400">Transaction ID</p>
-								<p className="font-semibold">0msaae8979faweawqt977</p>
+								<div className="flex flex-col gap-1 md:mx-auto">
+									<p className="text-neutral-400">Transaction ID</p>
+									<p className="font-semibold">0msaae8979faweawqt977</p>
+								</div>
 							</div>
 
 							<div className="flex flex-col gap-1">

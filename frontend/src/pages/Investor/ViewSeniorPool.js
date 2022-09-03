@@ -19,6 +19,7 @@ import LinkedIn from "../SVGIcons/LinkedIn";
 import Website from "../SVGIcons/Website";
 import Twitter from "../SVGIcons/Twitter";
 import UpArrow from "../SVGIcons/UpArrow";
+import DollarImage from "../../assets/Dollar-icon.svg";
 
 const ViewSeniorPool = () => {
 	const location = useLocation();
@@ -154,10 +155,13 @@ const ViewSeniorPool = () => {
 							</div>
 
 							<div className="ml-auto flex flex-col justify-start">
-								<p className=" font-semibold text-xl mb-1">{estimatedAPY}%</p>
-								<p className="font-semibold text-xl">
-									{poolAmount} {process.env.REACT_APP_TOKEN_NAME}
+								<p className=" font-semibold text-xl mb-1 text-right">
+									{estimatedAPY}%
 								</p>
+								<div className="flex gap-1 text-right">
+									<img src={DollarImage} className="w-4" />
+									<p className="font-semibold text-xl">{poolAmount}</p>
+								</div>
 							</div>
 						</div>
 

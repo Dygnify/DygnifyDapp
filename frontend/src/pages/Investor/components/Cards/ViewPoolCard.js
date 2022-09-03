@@ -80,35 +80,32 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}</p>
+					<p className="text-2xl font-semibold">{poolName}</p>
+					<p>{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}</p>
+					<p className="text-2xl font-semibold">{poolName}</p>
+					<p>{companyName}</p>
 				</div>
 
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col gap-1 font-semibold">
 					<div className="flex gap-1">
-						<p className="text-lg font-medium">Pool Size</p>
+						<p className="">Pool Size</p>
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{opportunityAmount}</p>
+						<p className="">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex">
-						<p className="text-lg font-medium">Estimated APY</p>
-						<p className="ml-auto text-lg font-medium">{loanInterest}</p>
+						<p className="">Estimated APY</p>
+						<p className="ml-auto ">{loanInterest}</p>
 					</div>
 					<div className="flex">
-						<p className="text-lg font-medium">Status</p>
+						<p className="">Status</p>
 
-						<StatusButton
-							className="ml-auto text-lg font-medium"
-							isFullStatus={isFull}
-						/>
+						<StatusButton className="ml-auto" isFullStatus={isFull} />
 					</div>
 				</div>
 

@@ -42,44 +42,42 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dygnify</p>
+					<p className="text-[1.4375rem] font-semibold">{poolName}</p>
+					<p className="">{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dygnify</p>
+					<p className="text-[1.4375rem] font-semibold">{poolName}</p>
+					<p className="">{companyName}</p>
 				</div>
 
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col gap-1 font-semibold">
 					<div className="flex gap-1">
-						<p className="text-lg font-medium">Pool Size</p>
+						<p className="">Pool Size</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{opportunityAmount}</p>
+						<p className="">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex gap-1">
-						<p className="text-lg font-medium">Capital Invested</p>
+						<p className="">Capital Invested</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{capitalInvested}</p>
+						<p className="">{capitalInvested}</p>
 					</div>
 
 					<div className="flex gap-1">
-						<p className="text-lg font-medium">Estimated APY</p>
-						<p className="text-lg font-medium ml-auto">{estimatedAPY}</p>
+						<p className="">Estimated APY</p>
+						<p className=" ml-auto">{estimatedAPY}</p>
 					</div>
 
 					<div className="flex gap-1">
-						<p className="text-lg font-medium">Available for Withdrawal</p>
+						<p className="">Available for Withdrawal</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">
-							{withdrawableAmt ? withdrawableAmt : "- -"}
-						</p>
+						<p className="">{withdrawableAmt ? withdrawableAmt : "- -"}</p>
 					</div>
 				</div>
 
@@ -95,7 +93,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 							padding: "12px 24px",
 							color: "white",
 						}}
-						className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-medium flex fill-white  items-center justify-center w-[100%] sm:w-[60%] mx-auto md:w-[70%] md:mx-auto xl:w-[100%] 2xl:w-[60%]"
+						className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-semibold flex fill-white  items-center justify-center w-[100%] sm:w-[60%] mx-auto md:w-[70%] md:mx-auto xl:w-[100%] 2xl:w-[60%]"
 					>
 						Withdraw Funds
 					</button>

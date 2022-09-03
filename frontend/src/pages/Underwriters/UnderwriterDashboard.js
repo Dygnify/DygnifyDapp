@@ -6,8 +6,6 @@ import BorrowIcon from "../../uiTools/Icons/BorrowIcon";
 import ApprovalIcon from "../../uiTools/Icons/ApprovalIcon";
 
 const UnderwriterDashboard = () => {
-	const [borrow, setborrow] = useState(true);
-	const [approval, setapproval] = useState(false);
 	const [linkStatus, setLinkStatus] = useState(false);
 
 	const handleChange = (e) => {
@@ -37,49 +35,31 @@ const UnderwriterDashboard = () => {
 
 				<div className="drawer-side  border-r-[#20232A] border-r-[1px]">
 					<label htmlFor="dashboard-sidebar" className="drawer-overlay"></label>
-					<ul className=" h-full overflow-y-auto w-60  text-white bg-darkmode-900 -mr-5">
-						<li
-							className={`font-medium text-center ${
-								borrow ? "bg-[#3A3C43]" : ""
-							} ${borrow ? "text-[#9281FF] " : "text-[#64748B]"}`}
-						>
+					<ul className=" h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<li className="font-medium text-center">
 							<NavLink
-								className="flex ml-9 py-4 gap-2"
-								to="/underwriterDashboard"
+								className="flex ml-8 py-4 gap-2"
+								to="/underwriterDashboard/borrowRequest"
 								onClick={() => {
-									if (borrow) {
-										setborrow(false);
-									} else {
-										setborrow(true);
-										setapproval(false);
-									}
+									setLinkStatus(false);
 								}}
 							>
-								<span>
-									<BorrowIcon color={borrow} />
+								<span className="ml-7">
+									<BorrowIcon />
 								</span>
 								Borrow request
 							</NavLink>
 						</li>
-						<li
-							className={`font-medium ${approval ? "bg-[#3A3C43]" : ""} ${
-								approval ? "text-[#9281FF]" : "text-[#64748B]"
-							}`}
-						>
+						<li className="font-medium text-center">
 							<NavLink
-								className="flex ml-9 py-4 gap-2"
+								className="flex ml-8 py-4 gap-2"
 								to="/underwriterDashboard/approvalHistory"
 								onClick={() => {
-									if (approval) {
-										setapproval(false);
-									} else {
-										setapproval(true);
-										setborrow(false);
-									}
+									setLinkStatus(false);
 								}}
 							>
-								<span>
-									<ApprovalIcon color={approval} />
+								<span className="ml-7">
+									<ApprovalIcon />
 								</span>
 								Approval history
 							</NavLink>

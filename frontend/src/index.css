@@ -10,6 +10,24 @@
   background-image: linear-gradient(81.75deg, #4B74FF 0%, #9281FF 100%);
 }
 
+.active {
+  color: #9281FF;
+  background-color: #3A3C43;
+  border-radius: 0.8em;
+}
+
+.active > span > svg > path {
+  fill: #9281FF;
+}
+
+.transaction-button > button {
+  padding-block: 0.2em;
+  padding-inline: 0.5em;
+  border-radius: 1.8em;
+  font-weight: 600;
+  color: black;
+}
+
 .text-gradient {
   color: transparent;
   background-clip: text;
