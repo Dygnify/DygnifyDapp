@@ -59,8 +59,8 @@ const Overview = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			let opportunities = await getDrawdownOpportunities();
+			console.log("************", opportunities);
 			if (opportunities && opportunities.length) {
-				console.log("************", opportunities);
 				setDrawdownList(opportunities);
 			}
 
@@ -190,11 +190,11 @@ const Overview = () => {
 					<></>
 				)}
 
-				<div className="mt-6 lg:mt-12 flex flex-col gap-4 md:flex-row">
-					<div className="card-gradient px-4 sm:px-6 md:px-3 pt-6 pb-3 rounded-xl md:flex flex-col justify-center md:w-[20%] lg:w-[25%]">
+				<div className="mt-6 lg:mt-12 flex flex-col gap-4 md:flex-row ">
+					<div className="card-gradient px-4 sm:px-6 md:px-3 pt-6 pb-3 rounded-xl md:flex flex-col justify-center md:w-[25%]">
 						{totalBorrowedAmt ? (
-							<div className="font-bold flex items-end gap-2 text-xl">
-								<h3 className="text-2xl md:text-4xl xl:text-5xl text-gradient">
+							<div className="font-bold flex items-end gap-2 text-xl flex-wrap">
+								<h3 className="text-[1.75rem] md:text-3xl xl:text-5xl text-gradient">
 									{totalBorrowedAmt}
 								</h3>
 								<p className="text-xl text-gradient">
@@ -210,7 +210,7 @@ const Overview = () => {
 						</p>
 					</div>
 
-					<div className="card-gradient pt-3 pb-4  rounded-xl  md:w-[60%] lg:w-[50%]">
+					<div className="card-gradient pt-3 pb-4  rounded-xl  md:w-[50%]">
 						<div className="hidden md:block">
 							<h2 className="text-neutral-500 font-semibold text-base md:text-xl px-5">
 								Active loans distribution
@@ -275,12 +275,16 @@ const Overview = () => {
 						</div>
 					</div>
 
-					<div className="flex flex-col gap-4 md:w-[20%] lg:w-[25%]">
+					<div className="flex flex-col gap-4 md:w-[25%]">
 						<div className="card-gradient py-4 rounded-xl px-4 sm:px-6 md:h-[50%]">
 							{nextDueAmount ? (
-								<div className="font-bold text-primary-500 flex items-end gap-2 text-xl">
-									<h3 className="text-3xl">{nextDueAmount}</h3>
-									{process.env.REACT_APP_TOKEN_NAME}
+								<div className="font-bold text-primary-500 flex items-end gap-1 text-xl flex-wrap">
+									<h3 className="text-[1.75rem] md:text-[1.1875rem] lg:text-2xl xl:text-[1.75rem]">
+										{nextDueAmount}
+									</h3>
+									<p className="text-xl md:text-sm lg:text-xl">
+										{process.env.REACT_APP_TOKEN_NAME}
+									</p>
 								</div>
 							) : (
 								<p>- -</p>
@@ -292,7 +296,7 @@ const Overview = () => {
 
 						<div className="card-gradient py-4 rounded-xl px-4 sm:px-6 md:h-[50%]">
 							{nextDueDate ? (
-								<h3 className="font-bold text-3xl text-primary-500">
+								<h3 className="font-bold text-[1.75rem] md:text-[1.1875rem] lg:text-2xl xl:text-[1.75rem] text-primary-500">
 									{nextDueDate}
 								</h3>
 							) : (
@@ -302,8 +306,11 @@ const Overview = () => {
 						</div>
 					</div>
 				</div>
-				<div className="mb-16 text-xl">
-					<h2 className="mb-2">Repayment Notification</h2>
+
+				<div className="my-16">
+					<h2 className="font-semibold text-[1.4375rem] mb-4">
+						Repayment Notification
+					</h2>
 					{repaymentList.length === 0 ? (
 						<div
 							style={{ display: "flex", marginTop: 20 }}
@@ -314,7 +321,7 @@ const Overview = () => {
 							</div>
 						</div>
 					) : (
-						<div style={{ display: "flex" }} className="gap-4">
+						<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 							{repaymentList.map((item) => (
 								<RepaymentCard
 									key={item.id}
@@ -331,20 +338,17 @@ const Overview = () => {
 						<ProcessingRepaymentModal processRepayment={processRepayment} />
 					)}
 				</div>
-				<div className="mb-16">
-					<h2 className="mb-2 text-xl">Drawdown Funds</h2>
+				<div className="">
+					<h2 className="font-semibold text-[1.4375rem] mb-4">
+						Drawdown Funds
+					</h2>
 
 					{drawdownList.length === 0 ? (
-						<div
-							style={{ display: "flex", marginTop: 20 }}
-							className="justify-center"
-						>
-							<div style={{ color: "#64748B", fontSize: 18 }}>
-								No drawdown available.
-							</div>
+						<div className="flex mt-5 justify-center">
+							<p className="text-neutral-500 text-lg">No drawdown available.</p>
 						</div>
 					) : (
-						<div style={{ display: "flex" }} className=" gap-4">
+						<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 							{drawdownList.map((item) => (
 								<DrawdownCard
 									key={item.id}
@@ -366,45 +370,34 @@ const Overview = () => {
 						<></>
 					)}
 				</div>
-				<div className="mb-16">
-					<h2 className="mb-2 text-xl">Upcoming Due Dates</h2>
-					<div className="collapse mb-3">
-						<input type="checkbox" className="peer" />
-						<div
-							style={{
-								display: "flex",
-								borderTop: "1px solid #20232A",
-								borderBottom: "1px solid #20232A",
-							}}
-							className="collapse-title text-md font-light justify-around w-full"
-						>
-							<p className="w-1/4 text-center">Pool Name</p>
-							<p className="w-1/4 text-center">Capital Borrowed</p>
-							<p className="w-1/4 text-center">Amount Due</p>
-							<p className="w-1/4 text-center">Due Date</p>
-						</div>
+
+				<div className="my-16">
+					<h2 className="font-semibold text-[1.4375rem] mb-4">
+						Upcoming Due Dates
+					</h2>
+
+					<div className="px-1 mt-8 py-6 gap-4 md:gap-0 md:justify-around flex font-bold border-y border-darkmode-500 text-center">
+						<p className="w-1/3 md:w-1/4 my-auto">Pool Name</p>
+						<p className="hidden md:block w-1/3 md:w-1/4 my-auto">
+							Capital Borrowed
+						</p>
+						<p className="w-1/3 md:w-1/4 my-auto">Amount Due</p>
+						<p className="w-1/3 md:w-1/4 my-auto">Due Date</p>
 					</div>
 					{repaymentList.length === 0 ? (
-						<div
-							style={{ display: "flex", marginTop: 40 }}
-							className="justify-center"
-						>
-							<div style={{ color: "#64748B", fontSize: 18 }}>
+						<div className="justify-center flex mt-10">
+							<p className="text-neutral-500 text-lg">
 								No due dates available.
-							</div>
+							</p>
 						</div>
 					) : (
-						<div>
+						<div className="my-5 flex flex-col gap-3">
 							{repaymentList.map((item) => (
 								<DueDateCard key={item.id} data={item} />
 							))}
 						</div>
 					)}
 				</div>
-				<br />
-				<br />
-				<br />
-				<br />
 			</div>
 		</>
 	);

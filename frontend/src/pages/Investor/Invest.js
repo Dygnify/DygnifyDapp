@@ -55,6 +55,8 @@ const Invest = () => {
 				if (juniorPool && juniorPool.length) {
 					setJuniorPools(juniorPool);
 					setJuniorPoolLoading(false);
+				} else {
+					setJuniorPoolLoading(false);
 				}
 			});
 		} catch (error) {
@@ -155,7 +157,7 @@ const Invest = () => {
 								</p>
 							</div>
 						) : (
-							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
+							<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 								{juniorPools.map((item) => (
 									<ViewPoolCard
 										data={item}

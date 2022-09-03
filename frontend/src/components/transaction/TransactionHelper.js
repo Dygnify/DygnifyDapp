@@ -516,7 +516,7 @@ export async function getDrawdownOpportunities() {
 
 				if (
 					!tx.opportunityPoolAddress ||
-					tx.opportunityPoolAddress !== nullAddress ||
+					tx.opportunityPoolAddress === nullAddress ||
 					tx.opportunityStatus.toString() !== "5"
 				) {
 					continue;
@@ -950,7 +950,8 @@ export async function getJuniorWithdrawableOp() {
 					ethers.utils.formatUnits(estimatedAPY[1].toString(), sixDecimals) *
 						100 +
 					"%";
-				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable =
+					await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals

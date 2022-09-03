@@ -229,7 +229,7 @@ const InvestorOverview = () => {
 								</p>
 							</div>
 						) : (
-							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw] sm:items-center md:items-start">
+							<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 								{juniorPool.map((juniorPoolData) => (
 									<PoolCard key={juniorPoolData.id} data={juniorPoolData} />
 								))}

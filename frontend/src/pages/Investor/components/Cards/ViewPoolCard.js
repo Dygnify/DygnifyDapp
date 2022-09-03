@@ -70,12 +70,12 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 	}
 	return (
 		<div
-			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%] my-gradient`}
+			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient`}
 		>
 			<div className="flex items-center gap-6">
 				<img
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
-					className="w-[7rem] lg:w-[12rem]"
+					className="w-[7rem] lg:w-[6rem] xl:w-[10rem] 2xl:w-[8rem]"
 					src={logoImgSrc ? logoImgSrc : DygnifyImage}
 				/>
 
@@ -110,10 +110,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				</div>
 
 				<div className="">
-					<PrimaryButton
-						className="w-[100%] sm:w-[60%] mx-auto md:w-[70%] md:mx-auto xl:w-[100%] 2xl:w-[60%]"
-						onClick={onClick}
-					>
+					<PrimaryButton className="w-[100%]" onClick={onClick}>
 						View Pool
 					</PrimaryButton>
 				</div>
