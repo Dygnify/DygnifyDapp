@@ -46,28 +46,14 @@ const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
 						{!processRepayment ? `Yay!🎉` : "In Progress⏱"}
 					</p>
 					<p
-						style={{ display: "flex", fontSize: 23, fontWeight: 600 }}
+						style={{ display: "flex", fontSize: 14, fontWeight: 600 }}
 						className="justify-center mb-2"
 					>
 						{processRepayment
-							? "Repayment is in progress"
-							: "Repayment done successfully"}
+							? "Repayment of 10,000 USDC of pool poolName is under progress. "
+							: "You successfully repaid 10,000 USDC of pool poolName"}
 					</p>
-					{processRepayment ? (
-						<p
-							className="justify-center"
-							style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
-						>
-							{`Repayment is in progress.`}
-						</p>
-					) : (
-						<p
-							className="justify-center"
-							style={{ display: "flex", fontSize: 14, marginBottom: 10 }}
-						>
-							{`You repayment is successful`}
-						</p>
-					)}
+
 					<div
 						className="text-sm py-3 px-4 rounder-box items-center "
 						style={{

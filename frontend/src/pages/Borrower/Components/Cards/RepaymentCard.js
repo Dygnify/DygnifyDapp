@@ -5,10 +5,17 @@ import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
-const RepaymentCard = ({ data, loadRepaymentList }) => {
+const RepaymentCard = ({
+	data,
+	setOpenProcessRepayment,
+	setProcessRepayment,
+	loadRepaymentList,
+}) => {
 	const [selected, setSelected] = useState(null);
 	const handleRepayment = async () => {
+		setOpenProcessRepayment(true);
 		setSelected(null);
+		setProcessRepayment(true);
 		loadRepaymentList(true);
 	};
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;

@@ -1,46 +1,104 @@
-import React from "react";
-import DollarImage from "../../../../assets/Dollar-icon.svg";
-import Website from "../../../SVGIcons/Website";
+import { ethers } from "ethers";
+import React, { useEffect, useState } from "react";
+import { convertDate } from "../../../../components/transaction/TransactionHelper";
+import {
+	getDisplayAmount,
+	getTrimmedWalletAddress,
+} from "../../../../services/displayTextHelper";
 
-const TransactionsCard = ({ data }) => {
+const TransactionsCard = ({ data, address }) => {
+	const [userAddress, setUserAddress] = useState();
+	const [isDrawdown, setIsDrawdown] = useState();
+	const [amount, setAmount] = useState();
+	const [date, setDate] = useState();
+
+	function getUserAddress() {
+		if (data.from.toUpperCase() === address.toUpperCase()) {
+			setUserAddress(getTrimmedWalletAddress(data.to));
+			setIsDrawdown(true);
+		} else {
+			setUserAddress(getTrimmedWalletAddress(data.from));
+			setIsDrawdown(false);
+		}
+	}
+
+	useEffect(() => {
+		if (data && address) {
+			getUserAddress();
+			let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
+			setAmount(getDisplayAmount(amt));
+			setDate(convertDate(data.timeStamp));
+		}
+	}, []);
+
 	return (
-		<div className="px-2 bg-darkmode-800 flex justify-around rounded-xl py-3 gap-4 md:gap-6 text-center">
-			<p className="w-1/3 md:w-1/6 my-auto ">{data?.opportunity_name}</p>
-			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">{data?.date}</p>
-			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">{data?.type}</p>
-			<p className="flex gap-1 items-center w-1/3 md:w-1/6 my-auto justify-center">
-				<img src={DollarImage} className="w-4" />
-				{data?.type === "Drawdown" ? "-" : "+"}
-				{data?.amount}
-			</p>
-			{data?.status === "Completed" && (
-				<p className="w-1/3 md:w-1/6 my-auto transaction-button">
-					<button className="bg-gradient-to-r from-[#51B960] to-[#83DC90]">
-						Completed
-					</button>
-				</p>
-			)}
-			{data?.status === "Not Completed" && (
-				<p className="w-1/3 md:w-1/6 my-auto transaction-button">
-					<button className="bg-gradient-to-r from-[#E73838] to-[#FFBABA] text-[0.775rem] xl:text-base">
-						Not Completed
-					</button>
-				</p>
-			)}
-			{data?.status === "Processing" && (
-				<p className="w-1/3 md:w-1/6 my-auto transaction-button">
-					<button className="bg-gradient-to-r from-[#FFE202] to-[#F2B24E]">
-						Processing
-					</button>
-				</p>
-			)}
-			<a
-				className="hidden md:flex underline w-1/3 md:w-1/6 my-auto gap-1 items-center justify-center"
-				href={data?.link}
+		<div
+			style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
+			className=" mb-2"
+		>
+			<div
+				style={{ display: "flex" }}
+				className="collapse-title text-md font-light justify-around w-full"
 			>
-				Polygonscan
-				<Website />
-			</a>
+				<p className="w-1/6 text-center">{data?.opportunity_name}</p>
+				<p className="w-1/6 text-center">{data?.date}</p>
+				<p className="w-1/6 text-center">{data?.type}</p>
+				<p className="w-1/6 text-center">
+					{data?.type === "Drawdown" ? "-" : "+"}
+					{data?.amount} {process.env.REACT_APP_TOKEN_NAME}
+				</p>
+				{data?.status === "Completed" && (
+					<p className="w-1/6 text-center">
+						<button
+							style={{
+								borderRadius: "35px",
+								padding: "5px 8px",
+								background:
+									"linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)",
+								border: "none",
+							}}
+							className="btn btn-xs btn-success"
+						>
+							Completed
+						</button>
+					</p>
+				)}
+				{data?.status === "Not Completed" && (
+					<p className="w-1/6 text-center">
+						<button
+							style={{
+								borderRadius: "35px",
+								padding: "5px 8px",
+								background:
+									"linear-gradient(97.67deg, #E73838 1.07%, #FFBABA 100%)",
+								border: "none",
+							}}
+							className="btn btn-xs btn-error"
+						>
+							Not Completed
+						</button>
+					</p>
+				)}
+				{data?.status === "Processing" && (
+					<p className="w-1/6 text-center">
+						<button
+							style={{
+								borderRadius: "35px",
+								padding: "5px 8px",
+								background:
+									"linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)",
+								border: "none",
+							}}
+							className="btn btn-xs btn-warning"
+						>
+							Processing
+						</button>
+					</p>
+				)}
+				<a className="w-1/6 text-center underline" href={data?.link}>
+					Polygonscan
+				</a>
+			</div>
 		</div>
 	);
 };

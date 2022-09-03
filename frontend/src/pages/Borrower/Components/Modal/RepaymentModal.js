@@ -20,12 +20,12 @@ const RepaymentModal = ({
 	}, []);
 
 	async function onRepayment() {
-		//setOpenProcessRepayment(true);
-		//setProcessRepayment(true);
+		setOpenProcessRepayment(true);
+		setProcessRepayment(true);
 		await repayment(data.opportunityPoolAddress);
 		handleRepayment();
 
-		//setProcessRepayment(false);
+		setProcessRepayment(false);
 	}
 
 	return (
@@ -91,6 +91,8 @@ const RepaymentModal = ({
 						<GradientBtnForModal
 							className={"w-full"}
 							htmlFor={"RepaymentProcessModal"}
+							setOpenProcessRepayment={setOpenProcessRepayment}
+							setProcessRepayment={setProcessRepayment}
 							onClick={onRepayment}
 						>
 							Make Repayment
