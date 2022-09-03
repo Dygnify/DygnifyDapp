@@ -24,7 +24,8 @@ interface IOpportunityPool {
         uint256 _loanAmount,
         uint256 _loanTenureInDays,
         uint256 _loanInterest,
-        uint256 _paymentFrequencyInDays
+        uint256 _paymentFrequencyInDays,
+        uint8 _loanType
     ) external;
 
     function deposit(uint8 _subpoolId, uint256 amount) external;
