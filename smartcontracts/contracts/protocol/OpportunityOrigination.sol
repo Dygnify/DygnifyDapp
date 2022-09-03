@@ -53,33 +53,29 @@ contract OpportunityOrigination is
 
     //Opportunity Creation
     function createOpportunity(
-        address _borrower,
-        string calldata _opportunityInfo,
-        uint8 _loanType,
-        uint256 _loanAmount,
-        uint256 _loanTenureInDays,
-        uint256 _loanInterest,
-        uint256 _paymentFrequencyInDays,
-        string calldata _collateralDocument,
-        uint256 _capitalLoss
+        CreateOpportunity memory _opportunityData
     ) external override nonReentrant whenNotPaused {
         // KYC check (add)
         // require(kycOf[msg.sender].isDoucument == kycOf[msg.sender].isLiveliness == kycOf[msg.sender].isAddress == kycOf[msg.sender].isAML == kycOf[msg.sender].imageHash == kycOf[msg.sender].result == true,"Please do your KYC before creating opportunity");
 
         require(
-            _loanType <= uint8(LoanType.TermLoan),
+            uint8(_opportunityData.loanType) <= uint8(LoanType.TermLoan),
             "LoanType : Out of range"
         );
-        require(_loanAmount > 0, "Loan Amount Must be greater than 0");
-        require(address(_borrower) != address(0), "invalid borrower address");
-        require(_loanInterest > 0, "Loan Interest Must be greater than 0");
-        require(_loanTenureInDays > 0, "Loan Tenure Must be greater than 0");
+        require(_opportunityData.loanAmount > 0, "Loan Amount Must be greater than 0");
+        require(address(_opportunityData.borrower) != address(0), "invalid borrower address");
+        require(_opportunityData.loanInterest > 0, "Loan Interest Must be greater than 0");
+        require(_opportunityData.loanTenureInDays > 0, "Loan Tenure Must be greater than 0");
         require(
-            _paymentFrequencyInDays > 0,
+            _opportunityData.paymentFrequencyInDays > 0,
             "Payment Frequency Must be greater than 0"
         );
+        require(
+            bytes(_opportunityData.opportunityName).length <= 50, 
+            "Length of Opportunity name must be less than or equal to 50" 
+        );
 
-        bytes32 id = keccak256(abi.encodePacked(_collateralDocument));
+        bytes32 id = keccak256(abi.encodePacked(_opportunityData.collateralDocument));
         require(
             isOpportunity[id] == false,
             "Same collatoral document is been used to create different opportunity."
@@ -87,19 +83,20 @@ contract OpportunityOrigination is
 
         Opportunity memory _opportunity;
         _opportunity.opportunityID = id;
-        _opportunity.borrower = _borrower;
-        _opportunity.opportunityInfo = _opportunityInfo;
-        _opportunity.loanType = LoanType(_loanType);
-        _opportunity.loanAmount = _loanAmount;
-        _opportunity.loanTenureInDays = _loanTenureInDays;
-        _opportunity.loanInterest = _loanInterest;
-        _opportunity.paymentFrequencyInDays = _paymentFrequencyInDays;
-        _opportunity.collateralDocument = _collateralDocument;
-        _opportunity.capitalLoss = _capitalLoss;
+        _opportunity.borrower = _opportunityData.borrower;
+        _opportunity.opportunityName = _opportunityData.opportunityName;
+        _opportunity.opportunityInfo = _opportunityData.opportunityInfo;
+        _opportunity.loanType = _opportunityData.loanType;
+        _opportunity.loanAmount = _opportunityData.loanAmount;
+        _opportunity.loanTenureInDays = _opportunityData.loanTenureInDays;
+        _opportunity.loanInterest = _opportunityData.loanInterest;
+        _opportunity.paymentFrequencyInDays = _opportunityData.paymentFrequencyInDays;
+        _opportunity.collateralDocument = _opportunityData.collateralDocument;
+        _opportunity.capitalLoss = _opportunityData.capitalLoss;
         _opportunity.createdOn = block.timestamp;
 
         opportunityToId[id] = _opportunity;
-        opportunityOf[_borrower].push(id);
+        opportunityOf[_opportunityData.borrower].push(id);
         isOpportunity[id] = true;
         opportunityIds.push(id);
     }
@@ -197,14 +194,10 @@ contract OpportunityOrigination is
         IOpportunityPool(pool).initialize(
             dygnifyConfig,
             opportunityToId[_opportunityId].opportunityID,
-            opportunityToId[_opportunityId].opportunityInfo,
-            uint8(opportunityToId[_opportunityId].loanType),
             opportunityToId[_opportunityId].loanAmount,
             opportunityToId[_opportunityId].loanTenureInDays,
             opportunityToId[_opportunityId].loanInterest,
-            opportunityToId[_opportunityId].paymentFrequencyInDays,
-            opportunityToId[_opportunityId].collateralDocument,
-            opportunityToId[_opportunityId].capitalLoss
+            opportunityToId[_opportunityId].paymentFrequencyInDays
         );
         opportunityToId[_opportunityId].opportunityPoolAddress = pool;
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus
@@ -337,5 +330,14 @@ contract OpportunityOrigination is
         require(_underwriter != address(0), "Invalid underwriter sddress");
         bytes32[] memory opportunities = underwriterToOpportunity[_underwriter];
         return opportunities;
+    }
+
+    function getOpportunityNameOf(bytes32 _opportunityId)external view returns(string memory){
+        require(
+            isOpportunity[_opportunityId] == true,
+            "Opportunity ID doesn't exist"
+        );
+        Opportunity memory opportunityDetails = opportunityToId[_opportunityId];
+        return opportunityDetails.opportunityName;
     }
 }

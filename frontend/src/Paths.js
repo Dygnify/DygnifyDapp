@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import { Route, Routes, HashRouter } from "react-router-dom";
+import { Route, Routes, HashRouter, Navigate } from "react-router-dom";
 import Token from "./home/Token";
 
 import LandingPage from "./pages/LandingPage/LandingPage";
@@ -42,7 +42,8 @@ const Paths = () => {
 
 					{/* // rename */}
 					<Route path="/investor-dashboard" element={<InvestorDashboard />}>
-						<Route index element={<InvestorOverview />} />
+						<Route index element={<Navigate to="overview" />} />
+						<Route path="overview" element={<InvestorOverview />} />
 						<Route path="invest" element={<Invest />} />
 						<Route path="withdraw" element={<Withdraw />} />
 						<Route path="transaction" element={<Transactions />} />
@@ -54,13 +55,15 @@ const Paths = () => {
 						path="/underwriterDashboard"
 						element={<UnderwriterDashboard />}
 					>
-						<Route index element={<BorrowRequest />} />
+						<Route index element={<Navigate to="borrowRequest" />} />
+						<Route path="borrowRequest" element={<BorrowRequest />} />
 						<Route path="poolDetail" element={<PoolDetails />} />
 						<Route path="approvalHistory" element={<ApprovalHistory />} />
 					</Route>
 
 					<Route path="/borrower_dashboard" element={<BorrowerDashboard />}>
-						<Route index element={<Overview />}></Route>
+						<Route index element={<Navigate to="overview" />} />
+						<Route path="overview" element={<Overview />} />
 
 						<Route path="borrow_list" element={<BorrowList />} />
 						<Route path="transaction" element={<Transaction />} />

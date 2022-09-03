@@ -3,6 +3,7 @@ import {
 	withdrawAllJunior,
 	withdrawSeniorPoolInvestment,
 } from "../../../../components/transaction/TransactionHelper";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
@@ -33,141 +34,84 @@ const WithdrawFundsModal = ({
 				className="modal-toggle"
 				checked={showModal}
 			/>
-			<div
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
-				className="modal"
-			>
-				<div
-					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-					className="modal-box w-1/3 max-w-5xl p-0"
-				>
-					<button
-						for="WithdrawModal"
-						className="btn btn-ghost absolute right-2 top-2 pb-2"
-						onClick={() => setShowModal(false)}
-					>
-						✕
-					</button>
-					<h3
-						style={{ borderBottom: "2px solid #292C33" }}
-						className="font-bold text-lg py-3 px-4"
-					>
-						Withdraw Funds
-					</h3>
-					<div style={{ display: "flex" }} className="justify-center my-6">
+			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
+				<div className="bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
+						<h3 className="font-semibold text-xl">Withdraw Funds</h3>
+
+						<button
+							for="WithdrawModal"
+							className="hover:text-primary-600 text-xl"
+							onClick={() => setShowModal(false)}
+						>
+							✕
+						</button>
+					</div>
+
+					<div className="px-4 md:px-8 mt-[4em] md:mt-6 flex flex-col gap-8">
 						<img
-							style={{ borderRadius: "50%" }}
-							className="p-4 bg-[#9281FF] opacity-80"
 							src={WalletImage}
+							style={{ aspectRatio: 1 / 1 }}
+							className="w-[4rem] mx-auto p-4 bg-purple-500 rounded-[50%]"
 							alt=""
 						/>
-					</div>
-					<div
-						style={{
-							backgroundColor: "#292C33",
-							borderRadius: "4px",
-						}}
-						className="mx-4 mb-3 py-4 px-4 text-base"
-					>
-						<div
-							style={{ display: "flex" }}
-							className="flex-row justify-between"
-						>
-							<p style={{ display: "flex" }}>Total Balance</p>
-							<p style={{ display: "flex" }}>{userWalletBal}</p>
-						</div>
-					</div>
-					<div
-						className="text-sm py-3 px-5 flex-col"
-						style={{ display: "flex" }}
-					>
-						<div
-							style={{ display: "flex" }}
-							className="flex-row mb-1 justify-between"
-						>
-							<p style={{ display: "flex" }}>Pool Name</p>
-							<p style={{ display: "flex" }}>{data?.poolName}</p>
-						</div>
 
-						<div
-							style={{ display: "flex" }}
-							className="flex-row mb-1 justify-between"
-						>
-							<p style={{ display: "flex" }}>Amount Invested</p>
-							<p style={{ display: "flex" }}>{data?.capitalInvested}</p>
-						</div>
-
-						<div
-							style={{ display: "flex" }}
-							className="mb-1 flex-row justify-between"
-						>
-							<p style={{ display: "flex" }}>Estimated APY</p>
-							<p style={{ display: "flex" }}>{data?.estimatedAPY}</p>
-						</div>
-						<div
-							style={{ display: "flex" }}
-							className="mb-0 flex-row justify-between"
-						>
-							<p style={{ display: "flex" }}>Available for withdrawal</p>
-							<p style={{ display: "flex" }}>{data?.withdrawableAmt}</p>
+						<div className="py-4 px-3 flex gap-1 bg-darkmode-500 rounded-md ">
+							<p className="font-semibold text-[1.125rem]">Total Balance</p>
+							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<p className="font-semibold text-[1.125rem]">{userWalletBal}</p>
 						</div>
 					</div>
 
-					<div
-						class="flex justify-center"
-						style={{ display: "flex", marginTop: -6 }}
-					>
+					<div className="px-4 md:px-8 mt-8 flex flex-col gap-1">
+						<div className="flex justify-between font-semibold">
+							<p>Pool Name</p>
+							<p>{data?.poolName}</p>
+						</div>
+
+						<div className="flex gap-1 font-semibold">
+							<p>Amount Invested</p>
+
+							<img src={DollarImage} className="w-4 ml-auto" />
+							<p>{data?.capitalInvested}</p>
+						</div>
+
+						<div className="flex justify-between font-semibold">
+							<p>Estimated APY</p>
+							<p>{data?.estimatedAPY}</p>
+						</div>
+						<div className="flex gap-1 font-semibold">
+							<p>Available for withdrawal</p>
+
+							<img src={DollarImage} className="w-4 ml-auto" />
+							<p>{data?.withdrawableAmt}</p>
+						</div>
+					</div>
+
+					<div className="relative px-4 md:px-8 mt-8 flex flex-col gap-1">
 						{data.isSeniorPool ? (
-							<div class="mb-3 w-full relative">
-								<label
-									for="exampleNumber0"
-									class="form-label inline-block mb-0  text-white rounded-box"
-									style={{ fontSize: 14 }}
-								>
+							<>
+								<label for="investModalAmount" className="font-semibold">
 									Enter Amount
 								</label>
 								<input
 									type="number"
-									style={{
-										appearance: "textfield",
-									}}
-									class="
-        form-control
-        block
-        w-full
-        h-57
-        pl-3
-        pr-[3.5rem]
-        py-3
-        text-base
-        font-normal
-        text-white
-        bg-[#24272F] bg-clip-padding
-        border border-solid border-[#3A3C43] 
-        rounded
-        transition
-        ease-in-out
-        m-0
-        focus:text-white focus:bg-base-100 focus:border-base-300 focus:outline-none
-      "
+									className="bg-darkmode-700 border-2 border-darkmode-50 outline-none p-2 pr-14 rounded-md placeholder:text-neutral-500 placeholder:font-semibold"
 									id="exampleNumber0"
 									placeholder="0.0"
 									onChange={(event) => setAmount(event.target.value)}
 								/>
 
-								<span className="text-[#64748B] font-medium absolute bottom-3 right-2 select-none">
+								<span className="absolute right-7 md:right-11 text-neutral-500 top-10 font-semibold">
 									{process.env.REACT_APP_TOKEN_NAME}
 								</span>
-							</div>
+							</>
 						) : (
 							<></>
 						)}
 					</div>
 
-					<div
-						className="modal-action mx-4 mt-2 mb-4 justify-center"
-						style={{ display: "flex" }}
-					>
+					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
 							className="w-full"
 							disable={true}

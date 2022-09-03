@@ -102,7 +102,7 @@ const InvestorOverview = () => {
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				<div className="flex items-center mb-8">
-					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl w-[50%]">
+					<h2 className="text-[1.4rem] lg:text-[1.75rem] w-[50%] font-semibold">
 						Investor's Dashboard
 					</h2>
 					<GradientButtonHeader
@@ -116,9 +116,9 @@ const InvestorOverview = () => {
 				{/* parent div */}
 				<div className="flex flex-col md:flex-row gap-6">
 					{/* child 1 */}
-					<div className="flex flex-col gap-4 bg-gradient-to-br from-[#282828] to-[#00000028] px-4 py-4 rounded-xl md:flex-row sm:px-[4vw] md:pl-2 md:pr-[1.5vw] md:gap-3 lg:px-[1vw] xl:px-[1vw] xl:gap-8 md:w-1/2 2xl:items-center 2xl:justify-around">
-						<div className="flex flex-col items-center gap-2 md:items-start">
-							<h2 className="text-lg font-bold text-[#64748B] sm:text-2xl md:text-xl 2xl:text-2xl">
+					<div className="flex flex-col gap-4 card-gradient px-4 py-4 rounded-xl md:flex-row sm:px-[4vw] md:pl-2 md:pr-[1.5vw] md:gap-3 lg:px-[1vw] xl:px-[1vw] xl:gap-8 md:w-1/2 2xl:items-center 2xl:justify-around">
+						<div className="flex flex-col items-center gap-2 md:items-start	">
+							<h2 className="text-xl font-bold text-[#64748B] md:text-sm 2xl:text-lg">
 								Yield Earned
 							</h2>
 
@@ -147,31 +147,53 @@ const InvestorOverview = () => {
 						{/* Change this total implementation */}
 
 						<div className="flex flex-col gap-3 justify-center">
-							<div className="flex items-center md:flex-col md:items-start">
-								<p className="text-base text-[#64748B] sm:text-lg xl:text-xl 2xl:text-2xl">
+							<div className="flex items-center md:flex-col md:items-start gap-1">
+								<p className="text-sm lg:text-base text-[#64748B] flex gap-1 items-center">
+									<span className="inline-block w-3 h-2 bg-primary-500 rounded-3xl"></span>
 									Total amount invested
 								</p>
 
-								<div className="ml-auto text-2xl md:ml-0 xl:text-3xl 2xl:text-4xl">
-									{totalInvestment === 0 ? "- -" : totalInvestment + "USDC"}
-								</div>
+								{totalInvestment === 0 ? (
+									<p className="ml-auto md:ml-0  text-xl lg:text-[1.75rem] px-5">
+										- -
+									</p>
+								) : (
+									<div className="ml-auto md:ml-0 font-semibold flex items-end gap-2 px-4">
+										<p className=" text-xl lg:text-[1.75rem] ">
+											{totalInvestment}
+										</p>
+										<p className="text-base lg:text-xl">
+											{process.env.REACT_APP_TOKEN_NAME}
+										</p>
+									</div>
+								)}
 							</div>
 
-							<div className="flex items-center md:flex-col md:items-start">
-								<p className="text-base text-[#64748B] sm:text-lg xl:text-xl 2xl:text-2xl">
+							<div className="flex items-center md:flex-col md:items-start gap-1">
+								<p className="text-sm lg:text-base text-[#64748B]  flex gap-1 items-center">
+									<span className="inline-block w-3 h-2 bg-[#F790F9] rounded-3xl"></span>
 									Total Yield Earned
 								</p>
 
-								<div className="ml-auto text-2xl md:ml-0 xl:3xl 2xl:text-4xl">
-									{totalYield === 0 ? "- -" : totalYield + "USDC"}
-								</div>
+								{totalYield === 0 ? (
+									<p className="ml-auto md:ml-0 text-xl lg:text-[1.75rem] px-5">
+										- -
+									</p>
+								) : (
+									<div className="ml-auto md:ml-0 font-semibold flex items-end gap-2 px-5">
+										<p className=" text-xl lg:text-[1.75rem] ">{totalYield}</p>
+										<p className="text-base lg:text-xl">
+											{process.env.REACT_APP_TOKEN_NAME}
+										</p>
+									</div>
+								)}
 							</div>
 						</div>
 					</div>
 
 					{/* child 2 */}
-					<div className="bg-gradient-to-br from-[#282828] to-[#00000028] md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
-						<p className="text-xl font-semibold sm:text-2xl md:text-xl lg:text-2xl xl:text-3xl sm:px-4">
+					<div className="card-gradient md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
+						<p className="text-sm lg:text-base font-semibold  sm:px-4">
 							Growth of investment on reinvesting everything for
 						</p>
 						<LineChart />
@@ -179,12 +201,12 @@ const InvestorOverview = () => {
 				</div>
 
 				<div className="flex flex-col gap-5 mt-[4em] md:mt-[5em]">
-					<h1 className="text-2xl md:text-3xl font-semibold">
+					<h1 className="text-[1.75rem] md:text-2xl font-semibold">
 						Your Investments
 					</h1>
 
 					<div className="mb-4">
-						<h2 className="text-3xl md:text-4xl mb-4">Senior Pool</h2>
+						<h2 className="md:text-[1.75rem] text-2xl mb-4">Senior Pool</h2>
 						{seniorPool ? (
 							<PoolCard data={seniorPool} />
 						) : (
@@ -198,7 +220,7 @@ const InvestorOverview = () => {
 					</div>
 
 					<div>
-						<h2 className="text-3xl md:text-4xl mb-4">Junior Pool</h2>
+						<h2 className="md:text-[1.75rem] text-2xl mb-4">Junior Pool</h2>
 						{juniorPool.length === 0 ? (
 							<div className="text-center">
 								<p className="text-neutral-500 text-lg">

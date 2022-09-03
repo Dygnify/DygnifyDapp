@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { PieChart } from "recharts";
 import axiosHttpService from "../../services/axioscall";
+import OverviewIcon from "../../pages/../uiTools/Icons/OverviewIcon";
+import InvestIcon from "../../pages/../uiTools/Icons/InvestIcon";
+import TransactionIcon from "../../pages/../uiTools/Icons/TransactionIcon";
+import WithdrawIcon from "../../pages/../uiTools/Icons/WithdrawIcon";
 
 import Header from "../Layout/Header";
 
@@ -14,7 +18,7 @@ const InvestorDashboardNew = () => {
 
 	return (
 		<>
-			<div style={{ backgroundColor: "#14171F" }}>
+			<div className="bg-darkmode-900">
 				<Header linkStatus={linkStatus} />
 				<div className="drawer drawer-mobile">
 					<input
@@ -43,46 +47,62 @@ const InvestorDashboardNew = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="menu p-4 overflow-y-auto w-60  text-white bg-darkmode-900 lg:bg-transparent">
-							<li>
-								<Link
-									to="/investor-dashboard"
+						<ul className="h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+							<li className="font-medium text-center">
+								<NavLink
+									className="flex ml-8 py-4 gap-2"
+									to="/investor-dashboard/overview"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
+									<span className="ml-6">
+										<OverviewIcon />
+									</span>
 									Overview
-								</Link>
+								</NavLink>
 							</li>
-							<li>
-								<Link
+							<li className="font-medium text-center ">
+								<NavLink
+									className="flex ml-8 py-4 gap-2"
 									to="/investor-dashboard/invest"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
+									<span className="ml-7">
+										<InvestIcon />
+									</span>
 									Invest
-								</Link>
+								</NavLink>
 							</li>
-							<li>
-								<Link
+							<li className="font-medium text-center ">
+								<NavLink
+									className="flex ml-8 py-4 gap-2"
 									to="/investor-dashboard/withdraw"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
+									<span className="ml-6">
+										<WithdrawIcon />
+									</span>
 									Withdraw
-								</Link>
+								</NavLink>
 							</li>
-							<li>
-								<Link
+							<li className="font-medium text-center ">
+								<NavLink
+									className="flex ml-8 py-4 gap-2"
 									to="/investor-dashboard/transaction"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
+									<span className="ml-6">
+										<TransactionIcon />
+									</span>
 									Transaction
-								</Link>
+								</NavLink>
 							</li>
 						</ul>
 					</div>

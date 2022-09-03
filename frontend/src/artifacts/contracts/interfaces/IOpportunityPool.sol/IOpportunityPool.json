@@ -34,16 +34,6 @@
           "type": "bytes32"
         },
         {
-          "internalType": "string",
-          "name": "_opportunityInfo",
-          "type": "string"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_loanType",
-          "type": "uint8"
-        },
-        {
           "internalType": "uint256",
           "name": "_loanAmount",
           "type": "uint256"
@@ -61,16 +51,6 @@
         {
           "internalType": "uint256",
           "name": "_paymentFrequencyInDays",
-          "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "_collateralDocument",
-          "type": "string"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_capitalLoss",
           "type": "uint256"
         }
       ],
