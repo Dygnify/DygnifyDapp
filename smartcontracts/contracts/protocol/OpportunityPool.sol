@@ -37,6 +37,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public dailyInterestRate;
     uint256 public totalRepaidAmount;
     uint256 public constant oneYearInDays = 360;
+    uint256 public constant sixDecimal = 10**6;
 
     uint256 public seniorYieldPerecentage;
     uint256 public juniorYieldPerecentage;
@@ -125,22 +126,22 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             block.timestamp +
             loanTenureInSec;
 
-        uint256 monthlyInterest = loanInterest.div(oneYearInDays);    
+        uint256 totalInterest = loanInterest.mul(loanTenureInDays).div(oneYearInDays);    
 
         uint256 total_Repayment = loanAmount.add(
-            loanAmount.mul(monthlyInterest.div(100)).div(10**6)
+            loanAmount.mul(totalInterest.div(100)).div(sixDecimal)
         );
         emiAmount = total_Repayment.div(
             loanTenureInDays.div(paymentFrequencyInDays)
         );
-        uint256 effectiveInterest = monthlyInterest.add(
+        uint256 effectiveInterest = loanInterest.add(
             dygnifyConfig.getOverDueFee()
         );
         dailyInterestRate = effectiveInterest.div(loanTenureInDays);
 
         amountWithoutEMI = loanAmount
-            .div(loanTenureInDays.div(paymentFrequencyInDays).mul(10**6))
-            .mul(10**6);
+            .div(loanTenureInDays.div(paymentFrequencyInDays).mul(sixDecimal))
+            .mul(sixDecimal);
 
         totalRepayments = loanTenureInDays.div(paymentFrequencyInDays);
 
@@ -323,7 +324,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             overDueFee = overDueSeconds
                 .mul(dailyInterestRate.div(100))
                 .mul(emiAmount)
-                .div(10**6);
+                .div(sixDecimal);
         }
 
         uint256 temp = amountWithoutEMI.div(
@@ -342,26 +343,26 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
         seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails
             .yieldGenerated
-            .add(seniorYieldPerecentage.mul(tempSenior).div(10**6));
+            .add(seniorYieldPerecentage.mul(tempSenior).div(sixDecimal));
 
         juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
             .yieldGenerated
-            .add(juniorYieldPerecentage.mul(temp).div(10**6));
+            .add(juniorYieldPerecentage.mul(temp).div(sixDecimal));
 
         //overdue Amount distribution
 
         juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
             .overdueGenerated
-            .add(juniorOverduePerecentage.mul(overDueFee).div(10**6));
+            .add(juniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
         seniorSubpoolDetails.overdueGenerated = seniorSubpoolDetails
             .overdueGenerated
-            .add(seniorOverduePerecentage.mul(overDueFee).div(10**6));
+            .add(seniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
 
         // sending fund in dygnifyTreasury
         uint256 dygnifyTreasury;
         uint256 profit = emiAmount.sub(amountWithoutEMI);
-        dygnifyTreasury = profit.mul(dygnifyConfig.getDygnifyFee()).div(10**6);
-        dygnifyTreasury += overDueFee.mul(dygnifyConfig.getDygnifyFee()).div(10**6);
+        dygnifyTreasury = profit.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal);
+        dygnifyTreasury += overDueFee.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal);
         usdcToken.safeTransferFrom(address(this), dygnifyConfig.dygnifyTreasuryAddress(), dygnifyTreasury);
 
         amount = amount.add(overDueFee);
@@ -434,7 +435,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             );
             uint256 yieldGatherd = juniorYieldPerecentage
                 .mul(stakingBalance[msg.sender])
-                .div(10**6);
+                .div(sixDecimal);
             require(
                 yieldGatherd <= juniorSubpoolDetails.yieldGenerated,
                 "currently junior subpool don't have Liquidity"
@@ -453,7 +454,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 uint256 overdueGathered = (
                     juniorOverduePerecentage.mul(stakingBalance[msg.sender])
                 )
-                    .div(10**6);
+                    .div(sixDecimal);
                 amount = amount.add(overdueGathered);
                 juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
                     .overdueGenerated
@@ -477,7 +478,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         if (opportunityOrigination.isRepaid(opportunityID) == true) {
             uint256 yieldGatherd = juniorYieldPerecentage
                 .mul(stakingBalance[msg.sender])
-                .div(10**6);
+                .div(sixDecimal);
 
             amount = stakingBalance[msg.sender].add(yieldGatherd);
 
@@ -485,7 +486,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 uint256 overdueGathered = (
                     juniorOverduePerecentage.mul(stakingBalance[msg.sender])
                 )
-                    .div(10**6);
+                    .div(sixDecimal);
                 amount = amount.add(overdueGathered);
             }
         }
@@ -513,7 +514,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             overDueFee = overDueSeconds
                 .mul(dailyInterestRate.div(100))
                 .mul(emiAmount)
-                .div(10**6);
+                .div(sixDecimal);
         }
 
         amount = amount.add(overDueFee);
@@ -521,7 +522,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     }
 
     function getYieldPercentage() public view returns (uint256, uint256) {
-        uint256 one = 10**6;
+        uint256 one = sixDecimal;
         uint256 _seniorYieldPerecentage = loanInterest
             .div(100)
             .mul(
@@ -529,7 +530,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 dygnifyConfig.getJuniorSubpoolFee()
             )
         )
-            .div(10**6);
+            .div(sixDecimal);
         uint256 _juniorYieldPerecentage = loanInterest
             .div(100)
             .mul(
@@ -539,7 +540,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 )
             )
         )
-            .div(10**6);
+            .div(sixDecimal);
         return (_seniorYieldPerecentage, _juniorYieldPerecentage);
     }
 

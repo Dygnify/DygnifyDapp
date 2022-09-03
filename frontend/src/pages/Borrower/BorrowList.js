@@ -80,7 +80,7 @@ const BorrowList = () => {
 	};
 
 	return (
-		<div>
+		<div className="">
 			<DashboardHeader setSelected={setSelected} />
 			{selected && (
 				<LoanFormModal
@@ -89,16 +89,13 @@ const BorrowList = () => {
 					handleForm={handleForm}
 				></LoanFormModal>
 			)}
-			<div className="mb-16">
-				<h2 className="mb-2 text-xl">Drawdown Funds</h2>
+			<div className="mt-8">
+				<h2 className="text-2xl">Drawdown Funds</h2>
 				{data.length === 0 ? (
-					<div
-						style={{ display: "flex", marginTop: 20 }}
-						className="justify-center"
-					>
-						<div style={{ color: "#64748B", fontSize: 18 }}>
+					<div className="h-[10rem] flex items-center justify-center">
+						<p className="text-lg font-semibold text-neutral-500">
 							No drawdown available.
-						</div>
+						</p>
 					</div>
 				) : (
 					<div style={{ display: "flex" }} className=" gap-4">
@@ -108,35 +105,27 @@ const BorrowList = () => {
 					</div>
 				)}
 			</div>
-			<div className="mb-16">
-				<h2 className="mb-2 text-xl">Borrow Request</h2>
-				<div className="collapse mb-3">
+
+			<div className="my-16">
+				<h2 className="text-2xl">Borrow Request</h2>
+
+				<div className="collapse">
 					<input type="checkbox" className="peer" />
-					<div
-						style={{
-							display: "flex",
-							borderTop: "1px solid #20232A",
-							borderBottom: "1px solid #20232A",
-						}}
-						className="collapse-title text-md font-light justify-around w-full"
-					>
-						<p className="w-1/4 text-center">Pool name</p>
-						<p className="w-1/4 text-center">Capital requested</p>
-						<p className="w-1/4 text-center">Created on</p>
-						<p className="w-1/4 text-center">Status</p>
+					<div className="collapse-title my-4 font-bold flex gap-4 md:gap-8 text-center py-6 border-y border-darkmode-500">
+						<p className="w-1/3 md:w-1/4 ">Pool name</p>
+						<p className="hidden md:block w-1/4 ">Capital requested</p>
+						<p className="w-1/3  md:w-1/4 ">Created on</p>
+						<p className="w-1/3  md:w-1/4 ">Status</p>
 					</div>
 				</div>
 				{opportunities.length === 0 ? (
-					<div
-						style={{ display: "flex", marginTop: 40 }}
-						className="justify-center"
-					>
-						<div style={{ color: "#64748B", fontSize: 18 }}>
+					<div className="h-[10rem] flex items-center justify-center">
+						<p className="text-lg font-semibold text-neutral-500">
 							No borrow request available.
-						</div>
+						</p>
 					</div>
 				) : (
-					<div>
+					<div className="flex flex-col gap-3">
 						{opportunities
 							? opportunities.map((item) => (
 									<OpportunityCardCollapsible key={item.id} data={item} />

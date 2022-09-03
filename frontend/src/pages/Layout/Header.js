@@ -14,7 +14,6 @@ import Cross from "../../assets/cross.svg";
 
 const Header = ({ linkStatus }) => {
 	const [status, setStatus] = useState(false);
-	// const [linkStatus, setLinkStatus] = useState(false);
 	const location = useLocation();
 
 	const fetchStatus = async () => {
