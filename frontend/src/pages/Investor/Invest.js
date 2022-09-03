@@ -97,14 +97,16 @@ const Invest = () => {
 	return (
 		<div className="">
 			<div className="mb-4">
-				<h2 className="text-white font-semibold text-3xl md:text-4xl lg:text-5xl">
+				<h2 className="text-white font-semibold text-[1.4375rem] lg:text-[2.0625rem] ">
 					Investment pools
 				</h2>
 			</div>
 
 			<div className="py-4">
 				<div className="flex flex-col gap-5 mb-[3rem] md:mb-[4rem]">
-					<h2 className="text-2xl font-semibold">Senior pool</h2>
+					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
+						Senior pool
+					</h2>
 
 					<div className="">
 						{seniorPoolLoading && (
@@ -138,7 +140,9 @@ const Invest = () => {
 				</div>
 
 				<div className="flex flex-col gap-5">
-					<h2 className="text-2xl font-semibold">Junior pools</h2>
+					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
+						Junior pools
+					</h2>
 
 					<div className={`relative ${juniorPoolLoading ? "h-[18rem]" : ""}`}>
 						{juniorPoolLoading && <Loader />}

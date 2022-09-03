@@ -19,12 +19,12 @@ const RepaymentModal = ({
 	}, []);
 
 	async function onRepayment() {
-		//setOpenProcessRepayment(true);
-		//setProcessRepayment(true);
+		setOpenProcessRepayment(true);
+		setProcessRepayment(true);
 		await repayment(data.opportunityPoolAddress);
 		handleRepayment();
 
-		//setProcessRepayment(false);
+		setProcessRepayment(false);
 	}
 
 	return (

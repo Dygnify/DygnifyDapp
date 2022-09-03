@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
 import OverviewIcon from "../../uiTools/Icons/OverviewIcon";
 import BorIcon from "../../uiTools/Icons/BorIcon";
@@ -36,51 +36,63 @@ const BorrowerDashboard = () => {
 				</div>
 				<div className="drawer-side border-r border-darkmode-800">
 					<label htmlFor="dashboard-sidebar" className="drawer-overlay"></label>
-					<ul className="menu p-4 overflow-y-auto w-60  text-white bg-darkmode-900 lg:bg-transparent">
-						<li>
-							<Link
-								to="/borrower_dashboard"
+					<ul className="h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<li className="font-medium text-center">
+							<NavLink
+								to="/borrower_dashboard/overview"
+								className="flex ml-8 py-4 gap-2"
 								onClick={() => {
 									setLinkStatus(false);
 								}}
 							>
+								<span className="ml-6">
+									<OverviewIcon />
+								</span>
 								Overview
-							</Link>
+							</NavLink>
 						</li>
-						<li>
-							<Link
+						<li className="font-medium text-center">
+							<NavLink
 								to="/borrower_dashboard/borrow_list"
+								className="flex ml-8 py-4 gap-2"
 								onClick={() => {
 									setLinkStatus(false);
 								}}
 							>
+								<span className="ml-6">
+									<BorIcon />
+								</span>
 								Borrow
-							</Link>
+							</NavLink>
 						</li>
-						<li>
-							<Link
+						<li className="font-medium text-center">
+							<NavLink
 								to="/borrower_dashboard/transaction"
+								className="flex ml-8 py-4 gap-2"
 								onClick={() => {
 									setLinkStatus(false);
 								}}
 							>
+								<span className="ml-6">
+									<UnderIcon />
+								</span>
 								Transactions
-							</Link>
+							</NavLink>
 						</li>
-						{/* <li>
-              <Link to="/borrower_dashboard/underwriterQueries">
-                Underwriter queries
-              </Link>
-            </li> */}
-						<li>
-							<Link
+
+						<li className="font-medium text-center">
+							<NavLink
 								to="/borrower_dashboard/borrower_profile"
+								className="flex ml-8 py-4 gap-2"
 								onClick={() => {
 									setLinkStatus(false);
 								}}
 							>
+								<span className="ml-6">
+									<ProfileIcon />
+								</span>
 								Profile
-							</Link>
+							</NavLink>
 						</li>
 					</ul>
 				</div>

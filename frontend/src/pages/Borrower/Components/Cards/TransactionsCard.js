@@ -1,4 +1,37 @@
-import React from "react";
+import { ethers } from "ethers";
+import React, { useEffect, useState } from "react";
+import { convertDate } from "../../../../components/transaction/TransactionHelper";
+import {
+	getDisplayAmount,
+	getTrimmedWalletAddress,
+} from "../../../../services/displayTextHelper";
+
+const TransactionsCard = ({ data, address }) => {
+	const [userAddress, setUserAddress] = useState();
+	const [isDrawdown, setIsDrawdown] = useState();
+	const [amount, setAmount] = useState();
+	const [date, setDate] = useState();
+
+	function getUserAddress() {
+		if (data.from.toUpperCase() === address.toUpperCase()) {
+			setUserAddress(getTrimmedWalletAddress(data.to));
+			setIsDrawdown(true);
+		} else {
+			setUserAddress(getTrimmedWalletAddress(data.from));
+			setIsDrawdown(false);
+		}
+	}
+
+	useEffect(() => {
+		if (data && address) {
+			getUserAddress();
+			let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
+			setAmount(getDisplayAmount(amt));
+			setDate(convertDate(data.timeStamp));
+		}
+	}, []);
+import DollarImage from "../../../../assets/Dollar-icon.svg";
+import Website from "../../../SVGIcons/Website";
 
 const TransactionsCard = ({ data }) => {
   return (
