@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
+import OverviewIcon from "../../uiTools/Icons/OverviewIcon";
+import BorIcon from "../../uiTools/Icons/BorIcon";
+import TransactionIcon from "../../uiTools/Icons/TransactionIcon";
+import UnderIcon from "../../uiTools/Icons/UnderIcon";
+import ProfileIcon from "../../uiTools/Icons/ProfileIcon";
 
 const BorrowerDashboard = () => {
 	const [linkStatus, setLinkStatus] = useState(false);

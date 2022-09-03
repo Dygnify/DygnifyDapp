@@ -33,6 +33,7 @@ const LoanFormModal = ({
 	});
 	const [currentStep, setCurrentStep] = useState(1);
 	const [brJson, setBrJson] = useState();
+	const [checkBox, setCheckBox] = useState(false);
 
 	useEffect(async () => {
 		getBorrowerDetails()
@@ -77,6 +78,8 @@ const LoanFormModal = ({
 						handlePrev={handlePrev}
 						finalSubmit={finalSubmit}
 						formData={formData}
+						setCheckBox={setCheckBox}
+						checkBox={checkBox}
 					/>
 				);
 			default:
@@ -155,7 +158,13 @@ const LoanFormModal = ({
 		setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
 	};
 
-	const handlePrev = (newData) => {
+	const handlePrev = (newData, value) => {
+		if (value === true) {
+			let temp = { ...formData, ...newData };
+			setFormData(temp);
+		} else {
+			setFormData((prev) => ({ ...prev, ...newData }));
+		}
 		setCurrentStep((prevCurrentStep) => prevCurrentStep - 1);
 		displayStep(currentStep);
 	};

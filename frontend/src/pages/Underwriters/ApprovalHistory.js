@@ -17,12 +17,12 @@ const ApprovalHistory = () => {
 		console.log(list);
 		setTransactions(list);
 	}
-	
+
 	return (
 		<div className={`mb-16 ${loading ? "relative h-[80vh]" : ""}`}>
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
-				<h2 className="text-2xl mb-2 md:mb-10 md:-mt-1">Approval history,</h2>
+				<h2 className="text-2xl mb-2 md:mb-10 md:-mt-1">Approval history</h2>
 				{transactions.length == 0 ? (
 					<div className="felx justify-center">
 						<div className="text-[#64748B] text-xl mt-3">

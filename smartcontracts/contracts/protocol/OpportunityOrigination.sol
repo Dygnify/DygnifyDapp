@@ -331,4 +331,13 @@ contract OpportunityOrigination is
         bytes32[] memory opportunities = underwriterToOpportunity[_underwriter];
         return opportunities;
     }
+
+    function getOpportunityNameOf(bytes32 _opportunityId)external view returns(string memory){
+        require(
+            isOpportunity[_opportunityId] == true,
+            "Opportunity ID doesn't exist"
+        );
+        Opportunity memory opportunityDetails = opportunityToId[_opportunityId];
+        return opportunityDetails.opportunityName;
+    }
 }
