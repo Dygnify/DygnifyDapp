@@ -116,7 +116,7 @@ const InvestorOverview = () => {
 				{/* parent div */}
 				<div className="flex flex-col md:flex-row gap-6">
 					{/* child 1 */}
-					<div className="flex flex-col gap-4 bg-gradient-to-br from-[#282828] to-[#00000028] px-4 py-4 rounded-xl md:flex-row sm:px-[4vw] md:pl-2 md:pr-[1.5vw] md:gap-3 lg:px-[1vw] xl:px-[1vw] xl:gap-8 md:w-1/2 2xl:items-center 2xl:justify-around">
+					<div className="flex flex-col gap-4 card-gradient px-4 py-4 rounded-xl md:flex-row sm:px-[4vw] md:pl-2 md:pr-[1.5vw] md:gap-3 lg:px-[1vw] xl:px-[1vw] xl:gap-8 md:w-1/2 2xl:items-center 2xl:justify-around">
 						<div className="flex flex-col items-center gap-2 md:items-start">
 							<h2 className="text-lg font-bold text-[#64748B] sm:text-2xl md:text-xl 2xl:text-2xl">
 								Yield Earned
@@ -152,9 +152,16 @@ const InvestorOverview = () => {
 									Total amount invested
 								</p>
 
-								<div className="ml-auto text-2xl md:ml-0 xl:text-3xl 2xl:text-4xl">
-									{totalInvestment === 0 ? "- -" : totalInvestment + "USDC"}
-								</div>
+								{totalInvestment === 0 ? (
+									<p className="ml-auto md:ml-0  text-xl lg:text-3xl ">- -</p>
+								) : (
+									<div className="ml-auto md:ml-0 font-semibold flex items-end gap-2">
+										<p className=" text-xl lg:text-3xl ">{totalInvestment}</p>
+										<p className="text-base lg:text-xl">
+											{process.env.REACT_APP_TOKEN_NAME}
+										</p>
+									</div>
+								)}
 							</div>
 
 							<div className="flex items-center md:flex-col md:items-start">
@@ -162,15 +169,22 @@ const InvestorOverview = () => {
 									Total Yield Earned
 								</p>
 
-								<div className="ml-auto text-2xl md:ml-0 xl:3xl 2xl:text-4xl">
-									{totalYield === 0 ? "- -" : totalYield + "USDC"}
-								</div>
+								{totalYield === 0 ? (
+									<p className="ml-auto md:ml-0  text-xl lg:text-3xl ">- -</p>
+								) : (
+									<div className="ml-auto md:ml-0 font-semibold flex items-end gap-2">
+										<p className=" text-xl lg:text-3xl ">{totalYield}</p>
+										<p className="text-base lg:text-xl">
+											{process.env.REACT_APP_TOKEN_NAME}
+										</p>
+									</div>
+								)}
 							</div>
 						</div>
 					</div>
 
 					{/* child 2 */}
-					<div className="bg-gradient-to-br from-[#282828] to-[#00000028] md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
+					<div className="card-gradient md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
 						<p className="text-xl font-semibold sm:text-2xl md:text-xl lg:text-2xl xl:text-3xl sm:px-4">
 							Growth of investment on reinvesting everything for
 						</p>

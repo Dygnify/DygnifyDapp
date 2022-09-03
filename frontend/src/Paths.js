@@ -60,7 +60,7 @@ const Paths = () => {
 					</Route>
 
 					<Route path="/borrower_dashboard" element={<BorrowerDashboard />}>
-						<Route index element={<Overview />}></Route>
+						<Route index element={<Overview />} />
 
 						<Route path="borrow_list" element={<BorrowList />} />
 						<Route path="transaction" element={<Transaction />} />
