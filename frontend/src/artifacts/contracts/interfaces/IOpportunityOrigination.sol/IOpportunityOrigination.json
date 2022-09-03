@@ -24,49 +24,61 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "_borrower",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "_opportunityInfo",
-          "type": "string"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_loanType",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_loanAmount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_loanTenureInDays",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_loanInterest",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_paymentFrequencyInDays",
-          "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "_collateralDocument",
-          "type": "string"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_capitalLoss",
-          "type": "uint256"
+          "components": [
+            {
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "opportunityName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "opportunityInfo",
+              "type": "string"
+            },
+            {
+              "internalType": "enum IOpportunityOrigination.LoanType",
+              "name": "loanType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "loanAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "loanTenureInDays",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "loanInterest",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "paymentFrequencyInDays",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "collateralDocument",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "capitalLoss",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IOpportunityOrigination.CreateOpportunity",
+          "name": "_opportunityData",
+          "type": "tuple"
         }
       ],
       "name": "createOpportunity",

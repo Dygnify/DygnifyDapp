@@ -135,7 +135,7 @@ const LoanFormModal = ({
 			collateral_document,
 			loan_info
 		);
-		loanDetails = { ...loanDetails, collateralHash, loanInfoHash };
+		loanDetails = { ...loanDetails, collateralHash, loanInfoHash, loan_name };
 		// sending data in backend to create opportunity with hash code
 
 		const result = await createOpportunity(loanDetails);

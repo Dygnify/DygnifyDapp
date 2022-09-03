@@ -205,48 +205,54 @@ export const getEthAddress = async () => {
 
 // to create opportunity
 export async function createOpportunity(formData) {
-	let borrower = await getEthAddress();
-	let {
-		loan_type,
-		loan_amount,
-		loan_tenure,
-		loan_interest,
-		capital_loss,
-		payment_frequency,
-		loanInfoHash,
-		collateralHash,
-	} = formData;
-	console.log("backend call", formData);
-
-	if (typeof window.ethereum !== "undefined") {
-		await requestAccount();
-		const provider = new ethers.providers.Web3Provider(window.ethereum);
-		console.log({ provider });
-		const signer = provider.getSigner();
-		const contract = new ethers.Contract(
-			process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
-			opportunityOrigination.abi,
-			signer
-		);
-		const loanAmt = ethers.utils.parseUnits(loan_amount, sixDecimals);
-		const loanInterest = ethers.utils.parseUnits(loan_interest, sixDecimals);
-		const capitalLoss = capital_loss
-			? ethers.utils.parseUnits(capital_loss, sixDecimals)
-			: 0;
-		const transaction1 = await contract.createOpportunity(
-			borrower,
-			loanInfoHash,
-			loan_type,
-			loanAmt,
-			loan_tenure,
-			loanInterest,
-			payment_frequency,
-			collateralHash,
-			capitalLoss
-		);
-		await transaction1.wait();
-		console.log("successfully created*******");
+	if (!formData) {
+		return false;
 	}
+	try {
+		let borrowerAdd = await getEthAddress();
+
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+			const contract = new ethers.Contract(
+				process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+				opportunityOrigination.abi,
+				signer
+			);
+			const loanAmt = ethers.utils.parseUnits(
+				formData.loan_amount,
+				sixDecimals
+			);
+			const loanInterest = ethers.utils.parseUnits(
+				formData.loan_interest,
+				sixDecimals
+			);
+			const capitalLoss = formData.capital_loss
+				? ethers.utils.parseUnits(formData.capital_loss, sixDecimals)
+				: 0;
+			console.log("********", formData);
+			const opData = [
+				borrowerAdd,
+				formData.loan_name,
+				formData.loanInfoHash,
+				formData.loan_type,
+				loanAmt,
+				formData.loan_tenure,
+				loanInterest,
+				formData.payment_frequency,
+				formData.collateralHash,
+				capitalLoss,
+			];
+			console.log("********", opData);
+			const transaction1 = await contract.createOpportunity(opData);
+			await transaction1.wait();
+		}
+		return true;
+	} catch (error) {
+		console.log(error);
+	}
+	return false;
 }
 
 export function convertDate(epochTimestamp) {
