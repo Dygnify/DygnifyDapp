@@ -173,28 +173,29 @@ const LoanFormModal = ({
 		<div>
 			<input type="checkbox" id="loanForm-modal" class="modal-toggle" />
 			<div
-				class="modal"
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
+				class="modal block backdrop-blur-xl backdrop-brightness-75 md:flex"
+				// style={{ backdropFilter: "brightness(40%) blur(8px)" }}
 			>
 				<div
-					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-					class="modal-box w-1/2 max-w-5xl p-0"
+					className="w-screen h-screen  md:modal-box md:h-auto md:w-1/2 md:max-w-5xl md:p-0 bg-[#20232A] md:rounded-[16px] "
+					// style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
+					// class="modal-box w-1/2 max-w-5xl p-0"
 				>
 					<label
 						for="loanForm-modal"
-						class="btn btn-ghost absolute right-2 top-2 pb-2"
+						class="btn btn-ghost absolute right-2 top-2 pb-2 font-bold"
 						onClick={() => handleForm()}
 					>
 						✕
 					</label>
 					<h3
-						style={{ borderBottom: "2px solid #292C33" }}
-						className="font-bold text-lg py-3 px-4"
+						// style={{ borderBottom: "2px solid " }}
+						className="font-bold text-lg py-3 px-4 border-b-[#292C33] border-b-2"
 					>
 						Create Borrow Request
 					</h3>
 
-					<div className="mx-auto pb-2 ">
+					<div className="mx-6  md:mx-auto pb-2 ">
 						<div className="mt-5 ">
 							<Stepper steps={steps} currentStep={currentStep} />
 							<div className="mt-2 p-10 ">{displayStep(currentStep)}</div>
