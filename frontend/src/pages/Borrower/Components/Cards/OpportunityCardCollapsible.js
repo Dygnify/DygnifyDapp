@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/fileHelper";
 import { retrieveFiles } from "../../../../services/web3storageIPFS";
 import DoughnutChart from "../../../Components/DoughnutChart";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const OpportunityCardCollapsible = ({ data }) => {
 	const [poolName, setPoolName] = useState();
@@ -54,22 +55,19 @@ const OpportunityCardCollapsible = ({ data }) => {
 	}
 
 	return (
-		<div
-			style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
-			className="collapse collapse-arrow  mb-2"
-		>
+		<div className="collapse collapse-arrow bg-darkmode-500 rounded-xl">
 			<input type="checkbox" className="peer" />
-			<div
-				style={{ display: "flex" }}
-				className="collapse-title text-md font-light justify-around w-full"
-			>
-				<p className="w-1/4 text-center">{poolName}</p>
-				<p className="w-1/4 text-center">
-					{data?.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
+
+			<div className="collapse-title flex gap-4 md:gap-8 text-center">
+				<p className="w-1/3 md:w-1/4  my-auto">{poolName}</p>
+				<p className="md:flex gap-1 hidden items-center w-1/4  justify-center">
+					<img src={DollarImage} className="w-4" />
+					{data?.opportunityAmount}
 				</p>
-				<p className="w-1/4 text-center">{data?.createdOn}</p>
-				<p className="w-1/4 text-center">{getStatus(data?.status)}</p>
+				<p className="w-1/3 md:w-1/4  my-auto">{data?.createdOn}</p>
+				<p className="w-1/3 md:w-1/4  my-auto">{getStatus(data?.status)}</p>
 			</div>
+
 			<div className="collapse-content">
 				<div
 					style={{ display: "flex" }}

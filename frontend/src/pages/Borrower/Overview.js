@@ -190,163 +190,115 @@ const Overview = () => {
 					<></>
 				)}
 
-				<div style={{ display: "flex" }} className="w-full my-10">
-					<div
-						style={{
-							backgroundColor: "#191D23",
-							boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)",
-							borderRadius: "16px",
-							display: "flex",
-						}}
-						className="w-1/4 mr-4 px-4 py-4 justify-center flex-col"
-					>
-						<h1 className="font-semibold text-5xl text-green-400">
-							{totalBorrowedAmt ? totalBorrowedAmt : "--"}
-						</h1>
-						<p className="text-xl">Total Amount Borrowed</p>
-					</div>
-					<div
-						style={{
-							backgroundColor: "#191D23",
-							//boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)",
-							borderRadius: "16px",
-							padding: 15,
-							height: 300,
-							display: "flex",
-						}}
-						className="flex-row w-1/2 items-center justify-between"
-					>
-						<div
-							style={{ display: "flex", color: "red" }}
-							className="flex-col justify-center"
-						>
-							<div
-								style={{ display: "flex" }}
-								className="flex-row items-center"
-							>
-								<div
-									style={{
-										height: 8,
-										width: 10,
-										borderRadius: 5,
-										backgroundColor: "#5375FE",
-										margin: 5,
-									}}
-								/>
-								<div
-									style={{
-										fontSize: 14,
-										fontWeight: 400,
-										color: "#777E91",
-									}}
-								>
-									Total Outstanding
-								</div>
+				<div className="mt-6 lg:mt-12 flex flex-col gap-4 md:flex-row">
+					<div className="card-gradient px-4 sm:px-6 md:px-3 pt-6 pb-3 rounded-xl md:flex flex-col justify-center md:w-[20%] lg:w-[25%]">
+						{totalBorrowedAmt ? (
+							<div className="font-bold flex items-end gap-2 text-xl">
+								<h3 className="text-2xl md:text-4xl xl:text-5xl text-gradient">
+									{totalBorrowedAmt}
+								</h3>
+								<p className="text-xl text-gradient">
+									{process.env.REACT_APP_TOKEN_NAME}
+								</p>
 							</div>
-							<div
-								style={{
-									fontSize: 28,
-									color: "white",
-									marginLeft: 20,
-								}}
-								className="mb-10"
-							>
-								{totalOutstandingAmt}
+						) : (
+							<p>--</p>
+						)}
+
+						<p className="font-semibold text-neutral-500 text-sm lg:text-base">
+							Total Amount Borrowed
+						</p>
+					</div>
+
+					<div className="card-gradient pt-3 pb-4  rounded-xl  md:w-[60%] lg:w-[50%]">
+						<div className="hidden md:block">
+							<h2 className="text-neutral-500 font-semibold text-base md:text-xl px-5">
+								Active loans distribution
+							</h2>
+						</div>
+						<div className="flex flex-col gap-8 md:flex-row-reverse md:justify-between md:gap-[3vw] md:items-center md:px-5">
+							<div className=" flex flex-col gap-3 items-center md:block ">
+								<h2 className="text-neutral-500 font-semibold text-xl md:hidden">
+									Active loans distribution
+								</h2>
+								{totalLoanAmtWithInterest || totalRepaidAmt.amount ? (
+									<DoughnutChart
+										data={[
+											totalLoanAmtWithInterest,
+											totalRepaidAmt.amount ? totalRepaidAmt.amount : 0,
+										]}
+										color={["#5375FE", "#ffffff"]}
+										width={200}
+										labels={["Total Outstanding", "Total Repaid"]}
+										borderWidth={[1, 8]}
+										legendStyle={{ display: false }}
+									/>
+								) : (
+									<DoughnutChart
+										data={[1]}
+										color={["#64748B"]}
+										width={200}
+										labels={["Total Outstanding", "Total Repaid"]}
+										borderWidth={[1, 8]}
+										legendStyle={{ display: false }}
+									/>
+								)}
 							</div>
 
-							<div
-								style={{ display: "flex" }}
-								className="flex-row items-center"
-							>
-								<div
-									style={{
-										height: 8,
-										width: 10,
-										borderRadius: 5,
-										backgroundColor: "white",
-										margin: 5,
-									}}
-								/>
-								<div
-									style={{
-										fontSize: 14,
-										fontWeight: 400,
-										color: "#777E91",
-									}}
-								>
-									Total Repaid
+							<div className="px-4 sm:px-6 flex flex-col gap-2 md:px-0 md:py-2">
+								<div className="flex flex-col gap-3 md:gap-2">
+									<div className="flex md:flex-col gap-1 items-end md:items-start">
+										<p className="text-neutral-400 flex gap-1 items-center">
+											<span className="inline-block w-3 h-2 bg-gradient-to-r from-[#4B74FF] to-primary-500 rounded-3xl"></span>
+											Total Outstanding
+										</p>
+										<div className="ml-auto font-semibold md:ml-0 flex md:flex-col gap-2 items-end md:items-start px-4">
+											<h3 className="text-2xl">{totalOutstandingAmt}</h3>
+											<p className="">{process.env.REACT_APP_TOKEN_NAME}</p>
+										</div>
+									</div>
+
+									<div className="flex md:flex-col gap-1 items-end md:items-start">
+										<p className="text-neutral-400 flex gap-1 items-center">
+											<span className="inline-block w-3 h-2 bg-white rounded-3xl"></span>
+											Total Repaid
+										</p>
+										<div className="ml-auto font-semibold md:ml-0 flex md:flex-col gap-2 items-end md:items-start px-4">
+											<h3 className="text-2xl">
+												{totalRepaidAmt?.displayTotalRepaidAmt}
+											</h3>
+											<p className="">{process.env.REACT_APP_TOKEN_NAME}</p>
+										</div>
+									</div>
 								</div>
 							</div>
-							<div
-								style={{
-									fontSize: 28,
-									color: "white",
-									marginLeft: 20,
-								}}
-							>
-								{totalRepaidAmt?.displayTotalRepaidAmt}
-							</div>
-						</div>
-						<div style={{ marginRight: 20 }}>
-							{totalLoanAmtWithInterest || totalRepaidAmt.amount ? (
-								<DoughnutChart
-									data={[
-										totalLoanAmtWithInterest,
-										totalRepaidAmt.amount ? totalRepaidAmt.amount : 0,
-									]}
-									color={["#5375FE", "#ffffff"]}
-									width={200}
-									labels={["Total Outstanding", "Total Repaid"]}
-									borderWidth={[1, 8]}
-									legendStyle={{ display: false }}
-								/>
-							) : (
-								<DoughnutChart
-									data={[1]}
-									color={["#64748B"]}
-									width={200}
-									labels={["Total Outstanding", "Total Repaid"]}
-									borderWidth={[1, 8]}
-									legendStyle={{ display: false }}
-								/>
-							)}
 						</div>
 					</div>
-					<div
-						style={{
-							boxShadow: "4px 4px 10px -32px rgba(0, 0, 0, 0.1)",
-						}}
-						className="w-1/4 ml-4"
-					>
-						<div
-							style={{
-								backgroundColor: "#191D23",
-								borderRadius: "16px",
-								height: 140,
-							}}
-							className="mb-4 px-4 py-4"
-						>
-							<h3 className=" text-3xl text-purple-100">
-								{nextDueAmount ? nextDueAmount : "- -"}
-							</h3>
-							<p className="text-base font-semibold text-gray-500">
+
+					<div className="flex flex-col gap-4 md:w-[20%] lg:w-[25%]">
+						<div className="card-gradient py-4 rounded-xl px-4 sm:px-6 md:h-[50%]">
+							{nextDueAmount ? (
+								<div className="font-bold text-primary-500 flex items-end gap-2 text-xl">
+									<h3 className="text-3xl">{nextDueAmount}</h3>
+									{process.env.REACT_APP_TOKEN_NAME}
+								</div>
+							) : (
+								<p>- -</p>
+							)}
+							<p className="text-neutral-500 text-[0.875rem]">
 								Next Due Amount
 							</p>
 						</div>
-						<div
-							style={{
-								backgroundColor: "#191D23",
-								borderRadius: "16px",
-								height: 140,
-							}}
-							className="px-4 py-4"
-						>
-							<h3 className="text-3xl text-purple-100">
-								{nextDueDate ? nextDueDate : "- -"}
-							</h3>
-							<p className="text-base font-semibold text-gray-500">
-								Next Due Date
-							</p>
+
+						<div className="card-gradient py-4 rounded-xl px-4 sm:px-6 md:h-[50%]">
+							{nextDueDate ? (
+								<h3 className="font-bold text-3xl text-primary-500">
+									{nextDueDate}
+								</h3>
+							) : (
+								<p>- -</p>
+							)}
+							<p className="text-neutral-500 text-[0.875rem]">Next Due Date</p>
 						</div>
 					</div>
 				</div>

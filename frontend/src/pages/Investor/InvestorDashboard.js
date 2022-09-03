@@ -14,7 +14,7 @@ const InvestorDashboardNew = () => {
 
 	return (
 		<>
-			<div style={{ backgroundColor: "#14171F" }}>
+			<div className="bg-darkmode-900">
 				<Header linkStatus={linkStatus} />
 				<div className="drawer drawer-mobile">
 					<input
