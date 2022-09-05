@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
-import {
-	getTrimmedWalletAddress,
-	getDisplayAmount,
-} from "../../../../services/Helpers/displayTextHelper";
+import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
 const TransactionsCard = ({ data, address }) => {
-	const [userAddress, setUserAddress] = useState();
 	const [isWithdraw, setIsWithdraw] = useState();
+	const [link, setLink] = useState();
 
 	const [amount, setAmount] = useState();
 	const [date, setDate] = useState();
 
 	function getTransactionType() {
 		if (data.from.toUpperCase() === address.toUpperCase()) {
-			setUserAddress(getTrimmedWalletAddress(data.to));
 			setIsWithdraw(true);
 		} else {
-			setUserAddress(getTrimmedWalletAddress(data.from));
 			setIsWithdraw(false);
 		}
 	}
 
 	useEffect(() => {
 		if (data) {
-			//getTransactionType();
-			//add address check in if
+			getTransactionType();
 			let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
 			setAmount(getDisplayAmount(amt));
-			setDate(convertDate(data.timeStamp), "fadate");
+			setDate(convertDate(data.timeStamp));
+			setLink(`${process.env.REACT_APP_POLYGONSCAN_URL}/tx/${data.hash}`);
 		}
 	}, []);
 	return (
@@ -100,7 +95,7 @@ const TransactionsCard = ({ data, address }) => {
 						</button>
 					</p>
 				)} */}
-				<a className="w-1/6 text-center underline" href={data?.link}>
+				<a className="w-1/6 text-center underline" href={link} target="_blank">
 					Transaction
 				</a>
 			</div>

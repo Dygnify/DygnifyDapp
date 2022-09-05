@@ -7,20 +7,21 @@ import { getUserWalletAddress } from "../../services/BackendConnectors/userConne
 
 const Transactions = () => {
 	const [transactions, setTransactions] = useState([]);
-
+	const [userAddress, setUserAddress] = useState();
 	const [loading, setLoading] = useState(true);
 
 	useEffect(async () => {
 		setTimeout(() => {
 			setLoading(false);
 		}, 300);
-		getUserWalletAddress().then((address) =>
+		getUserWalletAddress().then((address) => {
+			setUserAddress(address);
 			axiosHttpService(
 				tokenTransactions(address, process.env.REACT_APP_TEST_USDCTOKEN)
 			).then((ret) => {
 				setTransactions(ret.res.result);
-			})
-		);
+			});
+		});
 	}, []);
 
 	return (
@@ -51,7 +52,11 @@ const Transactions = () => {
 						<div>
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard key={transactions.id} data={item} />
+										<TransactionsCard
+											key={transactions.id}
+											data={item}
+											address={userAddress}
+										/>
 								  ))
 								: null}
 						</div>
