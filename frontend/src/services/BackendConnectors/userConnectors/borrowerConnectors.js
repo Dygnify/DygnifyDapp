@@ -1,19 +1,14 @@
 const { ethers } = require("ethers");
 const { requestAccount, getEthAddress } = require("./commonConnectors");
-const {
-	borrowerContract,
-} = require("../../../artifacts/contracts/protocol/Borrower.sol/Borrower.json");
+const borrowerContract = require("../../../artifacts/contracts/protocol/Borrower.sol/Borrower.json");
 
-const {
-	opportunityPool,
-} = require("../../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
+const opportunityPool = require("../../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
 
 const getBorrowerDetails = async (address) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			console.log({ provider });
 			const contract = new ethers.Contract(
 				process.env.REACT_APP_BORROWER,
 				borrowerContract.abi,

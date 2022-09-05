@@ -3,20 +3,14 @@ const {
 	requestAccount,
 	convertDate,
 } = require("./userConnectors/commonConnectors");
-const {
-	opportunityOrigination,
-} = require("../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
-const {
-	opportunityPool,
-} = require("../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
-const {
-	getUserWalletAddress,
-} = require("../../components/transaction/TransactionHelper");
+const opportunityOrigination = require("../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
+const opportunityPool = require("../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
 const {
 	getTrimmedWalletAddress,
 	getDisplayAmount,
 } = require("../Helpers/displayTextHelper");
 const { getEthAddress } = require("./userConnectors/borrowerConnectors");
+const { getUserWalletAddress } = require("./userConnectors/commonConnectors");
 
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";

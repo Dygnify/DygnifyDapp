@@ -1,16 +1,8 @@
 const { ethers } = require("ethers");
-const {
-	opportunityPool,
-} = require("../../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
-const {
-	seniorPool,
-} = require("../../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json");
-const {
-	investor,
-} = require("../../../artifacts/contracts/protocol/Investor.sol/Investor.json");
-const {
-	opportunityOrigination,
-} = require("../../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
+const opportunityPool = require("../../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
+const seniorPool = require("../../../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json");
+const investor = require("../../../artifacts/contracts/protocol/Investor.sol/Investor.json");
+const opportunityOrigination = require("../../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
 const { requestAccount, getEthAddress } = require("./commonConnectors");
 const { getOpportunity } = require("../opportunityConnectors");
 
@@ -236,8 +228,7 @@ const getJuniorWithdrawableOp = async () => {
 					ethers.utils.formatUnits(estimatedAPY[1].toString(), sixDecimals) *
 						100 +
 					"%";
-				let investorWithdrawable =
-					await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals

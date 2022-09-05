@@ -1,9 +1,7 @@
 const { ethers } = require("ethers");
 const { getOpportunity } = require("../opportunityConnectors");
 const { getEthAddress } = require("./commonConnectors");
-const {
-	opportunityOrigination,
-} = require("../../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
+const opportunityOrigination = require("../../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
 
 const getApprovalHistory = async () => {
 	try {

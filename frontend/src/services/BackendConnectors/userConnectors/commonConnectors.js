@@ -1,7 +1,5 @@
 const { ethers } = require("ethers");
-const {
-	dygnifyToken,
-} = require("../../../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json");
+const dygnifyToken = require("../../../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json");
 
 const sixDecimals = 6;
 
