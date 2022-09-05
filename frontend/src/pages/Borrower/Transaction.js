@@ -24,12 +24,6 @@ const Transaction = () => {
 		console.log(data);
 	}, []);
 
-	useEffect(() => {
-		fetch("/transactions.json")
-			.then((res) => res.json())
-			.then((data) => setTransactions(data));
-	}, [transactions]);
-
 	return (
 		<div className={`relative mb-16 ${loading ? "h-[100vh]" : ""}`}>
 			{loading && <Loader />}

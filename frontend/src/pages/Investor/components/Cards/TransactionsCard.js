@@ -48,30 +48,27 @@ const TransactionsCard = ({ data, address }) => {
 					{isWithdraw ? "Withdrawal" : "Deposit"}
 				</p>
 
-				<p className="flex-row w-1/6 text-center" style={{ display: "flex" }}>
-					<>
-						{isWithdraw ? "-" : "+"} {amount}
-					</>
+				<p className="flex-row w-1/6 text-center">
+					{isWithdraw ? "-" : "+"} {amount}
 				</p>
 
-				{data?.status === "Completed" && (
-					<p className="w-1/6 text-center">
-						<button
-							style={{
-								borderRadius: "35px",
-								padding: "5px 8px",
-								background:
-									"linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)",
-								border: "none",
-							}}
-							className="btn btn-xs btn-success"
-						>
-							Completed
-						</button>
-					</p>
-				)}
+				<p className="w-1/6 text-center">
+					<button
+						style={{
+							borderRadius: "35px",
+							padding: "5px 8px",
+							background:
+								"linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)",
+							border: "none",
+						}}
+						className="btn btn-xs btn-success"
+					>
+						Completed
+					</button>
+				</p>
+
 				{/* {data?.status === "Not Completed" && ( */}
-				{data?.input === "deprecated" && (
+				{/* {data?.input === "deprecated" && (
 					<p className="w-1/6 text-center">
 						<button
 							style={{
@@ -103,7 +100,7 @@ const TransactionsCard = ({ data, address }) => {
 							Processing
 						</button>
 					</p>
-				)}
+				)} */}
 				<a className="w-1/6 text-center underline" href={data?.link}>
 					Polygonscan
 				</a>
