@@ -1,7 +1,7 @@
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 import { useEffect, useState } from "react";
 import Doller from "../../../../assets/Dollar-icon.svg";
-import { getExtendableTextBreakup } from "../../../../services/displayTextHelper";
+import { getExtendableTextBreakup } from "../../../../services/Helpers/displayTextHelper";
 
 export default function Final({
 	handlePrev,
