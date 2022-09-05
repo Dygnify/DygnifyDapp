@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
-import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
 import Loader from "../../uiTools/Loading/Loader";
 import axiosHttpService from "../../services/axioscall";
 import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
@@ -16,9 +15,10 @@ const Transactions = () => {
 			setLoading(false);
 		}, 300);
 		getUserWalletAddress().then((address) =>
-			axiosHttpService(tokenTransactions(address)).then((ret) => {
+			axiosHttpService(
+				tokenTransactions(address, process.env.REACT_APP_TEST_USDCTOKEN)
+			).then((ret) => {
 				setTransactions(ret.res.result);
-				console.log(ret.res.result, "sadfaaaaaaaaa");
 			})
 		);
 	}, []);

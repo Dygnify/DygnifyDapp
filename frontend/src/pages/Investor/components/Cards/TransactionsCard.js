@@ -7,7 +7,6 @@ import {
 } from "../../../../services/Helpers/displayTextHelper";
 
 const TransactionsCard = ({ data, address }) => {
-	console.log(data, "ssssssss");
 	const [userAddress, setUserAddress] = useState();
 	const [isWithdraw, setIsWithdraw] = useState();
 
@@ -105,7 +104,7 @@ const TransactionsCard = ({ data, address }) => {
 					</p>
 				)}
 				<a className="w-1/6 text-center underline" href={data?.link}>
-					Polygonscan
+					Transaction
 				</a>
 			</div>
 		</div>
