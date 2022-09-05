@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getBinaryFileData } from "../../../services/fileHelper";
-import { retrieveFiles } from "../../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../../services/Helpers/web3storageIPFS";
 
 const TransactionsCard = ({ data }) => {
 	const [companyName, setCompanyName] = useState();

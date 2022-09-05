@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Underwriters/Components/TransactionsCard";
-import { getApprovalHistory } from "../../components/transaction/TransactionHelper";
+import { getApprovalHistory } from "../../services/BackendConnectors/userConnectors/underwriterConnectors";
 import Loader from "../../uiTools/Loading/Loader";
 
 const ApprovalHistory = () => {

@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-	createOpportunity,
-	getBorrowerDetails,
-} from "../../../../components/transaction/TransactionHelper";
+import { createOpportunity } from "../../../../services/BackendConnectors/opportunityConnectors";
+import { getBorrowerDetails } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import Stepper from "../../LoanForm/Stepper";
 import Account from "../../LoanForm/Steps/Account";
 import Details from "../../LoanForm/Steps/Details";
 import Final from "../../LoanForm/Steps/Final";
-import { getBinaryFileData } from "../../../../services/fileHelper";
+import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
 import {
 	storeFiles,
 	makeFileObjects,
 	retrieveFiles,
-} from "../../../../services/web3storageIPFS";
+} from "../../../../services/Helpers/web3storageIPFS";
 
 const LoanFormModal = ({
 	handleForm,

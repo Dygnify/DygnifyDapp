@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { convertDate } from "../../../../components/transaction/TransactionHelper";
+import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
 	getTrimmedWalletAddress,
 	getDisplayAmount,
-} from "../../../../services/displayTextHelper";
+} from "../../../../services/Helpers/displayTextHelper";
 
 const TransactionCard = ({ data, address }) => {
 	const [userAddress, setUserAddress] = useState();

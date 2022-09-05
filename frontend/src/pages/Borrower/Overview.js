@@ -4,17 +4,15 @@ import DueDateCard from "./Components/Cards/DueDateCard";
 import RepaymentCard from "./Components/Cards/RepaymentCard";
 import LoanFormModal from "./Components/Modal/LoanFormModal";
 import DashboardHeader from "./DashboardHeader";
-import {
-	getOpportunitiesWithDues,
-	getDrawdownOpportunities,
-	getBorrowerDetails,
-	getUserWalletAddress,
-} from "../../components/transaction/TransactionHelper";
+import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { getDrawdownOpportunities } from "../../services/BackendConnectors/opportunityConnectors";
+import { getOpportunitiesWithDues } from "../../services/BackendConnectors/opportunityConnectors";
 import DoughnutChart from "../Components/DoughnutChart";
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import Loader from "../../uiTools/Loading/Loader";
 
-import { getDisplayAmount } from "../../services/displayTextHelper";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import ViewPoolCard from "./components/Cards/ViewPoolCard";
 import { useNavigate } from "react-router-dom";
+import { getAllActiveOpportunities } from "../../services/BackendConnectors/opportunityConnectors";
 import {
-	getAllActiveOpportunities,
 	getUserWalletAddress,
 	getWalletBal,
-} from "../../components/transaction/TransactionHelper";
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getBinaryFileData } from "../../services/fileHelper";
-import { getDisplayAmount } from "../../services/displayTextHelper";
+} from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getBinaryFileData } from "../../services/Helpers/fileHelper";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Loader from "../../uiTools/Loading/Loader";

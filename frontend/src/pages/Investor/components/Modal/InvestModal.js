@@ -1,11 +1,11 @@
 import { React, useState, useEffect, useContext } from "react";
-import {
-	investInSeniorPool,
-	investInJuniorPool,
-	getWalletBal,
-} from "../../../../components/transaction/TransactionHelper";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
+import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
+import {
+	investInJuniorPool,
+	investInSeniorPool,
+} from "../../../../services/BackendConnectors/userConnectors/investorConncector";
 
 //for send data import from paths--
 import { UserContext } from "../../../../Paths"; //

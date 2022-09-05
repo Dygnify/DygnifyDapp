@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import {
-	getBorrowerDetails,
 	getDrawdownOpportunities,
 	getOpportunitysOf,
-} from "../../components/transaction/TransactionHelper";
+} from "../../services/BackendConnectors/opportunityConnectors";
 import DrawdownCard from "./Components/Cards/DrawdownCard";
 import OpportunityCardCollapsible from "./Components/Cards/OpportunityCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
 import LoanFormModal from "./Components/Modal/LoanFormModal";
-import Loader from "../../uiTools/Loading/Loader";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
-import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
-import KycCheckModal from "./Components/Modal/KycCheckModal";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);

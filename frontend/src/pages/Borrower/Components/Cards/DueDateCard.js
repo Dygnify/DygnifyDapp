@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getBinaryFileData } from "../../../../services/fileHelper";
-import { retrieveFiles } from "../../../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 const DueDateCard = ({ data }) => {
 	const [poolName, setPoolName] = useState(data.poolName);
 

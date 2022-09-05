@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { convertDate } from "../../../../components/transaction/TransactionHelper";
+import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
 	getTrimmedWalletAddress,
 	getDisplayAmount,
-} from "../../../../services/displayTextHelper";
+} from "../../../../services/Helpers/displayTextHelper";
 
 const TransactionsCard = ({ data, address }) => {
 	console.log(data, "ssssssss");
@@ -42,21 +42,17 @@ const TransactionsCard = ({ data, address }) => {
 				style={{ display: "flex" }}
 				className="collapse-title text-md font-light justify-around w-full"
 			>
-				<p className="w-1/6 text-center">{data?.opportunity_name}</p>
+				<p className="w-1/6 text-center">New Opportunity</p>
 				<p className="w-1/6 text-center">{date}</p>
-				<p className="">{isWithdraw ? "Withdrawal" : "Deposit"}</p>
-				<div className="flex-row" style={{ display: "flex" }}>
-					<p className="">
-						<>
-							{isWithdraw ? "-" : "+"} {amount}
-						</>
-					</p>
-					<p className="w-1/6 text-center">
-						{data
-							? ethers.utils.formatUnits(data.value, data.tokenDecimal)
-							: ""}
-					</p>
-				</div>
+				<p className="w-1/6 text-center">
+					{isWithdraw ? "Withdrawal" : "Deposit"}
+				</p>
+
+				<p className="flex-row w-1/6 text-center" style={{ display: "flex" }}>
+					<>
+						{isWithdraw ? "-" : "+"} {amount}
+					</>
+				</p>
 
 				{data?.status === "Completed" && (
 					<p className="w-1/6 text-center">

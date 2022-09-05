@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { voteOpportunity } from "../../components/transaction/TransactionHelper";
-import { getExtendableTextBreakup } from "../../services/displayTextHelper";
+import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
 import DocumentCard from "../../uiTools/Card/DocumentCard";
 import Email from "../SVGIcons/Email";
 import LinkedIn from "../SVGIcons/LinkedIn";
@@ -9,8 +8,9 @@ import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import Loader from "../../uiTools/Loading/Loader";
 
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getDataURLFromFile } from "../../services/fileHelper";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getDataURLFromFile } from "../../services/Helpers/fileHelper";
+import { voteOpportunity } from "../../services/BackendConnectors/opportunityConnectors";
 
 const PoolDetails = () => {
 	const location = useLocation();

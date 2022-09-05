@@ -3,15 +3,14 @@ import { ethers } from "ethers";
 import dygToken from "../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json";
 import NFTMinter from "../artifacts/contracts/protocol/old/NFT_minter.sol/NFTMinter.json";
 import axiosHttpService from "../services/axioscall";
-import { uploadFileToIPFS } from "../services/PinataIPFSOptions";
-import { amlCheck } from "../services/OFACAxiosOptions";
+import { amlCheck } from "../services/ApiOptions/OFACAxiosOptions";
 import axios from "axios";
 import { Web3Storage, getFilesFromPath } from "web3.storage";
 import opportunityOrigination from "../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json";
 import seniorPool from "../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 import opportunityPool from "../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import "./Token.css";
-import { getAllUnderReviewOpportunities } from "../components/transaction/TransactionHelper";
+import { getAllUnderReviewOpportunities } from "../services/BackendConnectors/opportunityConnectors";
 const tokenAddress = "0x7d7FE8dbb260a213322b0dEE20cB1ca2d313EBfE";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 

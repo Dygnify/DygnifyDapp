@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-	repayment,
-	getWalletBal,
-} from "../../../../components/transaction/TransactionHelper";
+import { repayment } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 

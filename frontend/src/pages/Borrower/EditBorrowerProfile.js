@@ -4,8 +4,11 @@ import InputGroup from "../../uiTools/Inputs/InputGroup";
 import TextArea from "../../uiTools/Inputs/TextArea";
 import TextField from "../../uiTools/Inputs/TextField";
 import FileUploader from "../Components/FileUploader";
-import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
-import { updateBorrowerDetails } from "../../components/transaction/TransactionHelper";
+import {
+	storeFiles,
+	makeFileObjects,
+} from "../../services/Helpers/web3storageIPFS";
+import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { useLocation, useNavigate } from "react-router-dom";
 // import Loading from "../Components/Loading";
 
