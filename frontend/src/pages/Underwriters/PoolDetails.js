@@ -249,10 +249,6 @@ const PoolDetails = () => {
 								{loanPurpose.firstText}
 								<a
 									className=" font-semibold cursor-pointer"
-									// style={{
-									// 	fontWeight: 600,
-									// 	cursor: "pointer",
-									// }}
 									onClick={() => setExpand(true)}
 								>
 									{expand ? null : "... view more"}
@@ -260,10 +256,6 @@ const PoolDetails = () => {
 								{expand ? <div>{loanPurpose.secondText}</div> : null}
 								<a
 									className=" font-semibold cursor-pointer"
-									// style={{
-									// 	fontWeight: 600,
-									// 	cursor: "pointer",
-									// }}
 									onClick={() => setExpand(false)}
 								>
 									{expand ? "view less" : null}

@@ -26,10 +26,10 @@ const TransactionsCard = ({ data }) => {
 
 	return (
 		<div className="flex collapse-title font-light justify-between w-full flex-wrap overflow-hidden bg-[#20232A] rounded-xl mb-2 items-center pl-1 pr-1 md:pr-3">
-			<p className="w-1/3 md:w-1/6 font-light text-lg text-center ">
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-start pl-8 ">
 				{poolName}
 			</p>
-			<p className="w-1/3 md:w-1/6 font-light text-lg text-center">
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-start pl-8">
 				{companyName}
 			</p>
 			<p className="w-1/3 md:w-1/6 font-light text-lg text-center hidden md:block">
@@ -38,21 +38,21 @@ const TransactionsCard = ({ data }) => {
 
 			{(data?.status == "2" || data?.status >= "4") && (
 				<p className="w-1/3 md:w-1/6 text-center">
-					<div className="btn btn-xs btn-success approved-btn border-none px-3.5 text-base pb-7 pt-0.5 rounded-full capitalize">
+					<div className="btn btn-xs btn-success approved-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
 						Approved
 					</div>
 				</p>
 			)}
 			{data?.status == "1" && (
 				<p className="w-1/3 md:w-1/6 text-center ">
-					<div className="btn btn-xs btn-success rejected-btn border-none px-3.5 text-base pb-7 pt-0.5 rounded-full capitalize">
+					<div className="btn btn-xs btn-success rejected-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
 						Rejected
 					</div>
 				</p>
 			)}
 			{data?.status == "3" && (
 				<p className="w-1/3 md:w-1/6 text-center ">
-					<div className="btn btn-xs btn-success unsured-btn border-none px-3.5 text-base pb-7 pt-0.5 rounded-full capitalize">
+					<div className="btn btn-xs btn-success unsured-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
 						Unsure
 					</div>
 				</p>

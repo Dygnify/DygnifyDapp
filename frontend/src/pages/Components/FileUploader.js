@@ -37,7 +37,7 @@ const FileUploader = ({
             border: "2px dashed #3A3C43",
             borderRadius: "8px",
           }}
-          className=" flex-row bg-[#24272F] items-center "
+          className=" flex-row bg-[#24272F] items-center overflow-hidden"
         >
           <input type="button"
             className="bg-[#30333A]"

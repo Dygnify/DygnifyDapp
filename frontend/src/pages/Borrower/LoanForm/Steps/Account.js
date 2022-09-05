@@ -20,14 +20,14 @@ export default function Account({ formData, handleNext, handleForm }) {
 
 	return (
 		<>
-			<div style={{ display: "flex" }} className="flex-col">
+			<div className=" flex flex-col mt-20 md:mt-14 md:px-5 ">
 				<form onSubmit={formik.handleSubmit}>
-					<div style={{ display: "flex" }}>
+					<div className="md:flex md:gap-3">
 						<TextField
 							name="loan_name"
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
-							className="w-1/2 mr-2"
+							className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
 							label="Pool Name"
 							placeholder="Enter Pool Name"
 							value={formik.values.loan_name}
@@ -46,14 +46,14 @@ export default function Account({ formData, handleNext, handleForm }) {
 									? formik.errors.loan_amount
 									: null
 							}
-							className="w-1/2 ml-2"
+							className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
 							label="Loan Amount"
 							placeholder="Loan Amount"
 							text={process.env.REACT_APP_TOKEN_NAME}
 							value={formik.values.loan_amount}
 						></TextField>
 					</div>
-					<div style={{ display: "flex" }}>
+					<div className="md:flex md:gap-3">
 						{/* <TextField
 							name="loan_tenure"
 							onChange={formik.handleChange}
@@ -67,7 +67,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							label="Loan Tenure"
 							placeholder="Enter Loan Tenure in Months"
 						></TextField> */}
-						<div className="w-1/2 mr-2">
+						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
 								<span class="text-white">Loan Tenure</span>
 							</label>
@@ -112,7 +112,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							placeholder="Enter Repayment Frequency in Days"
 							value={formik.values.payment_frequency}
 						></TextField> */}
-						<div className="w-1/2 ml-2">
+						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
 								<span class="text-white">Repayment Frequency</span>
 							</label>
@@ -143,7 +143,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							) : null}
 						</div>
 					</div>
-					<div style={{ display: "flex" }}>
+					<div className="md:flex md:gap-3">
 						<TextField
 							name="loan_interest"
 							onChange={formik.handleChange}
@@ -153,12 +153,12 @@ export default function Account({ formData, handleNext, handleForm }) {
 									? formik.errors.loan_interest
 									: null
 							}
-							className="w-1/2 mr-2"
+							className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
 							label="Loan Interest"
 							placeholder="Enter Loan Interest Percentage"
 							value={formik.values.loan_interest}
 						></TextField>
-						<div className="w-1/2 ml-2">
+						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
 								<span class="text-white">Loan Type</span>
 							</label>
@@ -209,33 +209,24 @@ export default function Account({ formData, handleNext, handleForm }) {
 								? formik.errors.loan_purpose
 								: null
 						}
-						className="w-full"
+						className="w-full mb-5 md:mb-0"
 						label="Loan Purpose"
 						placeholder="Short Summary on Purpose of Loans"
 						value={formik.values.loan_purpose}
 					></TextArea>
 
-					<div
-						style={{ display: "flex", marginTop: 20 }}
-						className="flex-row justify-between w-full items-center content-center "
-					>
-						<div
-							style={{ display: "flex" }}
-							className="justify-center flex-row w-1/3"
-						>
+					<div className="flex justify-center items-center flex-col-reverse  md:flex-row md:justify-around gap-5  mt-6 -mb-2 overflow-hidden">
+						<div className="">
 							<label
+								className="cursor-pointer md:pl-32 ml-1"
 								onClick={handleForm}
-								style={{
-									cursor: "pointer",
-									marginLeft: 5,
-									display: "flex",
-									marginLeft: 50,
-								}}
 							>
 								Cancel
 							</label>
 						</div>
+						<div className="md:pr-40 lg:pr-10 xl:pr-0">
 						<GradientButton type="submit">Next</GradientButton>
+						</div>
 					</div>
 				</form>
 			</div>

@@ -34,8 +34,8 @@ const ApprovalHistory = () => {
 						<div className="collapse mb-3">
 							<input type="checkbox" className="peer" />
 							<div className="flex collapse-title  border-t-2 border-b-2 border-t-[#20232A] border-b-[#20232A]  justify-between w-full items-center font-bold flex-wrap pr-1 pl-1 md:pr-3">
-								<p className="w-1/3 md:w-1/6 text-center">Pool Name</p>
-								<p className="w-1/3 md:w-1/6 text-center ">Company Name</p>
+								<p className="w-1/3 md:w-1/6 text-start pl-7">Pool Name</p>
+								<p className="w-1/3 md:w-1/6 text-start pl-7">Company Name</p>
 								<p className="w-1/3 md:w-1/6 text-center  hidden md:block">
 									Created On
 								</p>

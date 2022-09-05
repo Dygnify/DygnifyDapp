@@ -37,7 +37,7 @@ const UnderwriterDashboard = () => {
 
 				<div className="drawer-side  border-r-[#20232A] border-r-[1px]">
 					<label htmlFor="dashboard-sidebar" className="drawer-overlay"></label>
-					<ul className=" h-full overflow-y-auto w-60  text-white bg-darkmode-900 -mr-5">
+					<ul className=" h-full overflow-y-auto w-60  text-white bg-darkmode-900 -mr-5 lg:bg-transparent">
 						<li
 							className={`font-medium text-center ${
 								borrow ? "bg-[#3A3C43]" : ""
