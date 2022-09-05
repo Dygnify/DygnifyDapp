@@ -8,9 +8,6 @@ import {
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import Website from "../../../SVGIcons/Website";
 
-import DollarImage from "../../../../assets/Dollar-icon.svg";
-import Website from "../../../SVGIcons/Website";
-
 const TransactionsCard = ({ data, address }) => {
 	const [userAddress, setUserAddress] = useState();
 	const [isDrawdown, setIsDrawdown] = useState();
