@@ -52,6 +52,11 @@
           "internalType": "uint256",
           "name": "_paymentFrequencyInDays",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_loanType",
+          "type": "uint8"
         }
       ],
       "name": "initialize",
