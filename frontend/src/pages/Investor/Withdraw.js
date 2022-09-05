@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import WithdrawCard from "./components/Cards/WithdrawCard";
+import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
-	getAllWithdrawableOpportunities,
 	getUserSeniorPoolInvestment,
-	getWalletBal,
 	getSeniorPoolDisplaySharePrice,
 	getJuniorWithdrawableOp,
-} from "../../components/transaction/TransactionHelper";
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getBinaryFileData } from "../../services/fileHelper";
-import { getDisplayAmount } from "../../services/displayTextHelper";
+} from "../../services/BackendConnectors/userConnectors/investorConncector";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getBinaryFileData } from "../../services/Helpers/fileHelper";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 
 import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";
 import Loader from "../../uiTools/Loading/Loader";

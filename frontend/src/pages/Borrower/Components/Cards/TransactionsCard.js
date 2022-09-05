@@ -1,10 +1,12 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { convertDate } from "../../../../components/transaction/TransactionHelper";
+import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
 	getDisplayAmount,
 	getTrimmedWalletAddress,
-} from "../../../../services/displayTextHelper";
+} from "../../../../services/Helpers/displayTextHelper";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
+import Website from "../../../SVGIcons/Website";
 
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import Website from "../../../SVGIcons/Website";
@@ -15,7 +17,7 @@ const TransactionsCard = ({ data, address }) => {
 	const [amount, setAmount] = useState();
 	const [date, setDate] = useState();
 
-	function getUserAddress() {
+	function getTransactionType() {
 		if (data.from.toUpperCase() === address.toUpperCase()) {
 			setUserAddress(getTrimmedWalletAddress(data.to));
 			setIsDrawdown(true);
@@ -27,7 +29,7 @@ const TransactionsCard = ({ data, address }) => {
 
 	useEffect(() => {
 		if (data && address) {
-			getUserAddress();
+			getTransactionType();
 			let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
 			setAmount(getDisplayAmount(amt));
 			setDate(convertDate(data.timeStamp));

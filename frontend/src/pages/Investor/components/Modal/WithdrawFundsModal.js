@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
 import {
 	withdrawAllJunior,
 	withdrawSeniorPoolInvestment,
-} from "../../../../components/transaction/TransactionHelper";
-import DollarImage from "../../../../assets/Dollar-icon.svg";
+} from "../../../../services/BackendConnectors/userConnectors/investorConncector";
 
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";

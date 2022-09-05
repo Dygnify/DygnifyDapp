@@ -2,20 +2,19 @@ import { useState, useEffect } from "react";
 import PoolCard from "./components/Cards/PoolCard";
 import GradientButtonHeader from "../../uiTools/Button/GradientButtonHeader";
 import {
-	getAllWithdrawableOpportunities,
 	getUserSeniorPoolInvestment,
-	getWalletBal,
-	getSeniorPoolDisplaySharePrice,
-	getTotalInvestmentOfInvestor,
-	getTotalYieldOfInvestor,
 	getJuniorWithdrawableOp,
-} from "../../components/transaction/TransactionHelper";
+	getSeniorPoolDisplaySharePrice,
+	getTotalYieldOfInvestor,
+	getTotalInvestmentOfInvestor,
+} from "../../services/BackendConnectors/userConnectors/investorConncector";
+import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
 import LineChart from "./components/LineChart";
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getBinaryFileData } from "../../services/fileHelper";
-import { getDisplayAmount } from "../../services/displayTextHelper";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getBinaryFileData } from "../../services/Helpers/fileHelper";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import Loader from "../../uiTools/Loading/Loader";
 
 const InvestorOverview = () => {

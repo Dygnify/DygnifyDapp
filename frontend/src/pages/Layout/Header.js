@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
 import GradientButton from "../../uiTools/Button/GradientButtonHeader";
-import {
-	requestAccount,
-	isConnected,
-} from "../../components/navbar/NavBarHelper";
 import WalletWhiteSmall from "../SVGIcons/WalletWhiteSmall";
 import { useLocation } from "react-router-dom";
 import LogoImage from "../../assets/logo.png";
@@ -11,6 +7,10 @@ import { Link } from "react-router-dom";
 import Wallet from "../../uiTools/Icons/Wallet";
 import Hamburger from "../../uiTools/Icons/Hamburger";
 import Cross from "../../assets/cross.svg";
+import {
+	requestAccount,
+	isConnected,
+} from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 const Header = ({ linkStatus }) => {
 	const [status, setStatus] = useState(false);

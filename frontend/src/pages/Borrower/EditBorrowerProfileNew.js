@@ -6,8 +6,8 @@ import TextArea from "../../uiTools/Inputs/TextArea";
 import FileUploader from "../Components/FileUploader";
 import { makeFileObjects, storeFiles } from "../../services/web3storageIPFS";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateBorrowerDetails } from "../../components/transaction/TransactionHelper";
 import GradientButton from "../../uiTools/Button/GradientButton";
+import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();

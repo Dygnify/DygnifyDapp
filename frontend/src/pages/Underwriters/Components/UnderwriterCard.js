@@ -4,8 +4,8 @@ import PrimaryButton from "../../../uiTools/Button/PrimaryButton";
 import {
 	getBinaryFileData,
 	getDataURLFromFile,
-} from "../../../services/fileHelper";
-import { retrieveFiles } from "../../../services/web3storageIPFS";
+} from "../../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../../services/Helpers/web3storageIPFS";
 import dollarIcon from "../../../assets/Dollar-icon.svg";
 
 const UnderwriterCard = ({ data }) => {
@@ -89,7 +89,6 @@ const UnderwriterCard = ({ data }) => {
 								<img src={dollarIcon} alt="" />
 							</p>
 							{data.opportunityAmount}
-							{process.env.REACT_APP_TOKEN_NAME}
 						</p>
 					</div>
 					<div className="flex justify-between space-y-1  font-medium ">

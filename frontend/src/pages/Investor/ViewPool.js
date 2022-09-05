@@ -1,27 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import InvestModal from "../Investor/components/Modal/InvestModal";
-import GradientButton from "../../uiTools/Button/GradientButton";
 import TransactionCard from "./components/Cards/TransactionCard";
 import {
-	getWalletBal,
 	getUserWalletAddress,
-	getBorrowerDetails,
-} from "../../components/transaction/TransactionHelper";
+	getWalletBal,
+} from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import axiosHttpService from "../../services/axioscall";
-import { kycOptions } from "../../services/KYC/blockpass";
-import Alert from "../Components/Alert";
 import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import LinkedIn from "../SVGIcons/LinkedIn";
 import {
 	getBinaryFileData,
 	getDataURLFromFile,
-} from "../../services/fileHelper";
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getExtendableTextBreakup } from "../../services/displayTextHelper";
-import { getDisplayAmount } from "../../services/displayTextHelper";
-import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
+} from "../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
+import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 import DygnifyImage from "../../assets/Dygnify_Image.png";

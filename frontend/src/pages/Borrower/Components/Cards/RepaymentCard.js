@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 import RepaymentModal from "../Modal/RepaymentModal";
-import { getBinaryFileData } from "../../../../services/fileHelper";
-import { retrieveFiles } from "../../../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const RepaymentCard = ({

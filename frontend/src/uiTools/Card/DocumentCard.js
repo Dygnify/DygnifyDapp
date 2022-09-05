@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getIPFSFileURL } from "../../services/web3storageIPFS";
+import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 
 const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 	const viewDoc = () => {

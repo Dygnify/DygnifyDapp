@@ -3,8 +3,8 @@ import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
 import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
 import Loader from "../../uiTools/Loading/Loader";
 import axiosHttpService from "../../services/axioscall";
-import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
-import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors";
+import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 const Transactions = () => {
 	const [transactions, setTransactions] = useState([]);

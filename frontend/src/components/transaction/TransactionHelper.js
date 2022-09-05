@@ -11,7 +11,7 @@ import investor from "../../artifacts/contracts/protocol/Investor.sol/Investor.j
 import {
 	getDisplayAmount,
 	getTrimmedWalletAddress,
-} from "../../services/displayTextHelper";
+} from "../../services/Helpers/displayTextHelper";
 
 const opportunityOriginationAddress =
 	process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;

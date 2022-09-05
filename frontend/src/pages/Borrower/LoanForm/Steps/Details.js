@@ -28,7 +28,11 @@ export default function Details({ handleNext, handlePrev, formData }) {
 		},
 		validationSchema: CollateralDetailsValidationSchema,
 		onSubmit: (values) => {
-			if (!formik.values.collateral_document[0].name) {
+			if (
+				formData.collateral_document &&
+				!formik.values.collateral_document[0].name
+			) {
+				
 				formik.values.collateral_document = formData.collateral_document;
 			}
 			console.log("clicked..", values);
@@ -38,9 +42,9 @@ export default function Details({ handleNext, handlePrev, formData }) {
 	// console.log(formik.values.collateral_document[0].name);
 
 	return (
-		<div className="bg-[#20232A]  w-full mb-2" style={{ borderRadius: "17px" }}>
+		<div className="bg-[#20232A]  w-full mb-2 rounded-2xl mt-20 md:mt-10 px-5 py-5">
 			<form onSubmit={formik.handleSubmit}>
-				<div className="justify-between" style={{ display: "flex" }}>
+				<div className="justify-between md:flex md:gap-3">
 					<TextField
 						name="collateral_document_name"
 						value={formik.values.collateral_document_name}
@@ -54,7 +58,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
 						}
 						label="Collateral Document Name"
 						placeholder="Enter Collateral Document Name"
-						className="w-1/2 mr-2"
+						className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
 					></TextField>
 					<FileUploader
 						name="collateral_document"
@@ -69,7 +73,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
 								: null
 						}
 						label="Upload Collateral Document"
-						className="w-1/2 ml-2"
+						className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
 						fileName={
 							formData.collateral_document
 								? formData.collateral_document[0].name
@@ -107,34 +111,28 @@ export default function Details({ handleNext, handlePrev, formData }) {
 					className="w-full"
 				/>
 
-				<div
-					style={{ display: "flex", marginTop: 20 }}
-					className="flex-row justify-between w-full items-center content-center "
-				>
-					<div
-						style={{ display: "flex" }}
-						className="justify-center flex-row w-1/3 ml-10"
-					>
+				<div className=" flex flex-col-reverse gap-5 py-5 md:my-0 md:-mb-14 pt-10 justify-center items-center md:flex-row md:justify-around  ">
+					<div className="">
 						<label
 							onClick={() => {
-								if (!formik.values.collateral_document[0].name) {
+								if (
+									formData.collateral_document &&
+									!formik.values.collateral_document[0].name
+								) {
 									formik.values.collateral_document =
 										formData.collateral_document;
 								}
 								handlePrev(formik.values, false);
 							}}
-							className="text-gray-500 flex-row"
-							style={{
-								cursor: "pointer",
-								marginLeft: 5,
-								display: "flex",
-							}}
+							className="text-gray-500 md:pl-28 flex-row cursor-pointerm ml-1 flex"
 						>
 							<ArrowLeft color="#64748B" />
 							Back
 						</label>
 					</div>
-					<GradientButton type="submit">Next</GradientButton>
+					<div className="md:pr-24 lg:pr-10 xl:pr-0">
+						<GradientButton type="submit">Next</GradientButton>
+					</div>
 				</div>
 			</form>
 		</div>

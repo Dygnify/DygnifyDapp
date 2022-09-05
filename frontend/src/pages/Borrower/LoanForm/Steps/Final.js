@@ -1,5 +1,7 @@
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Doller from "../../../../assets/Dollar-icon.svg";
+import { getExtendableTextBreakup } from "../../../../services/Helpers/displayTextHelper";
 
 export default function Final({
 	handlePrev,
@@ -9,6 +11,71 @@ export default function Final({
 	checkBox,
 }) {
 	const [checked, setChecked] = useState(false);
+	const [expand, setExpand] = useState(false);
+	const [expand2, setExpand2] = useState(false);
+
+	const [loanPurpose, setLoanPurpose] = useState({
+		isSliced: false,
+		firstText: "",
+		secondText: "",
+	});
+
+	const [documentDescription, setDocumentDescription] = useState({
+		isSliced: false,
+		firstText: "",
+		secondText: "",
+	});
+
+	function LoanPurpose() {
+		if (!formData || !formData.loan_purpose) {
+			return;
+		}
+		const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+			formData.loan_purpose,
+			200
+		);
+
+		if (isSliced) {
+			setLoanPurpose({
+				firstText: firstText,
+				secondText: secondText,
+				isSliced: isSliced,
+			});
+		} else {
+			setLoanPurpose({
+				firstText: firstText,
+				isSliced: isSliced,
+			});
+		}
+	}
+	function DocumentDescription() {
+		if (!formData || !formData.collateral_document_description) {
+			return;
+		}
+		const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+			formData.collateral_document_description,
+			200
+		);
+
+		if (isSliced) {
+			setDocumentDescription({
+				firstText: firstText,
+				secondText: secondText,
+				isSliced: isSliced,
+			});
+		} else {
+			setDocumentDescription({
+				firstText: firstText,
+				isSliced: isSliced,
+			});
+		}
+	}
+	useEffect(() => {
+		if (formData) {
+			LoanPurpose();
+			DocumentDescription();
+		}
+	}, []);
 
 	if (!checked && checkBox) {
 		setChecked(true);
@@ -21,149 +88,107 @@ export default function Final({
 	console.log("clicked...", formData);
 
 	return (
-		<div style={{ display: "flex" }} className="flex-col gap-4">
-			<div style={{ display: "flex" }} className="flex-col gap-3">
-				<div className="">
-					<h4
-						className="text-primary
-				font-bold
-				text-lg
-				2xl:text-xl
-				mb-2"
-						style={{ color: "#9281FF" }}
-					>
+		<div className="flex flex-col mt-20 md:mt-14 gap-1 md:gap-1 md:px-5 overflow-hidden">
+			<div className="flex flex-col gap-3">
+				<div className=" flex flex-col gap-1 md:gap-1">
+					<h4 className="text-primary font-medium text-lg 2xl:text-xl mb-2 text-[#9281FF]">
 						Loan Details
 					</h4>
 
-					<div style={{ display: "flex" }} className="w-full">
-						<div
-							style={{ display: "flex" }}
-							className="flex-col gap-1 w-[55%] xl:w-[60%] 2xl:w-[65%]"
-						>
-							<div
-								style={{
-									display: "grid",
-									gridTemplateColumns: "7rem 1fr",
-								}}
-								className="font-[500] text-base"
-							>
+					<div className="flex w-full flex-col md:flex-row  justify-between">
+						<div className="flex flex-col gap-2">
+							<div className="font-[500] flex justify-between md:justify-start md:gap-7">
 								<span className=" text-[#A0ABBB]">Pool Name</span>
 								<span className="text-[#fff]">{formData.loan_name}</span>
 							</div>
 
-							<div
-								style={{
-									display: "grid",
-									gridTemplateColumns: "7rem 1fr",
-								}}
-								className="font-[500] text-base"
-							>
+							<div className="font-[500] text-base flex justify-between md:justify-start md:gap-4">
 								<span className=" text-[#A0ABBB]">Loan Tenure</span>
-								<span className="text-[#fff]">{formData.loan_tenure}</span>
+								<span className="text-[#fff]">
+									{formData.loan_tenure ? `${formData.loan_tenure} Months` : ""}
+								</span>
 							</div>
 
-							<div
-								style={{
-									display: "grid",
-									gridTemplateColumns: "7rem 1fr",
-								}}
-								className="font-[500] text-base"
-							>
+							<div className="font-[500] text-base flex justify-between md:justify-start  md:gap-3">
 								<span className=" text-[#A0ABBB]">Loan Interest</span>
-								<span className="text-[#fff]">{formData.loan_interest}</span>
+								<span className="text-[#fff]">
+									{formData.loan_interest ? `${formData.loan_interest}%` : ""}
+								</span>
 							</div>
 						</div>
 
-						<div
-							style={{ display: "flex" }}
-							className="flex-col gap-1 w-[45%] xl:w-[40%] 2xl:w-[35%] "
-						>
-							<div
-								style={{
-									display: "grid",
-									gridTemplateColumns: "repeat(2, 1fr)",
-								}}
-								className="font-[500] text-base w-full"
-							>
-								<span className=" text-[#A0ABBB]">Loan amount</span>
-								<span className="text-[#fff] text-right">
+						<div className="mt-1 md:mt-0 flex flex-col gap-2">
+							<div className="font-[500] text-base w-full flex justify-between  md:gap-7">
+								<span className=" text-[#A0ABBB]"> Loan amount</span>
+								<span className="text-[#fff] text-right flex gap-1">
+									{formData.loan_amount ? (
+										<img src={Doller} className="w-5" />
+									) : (
+										""
+									)}
 									{formData.loan_amount}
 								</span>
 							</div>
 
-							<div
-								style={{
-									display: "grid",
-									gridTemplateColumns: "10rem 1fr",
-								}}
-								className="font-[500] text-base"
-							>
+							<div className="font-[500] text-base flex justify-between  md:gap-7">
 								<span className=" text-[#A0ABBB]">Repayment frequency</span>
 								<span className="text-[#fff] text-right">
-									{formData.payment_frequency}
+									{formData.payment_frequency
+										? `${formData.payment_frequency} Days`
+										: ""}
 								</span>
 							</div>
 
-							<div
-								style={{
-									display: "grid",
-									gridTemplateColumns: "repeat(2, 1fr)",
-								}}
-								className="font-[500] text-base"
-							>
-								<p className="font-[500] text-[#A0ABBB]">Loan Type</p>
+							<div className="font-[500] text-base flex justify-between  md:gap-7">
+								<span className="font-[500] text-[#A0ABBB]">Loan Type</span>
 
-								<span className="text-[#fff] text-right">
+								<span className="text-[#fff] text-right ">
 									{formData.loan_type == 1 ? "Term Loan" : "Bullet Loan"}
 								</span>
 							</div>
 						</div>
 					</div>
 
-					<div
-						style={{
-							display: "grid",
-							gridTemplateColumns: "7rem 1fr",
-						}}
-						className="font-[500] text-base mt-[0.5rem]"
-					>
-						<span className="text-[#A0ABBB]">Loan Purpose</span>
-						<span className="text-[#fff]">{formData.loan_purpose}</span>
+					<div className="font-[500] text-base w-full md:flex gap-2">
+						<div className="text-[#A0ABBB] ">Loan&nbsp;Purpose</div>
+						<div className="text-[#fff]">
+							{loanPurpose.isSliced ? (
+								<div>
+									{loanPurpose.firstText}
+									<a
+										className=" font-semibold cursor-pointer text-[#A0ABBB]"
+										onClick={() => setExpand(true)}
+									>
+										{expand ? null : "... view more"}
+									</a>
+									{expand ? <div>{loanPurpose.secondText}</div> : null}
+									<a
+										className=" font-semibold cursor-pointer text-[#A0ABBB]"
+										onClick={() => setExpand(false)}
+									>
+										{expand ? "view less" : null}
+									</a>
+								</div>
+							) : (
+								<div>{loanPurpose.firstText}</div>
+							)}
+						</div>
 					</div>
 				</div>
-
-				<div className="">
-					<h4
-						className="text-primary font-[500] text-xl mb-2"
-						style={{ color: "#9281FF" }}
-					>
+				<div className="flex flex-col gap-1 md:gap-1 mt-5 md:mt-0 ">
+					<h4 className="text-primary font-medium text-lg mb-2 text-[#9281FF]">
 						Collateral
 					</h4>
 
-					<div
-						style={{ display: "flex" }}
-						className="flex-col gap-2 justify-between mb-3"
-					>
-						<div
-							style={{
-								display: "grid",
-								gridTemplateColumns: "14rem 1fr",
-							}}
-							className="font-[500] text-base grid-cols-2"
-						>
+					<div className="flex flex-col md:justify-between gap-1 md:gap-2 md:flex-row">
+						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral document Name</span>
 							<span className="text-[#fff]">
 								{formData.collateral_document_name}
 							</span>
 						</div>
 
-						<div
-							style={{
-								display: "grid",
-								gridTemplateColumns: "14rem 1fr",
-							}}
-							className="font-[500] text-base grid-cols-2"
-						>
+						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral File</span>
 							<span className="text-[#fff]">
 								{formData.collateral_document[0]?.name}
@@ -171,20 +196,37 @@ export default function Final({
 						</div>
 					</div>
 
-					<div
-						style={{ display: "flex" }}
-						className="flex-col font-[500] text-base mt-[0.1rem]"
-					>
+					<div className="flex-col font-[500] flex text-base mt-[0.1rem]">
 						<span className="text-[#A0ABBB]">
-							Collateral Document Description{" "}
+							Collateral Document Description
 						</span>
 						<span className="text-[#fff]">
-							{formData.collateral_document_description}
+							{/* {formData.collateral_document_description} */}
+							{documentDescription.isSliced ? (
+								<div>
+									{documentDescription.firstText}
+									<a
+										className=" font-semibold cursor-pointer text-[#A0ABBB]"
+										onClick={() => setExpand2(true)}
+									>
+										{expand2 ? null : "... view more"}
+									</a>
+									{expand2 ? <div>{documentDescription.secondText}</div> : null}
+									<a
+										className=" font-semibold cursor-pointer text-[#A0ABBB]"
+										onClick={() => setExpand2(false)}
+									>
+										{expand2 ? "view less" : null}
+									</a>
+								</div>
+							) : (
+								<div>{documentDescription.firstText}</div>
+							)}
 						</span>
 					</div>
 				</div>
 			</div>
-			<div className="text-center">
+			<div className="text-center md:mt-1 mt-5  ">
 				<input
 					type="checkbox"
 					checked={checked}
@@ -206,22 +248,11 @@ export default function Final({
 				</a>
 			</div>
 
-			<div
-				style={{ display: "flex" }}
-				className="flex-row justify-between w-full items-center content-center"
-			>
-				<div
-					style={{ display: "flex" }}
-					className="justify-center flex-row w-1/3 ml-10"
-				>
+			<div className="flex flex-col-reverse gap-10  md:gap-0 justify-center md:justify-around md:flex-row md:items-center  w-full items-center content-center">
+				<div className="pb-10 md:pb-0 md:mt-10">
 					<label
 						onClick={handlePrev}
-						className="text-gray-500 flex-row"
-						style={{
-							cursor: "pointer",
-							marginLeft: 5,
-							display: "flex",
-						}}
+						className="text-gray-500 flex-row cursor-pointer flex ml-1 md:pl-14 md:-mt-6"
 					>
 						<ArrowLeft color="#64748B" />
 						Back
@@ -237,9 +268,9 @@ export default function Final({
 						padding: "12px 24px",
 						color: "white",
 					}}
-					className={`btn btn-wide  capitalize font-medium border-none  
+					className={`mt-10 md:mt-2 btn btn-wide  capitalize font-medium border-none 
 					bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF]
-					disabled:opacity-40
+					disabled:opacity-40 
 							
 					`}
 					disabled={!checked}
@@ -248,16 +279,10 @@ export default function Final({
 				</button>
 			</div>
 
-			<div style={{ display: "flex" }} className=" justify-center">
-				<div
-					style={{
-						fontWeight: 600,
-						fontSize: "14px",
-						color: "#FBBF24",
-					}}
-				>
+			<div className="flex  justify-center  font-semibold text-sm text-[#FBBF24]">
+				<div className="text-center">
 					Note - This pool created will only be valid for 60 days from the day
-					after verification{" "}
+					after verification
 				</div>
 			</div>
 		</div>

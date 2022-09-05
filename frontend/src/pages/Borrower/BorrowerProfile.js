@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import DocumentCard from "../../uiTools/Card/DocumentCard";
 import { useNavigate, useLocation } from "react-router-dom";
-import { retrieveFiles } from "../../services/web3storageIPFS";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
 import {
 	getBinaryFileData,
 	getDataURLFromFile,
-} from "../../services/fileHelper";
+} from "../../services/Helpers/fileHelper";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
-import {
-	getBorrowerDetails,
-	getUserWalletAddress,
-} from "../../components/transaction/TransactionHelper";
+import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+
 import Twitter from "../SVGIcons/Twitter";
 import LinkedIn from "../SVGIcons/LinkedIn";
 import Email from "../SVGIcons/Email";
