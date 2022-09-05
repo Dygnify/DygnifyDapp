@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import GradientButton from "../../uiTools/Button/GradientButton";
 import TransactionCard from "./components/Cards/TransactionCard";
 import axiosHttpService from "../../services/axioscall";
-import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
-import { kycOptions } from "../../services/KYC/blockpass";
-import Alert from "../Components/Alert";
+import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
 import InvestModal from "./components/Modal/InvestModal";
 import {
 	getUserWalletAddress,
 	getWalletBal,
-} from "../../components/transaction/TransactionHelper";
-import { getDisplayAmount } from "../../services/displayTextHelper";
+} from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 import DygnifyImage from "../../assets/Dygnify_Image.png";
-import LinkedIn from "../SVGIcons/LinkedIn";
-import Website from "../SVGIcons/Website";
-import Twitter from "../SVGIcons/Twitter";
-import UpArrow from "../SVGIcons/UpArrow";
+import DollarImage from "../../assets/Dollar-icon.svg";
 
 const ViewSeniorPool = () => {
 	const location = useLocation();
@@ -154,10 +148,13 @@ const ViewSeniorPool = () => {
 							</div>
 
 							<div className="ml-auto flex flex-col justify-start">
-								<p className=" font-semibold text-xl mb-1">{estimatedAPY}%</p>
-								<p className="font-semibold text-xl">
-									{poolAmount} {process.env.REACT_APP_TOKEN_NAME}
+								<p className=" font-semibold text-xl mb-1 text-right">
+									{estimatedAPY}%
 								</p>
+								<div className="flex gap-1 text-right">
+									<img src={DollarImage} className="w-4" />
+									<p className="font-semibold text-xl">{poolAmount}</p>
+								</div>
 							</div>
 						</div>
 

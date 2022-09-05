@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import WithdrawCard from "./components/Cards/WithdrawCard";
+import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
-	getAllWithdrawableOpportunities,
 	getUserSeniorPoolInvestment,
-	getWalletBal,
 	getSeniorPoolDisplaySharePrice,
 	getJuniorWithdrawableOp,
-} from "../../components/transaction/TransactionHelper";
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getBinaryFileData } from "../../services/fileHelper";
-import { getDisplayAmount } from "../../services/displayTextHelper";
+} from "../../services/BackendConnectors/userConnectors/investorConncector";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getBinaryFileData } from "../../services/Helpers/fileHelper";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 
 import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";
 import Loader from "../../uiTools/Loading/Loader";
@@ -107,15 +106,13 @@ const Withdraw = () => {
 				)}
 
 				<div className="">
-					<h2 className="text-xl md:text-2xl lg:text-3xl font-medium">
-						Withdraw
-					</h2>
+					<h2 className="text-[1.4375rem] lg:text-[2.0625rem] ">Withdraw</h2>
 				</div>
 
 				<div className="mt-8">
 					{seniorPool ? (
 						<div className="mb-16 flex flex-col gap-5">
-							<h2 className="text-2xl md:text-3xl lg:text-4xl font-medium">
+							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
 								Senior pool
 							</h2>
 
@@ -136,7 +133,7 @@ const Withdraw = () => {
 						</div>
 					) : (
 						<div className="mb-16 flex flex-col gap-5">
-							<h2 className="text-2xl md:text-3xl lg:text-4xl font-medium">
+							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
 								Junior pools
 							</h2>
 							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">

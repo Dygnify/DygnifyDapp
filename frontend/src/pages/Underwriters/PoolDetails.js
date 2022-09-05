@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { voteOpportunity } from "../../components/transaction/TransactionHelper";
-import { getExtendableTextBreakup } from "../../services/displayTextHelper";
+import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
 import DocumentCard from "../../uiTools/Card/DocumentCard";
 import Email from "../SVGIcons/Email";
 import LinkedIn from "../SVGIcons/LinkedIn";
@@ -9,13 +8,13 @@ import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import Loader from "../../uiTools/Loading/Loader";
 
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getDataURLFromFile } from "../../services/fileHelper";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getDataURLFromFile } from "../../services/Helpers/fileHelper";
+import { voteOpportunity } from "../../services/BackendConnectors/opportunityConnectors";
 
 const PoolDetails = () => {
 	const location = useLocation();
 	const [expand, setExpand] = useState(false);
-	const [approveStatus, setApproveStatus] = useState(false);
 	const [opDetails, setOpDetails] = useState();
 	const [companyDetails, setCompanyDetails] = useState();
 	const [info, setInfo] = useState([]);
@@ -57,7 +56,7 @@ const PoolDetails = () => {
 
 	useEffect(() => {
 		setOpDetails(location.state);
-	}, []);
+	}, [location.state]);
 
 	useEffect(() => {
 		if (opDetails) {
@@ -65,7 +64,7 @@ const PoolDetails = () => {
 			loadLoanPurpose();
 			setCompanyDetails(opDetails.companyDetails);
 			fetchPoolLogo(
-				opDetails.companyDetails.companyLogoFile.businessLogoFileCID
+				opDetails.companyDetails?.companyLogoFile.businessLogoFileCID
 			);
 		}
 	}, [opDetails]);
@@ -132,11 +131,11 @@ const PoolDetails = () => {
 	}
 
 	function updateStatus(vote) {
-		if (vote == "1") {
+		if (vote === "1") {
 			setStatus({ approve: false, unsure: false, reject: true });
-		} else if (vote == "2") {
+		} else if (vote === "2") {
 			setStatus({ approve: true, unsure: false, reject: false });
-		} else if (vote == "3") {
+		} else if (vote === "3") {
 			setStatus({ approve: false, unsure: true, reject: false });
 		}
 	}

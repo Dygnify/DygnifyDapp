@@ -197,7 +197,8 @@ contract OpportunityOrigination is
             opportunityToId[_opportunityId].loanAmount,
             opportunityToId[_opportunityId].loanTenureInDays,
             opportunityToId[_opportunityId].loanInterest,
-            opportunityToId[_opportunityId].paymentFrequencyInDays
+            opportunityToId[_opportunityId].paymentFrequencyInDays,
+            uint8(opportunityToId[_opportunityId].loanType)
         );
         opportunityToId[_opportunityId].opportunityPoolAddress = pool;
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus

@@ -4,8 +4,8 @@ import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 import {
 	getBinaryFileData,
 	getDataURLFromFile,
-} from "../../../../services/fileHelper";
-import { retrieveFiles } from "../../../../services/web3storageIPFS";
+} from "../../../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
@@ -70,53 +70,47 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 	}
 	return (
 		<div
-			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%] my-gradient`}
+			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient`}
 		>
 			<div className="flex items-center gap-6">
 				<img
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
-					className="w-[7rem] lg:w-[12rem]"
+					className="w-[7rem] lg:w-[6rem] xl:w-[10rem] 2xl:w-[8rem]"
 					src={logoImgSrc ? logoImgSrc : DygnifyImage}
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}</p>
+					<p className="text-2xl font-semibold">{poolName}</p>
+					<p>{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}</p>
+					<p className="text-2xl font-semibold">{poolName}</p>
+					<p>{companyName}</p>
 				</div>
 
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col gap-1 font-semibold">
 					<div className="flex gap-1">
-						<p className="text-lg font-medium">Pool Size</p>
+						<p className="">Pool Size</p>
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{opportunityAmount}</p>
+						<p className="">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex">
-						<p className="text-lg font-medium">Estimated APY</p>
-						<p className="ml-auto text-lg font-medium">{loanInterest}</p>
+						<p className="">Estimated APY</p>
+						<p className="ml-auto ">{loanInterest}</p>
 					</div>
 					<div className="flex">
-						<p className="text-lg font-medium">Status</p>
+						<p className="">Status</p>
 
-						<StatusButton
-							className="ml-auto text-lg font-medium"
-							isFullStatus={isFull}
-						/>
+						<StatusButton className="ml-auto" isFullStatus={isFull} />
 					</div>
 				</div>
 
 				<div className="">
-					<PrimaryButton
-						className="w-[100%] sm:w-[60%] mx-auto md:w-[70%] md:mx-auto xl:w-[100%] 2xl:w-[60%]"
-						onClick={onClick}
-					>
+					<PrimaryButton className="w-[100%]" onClick={onClick}>
 						View Pool
 					</PrimaryButton>
 				</div>

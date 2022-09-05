@@ -1,11 +1,11 @@
 import { React, useState, useEffect, useContext } from "react";
-import {
-	investInSeniorPool,
-	investInJuniorPool,
-	getWalletBal,
-} from "../../../../components/transaction/TransactionHelper";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
+import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
+import {
+	investInJuniorPool,
+	investInSeniorPool,
+} from "../../../../services/BackendConnectors/userConnectors/investorConncector";
 
 //for send data import from paths--
 import { UserContext } from "../../../../Paths"; //
@@ -115,25 +115,25 @@ const InvestModal = ({
 					</div>
 
 					<div className="px-4 md:px-8 mt-8 flex flex-col gap-1">
-						<div className="flex justify-between">
-							<p className="font-semibold">Pool Name</p>
-							<p className="font-semibold">{poolName}</p>
+						<div className="flex justify-between font-semibold">
+							<p className="">Pool Name</p>
+							<p className="">{poolName}</p>
 						</div>
 
 						{poolLimit ? (
-							<div className="flex gap-1">
-								<p className="font-semibold">Pool Limit</p>
+							<div className="flex gap-1 font-semibold">
+								<p className="">Pool Limit</p>
 
 								<img src={DollarImage} className="ml-auto w-[1rem]" />
-								<p className="font-semibold">{poolLimit}</p>
+								<p className="">{poolLimit}</p>
 							</div>
 						) : (
 							<></>
 						)}
 
-						<div className="flex justify-between">
-							<p className="font-semibold">Estimated APY</p>
-							<p className="font-semibold">{estimatedAPY}%</p>
+						<div className="flex justify-between font-semibold">
+							<p className="">Estimated APY</p>
+							<p className="">{estimatedAPY}%</p>
 						</div>
 					</div>
 

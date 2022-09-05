@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { PieChart } from "recharts";
 import axiosHttpService from "../../services/axioscall";
 import OverviewIcon from "../../pages/../uiTools/Icons/OverviewIcon";
@@ -11,10 +11,6 @@ import Header from "../Layout/Header";
 
 const InvestorDashboardNew = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
-	const [Overview, setOverview] = useState(true);
-	const [Invest, setInvest] = useState(false);
-	const [Transaction, setTransaction] = useState(false);
-	const [Withdrow, setWithdrow] = useState(false);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);
@@ -51,110 +47,62 @@ const InvestorDashboardNew = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="h-full  overflow-y-auto w-60  text-white bg-darkmode-900 -mr-5">
-							<li
-								className={`font-medium text-center ${
-									Overview ? "bg-[#3A3C43]" : ""
-								} ${Overview ? "text-[#9281FF] " : "text-[#64748B]"}`}
-							>
-								<Link
+						<ul className="h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+							<li className="font-medium text-center">
+								<NavLink
 									className="flex ml-8 py-4 gap-2"
-									to="/investor-dashboard"
+									to="/investor-dashboard/overview"
 									onClick={() => {
 										setLinkStatus(false);
-										if (Overview) {
-											setOverview(false);
-										} else {
-											setOverview(true);
-											setTransaction(false);
-											setWithdrow(false);
-											setInvest(false);
-										}
 									}}
 								>
 									<span className="ml-6">
-										<OverviewIcon color={Overview} />
+										<OverviewIcon />
 									</span>
 									Overview
-								</Link>
+								</NavLink>
 							</li>
-							<li
-								className={`font-medium text-center ${
-									Invest ? "bg-[#3A3C43]" : ""
-								} ${Invest ? "text-[#9281FF] " : "text-[#64748B]"}`}
-							>
-								<Link
+							<li className="font-medium text-center ">
+								<NavLink
 									className="flex ml-8 py-4 gap-2"
 									to="/investor-dashboard/invest"
 									onClick={() => {
 										setLinkStatus(false);
-										if (Invest) {
-											setInvest(false);
-										} else {
-											setInvest(true);
-											setTransaction(false);
-											setWithdrow(false);
-											setOverview(false);
-										}
 									}}
 								>
 									<span className="ml-7">
-										<InvestIcon color={Invest} />
+										<InvestIcon />
 									</span>
 									Invest
-								</Link>
+								</NavLink>
 							</li>
-							<li
-								className={`font-medium text-center ${
-									Transaction ? "bg-[#3A3C43]" : ""
-								} ${Transaction ? "text-[#9281FF] " : "text-[#64748B]"}`}
-							>
-								<Link
+							<li className="font-medium text-center ">
+								<NavLink
 									className="flex ml-8 py-4 gap-2"
 									to="/investor-dashboard/withdraw"
 									onClick={() => {
 										setLinkStatus(false);
-										if (Transaction) {
-											setTransaction(false);
-										} else {
-											setInvest(false);
-											setTransaction(true);
-											setWithdrow(false);
-											setOverview(false);
-										}
 									}}
 								>
 									<span className="ml-6">
-										<WithdrawIcon color={Transaction} />
+										<WithdrawIcon />
 									</span>
 									Withdraw
-								</Link>
+								</NavLink>
 							</li>
-							<li
-								className={`font-medium text-center ${
-									Withdrow ? "bg-[#3A3C43]" : ""
-								} ${Withdrow ? "text-[#9281FF] " : "text-[#64748B]"}`}
-							>
-								<Link
+							<li className="font-medium text-center ">
+								<NavLink
 									className="flex ml-8 py-4 gap-2"
 									to="/investor-dashboard/transaction"
 									onClick={() => {
 										setLinkStatus(false);
-										if (Withdrow) {
-											setWithdrow(false);
-										} else {
-											setInvest(false);
-											setTransaction(false);
-											setWithdrow(true);
-											setOverview(false);
-										}
 									}}
 								>
 									<span className="ml-6">
-										<TransactionIcon color={Withdrow} />
+										<TransactionIcon />
 									</span>
 									Transaction
-								</Link>
+								</NavLink>
 							</li>
 						</ul>
 					</div>

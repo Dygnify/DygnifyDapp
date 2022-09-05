@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getBinaryFileData } from "../../../../services/fileHelper";
-import { retrieveFiles } from "../../../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
+
 const DueDateCard = ({ data }) => {
 	const [poolName, setPoolName] = useState(data.poolName);
 
@@ -20,30 +22,17 @@ const DueDateCard = ({ data }) => {
 	}, []);
 
 	return (
-		<div
-			style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
-			className=" mb-2"
-		>
-			<div
-				style={{ display: "flex" }}
-				className="collapse-title text-md font-light justify-around w-full"
-			>
-				<p className="w-1/4 text-center">{poolName}</p>
-				<p className="w-1/4 text-center">
-					{data?.opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
-				</p>
-				<p className="w-1/4 text-center">
-					{data?.repaymentDisplayAmount} {process.env.REACT_APP_TOKEN_NAME}{" "}
-					{/* <sup
-            style={{ backgroundColor: "#323A46", borderRadius: "50%" }}
-            className="ml-1 tooltip p-2"
-            data-tip={`Principle - ${data?.principal_amount} ${process.env.REACT_APP_TOKEN_NAME}, Interest - ${data?.interest_amount} ${process.env.REACT_APP_TOKEN_NAME}`}
-          >
-            <button>i</button>
-          </sup> */}
-				</p>
-				<p className="w-1/4 text-center">{data?.nextDueDate}</p>
+		<div className="px-2 bg-darkmode-800 flex justify-around rounded-xl py-3 gap-4 md:gap-6 ">
+			<p className="w-1/3 md:w-1/4 my-auto text-center ">{poolName}</p>
+			<div className="hidden md:flex md:w-1/4  text-right pr-5 gap-1  justify-center">
+				<img src={DollarImage} className="w-4" />
+				{data?.opportunityAmount}
 			</div>
+			<div className="w-1/3 md:w-1/4 my-auto  text-right pr-5 flex gap-1  justify-center">
+				<img src={DollarImage} className="w-4" />
+				{data?.repaymentDisplayAmount}
+			</div>
+			<p className="w-1/3 md:w-1/4 text-center ">{data?.nextDueDate}</p>
 		</div>
 	);
 };

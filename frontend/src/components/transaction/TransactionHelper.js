@@ -11,12 +11,12 @@ import investor from "../../artifacts/contracts/protocol/Investor.sol/Investor.j
 import {
 	getDisplayAmount,
 	getTrimmedWalletAddress,
-} from "../../services/displayTextHelper";
+} from "../../services/Helpers/displayTextHelper";
 
 const opportunityOriginationAddress =
 	process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS;
 const sixDecimals = 6;
-const eighteenDecimals = 18;
+const nullAddress = "0x0000000000000000000000000000000000000000";
 
 export async function getUserWalletAddress() {
 	try {
@@ -205,48 +205,54 @@ export const getEthAddress = async () => {
 
 // to create opportunity
 export async function createOpportunity(formData) {
-	let borrower = await getEthAddress();
-	let {
-		loan_type,
-		loan_amount,
-		loan_tenure,
-		loan_interest,
-		capital_loss,
-		payment_frequency,
-		loanInfoHash,
-		collateralHash,
-	} = formData;
-	console.log("backend call", formData);
-
-	if (typeof window.ethereum !== "undefined") {
-		await requestAccount();
-		const provider = new ethers.providers.Web3Provider(window.ethereum);
-		console.log({ provider });
-		const signer = provider.getSigner();
-		const contract = new ethers.Contract(
-			process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
-			opportunityOrigination.abi,
-			signer
-		);
-		const loanAmt = ethers.utils.parseUnits(loan_amount, sixDecimals);
-		const loanInterest = ethers.utils.parseUnits(loan_interest, sixDecimals);
-		const capitalLoss = capital_loss
-			? ethers.utils.parseUnits(capital_loss, sixDecimals)
-			: 0;
-		const transaction1 = await contract.createOpportunity(
-			borrower,
-			loanInfoHash,
-			loan_type,
-			loanAmt,
-			loan_tenure,
-			loanInterest,
-			payment_frequency,
-			collateralHash,
-			capitalLoss
-		);
-		await transaction1.wait();
-		console.log("successfully created*******");
+	if (!formData) {
+		return false;
 	}
+	try {
+		let borrowerAdd = await getEthAddress();
+
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+			const contract = new ethers.Contract(
+				process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+				opportunityOrigination.abi,
+				signer
+			);
+			const loanAmt = ethers.utils.parseUnits(
+				formData.loan_amount,
+				sixDecimals
+			);
+			const loanInterest = ethers.utils.parseUnits(
+				formData.loan_interest,
+				sixDecimals
+			);
+			const capitalLoss = formData.capital_loss
+				? ethers.utils.parseUnits(formData.capital_loss, sixDecimals)
+				: 0;
+			console.log("********", formData);
+			const opData = [
+				borrowerAdd,
+				formData.loan_name,
+				formData.loanInfoHash,
+				formData.loan_type,
+				loanAmt,
+				formData.loan_tenure,
+				loanInterest,
+				formData.payment_frequency,
+				formData.collateralHash,
+				capitalLoss,
+			];
+			console.log("********", opData);
+			const transaction1 = await contract.createOpportunity(opData);
+			await transaction1.wait();
+		}
+		return true;
+	} catch (error) {
+		console.log(error);
+	}
+	return false;
 }
 
 export function convertDate(epochTimestamp) {
@@ -309,7 +315,10 @@ export async function getOpportunitysOf() {
 			for (const op of data) {
 				let tx = await contract.opportunityToId(op);
 				let obj = await getOpportunity(tx);
-				if (obj.opportunityPoolAddress) {
+				if (
+					obj.opportunityPoolAddress &&
+					obj.opportunityPoolAddress !== nullAddress
+				) {
 					try {
 						const poolContract = new ethers.Contract(
 							obj.opportunityPoolAddress,
@@ -399,7 +408,7 @@ export async function getAllUnderReviewOpportunities() {
 				let id = await contract.opportunityIds(i);
 
 				let tx = await contract.opportunityToId(id);
-				if (tx.opportunityStatus.toString() == "0") {
+				if (tx.opportunityStatus.toString() === "0") {
 					let obj = getOpportunity(tx);
 					opportunities.push(obj);
 				}
@@ -432,7 +441,7 @@ export async function getApprovalHistory() {
 
 			for (let i = 0; i < count; i++) {
 				let tx = await contract.opportunityToId(opportunities[i]);
-				if (tx.opportunityStatus.toString() != "0") {
+				if (tx.opportunityStatus.toString() !== "0") {
 					//neglecting non voted opoortunities.
 					let obj = getOpportunity(tx);
 					opportunitiesList.push(obj);
@@ -464,7 +473,7 @@ export async function getAllActiveOpportunities() {
 			for (let i = 0; i < count; i++) {
 				let id = await contract.opportunityIds(i);
 				let opportunity = await contract.opportunityToId(id);
-				if (opportunity.opportunityStatus.toString() == "5") {
+				if (opportunity.opportunityStatus.toString() === "5") {
 					// get pool for opportunity
 					let poolAddress = opportunity.opportunityPoolAddress.toString();
 					console.log(poolAddress);
@@ -507,7 +516,8 @@ export async function getDrawdownOpportunities() {
 
 				if (
 					!tx.opportunityPoolAddress ||
-					tx.opportunityStatus.toString() != "5"
+					tx.opportunityPoolAddress === nullAddress ||
+					tx.opportunityStatus.toString() !== "5"
 				) {
 					continue;
 				}
@@ -562,7 +572,7 @@ export async function getAllWithdrawableOpportunities() {
 
 				let tx = await contract.opportunityToId(id);
 
-				if (tx.opportunityStatus.toString() == "7") {
+				if (tx.opportunityStatus.toString() === "7") {
 					let poolAddress = tx.opportunityPoolAddress.toString();
 					console.log(poolAddress);
 					const poolContract = new ethers.Contract(
@@ -571,7 +581,7 @@ export async function getAllWithdrawableOpportunities() {
 						provider
 					);
 					let poolBal = await poolContract.poolBalance();
-					if (poolBal.toString() != "0") {
+					if (poolBal.toString() !== "0") {
 						const signer = provider.getSigner();
 						const userStakingAmt = await poolContract.stakingBalance(
 							await signer.getAddress()
@@ -727,7 +737,7 @@ export async function getOpportunitiesWithDues() {
 			for (const opportunity of data) {
 				let tx = await contract.opportunityToId(opportunity);
 				// check for the drawn down opportunities
-				if (tx.opportunityStatus.toString() == "6") {
+				if (tx.opportunityStatus.toString() === "6") {
 					let poolAddress = tx.opportunityPoolAddress.toString();
 					console.log(poolAddress);
 					const poolContract = new ethers.Contract(
@@ -793,7 +803,7 @@ export async function getAllUnderwriterOpportunities() {
 			let opportunities = [];
 			for (let i = 0; i < opportunityList.length; i++) {
 				let tx = await contract.opportunityToId(opportunityList[i]);
-				if (tx.opportunityStatus.toString() == "0") {
+				if (tx.opportunityStatus.toString() === "0") {
 					let obj = getOpportunity(tx);
 					opportunities.push(obj);
 				}
@@ -880,8 +890,6 @@ export async function getSeniorPoolDisplaySharePrice(defaultSharePrice) {
 }
 
 export async function repayment(poolAddress) {
-	let borrower = await getEthAddress();
-
 	if (typeof window.ethereum !== "undefined") {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		console.log({ provider });
@@ -942,7 +950,8 @@ export async function getJuniorWithdrawableOp() {
 					ethers.utils.formatUnits(estimatedAPY[1].toString(), sixDecimals) *
 						100 +
 					"%";
-				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable =
+					await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals
@@ -963,8 +972,6 @@ export async function getJuniorWithdrawableOp() {
 }
 
 export async function drawdown(poolAddress) {
-	let borrower = await getEthAddress();
-
 	if (typeof window.ethereum !== "undefined") {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		console.log({ provider });
@@ -981,8 +988,6 @@ export async function drawdown(poolAddress) {
 }
 
 export async function withdrawAllJunior(poolAddress) {
-	let borrower = await getEthAddress();
-
 	if (typeof window.ethereum !== "undefined") {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		console.log({ provider });
@@ -1068,7 +1073,7 @@ export async function getTotalYieldOfInvestor() {
 
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
-				if (tx.opportunityStatus.toString() == "7") {
+				if (tx.opportunityStatus.toString() === "7") {
 					let obj = await getOpportunity(tx);
 
 					const poolContract = new ethers.Contract(

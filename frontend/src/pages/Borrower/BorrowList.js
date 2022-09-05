@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import {
-	getBorrowerDetails,
 	getDrawdownOpportunities,
 	getOpportunitysOf,
-} from "../../components/transaction/TransactionHelper";
+} from "../../services/BackendConnectors/opportunityConnectors";
 import DrawdownCard from "./Components/Cards/DrawdownCard";
 import OpportunityCardCollapsible from "./Components/Cards/OpportunityCardCollapsible";
 import DashboardHeader from "./DashboardHeader";
 import LoanFormModal from "./Components/Modal/LoanFormModal";
-import Loader from "../../uiTools/Loading/Loader";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
-import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
-import KycCheckModal from "./Components/Modal/KycCheckModal";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -90,7 +87,7 @@ const BorrowList = () => {
 				></LoanFormModal>
 			)}
 			<div className="mt-8">
-				<h2 className="text-2xl">Drawdown Funds</h2>
+				<h2 className="font-semibold text-[1.4375rem] mb-4">Drawdown Funds</h2>
 				{data.length === 0 ? (
 					<div className="h-[10rem] flex items-center justify-center">
 						<p className="text-lg font-semibold text-neutral-500">
@@ -98,7 +95,7 @@ const BorrowList = () => {
 						</p>
 					</div>
 				) : (
-					<div style={{ display: "flex" }} className=" gap-4">
+					<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 						{data.map((item) => (
 							<DrawdownCard key={item?.id} data={item} />
 						))}
@@ -107,7 +104,7 @@ const BorrowList = () => {
 			</div>
 
 			<div className="my-16">
-				<h2 className="text-2xl">Borrow Request</h2>
+				<h2 className="font-semibold text-[1.4375rem]">Borrow Request</h2>
 
 				<div className="collapse">
 					<input type="checkbox" className="peer" />

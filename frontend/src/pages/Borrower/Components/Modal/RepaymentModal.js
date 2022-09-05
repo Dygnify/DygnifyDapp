@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-	repayment,
-	getWalletBal,
-} from "../../../../components/transaction/TransactionHelper";
+import { repayment } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const RepaymentModal = ({
 	data,
@@ -19,108 +18,79 @@ const RepaymentModal = ({
 	}, []);
 
 	async function onRepayment() {
-		//setOpenProcessRepayment(true);
-		//setProcessRepayment(true);
+		setOpenProcessRepayment(true);
+		setProcessRepayment(true);
 		await repayment(data.opportunityPoolAddress);
 		handleRepayment();
 
-		//setProcessRepayment(false);
+		setProcessRepayment(false);
 	}
 
 	return (
 		<div>
 			<input type="checkbox" id="repayment-modal" className="modal-toggle" />
-			<div
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
-				className="modal"
-			>
-				<div
-					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-					className="modal-box w-1/3 max-w-5xl p-0"
-				>
-					<label
-						for="repayment-modal"
-						className="btn btn-ghost absolute right-2 top-2 pb-2"
-						onClick={() => handleRepayment()}
-					>
-						✕
-					</label>
-					<h3
-						style={{ borderBottom: "2px solid #292C33" }}
-						className="font-bold text-lg py-3 px-4"
-					>
-						Repayment
-					</h3>
-					<div style={{ display: "flex" }} className="justify-center my-6">
+			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
+				<div className="bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
+						<h3 className="font-semibold text-xl">Repayment</h3>
+
+						<label
+							for="repayment-modal"
+							className="hover:text-primary-600 text-xl"
+							onClick={() => handleRepayment()}
+						>
+							✕
+						</label>
+					</div>
+
+					<div className="px-4 md:px-8 mt-[4em] md:mt-6 flex flex-col gap-8">
 						<img
-							style={{ borderRadius: "50%" }}
-							className="p-4 bg-[#9281FF] opacity-80"
 							src={WalletImage}
+							style={{ aspectRatio: 1 / 1 }}
+							className="w-[4rem] mx-auto p-4 bg-purple-500 rounded-[50%]"
 							alt=""
 						/>
-					</div>
-					<div
-						style={{ backgroundColor: "#292C33", borderRadius: "4px" }}
-						className="mx-4 mb-3 py-4 px-4 text-base"
-					>
-						<div style={{ display: "flex" }}>
-							<p style={{ display: "flex" }} className="justify-start">
-								Total Balance
-							</p>
-							<p style={{ display: "flex" }} className="justify-end">
-								{walletBal} {process.env.REACT_APP_TOKEN_NAME}
-							</p>
-						</div>
-					</div>
-					<div className="text-sm py-3 px-5">
-						<div style={{ display: "flex" }} className="mb-2">
-							<p style={{ display: "flex" }} className="justify-start">
-								Pool Name
-							</p>
-							<p style={{ display: "flex" }} className="justify-end">
-								{poolName}
-							</p>
-						</div>
-						<div style={{ display: "flex" }} className="mb-2">
-							{data?.isOverDue ? (
-								<p
-									style={{ display: "flex", color: "#EF4444" }}
-									className="justify-start"
-								>
-									Overdue Amount
-								</p>
-							) : (
-								<p style={{ display: "flex" }} className="justify-start">
-									Due Amount
-								</p>
-							)}
-							<p
-								style={{
-									display: "flex",
-									color: `${data?.isOverDue ? "#EF4444" : "white"}`,
-								}}
-								className="justify-end"
-							>
-								${data?.repaymentDisplayAmount}
-							</p>
-						</div>
-						<div style={{ display: "flex" }} className="mb-2">
-							<p style={{ display: "flex" }} className="justify-start">
-								Due Date
-							</p>
-							<p style={{ display: "flex" }} className="justify-end">
-								{data?.nextDueDate}
-							</p>
+
+						<div className="py-4 px-3 flex gap-1 bg-darkmode-500 rounded-md ">
+							<p className="font-semibold text-[1.125rem]">Total Balance</p>
+
+							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<p className="font-semibold text-[1.125rem]">{walletBal}</p>
 						</div>
 					</div>
 
-					<div
-						className="modal-action mx-4 mt-2 mb-4 justify-center"
-						style={{ display: "flex" }}
-					>
+					<div className="px-4 md:px-8 mt-10 flex flex-col gap-1">
+						<div className="flex justify-between font-semibold">
+							<p>Pool Name</p>
+							<p>{poolName}</p>
+						</div>
+
+						<div className="flex gap-1 font-semibold">
+							{data?.isOverDue ? (
+								<p className="flex justify-start text-error-500">
+									Overdue Amount
+								</p>
+							) : (
+								<p className="flex justify-start">Due Amount</p>
+							)}
+
+							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<p className="font-semibold text-[1.125rem]">
+								{data?.repaymentDisplayAmount}
+							</p>
+						</div>
+						<div className="flex justify-between font-semibold">
+							<p>Due Date</p>
+							<p>{data?.nextDueDate}</p>
+						</div>
+					</div>
+
+					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
 							className={"w-full"}
 							htmlFor={"RepaymentProcessModal"}
+							setOpenProcessRepayment={setOpenProcessRepayment}
+							setProcessRepayment={setProcessRepayment}
 							onClick={onRepayment}
 						>
 							Make Repayment

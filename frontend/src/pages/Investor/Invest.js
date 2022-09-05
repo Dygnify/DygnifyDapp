@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import ViewPoolCard from "./components/Cards/ViewPoolCard";
 import { useNavigate } from "react-router-dom";
+import { getAllActiveOpportunities } from "../../services/BackendConnectors/opportunityConnectors";
 import {
-	getAllActiveOpportunities,
 	getUserWalletAddress,
 	getWalletBal,
-} from "../../components/transaction/TransactionHelper";
-import { retrieveFiles } from "../../services/web3storageIPFS";
-import { getBinaryFileData } from "../../services/fileHelper";
-import { getDisplayAmount } from "../../services/displayTextHelper";
+} from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
+import { getBinaryFileData } from "../../services/Helpers/fileHelper";
+import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Loader from "../../uiTools/Loading/Loader";
@@ -55,6 +55,8 @@ const Invest = () => {
 				if (juniorPool && juniorPool.length) {
 					setJuniorPools(juniorPool);
 					setJuniorPoolLoading(false);
+				} else {
+					setJuniorPoolLoading(false);
 				}
 			});
 		} catch (error) {
@@ -97,14 +99,16 @@ const Invest = () => {
 	return (
 		<div className="">
 			<div className="mb-4">
-				<h2 className="text-white font-semibold text-3xl md:text-4xl lg:text-5xl">
+				<h2 className="text-white font-semibold text-[1.4375rem] lg:text-[2.0625rem] ">
 					Investment pools
 				</h2>
 			</div>
 
 			<div className="py-4">
 				<div className="flex flex-col gap-5 mb-[3rem] md:mb-[4rem]">
-					<h2 className="text-2xl font-semibold">Senior pool</h2>
+					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
+						Senior pool
+					</h2>
 
 					<div className="">
 						{seniorPoolLoading && (
@@ -138,7 +142,9 @@ const Invest = () => {
 				</div>
 
 				<div className="flex flex-col gap-5">
-					<h2 className="text-2xl font-semibold">Junior pools</h2>
+					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
+						Junior pools
+					</h2>
 
 					<div className={`relative ${juniorPoolLoading ? "h-[18rem]" : ""}`}>
 						{juniorPoolLoading && <Loader />}
@@ -151,7 +157,7 @@ const Invest = () => {
 								</p>
 							</div>
 						) : (
-							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
+							<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 								{juniorPools.map((item) => (
 									<ViewPoolCard
 										data={item}

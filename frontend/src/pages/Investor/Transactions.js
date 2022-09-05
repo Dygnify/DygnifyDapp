@@ -3,8 +3,8 @@ import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
 import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
 import Loader from "../../uiTools/Loading/Loader";
 import axiosHttpService from "../../services/axioscall";
-import { tokenTransactions } from "../../services/blockchainTransactionDataOptions";
-import { getUserWalletAddress } from "../../components/transaction/TransactionHelper";
+import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 const Transactions = () => {
 	const [transactions, setTransactions] = useState([]);
@@ -15,12 +15,12 @@ const Transactions = () => {
 		setTimeout(() => {
 			setLoading(false);
 		}, 300);
-		//getUserWalletAddress().then((address) => console.log(address));
-		const ret = await axiosHttpService(
-			tokenTransactions("0x959215a40Edc898C3aA7371f8a262f9f6acAC0df")
+		getUserWalletAddress().then((address) =>
+			axiosHttpService(tokenTransactions(address)).then((ret) => {
+				setTransactions(ret.res.result);
+				console.log(ret.res.result, "sadfaaaaaaaaa");
+			})
 		);
-		setTransactions(ret.res.result);
-		console.log(ret.res.result, "sadfaaaaaaaaa");
 	}, []);
 
 	return (

@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect, Profiler } from "react";
 import GradientButton from "../../uiTools/Button/GradientButton";
-import FileFields from "../../uiTools/Inputs/FileFields";
 import InputGroup from "../../uiTools/Inputs/InputGroup";
 import TextArea from "../../uiTools/Inputs/TextArea";
 import TextField from "../../uiTools/Inputs/TextField";
 import FileUploader from "../Components/FileUploader";
-import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
-import { updateBorrowerDetails } from "../../components/transaction/TransactionHelper";
+import {
+	storeFiles,
+	makeFileObjects,
+} from "../../services/Helpers/web3storageIPFS";
+import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { useLocation, useNavigate } from "react-router-dom";
 // import Loading from "../Components/Loading";
 
@@ -28,14 +30,13 @@ const EditBorrowerProfile = () => {
 	const bizIncoFileName = useRef();
 	const bizLicFileName = useRef();
 
-	const [logoFile, setLogoFile] = useState();
 	const [kycFiles, setKYCFiles] = useState();
+
+	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
 	const [businessAddressFiles, setBusinessAddressFiles] = useState();
-	const [
-		businessIncorporationFiles,
-		setBusinessIncorporationFiles,
-	] = useState();
+	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
+		useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
 	const [profileState, setProfileState] = useState();
@@ -48,7 +49,6 @@ const EditBorrowerProfile = () => {
 	const [error, setError] = useState();
 
 	let logoFileCID = "";
-	let kycFilesCID = "";
 	let businessIdFilesCID = "";
 	let businessLicFilesCID = "";
 	let businessAddFilesCID = "";
@@ -345,6 +345,7 @@ const EditBorrowerProfile = () => {
 					) : (
 						<></>
 					)}
+
 					<h2 className="text-xl font-medium">Company Details</h2>
 					<div
 						style={{
@@ -384,10 +385,7 @@ const EditBorrowerProfile = () => {
 						/>
 					</div>
 				</div>
-				{/* <div className="mb-6">
-      <h2 className="text-xl font-medium mb-2">KYC Documents</h2>
-      <InputGroup onChange={onKYCFilesUpload} reference={kycFileName} />
-    </div> */}
+
 				<div className="mb-6">
 					<h2 className="text-xl font-medium mb-2">KYB Documents</h2>
 					<InputGroup

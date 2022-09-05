@@ -24,6 +24,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     LPToken public lpToken;
 
     bytes32 public opportunityID;
+    uint8 public loanType;
     uint256 public loanAmount;
     uint256 public loanTenureInDays;
     uint256 public loanInterest;
@@ -36,7 +37,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public amountWithoutEMI;
     uint256 public dailyInterestRate;
     uint256 public totalRepaidAmount;
-    uint256 public constant oneYearInDays = 360;
+    uint256 public constant oneYearInDays = 365;
     uint256 public constant sixDecimal = 10**6;
 
     uint256 public seniorYieldPerecentage;
@@ -75,7 +76,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint256 _loanAmount,
         uint256 _loanTenureInDays,
         uint256 _loanInterest,
-        uint256 _paymentFrequencyInDays
+        uint256 _paymentFrequencyInDays,
+        uint8 _loanType
     ) external override initializer {
         require(
             address(_dygnifyConfig) != address(0),
@@ -105,6 +107,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         loanInterest = _loanInterest;
         paymentFrequencyInDays = _paymentFrequencyInDays;
         repaymentCounter = 1;
+        loanType = _loanType;
 
         if (dygnifyConfig.getFlag(_opportunityID) == false) {
             // follow 4x leverage ratio
@@ -134,10 +137,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         emiAmount = total_Repayment.div(
             loanTenureInDays.div(paymentFrequencyInDays)
         );
-        uint256 effectiveInterest = loanInterest.add(
-            dygnifyConfig.getOverDueFee()
-        );
-        dailyInterestRate = effectiveInterest.div(loanTenureInDays);
+        dailyInterestRate = dygnifyConfig.getOverDueFee().div(oneYearInDays);
 
         amountWithoutEMI = loanAmount
             .div(loanTenureInDays.div(paymentFrequencyInDays).mul(sixDecimal))
@@ -312,70 +312,144 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             opportunityOrigination.isDrawdown(opportunityID) == true,
             "Funds in opportunity haven't drawdown yet."
         );
-        uint256 amount = emiAmount;
-        totalRepaidAmount += emiAmount;
-        uint256 currentTime = block.timestamp;
-        uint256 currentRepaymentDue = nextRepaymentTime();
-        uint256 overDueFee;
-        if (currentTime > currentRepaymentDue) {
-            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
-                86400
+        if(loanType == 1){
+            uint256 amount = emiAmount;
+            totalRepaidAmount += emiAmount;
+            uint256 currentTime = block.timestamp;
+            uint256 currentRepaymentDue = nextRepaymentTime();
+            uint256 overDueFee;
+            if (currentTime > currentRepaymentDue) {
+                uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                    86400
+                );
+                overDueFee = overDueSeconds
+                    .mul(dailyInterestRate.div(100))
+                    .mul(emiAmount)
+                    .div(sixDecimal);
+            }
+
+            uint256 temp = amountWithoutEMI.div(
+                dygnifyConfig.getLeverageRatio().add(1)
             );
-            overDueFee = overDueSeconds
-                .mul(dailyInterestRate.div(100))
-                .mul(emiAmount)
-                .div(sixDecimal);
+
+            uint256 tempSenior = temp.mul(dygnifyConfig.getLeverageRatio());
+            seniorSubpoolDetails.depositedAmount = seniorSubpoolDetails
+                .depositedAmount
+                .add(tempSenior);
+            juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
+                .depositedAmount
+                .add(temp);
+
+            //yield distribution
+
+            seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails
+                .yieldGenerated
+                .add(seniorYieldPerecentage.mul(tempSenior).div(sixDecimal));
+
+            juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
+                .yieldGenerated
+                .add(juniorYieldPerecentage.mul(temp).div(sixDecimal));
+
+            //overdue Amount distribution
+
+            juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
+                .overdueGenerated
+                .add(juniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
+            seniorSubpoolDetails.overdueGenerated = seniorSubpoolDetails
+                .overdueGenerated
+                .add(seniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
+
+            // sending fund in dygnifyTreasury
+            uint256 dygnifyTreasury;
+            uint256 profit = emiAmount.sub(amountWithoutEMI);
+            dygnifyTreasury = profit.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal);
+            dygnifyTreasury += overDueFee.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal);
+
+            amount = amount.add(overDueFee);
+            poolBalance = poolBalance.add(amount);
+
+            usdcToken.safeTransferFrom(msg.sender, address(this), amount);
+            
+            // trasfering protocal fee to treasury.
+            usdcToken.transfer(dygnifyConfig.dygnifyTreasuryAddress(), dygnifyTreasury);
+        }
+        else{
+            uint256 amount = emiAmount.sub(amountWithoutEMI);
+            totalRepaidAmount += amount;
+            uint256 currentTime = block.timestamp;
+            uint256 currentRepaymentDue = nextRepaymentTime();
+            uint256 overDueFee;
+            if (currentTime > currentRepaymentDue) {
+                uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                    86400
+                );
+                overDueFee = overDueSeconds
+                    .mul(dailyInterestRate.div(100))
+                    .mul(amount)
+                    .div(sixDecimal);
+            }
+
+            uint256 temp = amountWithoutEMI.div(
+                dygnifyConfig.getLeverageRatio().add(1)
+            );
+
+            uint256 tempSenior = temp.mul(dygnifyConfig.getLeverageRatio());
+
+            //yield distribution
+
+            seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails
+                .yieldGenerated
+                .add(seniorYieldPerecentage.mul(tempSenior).div(sixDecimal));
+
+            juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
+                .yieldGenerated
+                .add(juniorYieldPerecentage.mul(temp).div(sixDecimal));
+
+            //overdue Amount distribution
+
+            juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
+                .overdueGenerated
+                .add(juniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
+            seniorSubpoolDetails.overdueGenerated = seniorSubpoolDetails
+                .overdueGenerated
+                .add(seniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
+
+            // sending fund in dygnifyTreasury
+            uint256 dygnifyTreasury;
+            uint256 profit = emiAmount.sub(amountWithoutEMI);
+            dygnifyTreasury = profit.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal);
+            dygnifyTreasury += (overDueFee.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal));
+
+            if (repaymentCounter == totalRepayments) {
+                seniorSubpoolDetails.depositedAmount = seniorSubpoolDetails.totalDepositable;
+                juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails.totalDepositable;
+                amount = amount.add(
+                    juniorSubpoolDetails.depositedAmount.add(seniorSubpoolDetails.depositedAmount)
+                );
+                totalRepaidAmount = totalRepaidAmount.add(
+                    juniorSubpoolDetails.depositedAmount.add(seniorSubpoolDetails.depositedAmount)
+                );
+            }
+
+            amount = amount.add(overDueFee);
+            poolBalance = poolBalance.add(amount);
+
+            usdcToken.safeTransferFrom(msg.sender, address(this), amount);
+            
+            // trasfering protocal fee to treasury.
+            usdcToken.transfer(dygnifyConfig.dygnifyTreasuryAddress(), dygnifyTreasury);
         }
 
-        uint256 temp = amountWithoutEMI.div(
-            dygnifyConfig.getLeverageRatio().add(1)
-        );
-
-        uint256 tempSenior = temp.mul(dygnifyConfig.getLeverageRatio());
-        seniorSubpoolDetails.depositedAmount = seniorSubpoolDetails
-            .depositedAmount
-            .add(tempSenior);
-        juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
-            .depositedAmount
-            .add(temp);
-
-        //yield distribution
-
-        seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails
-            .yieldGenerated
-            .add(seniorYieldPerecentage.mul(tempSenior).div(sixDecimal));
-
-        juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
-            .yieldGenerated
-            .add(juniorYieldPerecentage.mul(temp).div(sixDecimal));
-
-        //overdue Amount distribution
-
-        juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
-            .overdueGenerated
-            .add(juniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
-        seniorSubpoolDetails.overdueGenerated = seniorSubpoolDetails
-            .overdueGenerated
-            .add(seniorOverduePerecentage.mul(overDueFee).div(sixDecimal));
-
-        // sending fund in dygnifyTreasury
-        uint256 dygnifyTreasury;
-        uint256 profit = emiAmount.sub(amountWithoutEMI);
-        dygnifyTreasury = profit.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal);
-        dygnifyTreasury += overDueFee.mul(dygnifyConfig.getDygnifyFee()).div(sixDecimal);
-        usdcToken.safeTransferFrom(address(this), dygnifyConfig.dygnifyTreasuryAddress(), dygnifyTreasury);
-
-        amount = amount.add(overDueFee);
-        poolBalance = poolBalance.add(amount);
-        repaymentCounter = repaymentCounter.add(1);
-
-        usdcToken.safeTransferFrom(msg.sender, address(this), amount);
-        
         if (repaymentCounter == totalRepayments) {
             opportunityOrigination.markRepaid(opportunityID);
             uint seniorPoolAmount = seniorSubpoolDetails.overdueGenerated + seniorSubpoolDetails.yieldGenerated + seniorSubpoolDetails.depositedAmount;
+            poolBalance -= seniorPoolAmount;
+            seniorSubpoolDetails.overdueGenerated = 0;
+            seniorSubpoolDetails.depositedAmount = 0;
+            seniorSubpoolDetails.yieldGenerated = 0;
             usdcToken.transfer(dygnifyConfig.seniorPoolAddress(), seniorPoolAmount);
         }
+        repaymentCounter = repaymentCounter.add(1);
     }
 
     // this function will withdraw all the available amount of executor including yield and overdue profit
@@ -502,22 +576,46 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             opportunityOrigination.isDrawdown(opportunityID) == true,
             "Funds in opportunity haven't drawdown yet."
         );
+        uint256 amount;
+        if(loanType == 1){
+            amount = emiAmount;
+            uint256 currentTime = block.timestamp;
+            uint256 currentRepaymentDue = nextRepaymentTime();
+            uint256 overDueFee;
+            if (currentTime > currentRepaymentDue) {
+                uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                    86400
+                );
+                overDueFee = overDueSeconds
+                    .mul(dailyInterestRate.div(100))
+                    .mul(emiAmount)
+                    .div(sixDecimal);
+            }
 
-        uint256 amount = emiAmount;
-        uint256 currentTime = block.timestamp;
-        uint256 currentRepaymentDue = nextRepaymentTime();
-        uint256 overDueFee;
-        if (currentTime > currentRepaymentDue) {
-            uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
-                86400
-            );
-            overDueFee = overDueSeconds
-                .mul(dailyInterestRate.div(100))
-                .mul(emiAmount)
-                .div(sixDecimal);
+            amount = amount.add(overDueFee);
         }
+        else{
+            amount = emiAmount.sub(amountWithoutEMI);
+            uint256 currentTime = block.timestamp;
+            uint256 currentRepaymentDue = nextRepaymentTime();
+            uint256 overDueFee;
+            if (currentTime > currentRepaymentDue) {
+                uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                    86400
+                );
+                overDueFee = overDueSeconds
+                    .mul(dailyInterestRate.div(100))
+                    .mul(amount)
+                    .div(sixDecimal);
+            }
 
-        amount = amount.add(overDueFee);
+            amount = amount.add(overDueFee);
+            if(repaymentCounter == totalRepayments){
+                amount = amount.add(
+                    seniorSubpoolDetails.totalDepositable.add(juniorSubpoolDetails.totalDepositable)
+                );
+            }
+        }
         return amount;
     }
 

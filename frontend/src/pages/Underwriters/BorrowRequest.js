@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 import UnderwriterCard from "./Components/UnderwriterCard";
-import { getAllUnderwriterOpportunities } from "../../components/transaction/TransactionHelper";
 import Loader from "../../uiTools/Loading/Loader";
+import { getAllUnderwriterOpportunities } from "../../services/BackendConnectors/opportunityConnectors";
 
 const BorrowRequest = () => {
 	const [opportunities, setOpportunities] = useState([]);

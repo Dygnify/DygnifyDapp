@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getBinaryFileData } from "../../../../services/fileHelper";
-import { retrieveFiles } from "../../../../services/web3storageIPFS";
+import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
@@ -42,40 +42,40 @@ const PoolCard = ({ data }) => {
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dygnify</p>
+					<p className="text-2xl font-semibold">{poolName}</p>
+					<p>{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-xl font-semibold">{poolName}</p>
-					<p className="text-lg">{companyName}Dygnify</p>
+					<p className="text-2xl font-semibold">{poolName}</p>
+					<p>{companyName}</p>
 				</div>
 
 				<div className="flex flex-col gap-1">
-					<div className="flex gap-1">
-						<p className="text-lg font-medium">Pool Size</p>
+					<div className="flex gap-1 font-semibold">
+						<p>Pool Size</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{opportunityAmount}</p>
+						<p>{opportunityAmount}</p>
 					</div>
-					<div className="flex gap-1">
-						<p className="text-lg font-medium">Capital Invested</p>
+					<div className="flex gap-1 font-semibold">
+						<p>Capital Invested</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{capitalInvested}</p>
+						<p>{capitalInvested}</p>
 					</div>
-					<div className="flex gap-1">
-						<p className="text-lg font-medium">Estimated APY</p>
+					<div className="flex gap-1 font-semibold">
+						<p>Estimated APY</p>
 
-						<p className="text-lg font-medium ml-auto">{estimatedAPY}</p>
+						<p className=" ml-auto">{estimatedAPY}</p>
 					</div>
-					<div className="flex gap-1">
-						<p className="text-lg font-medium">Yield Generated</p>
+					<div className="flex gap-1 font-semibold">
+						<p>Yield Generated</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="text-lg font-medium">{yieldGenerated}</p>
+						<p>{yieldGenerated}</p>
 					</div>
 				</div>
 			</div>
