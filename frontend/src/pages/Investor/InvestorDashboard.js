@@ -11,7 +11,7 @@ import Header from "../Layout/Header";
 
 const InvestorDashboardNew = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
-	const [darkMode, setDarkMode] = useState(true);
+	const [darkMode, setDarkMode] = useState(false);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);
@@ -19,7 +19,7 @@ const InvestorDashboardNew = () => {
 
 	return (
 		<div className={`${darkMode ? "dark" : ""} `}>
-			<div className="bg-white dark:bg-darkmode-900 text-black dark:text-white">
+			<div className="bg-neutral-50 dark:bg-darkmode-900 text-black dark:text-white">
 				<Header
 					linkStatus={linkStatus}
 					darkMode={darkMode}
@@ -44,15 +44,12 @@ const InvestorDashboardNew = () => {
 						</div>
 					</div>
 
-					<div
-						style={{ borderRight: "1px solid #20232A" }}
-						className="drawer-side"
-					>
+					<div className="drawer-side border-r border-neutral-300 dark:border-darkmode-800">
 						<label
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<ul className="h-full py-4 px-2 overflow-y-auto w-60  text-[#64748B] bg-neutral-50 dark:bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex ml-8 py-4 gap-2"

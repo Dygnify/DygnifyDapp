@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import Header from "../Layout/Header";
 import { useNavigate } from "react-router-dom";
@@ -8,96 +8,130 @@ import InvestImage from "../../assets/Invest.png";
 const LandingPage = () => {
 	const path = useNavigate();
 
+	const [darkMode, setDarkMode] = useState(true);
+
 	return (
-		<div className="bg-[#000000] dark:bg-white w-full pb-10">
-			<Header />
+		<div className={`${darkMode ? "dark" : ""} `}>
+			<div className="dark:bg-[#000000] w-full">
+				<Header darkMode={darkMode} setDarkMode={setDarkMode} />
 
-			<div className="flex-col items-center flex">
-				{/* <div style={{ position: "absolute", overflow: "hidden" }}>
-                   <GradientDark />
-                   </div> */}
-				<h1
-					className="text-7xl font-bold text-white mt-20 mb-2"
-					// style={
-					// 	{
-					// fontSize: 50,
-					// fontWeight: 700,
-					// fontSize: 68,
-					// marginBottom: -18,
-					// color: "white",
-					// marginTop: 50,
-					// 	}
-					// }
-				>
-					Democratising Credit Flow
-				</h1>
-				<h1
-					className="text-7xl font-bold text-white"
-					// style={{
-					// 	fontSize: 50,
-					// 	fontWeight: 700,
-					// 	fontSize: 68,
-					// 	letterSpacing: 0.03,
-					// 	color: "white",
-					// }}
-				>
-					to Small Business
-				</h1>
+				<div className="flex-col items-center" style={{ display: "flex" }}>
+					{/* <div style={{ position: "absolute", overflow: "hidden" }}>
+          <GradientDark />
+        </div> */}
+					<h1
+						style={{
+							fontSize: 50,
+							fontWeight: 700,
+							fontSize: 68,
+							marginBottom: -18,
+							color: "white",
+							marginTop: 50,
+						}}
+					>
+						Democratising Credit Flow
+					</h1>
+					<h1
+						style={{
+							fontSize: 50,
+							fontWeight: 700,
+							fontSize: 68,
+							letterSpacing: 0.03,
+							color: "white",
+						}}
+					>
+						to Small Business
+					</h1>
+					<div
+						style={{
+							width: 520,
+							height: 69,
+							// marginLeft: "31%",
+						}}
+					>
+						<h6
+							style={{
+								fontSize: 18,
+								fontWeight: 500,
+								color: "white",
+
+								textAlign: "center",
+							}}
+						>
+							DeFi platform enabling stable, attractive yields for digital asset
+							investors via purpose-based investments in emerging market
+							opportunities
+						</h6>
+					</div>
+				</div>
+				<br />
+
 				<div
-					className="w-[33rem] h-16 mt-5"
-					style={
-						{
-							// width: 520,
-							// height: 69,
-						}
-					}
+					className="flex-row justify-evenly w-full"
+					style={{ display: "flex" }}
 				>
-					<h6
-						className="text-lg font-medium text-white text-center"
-						// style={{
-						// 	fontSize: 18,
-						// 	fontWeight: 500,
-						// 	color: "white",
-
-						// 	textAlign: "center",
-						// }}
+					<div
+						className="w-1/2 flex-col justify-center items-center"
+						style={{ display: "flex" }}
 					>
-						DeFi platform enabling stable, attractive yields for digital asset
-						investors via purpose-based investments in emerging market
-						opportunities
-					</h6>
-				</div>
-			</div>
-			<br />
-			<div className="flex flex-row w-full">
-				<div className="flex w-1/2 flex-col justify-center items-center">
-					<img src={InvestImage} />
-					<h6 className="font-semibold text-base text-center text-[#ffffff] w-[33%] my-3">
-						Invest USDC in real world assets and earn attractive risk adjusted
-						returns.
-					</h6>
-					<GradientButton
-						onClick={() => {
-							path("/investor-dashboard/overview");
-						}}
+						<img src={InvestImage} />
+						<h6
+							style={{
+								fontWeight: 600,
+								fontSize: 16,
+								textAlign: "center",
+								color: "#ffffff",
+								width: "70%",
+								marginTop: 10,
+								marginBottom: 10,
+							}}
+						>
+							Invest USDC in real world assets and earn attractive risk adjusted
+							returns.
+						</h6>
+						<GradientButton
+							onClick={() => {
+								path("/investor-dashboard/overview");
+							}}
+						>
+							Invest
+						</GradientButton>
+					</div>
+					<div
+						className="w-1/2 flex-col justify-center items-center"
+						style={{ display: "flex" }}
 					>
-						Invest
-					</GradientButton>
+						<img src={BorrowImage} />
+						<h6
+							style={{
+								fontWeight: 600,
+								fontSize: 16,
+								textAlign: "center",
+								color: "#ffffff",
+								width: "70%",
+								marginBottom: 10,
+								marginTop: 10,
+							}}
+						>
+							On tap liquidity in a transaparent and hassle free manner at
+							competitive prices.
+						</h6>
+						<GradientButton
+							onClick={() => {
+								path("/borrower_dashboard/overview");
+							}}
+						>
+							Borrow
+						</GradientButton>
+					</div>
 				</div>
-				<div className="flex w-1/2 flex-col justify-center items-center">
-					<img src={BorrowImage} />
-					<h6 className="font-semibold text-base text-center text-[#ffffff] w-[33%] my-3">
-						On tap liquidity in a transaparent and hassle free manner at
-						competitive prices.
-					</h6>
-					<GradientButton
-						onClick={() => {
-							path("/borrower_dashboard/overview");
-						}}
-					>
-						Borrow
-					</GradientButton>
-				</div>
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
 			</div>
 		</div>
 	);
