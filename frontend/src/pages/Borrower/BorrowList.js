@@ -10,11 +10,17 @@ import DashboardHeader from "./DashboardHeader";
 import LoanFormModal from "./Components/Modal/LoanFormModal";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
+import KycCheckModal from "./Components/Modal/KycCheckModal";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
 	const [opportunities, setOpportunities] = useState([]);
 	const [selected, setSelected] = useState(null);
+	const [kycSelected, setKycSelected] = useState();
+	const [borrowReqProcess, setBorrowReqProcess] = useState(false);
+	const [processModal, setProcessModal] = useState(false);
 
 	const [loading, setLoading] = useState();
 	const [kycStatus, setKycStatus] = useState();
@@ -22,6 +28,13 @@ const BorrowList = () => {
 
 	const handleForm = () => {
 		setSelected(null);
+		setKycSelected(null);
+	};
+
+	const cutProcessModal = () => {
+		console.log("kadl");
+		setSelected(null);
+		setProcessModal(null);
 	};
 
 	useEffect(() => {
@@ -34,6 +47,7 @@ const BorrowList = () => {
 			setLoading(false);
 		};
 		fetchData();
+		getUserWalletAddress().then((address) => checkForKycAndProfile(address));
 	}, []);
 
 	useEffect(() => {
@@ -78,13 +92,36 @@ const BorrowList = () => {
 
 	return (
 		<div className="">
-			<DashboardHeader setSelected={setSelected} />
+			<DashboardHeader
+				setSelected={setSelected}
+				kycStatus={kycStatus}
+				profileStatus={profileStatus}
+				setKycSelected={setKycSelected}
+			/>
+
 			{selected && (
 				<LoanFormModal
-					// key={drawdownList?.id}
-					// data={drawdownList}
 					handleForm={handleForm}
-				></LoanFormModal>
+					setBorrowReqProcess={setBorrowReqProcess}
+					setSelected={setSelected}
+					setProcessModal={setProcessModal}
+				/>
+			)}
+
+			{processModal && (
+				<ProcessingRequestModal
+					borrowReqProcess={borrowReqProcess}
+					setSelected={setSelected}
+					handleDrawdown={cutProcessModal}
+					setProcessModal={setProcessModal}
+					processModal={processModal}
+				/>
+			)}
+
+			{kycSelected ? (
+				<KycCheckModal kycStatus={kycStatus} profileStatus={profileStatus} />
+			) : (
+				<></>
 			)}
 			<div className="mt-8">
 				<h2 className="font-semibold text-[1.4375rem] mb-4">Drawdown Funds</h2>

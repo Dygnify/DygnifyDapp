@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { getTransactionHistory } from "../../components/transactionHistory/TransactionGetter";
 import TransactionsCard from "./Components/Cards/TransactionsCard";
 import Loader from "../../uiTools/Loading/Loader";
 
@@ -14,21 +13,13 @@ const Transaction = () => {
 			setLoading(false);
 		}, 300);
 
-		let data = await getTransactionHistory();
+		//let data = await getTransactionHistory();
 
 		// not getting any response
-		setTransactions(data);
+		//setTransactions(data);
 
 		setLoading(false);
-
-		console.log(data);
 	}, []);
-
-	useEffect(() => {
-		fetch("/transactions.json")
-			.then((res) => res.json())
-			.then((data) => setTransactions(data));
-	}, [transactions]);
 
 	return (
 		<div className={`relative mb-16 ${loading ? "h-[100vh]" : ""}`}>
