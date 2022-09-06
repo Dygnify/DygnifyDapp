@@ -11,15 +11,20 @@ import Header from "../Layout/Header";
 
 const InvestorDashboardNew = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
+	const [darkMode, setDarkMode] = useState(true);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);
 	};
 
 	return (
-		<>
-			<div className="bg-darkmode-900">
-				<Header linkStatus={linkStatus} />
+		<div className={`${darkMode ? "dark" : ""} `}>
+			<div className="bg-white dark:bg-darkmode-900 text-black dark:text-white">
+				<Header
+					linkStatus={linkStatus}
+					darkMode={darkMode}
+					setDarkMode={setDarkMode}
+				/>
 				<div className="drawer drawer-mobile">
 					<input
 						id="dashboard-sidebar"
@@ -30,7 +35,7 @@ const InvestorDashboardNew = () => {
 					/>
 
 					<div
-						className={`py-4 drawer-content text-white ${
+						className={`py-4 drawer-content  ${
 							linkStatus ? "blur-sm lg:blur-none" : ""
 						}`}
 					>
@@ -108,7 +113,7 @@ const InvestorDashboardNew = () => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -12,7 +12,10 @@ import {
 	isConnected,
 } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
-const Header = ({ linkStatus }) => {
+import Dark from "../../uiTools/Icons/Dark";
+import Light from "../../uiTools/Icons/Light";
+
+const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	const [status, setStatus] = useState(false);
 	const location = useLocation();
 
@@ -41,15 +44,25 @@ const Header = ({ linkStatus }) => {
 						alt="company logo"
 					/>
 				</div>
+				<div className="ml-auto p-3 bg-darkmode-500 rounded-md">
+					<input
+						type="checkbox"
+						id="themeToggle"
+						checked={darkMode}
+						onChange={() => setDarkMode((prev) => !prev)}
+						className="hidden"
+					/>
+					<label htmlFor="themeToggle">{darkMode ? <Light /> : <Dark />}</label>
+				</div>
 
 				{!status ? (
-					<div className="ml-auto">
+					<div className="">
 						<GradientButton onClick={hitRequestAccount}>
 							<Wallet /> Connect Wallet
 						</GradientButton>
 					</div>
 				) : (
-					<div className="outline outline-[#9281FF]  ml-auto rounded-full  px-4 sm:px-6 md:px-8 flex items-center gap-2 py-2 sm:py-3">
+					<div className="outline outline-[#9281FF] rounded-full  px-4 sm:px-6 md:px-8 flex items-center gap-2 py-2 sm:py-3">
 						<WalletWhiteSmall />
 						<div className="font-semibold text-white text-sm sm:text-base md:text-lg">
 							Connected
