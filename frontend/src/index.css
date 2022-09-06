@@ -35,8 +35,15 @@
 }
 
 .card-gradient {
+  background-image: none;
+  background-color: #E7EAEE;
+  box-shadow: none;
+}
+
+.dark .card-gradient {
   box-shadow: 2.96797px 2.96797px 7.41993px -23.7438px rgba(0, 0, 0, 0.1);
   background-image: linear-gradient(to bottom right, #282828, #00000028);
+  background-color: transparent;
 }
 
 .my-gradient {
