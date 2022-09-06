@@ -9,51 +9,58 @@ const LandingPage = () => {
 	const path = useNavigate();
 
 	return (
-		<div className="bg-[#000000] w-full">
+		<div className="bg-[#000000] dark:bg-white w-full pb-10">
 			<Header />
 
-			<div className="flex-col items-center" style={{ display: "flex" }}>
+			<div className="flex-col items-center flex">
 				{/* <div style={{ position: "absolute", overflow: "hidden" }}>
-          <GradientDark />
-        </div> */}
+                   <GradientDark />
+                   </div> */}
 				<h1
-					style={{
-						fontSize: 50,
-						fontWeight: 700,
-						fontSize: 68,
-						marginBottom: -18,
-						color: "white",
-						marginTop: 50,
-					}}
+					className="text-7xl font-bold text-white mt-20 mb-2"
+					// style={
+					// 	{
+					// fontSize: 50,
+					// fontWeight: 700,
+					// fontSize: 68,
+					// marginBottom: -18,
+					// color: "white",
+					// marginTop: 50,
+					// 	}
+					// }
 				>
 					Democratising Credit Flow
 				</h1>
 				<h1
-					style={{
-						fontSize: 50,
-						fontWeight: 700,
-						fontSize: 68,
-						letterSpacing: 0.03,
-						color: "white",
-					}}
+					className="text-7xl font-bold text-white"
+					// style={{
+					// 	fontSize: 50,
+					// 	fontWeight: 700,
+					// 	fontSize: 68,
+					// 	letterSpacing: 0.03,
+					// 	color: "white",
+					// }}
 				>
 					to Small Business
 				</h1>
 				<div
-					style={{
-						width: 520,
-						height: 69,
-						// marginLeft: "31%",
-					}}
+					className="w-[33rem] h-16 mt-5"
+					style={
+						{
+							// width: 520,
+							// height: 69,
+						}
+					}
 				>
 					<h6
-						style={{
-							fontSize: 18,
-							fontWeight: 500,
-							color: "white",
+						className="text-lg font-medium text-white text-center"
+						// style={{
+						// 	fontSize: 18,
+						// 	fontWeight: 500,
+						// 	color: "white",
 
-							textAlign: "center",
-						}}
+						// 	textAlign: "center",
+						// }}
 					>
 						DeFi platform enabling stable, attractive yields for digital asset
 						investors via purpose-based investments in emerging market
@@ -62,27 +69,10 @@ const LandingPage = () => {
 				</div>
 			</div>
 			<br />
-
-			<div
-				className="flex-row justify-evenly w-full"
-				style={{ display: "flex" }}
-			>
-				<div
-					className="w-1/2 flex-col justify-center items-center"
-					style={{ display: "flex" }}
-				>
+			<div className="flex flex-row w-full">
+				<div className="flex w-1/2 flex-col justify-center items-center">
 					<img src={InvestImage} />
-					<h6
-						style={{
-							fontWeight: 600,
-							fontSize: 16,
-							textAlign: "center",
-							color: "#ffffff",
-							width: "70%",
-							marginTop: 10,
-							marginBottom: 10,
-						}}
-					>
+					<h6 className="font-semibold text-base text-center text-[#ffffff] w-[33%] my-3">
 						Invest USDC in real world assets and earn attractive risk adjusted
 						returns.
 					</h6>
@@ -94,22 +84,9 @@ const LandingPage = () => {
 						Invest
 					</GradientButton>
 				</div>
-				<div
-					className="w-1/2 flex-col justify-center items-center"
-					style={{ display: "flex" }}
-				>
+				<div className="flex w-1/2 flex-col justify-center items-center">
 					<img src={BorrowImage} />
-					<h6
-						style={{
-							fontWeight: 600,
-							fontSize: 16,
-							textAlign: "center",
-							color: "#ffffff",
-							width: "70%",
-							marginBottom: 10,
-							marginTop: 10,
-						}}
-					>
+					<h6 className="font-semibold text-base text-center text-[#ffffff] w-[33%] my-3">
 						On tap liquidity in a transaparent and hassle free manner at
 						competitive prices.
 					</h6>
@@ -122,13 +99,6 @@ const LandingPage = () => {
 					</GradientButton>
 				</div>
 			</div>
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
 		</div>
 	);
 };
