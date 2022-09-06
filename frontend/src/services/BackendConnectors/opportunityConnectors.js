@@ -9,55 +9,61 @@ const {
 	getTrimmedWalletAddress,
 	getDisplayAmount,
 } = require("../Helpers/displayTextHelper");
-const { getEthAddress } = require("./userConnectors/borrowerConnectors");
-const { getUserWalletAddress } = require("./userConnectors/commonConnectors");
+const {
+	getUserWalletAddress,
+	getEthAddress,
+} = require("./userConnectors/commonConnectors");
 
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
 
 const createOpportunity = async (formData) => {
-	let borrower = await getUserWalletAddress();
-	let {
-		loan_type,
-		loan_amount,
-		loan_tenure,
-		loan_interest,
-		capital_loss,
-		payment_frequency,
-		loanInfoHash,
-		collateralHash,
-	} = formData;
-	console.log("backend call", formData);
-
-	if (typeof window.ethereum !== "undefined") {
-		await requestAccount();
-		const provider = new ethers.providers.Web3Provider(window.ethereum);
-		console.log({ provider });
-		const signer = provider.getSigner();
-		const contract = new ethers.Contract(
-			process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
-			opportunityOrigination.abi,
-			signer
-		);
-		const loanAmt = ethers.utils.parseUnits(loan_amount, sixDecimals);
-		const loanInterest = ethers.utils.parseUnits(loan_interest, sixDecimals);
-		const capitalLoss = capital_loss
-			? ethers.utils.parseUnits(capital_loss, sixDecimals)
-			: 0;
-		const transaction1 = await contract.createOpportunity(
-			borrower,
-			loanInfoHash,
-			loan_type,
-			loanAmt,
-			loan_tenure,
-			loanInterest,
-			payment_frequency,
-			collateralHash,
-			capitalLoss
-		);
-		await transaction1.wait();
-		console.log("successfully created*******");
+	if (!formData) {
+		return false;
 	}
+	try {
+		let borrowerAdd = await getUserWalletAddress();
+
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+			const contract = new ethers.Contract(
+				process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+				opportunityOrigination.abi,
+				signer
+			);
+			const loanAmt = ethers.utils.parseUnits(
+				formData.loan_amount,
+				sixDecimals
+			);
+			const loanInterest = ethers.utils.parseUnits(
+				formData.loan_interest,
+				sixDecimals
+			);
+			const capitalLoss = formData.capital_loss
+				? ethers.utils.parseUnits(formData.capital_loss, sixDecimals)
+				: 0;
+			const opData = [
+				borrowerAdd,
+				formData.loan_name,
+				formData.loanInfoHash,
+				formData.loan_type,
+				loanAmt,
+				formData.loan_tenure,
+				loanInterest,
+				formData.payment_frequency,
+				formData.collateralHash,
+				capitalLoss,
+			];
+			const transaction1 = await contract.createOpportunity(opData);
+			await transaction1.wait();
+		}
+		return true;
+	} catch (error) {
+		console.log(error);
+	}
+	return false;
 };
 
 function getOpportunity(opportunity) {
@@ -69,6 +75,7 @@ function getOpportunity(opportunity) {
 	let obj = {};
 	obj.id = opportunity.opportunityID.toString();
 	obj.borrower = opportunity.borrower.toString();
+	obj.opportunityName = opportunity.opportunityName.toString();
 	obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
 	obj.opportunityInfo = opportunity.opportunityInfo.toString();
 	obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
@@ -93,6 +100,7 @@ function getOpportunity(opportunity) {
 
 	return obj;
 }
+
 // to fetch created opportunities of specific borrower
 const getOpportunitysOf = async () => {
 	try {
@@ -110,7 +118,7 @@ const getOpportunitysOf = async () => {
 			let opportunities = [];
 			for (const op of data) {
 				let tx = await contract.opportunityToId(op);
-				let obj = await getOpportunity(tx);
+				let obj = getOpportunity(tx);
 				if (
 					obj.opportunityPoolAddress &&
 					obj.opportunityPoolAddress !== nullAddress
@@ -260,7 +268,7 @@ const getDrawdownOpportunities = async () => {
 				let loanAmount = ethers.utils.formatUnits(tx.loanAmount, sixDecimals);
 				console.log(poolBalance.toString());
 				if (parseInt(poolBalance) >= parseInt(loanAmount)) {
-					let obj = await getOpportunity(tx);
+					let obj = getOpportunity(tx);
 					opportunities.push(obj);
 				}
 			}
@@ -316,7 +324,7 @@ const getOpportunitiesWithDues = async () => {
 						sixDecimals
 					);
 
-					let obj = await getOpportunity(tx);
+					let obj = getOpportunity(tx);
 					obj.nextDueDate = convertDate(repaymentDate);
 					obj.epochDueDate = repaymentDate.toString();
 					obj.repaymentAmount = repaymentAmount;
@@ -470,6 +478,26 @@ const getAllUnderwriterOpportunities = async () => {
 	return null;
 };
 
+const getOpportunityName = async (poolAddress) => {
+	if (!poolAddress || poolAddress === nullAddress) {
+		return;
+	}
+
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const poolContract = new ethers.Contract(
+				poolAddress,
+				opportunityPool.abi,
+				provider
+			);
+			return await poolContract.getOpportunityName();
+		}
+	} catch (error) {
+		console.log(error);
+	}
+	return "";
+};
 module.exports = {
 	createOpportunity,
 	getOpportunity,
@@ -482,4 +510,5 @@ module.exports = {
 	getAllActiveOpportunities,
 	getAllWithdrawableOpportunities,
 	getAllUnderwriterOpportunities,
+	getOpportunityName,
 };
