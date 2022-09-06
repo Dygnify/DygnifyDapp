@@ -16,11 +16,11 @@
   border-radius: 0.8em;
 }
 
-.active > span > svg > path {
+.active>span>svg>path {
   fill: #9281FF;
 }
 
-.transaction-button > button {
+.transaction-button>button {
   padding-block: 0.2em;
   padding-inline: 0.5em;
   border-radius: 1.8em;
@@ -31,12 +31,19 @@
 .text-gradient {
   color: transparent;
   background-clip: text;
-  background-image: linear-gradient(90deg, #51B960, #83DC90 );
+  background-image: linear-gradient(90deg, #51B960, #83DC90);
 }
 
 .card-gradient {
+  background-image: none;
+  background-color: #E7EAEE;
+  box-shadow: none;
+}
+
+.dark .card-gradient {
   box-shadow: 2.96797px 2.96797px 7.41993px -23.7438px rgba(0, 0, 0, 0.1);
   background-image: linear-gradient(to bottom right, #282828, #00000028);
+  background-color: transparent;
 }
 
 .my-gradient {
@@ -46,12 +53,12 @@
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0; 
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type=number] {
-    -moz-appearance:textfield; 
+  -moz-appearance: textfield;
 }
 
 .approved-btn {
@@ -65,4 +72,8 @@ input[type=number] {
 .unsured-btn {
   background-image: linear-gradient(276.08deg, rgba(255, 255, 255, 0.04) 2.02%, rgba(255, 255, 255, 0.4) 2.03%, #FFFFFF 99.33%);
 
+}
+
+.css-1hb7zxy-IndicatorsContainer {
+  display: none !important;
 }

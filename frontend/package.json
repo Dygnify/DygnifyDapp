@@ -27,6 +27,7 @@
     "react-loading-overlay": "^1.0.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
+    "react-select": "^5.4.0",
     "react-spinners": "^0.12.0",
     "react-toastify": "^9.0.4",
     "react-webcam": "^7.0.1",

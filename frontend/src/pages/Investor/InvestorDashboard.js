@@ -11,15 +11,20 @@ import Header from "../Layout/Header";
 
 const InvestorDashboardNew = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
+	const [darkMode, setDarkMode] = useState(false);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);
 	};
 
 	return (
-		<>
-			<div className="bg-darkmode-900">
-				<Header linkStatus={linkStatus} />
+		<div className={`${darkMode ? "dark" : ""} `}>
+			<div className="bg-neutral-50 dark:bg-darkmode-900 text-black dark:text-white">
+				<Header
+					linkStatus={linkStatus}
+					darkMode={darkMode}
+					setDarkMode={setDarkMode}
+				/>
 				<div className="drawer drawer-mobile">
 					<input
 						id="dashboard-sidebar"
@@ -30,7 +35,7 @@ const InvestorDashboardNew = () => {
 					/>
 
 					<div
-						className={`py-4 drawer-content text-white ${
+						className={`py-4 drawer-content  ${
 							linkStatus ? "blur-sm lg:blur-none" : ""
 						}`}
 					>
@@ -39,15 +44,12 @@ const InvestorDashboardNew = () => {
 						</div>
 					</div>
 
-					<div
-						style={{ borderRight: "1px solid #20232A" }}
-						className="drawer-side"
-					>
+					<div className="drawer-side border-r border-neutral-300 dark:border-darkmode-800">
 						<label
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<ul className="h-full py-4 px-2 overflow-y-auto w-60  text-[#64748B] bg-neutral-50 dark:bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex ml-8 py-4 gap-2"
@@ -108,7 +110,7 @@ const InvestorDashboardNew = () => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

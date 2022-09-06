@@ -22,7 +22,7 @@ const LoanFormModal = ({
 
 	const [formData, setFormData] = useState({
 		loan_name: "",
-		loan_type: "0",
+		loan_type: "1",
 		loan_amount: "",
 		loan_purpose: "",
 		loan_tenure: "",

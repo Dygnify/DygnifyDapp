@@ -3,10 +3,28 @@ import GradientButton from "../../../../uiTools/Button/GradientButton";
 import TextArea from "../../../../uiTools/Inputs/TextArea";
 import TextField from "../../../../uiTools/Inputs/TextField";
 import { loanDetailsValidationSchema } from "../../../LoanForm/validations/validation";
+import Selection from "../../../../uiTools/Inputs/Selection";
+import { useState } from "react";
 
-const loantenure = [6, 12, 18, 24, 30, 36];
-const paymentfrequency = [30, 60, 90];
+const loantenure = [
+	{ value: 6, label: 6 },
+	{ value: 12, label: 12 },
+	{ value: 18, label: 18 },
+	{ value: 24, label: 24 },
+	{ value: 30, label: 30 },
+	{ value: 36, label: 36 },
+];
+
 const loantype = ["Bullet Loan", "Term Loan"];
+const paymentfrequency = [
+	{ value: 30, label: 30 },
+	{ value: 60, label: 60 },
+	{ value: 90, label: 90 },
+];
+const loantypes = [
+	{ value: 0, label: "Bullet Loan" },
+	{ value: 1, label: "Term Loan" },
+];
 
 export default function Account({ formData, handleNext, handleForm }) {
 	const formik = useFormik({
@@ -17,7 +35,6 @@ export default function Account({ formData, handleNext, handleForm }) {
 			handleNext(values, false);
 		},
 	});
-
 	return (
 		<>
 			<div className=" flex flex-col mt-20 md:mt-14 md:px-5 ">
@@ -54,31 +71,24 @@ export default function Account({ formData, handleNext, handleForm }) {
 						></TextField>
 					</div>
 					<div className="md:flex md:gap-3">
-						{/* <TextField
-							name="loan_tenure"
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							error={
-								formik.touched.loan_tenure && formik.errors.loan_tenure
-									? formik.errors.loan_tenure
-									: null
-							}
-							className="w-1/2 mr-2"
-							label="Loan Tenure"
-							placeholder="Enter Loan Tenure in Months"
-						></TextField> */}
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
 								<span class="text-white">Loan Tenure</span>
 							</label>
 							<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
-								<select
+								<Selection
+									onChange={(value) =>
+										formik.setFieldValue("loan_tenure", value.value)
+									}
+									value={formik.values.loan_tenure}
+									placeholder="Loan Tenure"
+									options={loantenure}
+								></Selection>
+								{/* <select
 									name="loan_tenure"
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									className="outline-none w-[80%] appearance-none rounded-lg bg-[#24272F]"
-									// placeholder="Enter Loan Tenure in Months"
-									// defaultValue={"0"}
 									value={formik.values.loan_tenure}
 									id="loan_tenure"
 								>
@@ -88,7 +98,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 											{val}
 										</option>
 									))}
-								</select>
+								</select> */}
 								<div className="text-gray-400">Months</div>
 							</div>
 							{formik.touched.loan_tenure && formik.errors.loan_tenure ? (
@@ -97,33 +107,25 @@ export default function Account({ formData, handleNext, handleForm }) {
 								</p>
 							) : null}
 						</div>
-						{/* <TextField
-							name="payment_frequency"
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							error={
-								formik.touched.payment_frequency &&
-								formik.errors.payment_frequency
-									? formik.errors.payment_frequency
-									: null
-							}
-							className="w-1/2 ml-2"
-							label="Repayment Frequency"
-							placeholder="Enter Repayment Frequency in Days"
-							value={formik.values.payment_frequency}
-						></TextField> */}
+
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
 								<span class="text-white">Repayment Frequency</span>
 							</label>
 							<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
-								<select
+								<Selection
+									onChange={(value) =>
+										formik.setFieldValue("payment_frequency", value.value)
+									}
+									value={formik.values.payment_frequency}
+									placeholder="Enter Repayment"
+									options={paymentfrequency}
+								></Selection>
+								{/* <select
 									name="payment_frequency"
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									className="outline-none w-[80%] appearance-none rounded-lg bg-[#24272F]"
-									// placeholder="Enter Repayment Frequency in Days"
-									// defaultValue={"0"}
 									value={formik.values.payment_frequency}
 								>
 									<option className="hidden">Enter Repayment</option>
@@ -132,7 +134,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 											{val}
 										</option>
 									))}
-								</select>
+								</select> */}
 								<div className="text-gray-400">Days</div>
 							</div>
 							{formik.touched.payment_frequency &&
@@ -162,7 +164,18 @@ export default function Account({ formData, handleNext, handleForm }) {
 							<label class="label">
 								<span class="text-white">Loan Type</span>
 							</label>
-							<select
+							<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
+								<Selection
+									onChange={(value) =>
+										formik.setFieldValue("loan_type", value.value)
+									}
+									value={formik.values.loan_type}
+									placeholder="Enter Repayment"
+									options={loantypes}
+								></Selection>
+							</div>
+
+							{/* <select
 								className="input input-bordered w-full"
 								style={{
 									backgroundColor: "#24272F",
@@ -185,13 +198,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 										{val}
 									</option>
 								))}
-								{/* <option value="0" className="text-base">
-									Term Loan
-								</option>
-								<option value="1" className="text-base">
-									Bullet Loan
-								</option> */}
-							</select>
+							</select> */}
 
 							{formik.touched.loan_type && formik.errors.loan_type ? (
 								<p style={{ color: "red" }}>
@@ -225,7 +232,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							</label>
 						</div>
 						<div className="md:pr-40 lg:pr-10 xl:pr-0">
-						<GradientButton type="submit">Next</GradientButton>
+							<GradientButton type="submit">Next</GradientButton>
 						</div>
 					</div>
 				</form>
