@@ -29,7 +29,6 @@ const ViewPool = () => {
 	const [transactionData, setTransactionData] = useState([]);
 	const [expand, setExpand] = useState(false);
 	const [companyDetails, setCompanyDetails] = useState();
-	const [poolName, setPoolName] = useState();
 	const [kycStatus, setKycStatus] = useState();
 	const [error, setError] = useState();
 	const [poolBal, setPoolBal] = useState();
@@ -106,14 +105,16 @@ const ViewPool = () => {
 					read.onloadend = function () {
 						let opJson = JSON.parse(read.result);
 						if (opJson) {
-							setPoolName(opJson.loan_name);
 							setCompanyDetails(opJson.companyDetails);
 							getCompanyLogo(
 								opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
 							);
 							// get the loan purpose
-							const { isSliced, firstText, secondText } =
-								getExtendableTextBreakup(opJson.loan_purpose, 200);
+							const {
+								isSliced,
+								firstText,
+								secondText,
+							} = getExtendableTextBreakup(opJson.loan_purpose, 200);
 
 							if (isSliced) {
 								setLoanPurpose({
@@ -225,7 +226,7 @@ const ViewPool = () => {
 						handleDrawdown={handleDrawdown}
 						isSenior={false}
 						poolAddress={poolData?.opportunityPoolAddress}
-						poolName={poolName}
+						poolName={poolData?.opportunityName}
 						poolLimit={poolData?.opportunityAmount}
 						estimatedAPY={poolData?.loanInterest}
 						setProcessFundModal={setProcessFundModal}
@@ -249,7 +250,9 @@ const ViewPool = () => {
 						/>
 
 						<div>
-							<p className="text-lg font-semibold">{poolName}</p>
+							<p className="text-lg font-semibold">
+								{poolData?.opportunityName}
+							</p>
 							<p className="text-neutral-500">
 								{companyDetails ? companyDetails.companyName : ""}
 							</p>

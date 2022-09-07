@@ -11,19 +11,17 @@ import dollarIcon from "../../../assets/Dollar-icon.svg";
 const UnderwriterCard = ({ data }) => {
 	const path = useNavigate();
 	const [companyName, setCompanyName] = useState();
-	const [poolName, setPoolName] = useState();
 	const [poolDetails, setPoolDetails] = useState();
 	const [logoImgSrc, setLogoImgSrc] = useState();
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
 		retrieveFiles(data?.opportunityInfo, true).then((res) => {
+			let opJson;
 			if (res) {
 				let read = getBinaryFileData(res);
 				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
+					opJson = JSON.parse(read.result);
 					if (opJson) {
-						setPoolName(opJson.loan_name);
-						setPoolDetails({ ...data, ...opJson });
 						setCompanyName(opJson.companyDetails?.companyName);
 						getCompanyLogo(
 							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
@@ -31,6 +29,7 @@ const UnderwriterCard = ({ data }) => {
 					}
 				};
 			}
+			setPoolDetails({ ...data, ...opJson });
 		});
 	}, []);
 
@@ -63,7 +62,7 @@ const UnderwriterCard = ({ data }) => {
 				/>
 				<div className="mt-7 -space-y-1 lg:hidden ">
 					<p className="font-medium text-2xl">
-						{poolName ? poolName : "Name of Pool"}
+						{data.opportunityName ? data.opportunityName : "Name of Pool"}
 					</p>
 					<p className="font-light text-sm">
 						{companyName ? companyName : "Name of Company"}
@@ -76,7 +75,7 @@ const UnderwriterCard = ({ data }) => {
 				<div className="mt-5 px-4 lg:pr-4 lg:pl-1 ">
 					<div className="hidden -space-y-1 lg:block lg:my-7 ">
 						<p className="font-medium text-2xl">
-							{poolName ? poolName : "Name of Pool"}
+							{data.opportunityName ? data.opportunityName : "Name of Pool"}
 						</p>
 						<p className="font-light text-sm">
 							{companyName ? companyName : "Name of Company"}

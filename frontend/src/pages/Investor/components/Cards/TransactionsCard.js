@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
-const TransactionsCard = ({ data }) => {
+const TransactionsCard = ({ data, isInvestor }) => {
 	const [link, setLink] = useState();
 
 	const [amount, setAmount] = useState();
@@ -29,11 +29,24 @@ const TransactionsCard = ({ data }) => {
 				<p className="w-1/6 text-center">{data?.opportunityName}</p>
 				<p className="w-1/6 text-center">{date}</p>
 				<p className="w-1/6 text-center">
-					{data?.isWithdraw ? "Withdrawal" : "Deposit"}
+					{isInvestor
+						? data?.isWithdraw
+							? "Deposit"
+							: "Withdrawal"
+						: data?.isWithdraw
+						? "Withdrawal"
+						: "Deposit"}
 				</p>
 
 				<p className="flex-row w-1/6 text-center">
-					{data?.isWithdraw ? "-" : "+"} {amount}
+					{isInvestor
+						? data?.isWithdraw
+							? "+"
+							: "-"
+						: data?.isWithdraw
+						? "-"
+						: "+"}{" "}
+					{amount}
 				</p>
 
 				<p className="w-1/6 text-center">
