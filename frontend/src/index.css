@@ -10,14 +10,24 @@
   background-image: linear-gradient(81.75deg, #4B74FF 0%, #9281FF 100%);
 }
 
-.active {
+.dark .active {
   color: #9281FF;
   background-color: #3A3C43;
   border-radius: 0.8em;
 }
 
-.active>span>svg>path {
+.active {
+  background-color: #9281FF;
+  border-radius: 0.8em;
+  color: #fff;
+}
+
+.dark .active>span>svg>path {
   fill: #9281FF;
+}
+
+.active>span>svg>path {
+  fill: #fff;
 }
 
 .transaction-button>button {

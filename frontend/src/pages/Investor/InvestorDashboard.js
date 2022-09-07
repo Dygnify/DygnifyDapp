@@ -19,7 +19,7 @@ const InvestorDashboardNew = () => {
 
 	return (
 		<div className={`${darkMode ? "dark" : ""} `}>
-			<div className="bg-neutral-50 dark:bg-darkmode-900 text-black dark:text-white">
+			<div className="bg-neutral-50 dark:bg-darkmode-900 text-neutral-700 dark:text-white">
 				<Header
 					linkStatus={linkStatus}
 					darkMode={darkMode}

@@ -110,7 +110,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				</div>
 
 				<div className="">
-					<PrimaryButton className="w-[100%]" onClick={onClick}>
+					<PrimaryButton className="w-[100%] text-white" onClick={onClick}>
 						View Pool
 					</PrimaryButton>
 				</div>
