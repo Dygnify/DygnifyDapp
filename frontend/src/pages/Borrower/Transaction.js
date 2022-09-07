@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "./Components/Cards/TransactionsCard";
 import Loader from "../../uiTools/Loading/Loader";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { getTokenTransactions } from "../../services/Helpers/transactionsHelper";
 
 const Transaction = () => {
 	const [transactions, setTransactions] = useState([]);
@@ -9,16 +11,16 @@ const Transaction = () => {
 	useEffect(async () => {
 		console.log("reached");
 
-		setTimeout(() => {
-			setLoading(false);
-		}, 300);
-
-		//let data = await getTransactionHistory();
-
-		// not getting any response
-		//setTransactions(data);
-
-		setLoading(false);
+		getUserWalletAddress().then((address) => {
+			getTokenTransactions(address, process.env.REACT_APP_TEST_USDCTOKEN).then(
+				(trxData) => {
+					if (trxData) {
+						setTransactions(trxData);
+					}
+					setLoading(false);
+				}
+			);
+		});
 	}, []);
 
 	return (

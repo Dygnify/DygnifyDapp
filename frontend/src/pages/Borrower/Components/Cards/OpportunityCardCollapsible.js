@@ -5,23 +5,6 @@ import DoughnutChart from "../../../Components/DoughnutChart";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const OpportunityCardCollapsible = ({ data }) => {
-	const [poolName, setPoolName] = useState();
-
-	useEffect(() => {
-		// fetch the opportunity details from IPFS
-		retrieveFiles(data?.opportunityInfo, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
-					if (opJson) {
-						setPoolName(opJson.loan_name);
-					}
-				};
-			}
-		});
-	}, []);
-
 	function getStatus(index) {
 		let status = "";
 		switch (index) {
@@ -59,7 +42,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 			<input type="checkbox" className="peer" />
 
 			<div className="collapse-title flex gap-4 md:gap-8 text-center">
-				<p className="w-1/3 md:w-1/4  my-auto">{poolName}</p>
+				<p className="w-1/3 md:w-1/4  my-auto">{data?.opportunityName}</p>
 				<p className="md:flex gap-1 hidden items-center w-1/4  justify-center">
 					<img src={DollarImage} className="w-4" />
 					{data?.opportunityAmount}

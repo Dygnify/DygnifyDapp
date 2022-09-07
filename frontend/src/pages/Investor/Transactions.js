@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Investor/components/Cards/TransactionsCard";
 import Loader from "../../uiTools/Loading/Loader";
-import axiosHttpService from "../../services/axioscall";
-import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { getTokenTransactions } from "../../services/Helpers/transactionsHelper";
 
 const Transactions = () => {
 	const [transactions, setTransactions] = useState([]);
-	const [userAddress, setUserAddress] = useState();
 	const [loading, setLoading] = useState(true);
 
 	useEffect(async () => {
-		setTimeout(() => {
-			setLoading(false);
-		}, 300);
 		getUserWalletAddress().then((address) => {
-			setUserAddress(address);
-			axiosHttpService(
-				tokenTransactions(address, process.env.REACT_APP_TEST_USDCTOKEN)
-			).then((ret) => {
-				setTransactions(ret.res.result);
-			});
+			getTokenTransactions(address, process.env.REACT_APP_TEST_USDCTOKEN).then(
+				(trxData) => {
+					if (trxData) {
+						setTransactions(trxData);
+					}
+					setLoading(false);
+				}
+			);
 		});
 	}, []);
 
@@ -52,11 +49,7 @@ const Transactions = () => {
 						<div>
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard
-											key={transactions.id}
-											data={item}
-											address={userAddress}
-										/>
+										<TransactionsCard key={transactions.id} data={item} />
 								  ))
 								: null}
 						</div>

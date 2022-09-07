@@ -66,5 +66,21 @@ interface IOpportunityOrigination {
 
     function markDrawDown(bytes32 id) external;
 
+    function isDrawdown(bytes32 id) external view returns(bool);
+
     function markRepaid(bytes32 id) external;
+
+    function isRepaid(bytes32 id) external view returns(bool);
+
+    function isActive(bytes32 id) external view returns(bool);
+
+    function getBorrower(bytes32 id) external view returns (address);
+
+    function getOpportunityPoolAddress(bytes32 id)external view returns (address);
+
+    function getAlltheOpportunitiesOf(address borrower)external view returns (bytes32[] memory);
+
+    function getUnderWritersOpportunities(address _underwriter)external view returns (bytes32[] memory);
+
+    function getOpportunityNameOf(bytes32 _opportunityId)external view returns(string memory);
 }

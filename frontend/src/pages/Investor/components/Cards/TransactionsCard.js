@@ -3,24 +3,14 @@ import { ethers } from "ethers";
 import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
-const TransactionsCard = ({ data, address }) => {
-	const [isWithdraw, setIsWithdraw] = useState();
+const TransactionsCard = ({ data }) => {
 	const [link, setLink] = useState();
 
 	const [amount, setAmount] = useState();
 	const [date, setDate] = useState();
 
-	function getTransactionType() {
-		if (data.from.toUpperCase() === address.toUpperCase()) {
-			setIsWithdraw(true);
-		} else {
-			setIsWithdraw(false);
-		}
-	}
-
 	useEffect(() => {
 		if (data) {
-			getTransactionType();
 			let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
 			setAmount(getDisplayAmount(amt));
 			setDate(convertDate(data.timeStamp));
@@ -36,14 +26,14 @@ const TransactionsCard = ({ data, address }) => {
 				style={{ display: "flex" }}
 				className="collapse-title text-md font-light justify-around w-full"
 			>
-				<p className="w-1/6 text-center">New Opportunity</p>
+				<p className="w-1/6 text-center">{data?.opportunityName}</p>
 				<p className="w-1/6 text-center">{date}</p>
 				<p className="w-1/6 text-center">
-					{isWithdraw ? "Withdrawal" : "Deposit"}
+					{data?.isWithdraw ? "Withdrawal" : "Deposit"}
 				</p>
 
 				<p className="flex-row w-1/6 text-center">
-					{isWithdraw ? "-" : "+"} {amount}
+					{data?.isWithdraw ? "-" : "+"} {amount}
 				</p>
 
 				<p className="w-1/6 text-center">
