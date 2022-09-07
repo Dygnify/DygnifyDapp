@@ -87,3 +87,22 @@ input[type=number] {
 .css-1hb7zxy-IndicatorsContainer {
   display: none !important;
 }
+
+
+@media (min-width: 768px) {
+  .dark .landing-backgroundimage {
+    background-image: url('./assets/Dark_gradient.svg');
+    background-repeat: no-repeat;
+    background-position: 60% 45%;
+    background-size: 95%;
+
+  }
+
+  .landing-backgroundimage {
+    background-image: url('./assets/White_gradient.svg');
+    background-repeat: no-repeat;
+    background-position: 60% 45%;
+    background-size: 95%;
+
+  }
+}

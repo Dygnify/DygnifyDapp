@@ -16,7 +16,7 @@ const UnderwriterDashboard = () => {
 
 	return (
 		<div className={`${darkMode ? "dark" : ""} `}>
-			<div className="dark:bg-[#14171F]">
+			<div className="dark:bg-[#000000] bg-white dark:text-white text-black">
 				<Header
 					linkStatus={linkStatus}
 					darkMode={darkMode}
