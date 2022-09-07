@@ -244,7 +244,7 @@ const getDrawdownOpportunities = async () => {
 
 				if (
 					!tx.opportunityPoolAddress ||
-					tx.opportunityPoolAddress !== nullAddress ||
+					tx.opportunityPoolAddress === nullAddress ||
 					tx.opportunityStatus.toString() !== "5"
 				) {
 					continue;

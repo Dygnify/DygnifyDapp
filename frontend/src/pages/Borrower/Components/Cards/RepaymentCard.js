@@ -20,26 +20,11 @@ const RepaymentCard = ({
 	};
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
-	const [poolName, setPoolName] = useState(data.poolName);
-
-	useEffect(() => {
-		// fetch the opportunity details from IPFS
-		retrieveFiles(opportunityInfo, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
-					if (opJson) {
-						setPoolName(opJson.loan_name);
-					}
-				};
-			}
-		});
-	}, []);
-
 	return (
 		<div className="my-gradient px-4 py-8 flex flex-col gap-5 rounded-xl md:w-[48%] xl:w-[32%] 2xl:w-[min(32%,30rem)]">
-			<h2 className="font-semibold text-[1.4375rem]">{poolName} </h2>
+			<h2 className="font-semibold text-[1.4375rem]">
+				{data?.opportunityName}
+			</h2>
 
 			<div className="flex flex-col gap-2">
 				<div className="font-semibold flex gap-1">
@@ -81,7 +66,6 @@ const RepaymentCard = ({
 					key={data?.id}
 					data={selected}
 					handleRepayment={handleRepayment}
-					poolName={poolName}
 				></RepaymentModal>
 			)}
 		</div>
