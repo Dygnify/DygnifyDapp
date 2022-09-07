@@ -18,6 +18,8 @@ interface IOpportunityPool {
         uint256 overdueGenerated;
     }
 
+    function isStaking(address _investor) external view returns(bool);
+
     function initialize(
         DygnifyConfig _dygnifyConfig,
         bytes32 _opportunityID,
@@ -29,6 +31,30 @@ interface IOpportunityPool {
     ) external;
 
     function deposit(uint8 _subpoolId, uint256 amount) external;
+
+    function withdraw(uint8 _subpoolId, uint256 amount) external;
+
+    function drawdown() external;
+
+    function repayment() external;
+
+    function withdrawAll(uint8 _subpoolId) external returns (uint256);
+
+    function getUserWithdrawableAmount() external view returns (uint256);
+
+    function getRepaymentAmount() external view returns (uint256);
+
+    function getYieldPercentage() external view returns (uint256, uint256);
+
+    function getOverDuePercentage() external view returns (uint256, uint256);
+
+    function nextRepaymentTime() external view returns (uint256);
+
+    function getSeniorTotalDepositable() external view returns (uint256);
+
+    function getSeniorProfit() external view returns (uint256);
+
+    function getOpportunityName()external view returns(string memory);
 }
 
 
