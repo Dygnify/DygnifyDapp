@@ -2,14 +2,15 @@
 pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./LPToken.sol";
+import "../interfaces/ILPToken.sol";
 import "./DygnifyConfig.sol";
 import "./BaseUpgradeablePausable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "./OpportunityOrigination.sol";
-import "./Investor.sol";
+import "../interfaces/IOpportunityOrigination.sol";
+import "../interfaces/IInvestor.sol";
+import "../interfaces/IOpportunityPool.sol";
 
 contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     DygnifyConfig public dygnifyConfig;
@@ -17,11 +18,11 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     using SafeMathUpgradeable for uint256;
     using SafeERC20 for IERC20;
     using SafeERC20Upgradeable for IERC20;
-    OpportunityOrigination public opportunityOrigination;
-    Investor public investor;
+    IOpportunityOrigination public opportunityOrigination;
+    IInvestor public investor;
 
     IERC20 public usdcToken;
-    LPToken public lpToken;
+    ILPToken public lpToken;
 
     bytes32 public opportunityID;
     uint8 public loanType;
@@ -54,7 +55,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     // backer's Address => stakingBalance
     mapping(address => uint256) public stakingBalance;
     // backer's Address => isStaking (boolean)
-    mapping(address => bool) public isStaking;
+    mapping(address => bool) public override isStaking;
 
     SubpoolDetails public seniorSubpoolDetails;
     SubpoolDetails public juniorSubpoolDetails;
@@ -86,14 +87,14 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         dygnifyConfig = _dygnifyConfig;
         address owner = dygnifyConfig.dygnifyAdminAddress();
         require(owner != address(0), "Invalid Owner");
-        opportunityOrigination = OpportunityOrigination(
+        opportunityOrigination = IOpportunityOrigination(
             dygnifyConfig.getOpportunityOrigination()
         );
-        investor = Investor(dygnifyConfig.investorContractAddress());
+        investor = IInvestor(dygnifyConfig.investorContractAddress());
 
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
-        lpToken = LPToken(dygnifyConfig.lpTokenAddress());
+        lpToken = ILPToken(dygnifyConfig.lpTokenAddress());
         _setRoleAdmin(SENIOR_POOL_ROLE, ADMIN_ROLE);
         _setupRole(SENIOR_POOL_ROLE, dygnifyConfig.seniorPoolAddress());
         _setRoleAdmin(BORROWER_ROLE, ADMIN_ROLE);
@@ -224,7 +225,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     }
 
     function withdraw(uint8 _subpoolId, uint256 amount)
-        public
+        external
+        override
         nonReentrant
         whenNotPaused
     {
@@ -284,7 +286,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         emit Withdrew(msg.sender, _subpoolId, amount);
     }
 
-    function drawdown() public nonReentrant whenNotPaused onlyBorrower {
+    function drawdown() public override nonReentrant whenNotPaused onlyBorrower {
         require(
             opportunityOrigination.isDrawdown(opportunityID) == false,
             "Funds in opportunity are already drawdown."
@@ -303,7 +305,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         usdcToken.safeTransferFrom(address(this), msg.sender, amount);
     }
 
-    function repayment() public nonReentrant whenNotPaused onlyBorrower {
+    function repayment() public override nonReentrant whenNotPaused onlyBorrower {
         require(
             repaymentCounter <= totalRepayments,
             "Repayment Process is done"
@@ -454,7 +456,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
     // this function will withdraw all the available amount of executor including yield and overdue profit
     function withdrawAll(uint8 _subpoolId)
-        public
+        external
+        override
         nonReentrant
         whenNotPaused
         returns (uint256)
@@ -543,7 +546,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return amount;
     }
 
-    function getUserWithdrawableAmount() external view returns (uint256) {
+    function getUserWithdrawableAmount() external override view returns (uint256) {
         require(
             isStaking[msg.sender] == true && stakingBalance[msg.sender] > 0,
             "zero amount to deposited."
@@ -567,7 +570,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return amount;
     }
 
-    function getRepaymentAmount() public view returns (uint256) {
+    function getRepaymentAmount() external override view returns (uint256) {
         require(
             repaymentCounter <= totalRepayments,
             "Repayment Process is done"
@@ -619,7 +622,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return amount;
     }
 
-    function getYieldPercentage() public view returns (uint256, uint256) {
+    function getYieldPercentage() public override view returns (uint256, uint256) {
         uint256 one = sixDecimal;
         uint256 _seniorYieldPerecentage = loanInterest
             .div(100)
@@ -642,7 +645,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return (_seniorYieldPerecentage, _juniorYieldPerecentage);
     }
 
-    function getOverDuePercentage() public view returns (uint256, uint256) {
+    function getOverDuePercentage() public override view returns (uint256, uint256) {
         uint256 yield = emiAmount - amountWithoutEMI;
 
         uint256 juniorInvestment = amountWithoutEMI.div(
@@ -663,7 +666,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return (_seniorOverDuePerecentage, _juniorOverDuePerecentage);
     }
 
-    function nextRepaymentTime() public view returns (uint256) {
+    function nextRepaymentTime() public override view returns (uint256) {
         require(
             repaymentCounter <= totalRepayments,
             "Repayment Process is done"
@@ -674,11 +677,11 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         return nextRepaymentDue;
     }
 
-    function getSeniorTotalDepositable() external view returns (uint256) {
+    function getSeniorTotalDepositable() external override view returns (uint256) {
         return seniorSubpoolDetails.totalDepositable;
     }
 
-    function getSeniorProfit() external view returns (uint256) {
+    function getSeniorProfit() external override view returns (uint256) {
         return
             seniorSubpoolDetails.yieldGenerated +
             seniorSubpoolDetails.overdueGenerated;
@@ -734,7 +737,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         isDrawdownsPaused = false;
     }
     
-    function getOpportunityName()external view returns(string memory){
+    function getOpportunityName()external override view returns(string memory){
         return opportunityOrigination.getOpportunityNameOf(opportunityID);
     }
 }

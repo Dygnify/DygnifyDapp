@@ -26,7 +26,7 @@ const Transactions = () => {
 			{loading && <Loader />}
 			<div className={`mb-16 ${loading ? "blur-sm" : ""}`}>
 				<h2 className="text-2xl mb-6">Transaction History</h2>
-				{transactions.length !== 0 ? (
+				{transactions?.length !== 0 ? (
 					<>
 						<div className="collapse mb-3">
 							<input type="checkbox" className="peer" />

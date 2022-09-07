@@ -106,7 +106,7 @@ const InvestorOverview = () => {
 					</h2>
 					<GradientButtonHeader
 						onClick={() => path("/investor-dashboard/invest")}
-						className="ml-auto"
+						className="ml-auto text-white"
 					>
 						+ Invest
 					</GradientButtonHeader>

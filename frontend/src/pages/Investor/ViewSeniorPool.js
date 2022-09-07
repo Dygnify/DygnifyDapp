@@ -129,24 +129,16 @@ const ViewSeniorPool = () => {
 							</h2>
 						</div>
 
-						<div className="text-neutral-200">{poolDescription}</div>
+						<div className="text-neutral-700 dark:text-neutral-200">
+							{poolDescription}
+						</div>
 					</div>
 
-					<div
-						style={{
-							backgroundImage:
-								" linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)",
-						}}
-						className="rounded-md px-4 py-6 border border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem]"
-					>
+					<div className="rounded-md px-4 py-6 dark:border border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem] bg-gradient-to-tl from-[#ffffff00] dark:from-[#20232a00] to-[#D1D1D1] dark:to-[#20232A]">
 						<div className="flex">
-							<div className="flex flex-col justify-start">
-								<p className="text-neutral-200 font-bold text-md mb-2">
-									Estimated APY.
-								</p>
-								<p className="text-neutral-200 font-bold text-md">
-									Total Pool Balance
-								</p>
+							<div className="flex flex-col justify-start text-neutral-500 dark:text-neutral-200">
+								<p className=" font-bold text-md mb-2">Estimated APY.</p>
+								<p className="font-bold text-md">Total Pool Balance</p>
 							</div>
 
 							<div className="ml-auto flex flex-col justify-start">
@@ -167,11 +159,7 @@ const ViewSeniorPool = () => {
 								if (kycStatus) return setSelected(true);
 								else return null;
 							}}
-							style={{
-								backgroundImage:
-									"linear-gradient(81.75deg, #4B74FF 0%, #9281FF 100%)",
-							}}
-							className="cursor-pointer text-center py-2 rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%]"
+							className="cursor-pointer font-semibold text-center py-2 rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%] text-white bg-gradient-to-r from-[#4B74FF] to-[#9281FF]"
 						>
 							{kycStatus ? "Invest" : "Complete your KYC"}
 						</label>
@@ -180,7 +168,7 @@ const ViewSeniorPool = () => {
 
 				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
 					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
-					{transactionData.length > 0 ? (
+					{transactionData?.length > 0 ? (
 						<div className="mt-6 flex flex-col gap-3">
 							{transactionData ? (
 								transactionData.map((item) => (

@@ -36,7 +36,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 
 	return (
 		<>
-			<div className="flex gap-4 sm:gap-8 px-2 sm:px-4 md:px-6 py-4 relative items-center border-b border-neutral-300 dark:border-darkmode-800 text-black dark:text-white">
+			<div className="flex gap-4 sm:gap-8 px-2 sm:px-4 md:px-6 py-4 relative items-center border-b border-neutral-300 dark:border-darkmode-800 text-neutral-700 dark:text-white">
 				<div className="">
 					<img
 						className="md:w-40 h-11  w-28 md:h-16"
@@ -56,9 +56,9 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 				</div>
 
 				{!status ? (
-					<div className="text-black dark:text-white">
+					<div className="">
 						<GradientButton onClick={hitRequestAccount}>
-							<Wallet fill={darkMode ? "white" : "black"} /> Connect Wallet
+							<Wallet fill={darkMode ? "white" : "#323A46"} /> Connect Wallet
 						</GradientButton>
 					</div>
 				) : (
