@@ -6,6 +6,7 @@ import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	const {
+		opportunityName,
 		opportunityInfo,
 		opportunityAmount,
 		estimatedAPY,
@@ -14,7 +15,6 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	} = data;
 
 	const [companyName, setCompanyName] = useState();
-	const [poolName, setPoolName] = useState(data.poolName);
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
@@ -25,7 +25,6 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 					let opJson = JSON.parse(read.result);
 					if (opJson) {
 						setCompanyName(opJson.company_name);
-						setPoolName(opJson.loanName);
 					}
 				};
 			}
@@ -42,14 +41,14 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-[1.4375rem] font-semibold">{poolName}</p>
+					<p className="text-[1.4375rem] font-semibold">{opportunityName}</p>
 					<p className="">{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-[1.4375rem] font-semibold">{poolName}</p>
+					<p className="text-[1.4375rem] font-semibold">{opportunityName}</p>
 					<p className="">{companyName}</p>
 				</div>
 
@@ -85,7 +84,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 					<button
 						disable={false}
 						onClick={() => {
-							setSelected({ ...data, poolName, isSeniorPool });
+							setSelected({ ...data, isSeniorPool });
 							setShowModal(true);
 						}}
 						style={{

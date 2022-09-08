@@ -57,7 +57,6 @@ const Overview = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			let opportunities = await getDrawdownOpportunities();
-			console.log("************", opportunities);
 			if (opportunities && opportunities.length) {
 				setDrawdownList(opportunities);
 			}
@@ -80,7 +79,6 @@ const Overview = () => {
 	const checkForKycAndProfile = async (refId) => {
 		try {
 			const result = await axiosHttpService(kycOptions(refId));
-
 			if (result.res.status === "success") setKycStatus(true);
 			if (result.res.status === "error") {
 				setKycStatus(false);

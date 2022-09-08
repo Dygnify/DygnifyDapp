@@ -43,7 +43,7 @@ const ProcessingFundsModal = ({ investProcessing }) => {
 									You successfully withdrew
 									<span className="text-success-500">
 										{" "}
-										{state}100 USDC
+										{state} {process.env.REACT_APP_TOKEN_NAME}
 									</span>{" "}
 									from poolname
 								</p>

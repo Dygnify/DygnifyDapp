@@ -49,7 +49,7 @@ const Transactions = () => {
 						<div>
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard key={transactions.id} data={item} />
+										<TransactionsCard key={transactions.hash} data={item} />
 								  ))
 								: null}
 						</div>

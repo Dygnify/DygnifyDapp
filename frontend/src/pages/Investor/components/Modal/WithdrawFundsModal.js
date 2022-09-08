@@ -66,7 +66,7 @@ const WithdrawFundsModal = ({
 					<div className="px-4 md:px-8 mt-8 flex flex-col gap-1">
 						<div className="flex justify-between font-semibold">
 							<p>Pool Name</p>
-							<p>{data?.poolName}</p>
+							<p>{data?.opportunityName}</p>
 						</div>
 
 						<div className="flex gap-1 font-semibold">

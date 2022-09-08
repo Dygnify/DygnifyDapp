@@ -5,7 +5,6 @@ import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper
 
 const TransactionsCard = ({ data }) => {
 	const [link, setLink] = useState();
-
 	const [amount, setAmount] = useState();
 	const [date, setDate] = useState();
 
@@ -29,11 +28,11 @@ const TransactionsCard = ({ data }) => {
 				<p className="w-1/6 text-center">{data?.opportunityName}</p>
 				<p className="w-1/6 text-center">{date}</p>
 				<p className="w-1/6 text-center">
-					{data?.isWithdraw ? "Withdrawal" : "Deposit"}
+					{data?.isWithdraw ? "Deposit" : "Withdrawal"}
 				</p>
 
 				<p className="flex-row w-1/6 text-center">
-					{data?.isWithdraw ? "-" : "+"} {amount}
+					{data?.isWithdraw ? "+" : "-"} {amount}
 				</p>
 
 				<p className="w-1/6 text-center">

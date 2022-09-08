@@ -36,7 +36,9 @@ const ViewSeniorPool = () => {
 	useEffect(() => {
 		if (location.state) {
 			setPoolName(
-				location.state.poolName ? location.state.poolName : defaultPoolName
+				location.state.opportunityName
+					? location.state.opportunityName
+					: defaultPoolName
 			);
 			setPoolDescription(
 				location.state.poolDescription ? location.state.poolDescription : ""
