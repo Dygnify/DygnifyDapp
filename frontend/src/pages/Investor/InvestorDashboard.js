@@ -49,7 +49,7 @@ const InvestorDashboardNew = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="h-full py-4 px-2 overflow-y-auto w-60  text-[#64748B] bg-neutral-50 dark:bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<ul className="h-full py-4 px-2 overflow-y-auto w-60  text-[#64748B] bg-neutral-50 dark:bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent lg:dark:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex ml-8 py-4 gap-2"
