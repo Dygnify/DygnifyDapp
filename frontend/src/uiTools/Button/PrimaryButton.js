@@ -28,7 +28,7 @@ const PrimaryButton = ({
 		<button
 			onClick={disable ? null : onClick}
 			htmlFor={htmlFor}
-			className={`bg-gradient-to-r bg-[#5375FE] rounded-full py-[0.5rem] font-semibold flex fill-white gap-2 items-center justify-center ${className}`}
+			className={`bg-gradient-to-r bg-[#5375FE] rounded-full py-[0.5rem] w-[100%] font-semibold flex text-white gap-2 items-center justify-center ${className}`}
 		>
 			{children}
 			{arrow}
