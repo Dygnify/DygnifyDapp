@@ -16,7 +16,7 @@ const UnderwriterDashboard = () => {
 
 	return (
 		<div className={`${darkMode ? "dark" : ""} `}>
-			<div className="dark:bg-[#000000] bg-white dark:text-white text-black">
+			<div className="dark:bg-[#1E1E1E] bg-white dark:text-white text-black">
 				<Header
 					linkStatus={linkStatus}
 					darkMode={darkMode}
@@ -31,7 +31,7 @@ const UnderwriterDashboard = () => {
 						onChange={handleChange}
 					/>
 					<div
-						className={`mt-6 drawer-content text-white ${
+						className={`mt-6 drawer-content ${
 							linkStatus ? "blur-sm lg:blur-none" : ""
 						}`}
 					>
@@ -40,7 +40,7 @@ const UnderwriterDashboard = () => {
 						</div>
 					</div>
 
-					<div className="drawer-side  border-r-[#20232A] border-r-[1px]">
+					<div className="drawer-side border-r-[#B8C0CC] dark:border-r-[#20232A] border-r-[1px]">
 						<label
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"

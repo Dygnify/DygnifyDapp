@@ -16,10 +16,9 @@ const LandingPage = () => {
 		<div className={`${darkMode ? "dark" : ""} `}>
 			<div className="dark:bg-[#000000] w-full bg-white dark:text-white text-black pb-20 md:pb-32 xl:pb-20">
 				<Header darkMode={darkMode} setDarkMode={setDarkMode} />
-				{/* <div className="w-4 h-2 bg-red-500 md:bg-green-500 lg:bg-blue-400 xl:bg-purple-900 2xl:bg-white"></div> */}
 				<div className="landing-backgroundimage">
 					<div className="flex-col items-center flex pt-20 xl:pt-10">
-						<h1 className="text-4xl font-bold text-center w-[90%] px-auto md:w-[78%] md:text-5xl xl:text-[3.25rem] xl:w-[50%] 2xl:text-6xl">
+						<h1 className="text-4xl font-bold text-center w-[90%] px-auto md:w-[78%] md:text-5xl xl:text-[3.1rem] xl:w-[50%] 2xl:text-[3.5]">
 							Democratising Credit Flow to Small Business
 						</h1>
 
@@ -35,7 +34,7 @@ const LandingPage = () => {
 						<div className="flex flex-col justify-center items-center">
 							<img
 								src={darkMode ? InvestImage : InvestImageLightmode}
-								className="w-[70%] mx-auto xl:w-[60%]"
+								className="w-72 px-auto xl:w-[18rem] 2xl:w-[21rem]"
 							/>
 							<h6 className="text-center py-3 w-[80%] font-medium text-base">
 								Invest USDC in real world assets and earn attractive risk
@@ -52,7 +51,7 @@ const LandingPage = () => {
 						<div className="flex flex-col justify-center items-center">
 							<img
 								src={darkMode ? BorrowImage : BorrowImageLightmode}
-								className="w-[70%] mx-auto xl:w-[60%]"
+								className="w-72 px-auto xl:w-[18rem] 2xl:w-[21rem]"
 							/>
 							<h6 className="text-center py-3 w-[80%] font-medium text-base">
 								On tap liquidity in a transaparent and hassle free manner at

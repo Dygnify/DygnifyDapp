@@ -25,11 +25,11 @@ const TransactionsCard = ({ data }) => {
 	}, []);
 
 	return (
-		<div className="flex collapse-title font-light justify-between w-full flex-wrap overflow-hidden bg-[#20232A] rounded-xl mb-2 items-center pl-1 pr-1 md:pr-3">
-			<p className="w-1/3 md:w-1/6 font-light text-lg text-start pl-8 ">
+		<div className="flex collapse-title pr-0 justify-between w-full flex-wrap overflow-hidden dark:bg-[#20232A] bg-[#E7EAEE] rounded-xl mb-2 items-center">
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-start">
 				{poolName}
 			</p>
-			<p className="w-1/3 md:w-1/6 font-light text-lg text-start pl-8">
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-start">
 				{companyName}
 			</p>
 			<p className="w-1/3 md:w-1/6 font-light text-lg text-center hidden md:block">
