@@ -32,7 +32,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%] my-gradient">
+		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient">
 			<div className="flex items-center gap-6">
 				<img
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
@@ -92,7 +92,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 							padding: "12px 24px",
 							color: "white",
 						}}
-						className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-semibold flex fill-white  items-center justify-center w-[100%] sm:w-[60%] mx-auto md:w-[70%] md:mx-auto xl:w-[100%] 2xl:w-[60%]"
+						className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-semibold flex fill-white  items-center justify-center w-[100%]"
 					>
 						Withdraw Funds
 					</button>

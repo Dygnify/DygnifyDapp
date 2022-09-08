@@ -60,13 +60,10 @@ const Withdraw = () => {
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +
 									seniorPoolInvestment.withdrawableAmt;
-								seniorInvestmentData.capitalInvested = getDisplayAmount(
-									totalInvestment
-								);
-								const {
-									sharePrice,
-									displaySharePrice,
-								} = await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
+								seniorInvestmentData.capitalInvested =
+									getDisplayAmount(totalInvestment);
+								const { sharePrice, displaySharePrice } =
+									await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
 								seniorInvestmentData.estimatedAPY = displaySharePrice;
 								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
 									seniorPoolInvestment.withdrawableAmt
