@@ -58,7 +58,7 @@ const InvestorOverview = () => {
 							let spJson = JSON.parse(read.result);
 							if (spJson) {
 								let seniorInvestmentData = {};
-								seniorInvestmentData.poolName = spJson.poolName;
+								seniorInvestmentData.opportunityName = spJson.poolName;
 								seniorInvestmentData.opportunityAmount = getDisplayAmount(
 									await getWalletBal(process.env.REACT_APP_SENIORPOOL)
 								);
@@ -66,10 +66,13 @@ const InvestorOverview = () => {
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +
 									seniorPoolInvestment.withdrawableAmt;
-								seniorInvestmentData.capitalInvested =
-									getDisplayAmount(totalInvestment);
-								const { sharePrice, displaySharePrice } =
-									await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
+								seniorInvestmentData.capitalInvested = getDisplayAmount(
+									totalInvestment
+								);
+								const {
+									sharePrice,
+									displaySharePrice,
+								} = await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
 								seniorInvestmentData.estimatedAPY = displaySharePrice;
 								seniorInvestmentData.yieldGenerated = getDisplayAmount(
 									parseFloat((totalInvestment * sharePrice) / 100)
