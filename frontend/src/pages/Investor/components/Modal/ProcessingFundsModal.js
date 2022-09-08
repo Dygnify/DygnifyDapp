@@ -13,8 +13,8 @@ const ProcessingFundsModal = ({ investProcessing }) => {
 		<div className="">
 			<input type="checkbox" id="InvestProcessModal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg px-4">
-				<div className="bg-darkmode-800 w-[100%] sm:w-[85%] md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[45rem] pb-6 rounded-xl md:pb-8">
-					<div className="md:px-8 flex px-4 py-3 text-2xl font-semibold border-b border-neutral-500">
+				<div className="bg-neutral-50 dark:bg-darkmode-800 w-[100%] sm:w-[85%] md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[45rem] pb-6 rounded-xl md:pb-8">
+					<div className="md:px-8 flex px-4 py-3 text-2xl font-semibold border-b border-neutral-300 dark:border-neutral-500">
 						<h3>Invest</h3>
 
 						<label
@@ -52,7 +52,7 @@ const ProcessingFundsModal = ({ investProcessing }) => {
 							)}
 						</div>
 
-						<div className="mt-3 border border-neutral-500 px-4 py-4 rounded-lg flex flex-col gap-4">
+						<div className="mt-3 border border-neutral-700 dark:border-neutral-500 px-4 py-4 rounded-lg flex flex-col gap-4">
 							<div className="flex flex-col gap-4 md:flex-row">
 								<div className="flex flex-col gap-1">
 									<p className="text-neutral-400">Status</p>
@@ -75,8 +75,8 @@ const ProcessingFundsModal = ({ investProcessing }) => {
 							</div>
 						</div>
 
-						<div className="border-2 border-neutral-500 rounded-[1.8em] mt-8">
-							<p className="cursor-pointer font-semibold py-3 text-center">
+						<div className="border-2 border-neutral-300 dark:border-neutral-500 rounded-[1.8em] mt-8">
+							<p className="text-black cursor-pointer font-semibold py-3 text-center">
 								View Transaction
 							</p>
 						</div>

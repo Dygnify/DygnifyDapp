@@ -63,7 +63,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 					</div>
 				) : (
 					<div className="outline outline-[#9281FF] rounded-full  px-4 sm:px-6 md:px-8 flex items-center gap-2 py-2 sm:py-3">
-						<WalletWhiteSmall />
+						<WalletWhiteSmall fill={darkMode ? "white" : "#323A46"} />
 						<div className="font-semibold  text-sm sm:text-base md:text-lg">
 							Connected
 						</div>

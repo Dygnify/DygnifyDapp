@@ -313,7 +313,7 @@ const ViewPool = () => {
 						</div>
 
 						{loanPurpose.isSliced ? (
-							<div className="text-neutral-200">
+							<div className="text-neutral-700 dark:text-neutral-200">
 								{loanPurpose.firstText}
 								<a
 									onClick={() => setExpand(true)}
@@ -330,37 +330,23 @@ const ViewPool = () => {
 								</a>
 							</div>
 						) : (
-							<div className="text-neutral-200">{loanPurpose.firstText} </div>
+							<div className="text-neutral-700 dark:text-neutral-200">
+								{loanPurpose.firstText}{" "}
+							</div>
 						)}
 					</div>
 
-					<div
-						style={{
-							backgroundImage:
-								" linear-gradient(285.83deg, rgba(32, 35, 42, 0) 0%, #20232A 103.08%)",
-						}}
-						className="rounded-md px-4 py-6 border border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem]"
-					>
-						<div className="flex">
-							<div className="flex flex-col justify-start">
-								<p className="text-neutral-200 font-bold text-md mb-2">
-									Estimated APY.
-								</p>
+					<div className="rounded-md px-4 py-6 border dark:border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem] bg-gradient-to-tl from-[#ffffff00] dark:from-[#20232a00] to-[#D1D1D1] dark:to-[#20232A]">
+						<div className="flex ">
+							<div className="flex flex-col justify-start text-neutral-500 dark:text-neutral-200">
+								<p className=" font-bold text-md mb-2">Estimated APY.</p>
 
-								<p className="text-neutral-200 font-bold text-md mb-2">
-									Pool Limit
-								</p>
+								<p className=" font-bold text-md mb-2">Pool Limit</p>
 
-								<p className="text-neutral-200 font-bold text-md mb-2">
-									Total supplied
-								</p>
+								<p className=" font-bold text-md mb-2">Total supplied</p>
 
-								<p className="text-neutral-200 font-bold text-md mb-2">
-									Payment terms
-								</p>
-								<p className="text-neutral-200 font-bold text-md mb-2">
-									Payment frequency
-								</p>
+								<p className=" font-bold text-md mb-2">Payment terms</p>
+								<p className=" font-bold text-md mb-2">Payment frequency</p>
 							</div>
 							<div className="ml-auto flex flex-col justify-start">
 								<p className="font-semibold text-xl mb-1">
@@ -389,11 +375,7 @@ const ViewPool = () => {
 								if (kycStatus) return setSelected(true);
 								else return null;
 							}}
-							style={{
-								backgroundImage:
-									"linear-gradient(81.75deg, #4B74FF 0%, #9281FF 100%)",
-							}}
-							className="cursor-pointer text-center py-2 rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%]"
+							className="cursor-pointer text-center py-2 bg-gradient-to-r from-[#4b74ff] to-[#9281ff] rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%] text-white"
 						>
 							{kycStatus ? "Invest" : "Complete your KYC"}
 						</label>
@@ -475,7 +457,7 @@ const ViewPool = () => {
 					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
 
 					<div className="mt-6 flex flex-col gap-3">
-						{transactionData.length ? (
+						{transactionData?.length ? (
 							<>
 								{transactionData.map((item) => (
 									<TransactionCard
@@ -541,7 +523,7 @@ const ViewPool = () => {
 								)}
 							</div>
 						</div>
-						<div className="mt-4 text-neutral-200">
+						<div className="mt-4 text-neutral-700 dark:text-neutral-200">
 							{companyDetails
 								? companyDetails.companyBio
 								: "Unable to fetch company profile"}

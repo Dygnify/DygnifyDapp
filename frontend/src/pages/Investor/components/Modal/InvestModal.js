@@ -83,8 +83,8 @@ const InvestModal = ({
 		<>
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
-				<div className="bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
-					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
+				<div className="bg-neutral-50 dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+					<div className="flex justify-between px-4 md:px-8 md:border-b md:border-neutral-300 md:dark:border-darkmode-500 mt-[4em] md:mt-0 py-4">
 						<h3 className="font-semibold text-xl">Invest</h3>
 
 						<label
@@ -104,7 +104,7 @@ const InvestModal = ({
 							alt=""
 						/>
 
-						<div className="py-4 px-3 flex gap-1 bg-darkmode-500 rounded-md">
+						<div className="py-4 px-3 flex gap-1 bg-neutral-200 dark:bg-darkmode-500 rounded-md">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
 
 							<img src={DollarImage} className="ml-auto w-[1rem]" />
@@ -147,7 +147,7 @@ const InvestModal = ({
 							placeholder="0.0"
 							onChange={handleAmount}
 							value={amount}
-							className="bg-darkmode-700 border-2 border-darkmode-50 outline-none p-2 pr-14 rounded-md placeholder:text-neutral-500 placeholder:font-semibold"
+							className="bg-neutral-100 dark:bg-darkmode-700 border-2 border-neutral-300 dark:border-darkmode-50 outline-none px-2 py-3 pr-14 rounded-md placeholder:text-neutral-500 placeholder:font-semibold"
 						/>
 						<span className="absolute right-7 md:right-11 text-neutral-500 top-10 font-semibold">
 							{process.env.REACT_APP_TOKEN_NAME}
@@ -164,7 +164,7 @@ const InvestModal = ({
 							onClick={() => {
 								if (!error.err) isSenior ? investSenior() : investJunior();
 							}} //if condition not true then investJunior will execute
-							className={`block ${
+							className={`block font-semibold text-white ${
 								error.err
 									? "bg-neutral-400 cursor-not-allowed"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
