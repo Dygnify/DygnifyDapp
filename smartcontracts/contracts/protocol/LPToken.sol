@@ -8,7 +8,7 @@ import "../interfaces/ILPToken.sol";
 
 contract LPToken is Initializable, AccessControlUpgradeable, ERC20Upgradeable, ILPToken {
     bytes32 public constant OWNER = keccak256("OWNER");
-    uint256 public totalShares;
+    uint256 public override totalShares;
 
     function initialize(address _stakingContract) external override initializer {
         require(_stakingContract != address(0), "Invalid staking address");
