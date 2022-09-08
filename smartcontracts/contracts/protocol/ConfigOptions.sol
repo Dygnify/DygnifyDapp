@@ -14,7 +14,8 @@ library ConfigOptions {
         CollateralToken,
         OpportunityOrigination,
         InvestorContract,
-        DygnifyTreasury
+        DygnifyTreasury,
+        DygnifyKeeper
     }
 
     enum Numbers {

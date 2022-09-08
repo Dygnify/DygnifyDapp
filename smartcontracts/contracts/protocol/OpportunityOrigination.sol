@@ -6,6 +6,7 @@ import "./DygnifyConfig.sol";
 import "../interfaces/IOpportunityPool.sol";
 import "../interfaces/IOpportunityOrigination.sol";
 import "./CollateralToken.sol";
+import "../interfaces/IDygnifyKeeper.sol";
 
 contract OpportunityOrigination is
     BaseUpgradeablePausable,
@@ -242,12 +243,13 @@ contract OpportunityOrigination is
             "Opportunity Pool is not created yet"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.Drawndown;
+        IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress()).addOpportunityInKeeper(id);
     }
 
     function isDrawdown(bytes32 id) public override view returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
-            uint8(opportunityToId[id].opportunityStatus) >=
+            uint8(opportunityToId[id].opportunityStatus) ==
             uint8(OpportunityStatus.Drawndown)
         ) return true;
         else return false;
@@ -269,6 +271,7 @@ contract OpportunityOrigination is
             "Opportunity Pool is not created yet"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.Repaid;
+        IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress()).removeOpportunityInKeeper(id);
     }
 
     function isRepaid(bytes32 id) public override view returns (bool) {
@@ -343,5 +346,19 @@ contract OpportunityOrigination is
         );
         Opportunity memory opportunityDetails = opportunityToId[_opportunityId];
         return opportunityDetails.opportunityName;
+    }
+
+    function markWriteOff(bytes32 id) external override {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        require(
+            opportunityToId[id].opportunityStatus ==
+                OpportunityStatus.Drawndown,
+            "Opportunity pool is haven't drawdown yet."
+        );
+        require(
+            msg.sender == dygnifyConfig.dygnifyKeeperAddress(),
+            "Only dygnifyKeeper can mark it as writeoff"
+        );
+        opportunityToId[id].opportunityStatus = OpportunityStatus.WriteOff;
     }
 }
