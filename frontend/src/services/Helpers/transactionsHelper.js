@@ -14,9 +14,16 @@ export const getTokenTransactions = async (address, tokenAddress) => {
 			for (let i = 0; i < trxData.res.result.length; i++) {
 				let trx = trxData.res.result[i];
 				let isWithdraw = getTransactionType(trx.from, address);
-				let opportunityName = await getOpportunityName(
-					isWithdraw ? trx.to : trx.from
-				);
+				const poolAddress = isWithdraw ? trx.to : trx.from;
+				let opportunityName;
+				if (
+					poolAddress.toUpperCase() ===
+					process.env.REACT_APP_SENIORPOOL.toUpperCase()
+				) {
+					opportunityName = "Senior Pool";
+				} else {
+					opportunityName = await getOpportunityName(poolAddress);
+				}
 
 				if (opportunityName) {
 					trxArray.push({ ...trx, isWithdraw, opportunityName });
