@@ -85,5 +85,7 @@ interface IOpportunityOrigination {
 
     function getOpportunityNameOf(bytes32 _opportunityId)external view returns(string memory);
 
-    function markWriteOff(bytes32 id) external;
+    function markWriteOff(bytes32 id, address _pool) external;
+
+    function isWriteOff(bytes32 id) external view returns(bool);
 }

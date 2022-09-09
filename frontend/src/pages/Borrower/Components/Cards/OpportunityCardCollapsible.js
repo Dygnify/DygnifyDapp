@@ -52,14 +52,8 @@ const OpportunityCardCollapsible = ({ data }) => {
 			</div>
 
 			<div className="collapse-content">
-				<div
-					style={{ display: "flex" }}
-					className="justify-around py-10 w-full"
-				>
-					<div
-						style={{ borderRight: "1px solid #292C33", display: "flex" }}
-						className="w-1/2 text-center flex-row justify-around items-center"
-					>
+				<div className="outline outline-[coral] w-[100vw] h-[100vh] absolute">
+					<div className="outline outline-[lightpink]">
 						<DoughnutChart
 							data={[data.actualLoanAmount, data.poolBalance]}
 							color={["#5375FE", "#ffffff"]}
@@ -68,55 +62,52 @@ const OpportunityCardCollapsible = ({ data }) => {
 							borderWidth={[1, 8]}
 							legendStyle={{ display: false }}
 						/>
-						<div
-							style={{ display: "flex", color: "red" }}
-							className="flex-col "
-						>
-							<div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
-								Capital requested
-							</div>
-							<div style={{ fontSize: 28, color: "white" }} className="mb-10">
-								{data ? data.opportunityAmount : "--"}{" "}
-								{process.env.REACT_APP_TOKEN_NAME}
-							</div>
-							<div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
-								Total raised till now
+
+						<div className="outline outline-[hotpink]">
+							<div className="outline outline-[lightgreen]">
+								<p>Capital requested</p>
+
+								<p className="">
+									<img src={DollarImage} className="w-4" />
+									{data ? data.opportunityAmount : "--"}
+									<span>{process.env.REACT_APP_TOKEN_NAME}</span>
+								</p>
 							</div>
 
-							<div style={{ fontSize: 28, color: "white" }}>
-								{data && data.poolDisplayBalance
-									? data.poolDisplayBalance
-									: "-- "}
-								{process.env.REACT_APP_TOKEN_NAME}
+							<div className="outline outline-[lightblue]">
+								<p>Total raised till now</p>
+								<p>
+									<img src={DollarImage} className="w-4" />
+									{data && data.poolDisplayBalance
+										? data.poolDisplayBalance
+										: "-- "}
+
+									<span>{process.env.REACT_APP_TOKEN_NAME}</span>
+								</p>
 							</div>
 						</div>
 					</div>
-					<div
-						style={{ borderLeft: "1px solid #292C33", display: "flex" }}
-						className="w-1/2 justify-evenly items-center"
-					>
-						<div style={{ display: "flex" }} className="flex-col">
-							<div className="mb-10">
-								<p className="font-light text-sm">Interest Rate</p>
-								<p className="font-medium text-lg">{data?.loanInterest}</p>
+
+					<div className="outline outline-[lightcoral]">
+						<div className="outline">
+							<div>
+								<p>Interest Rate</p>
+								<p>{data?.loanInterest}</p>
 							</div>
 							<div>
-								<p className="font-light text-sm">Payment Frequency</p>
-								<p className="font-medium text-lg">
-									{data?.paymentFrequencyInDays}
-								</p>
+								<p>Payment Frequency</p>
+								<p>{data?.paymentFrequencyInDays}</p>
 							</div>
 						</div>
-						<div style={{ display: "flex" }} className="flex-col">
-							<div className="mb-10">
-								<p className="font-light text-sm">Loan Tenure</p>
-								<p className="font-medium text-lg">{data?.loanTenure}</p>
+
+						<div className="outline outline-[black]">
+							<div>
+								<p>Loan Tenure</p>
+								<p>{data?.loanTenure}</p>
 							</div>
 							<div>
-								<p className="font-light text-sm">Loan Type</p>
-								<p className="font-medium text-lg">
-									{data?.loanType === 0 ? "Bullet Loan" : "Term Loan"}
-								</p>
+								<p>Loan Type</p>
+								<p>{data?.loanType === 0 ? "Bullet Loan" : "Term Loan"}</p>
 							</div>
 						</div>
 					</div>

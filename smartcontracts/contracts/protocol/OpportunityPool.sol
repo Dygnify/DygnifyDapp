@@ -160,7 +160,6 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         external
         override
         nonReentrant
-        whenNotPaused
     {
         require(
             _subpoolId <= uint8(Subpool.SeniorSubpool),
@@ -305,7 +304,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         usdcToken.safeTransferFrom(address(this), msg.sender, amount);
     }
 
-    function repayment() public override nonReentrant whenNotPaused onlyBorrower {
+    function repayment() public override nonReentrant onlyBorrower {
         require(
             repaymentCounter <= totalRepayments,
             "Repayment Process is done"
@@ -739,5 +738,71 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     
     function getOpportunityName()external override view returns(string memory){
         return opportunityOrigination.getOpportunityNameOf(opportunityID);
+    }
+
+    function writeOffOpportunity() external override{
+        require(
+            opportunityOrigination.isWriteOff(opportunityID) ==true ,
+            "Opportunity pool is haven't Writeoff yet."
+        );
+        require(
+            msg.sender == dygnifyConfig.getOpportunityOrigination(),
+            "Only OpportunityOrigination can execute writeoff"
+        );
+
+        uint256 temp = amountWithoutEMI.mul(totalRepayments).div(
+                dygnifyConfig.getLeverageRatio().add(1)
+            );
+
+        uint256 tempSenior = temp.mul(dygnifyConfig.getLeverageRatio());
+        uint256 estimatedSeniorYield = seniorYieldPerecentage.mul(tempSenior).div(sixDecimal);
+
+        uint256 remainingOverdue;
+        if(loanType == 1){
+            uint256 currentTime = block.timestamp;
+            uint256 currentRepaymentDue = nextRepaymentTime();
+            uint256 overDueFee;
+            if (currentTime > currentRepaymentDue) {
+                uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                    86400
+                );
+                overDueFee = overDueSeconds
+                    .mul(dailyInterestRate.div(100))
+                    .mul(emiAmount)
+                    .div(sixDecimal);
+            }
+
+            remainingOverdue = overDueFee;
+        }
+        else{
+            uint256 amount = emiAmount.sub(amountWithoutEMI);
+            uint256 currentTime = block.timestamp;
+            uint256 currentRepaymentDue = nextRepaymentTime();
+            uint256 overDueFee;
+            if (currentTime > currentRepaymentDue) {
+                uint256 overDueSeconds = currentTime.sub(currentRepaymentDue).div(
+                    86400
+                );
+                overDueFee = overDueSeconds
+                    .mul(dailyInterestRate.div(100))
+                    .mul(amount)
+                    .div(sixDecimal);
+            }
+
+            remainingOverdue = overDueFee;
+        }
+        remainingOverdue = seniorOverduePerecentage.mul(remainingOverdue).div(sixDecimal);
+        uint256 estimatedOverdue = remainingOverdue + seniorSubpoolDetails.overdueGenerated;
+
+        uint256 estimatedSeniorPoolAmount = estimatedOverdue + estimatedSeniorYield + seniorSubpoolDetails.totalDepositable;
+
+        if(poolBalance > estimatedSeniorPoolAmount){
+            uint256 remainingAmount = poolBalance - estimatedSeniorPoolAmount;
+            usdcToken.transfer(dygnifyConfig.seniorPoolAddress(), estimatedSeniorPoolAmount);
+        }
+        else{
+            usdcToken.transfer(dygnifyConfig.seniorPoolAddress(), poolBalance);
+        }
+
     }
 }
