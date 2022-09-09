@@ -44,7 +44,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 				<p>{docName ? null : "view document"}</p>
 				{docName ? <p className="italic"> {docName}</p> : null}
 			</div>
-			<a className="text-blue-700 cursor-pointer" onClick={viewDoc}>
+			<a className="text-[#5375FE] cursor-pointer" onClick={viewDoc}>
 				{disable ? null : "view document"}
 			</a>
 		</div>
