@@ -348,7 +348,7 @@ contract OpportunityOrigination is
         return opportunityDetails.opportunityName;
     }
 
-    function markWriteOff(bytes32 id) external override {
+    function markWriteOff(bytes32 id, address _pool) external override {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         require(
             opportunityToId[id].opportunityStatus ==
@@ -360,5 +360,15 @@ contract OpportunityOrigination is
             "Only dygnifyKeeper can mark it as writeoff"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.WriteOff;
+        IOpportunityPool(_pool).writeOffOpportunity();
+    }
+
+    function isWriteOff(bytes32 id) public override view returns (bool) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        if (
+            uint8(opportunityToId[id].opportunityStatus) ==
+            uint8(OpportunityStatus.WriteOff)
+        ) return true;
+        else return false;
     }
 }

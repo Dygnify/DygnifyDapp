@@ -15,10 +15,12 @@ contract DygnifyKeeper is BaseUpgradeablePausable, KeeperCompatibleInterface, ID
     IOpportunityOrigination private opportunityOrigination;
 
     uint256 private threshold;
-    bytes32[] private drawdownOpportunites; 
+    bytes32[] private drawdownOpportunites;
+    bool private stopKeeper; 
 
     // @notice initializes the contract
-    // @param DygnifyConfig : dygnify config address, _threshold : no. of allowable days for writeoff 
+    // @param DygnifyConfig : dygnify config address 
+    // @param _threshold : no. of allowable days for writeoff 
     function initialize(DygnifyConfig _dygnifyConfig, uint256 _threshold) public initializer {
         require(
             address(_dygnifyConfig) != address(0),
@@ -49,22 +51,23 @@ contract DygnifyKeeper is BaseUpgradeablePausable, KeeperCompatibleInterface, ID
                 }
             }
         }
-        upkeepNeeded = isUpkeepNeeded;
+        upkeepNeeded = stopKeeper == false && isUpkeepNeeded;
     }
 
-    function performUpkeep(bytes calldata /* performData */) external override {
+    function performUpkeep(bytes calldata /* performData */) external nonReentrant override {
+        stopKeeper = true;
         for(uint i = 0 ; i < drawdownOpportunites.length ; i++){
             uint dueTime = IOpportunityPool(opportunityOrigination.getOpportunityPoolAddress(drawdownOpportunites[i])).nextRepaymentTime();
             if(dueTime < block.timestamp){
                 uint timePassed = block.timestamp-dueTime;
                 if(timePassed > threshold){
-                    opportunityOrigination.markWriteOff(drawdownOpportunites[i]);
+                    opportunityOrigination.markWriteOff(drawdownOpportunites[i], opportunityOrigination.getOpportunityPoolAddress(drawdownOpportunites[i]));
                     drawdownOpportunites[i] = drawdownOpportunites[drawdownOpportunites.length - 1];
                     delete drawdownOpportunites[drawdownOpportunites.length - 1];
-                    // distribute loss code will come here
                 }
             }
         }
+        stopKeeper = false;
     }
 
     function addOpportunityInKeeper(bytes32 _id) external override {

@@ -55,6 +55,8 @@ interface IOpportunityPool {
     function getSeniorProfit() external view returns (uint256);
 
     function getOpportunityName()external view returns(string memory);
+
+    function writeOffOpportunity() external;
 }
 
 
