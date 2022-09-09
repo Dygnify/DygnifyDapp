@@ -10,6 +10,7 @@ interface IOpportunityOrigination {
         Collateralized,
         Active,
         Drawndown,
+        WriteOff,
         Repaid
     }
 
@@ -83,4 +84,6 @@ interface IOpportunityOrigination {
     function getUnderWritersOpportunities(address _underwriter)external view returns (bytes32[] memory);
 
     function getOpportunityNameOf(bytes32 _opportunityId)external view returns(string memory);
+
+    function markWriteOff(bytes32 id) external;
 }

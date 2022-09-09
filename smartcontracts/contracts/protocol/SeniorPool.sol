@@ -3,14 +3,14 @@ pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "./LPToken.sol";
+import "../interfaces/ILPToken.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "./DygnifyConfig.sol";
 import "./BaseUpgradeablePausable.sol";
-import "./OpportunityOrigination.sol";
-import "./OpportunityPool.sol";
+import "../interfaces/IOpportunityOrigination.sol";
+import "../interfaces/IOpportunityPool.sol";
 import "./ConfigOptions.sol";
 
 /// @title SeniorPool
@@ -22,7 +22,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
     using SafeMathUpgradeable for uint256;
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
-    OpportunityOrigination private opportunityOrigination;
+    IOpportunityOrigination private opportunityOrigination;
 
     struct InvestmentTimestamp {
         uint256 timestamp;
@@ -40,7 +40,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
 
     string public contractName = "Senior Pool";
     IERC20 private usdcToken;
-    LPToken private lpToken;
+    ILPToken private lpToken;
     uint256 public investmentLockinInMonths;
     uint256 public seniorPoolBal;
     uint256 public constant oneday = 60 * 60 * 24;
@@ -72,13 +72,13 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         address owner = dygnifyConfig.dygnifyAdminAddress();
         require(owner != address(0), "Invalid Owner");
 
-        opportunityOrigination = OpportunityOrigination(
+        opportunityOrigination = IOpportunityOrigination(
             dygnifyConfig.getOpportunityOrigination()
         );
 
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
-        lpToken = LPToken(dygnifyConfig.lpTokenAddress());
+        lpToken = ILPToken(dygnifyConfig.lpTokenAddress());
         investmentLockinInMonths = dygnifyConfig.getSeniorPoolLockinMonths();
         sharePrice = 0;
     }
@@ -123,7 +123,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
             opportunityId
         );
-        OpportunityPool opportunityPool = OpportunityPool(poolAddress);
+        IOpportunityPool opportunityPool = IOpportunityPool(poolAddress);
         uint256 amount = opportunityPool.getSeniorTotalDepositable();
 
         require(amount <= seniorPoolBal, "insufficient Pool balance");
@@ -140,7 +140,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
             opportunityId
         );
-        OpportunityPool opportunityPool = OpportunityPool(poolAddress);
+        IOpportunityPool opportunityPool = IOpportunityPool(poolAddress);
 
         //calculate the shareprice
         uint256 totalProfit = opportunityPool.getSeniorProfit();

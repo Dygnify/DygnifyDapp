@@ -26,9 +26,9 @@ const BorrowRequest = () => {
 		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
-				<div className="md:pl-1 lg:pl-2 xl:pl-2 ">
+				<div className="md:pl-1 lg:pl-2 xl:pl-2 dark:text-white text-black">
 					<div className="mb-2">
-						<h2 className="text-left font-medium text-white text-2xl xl:text-3xl lg:mb-8 xl:mb-10 xl:mt-1 ">
+						<h2 className="text-left font-medium text-2xl xl:text-3xl lg:mb-8 xl:mb-10 xl:mt-1 ">
 							Underwriter's Dashboard
 						</h2>
 					</div>

@@ -4,6 +4,7 @@ import { getWalletBal } from "../../../../services/BackendConnectors/userConnect
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
+import approve from "../../../../services/BackendConnectors/approve";
 
 const RepaymentModal = ({
 	data,
@@ -84,6 +85,17 @@ const RepaymentModal = ({
 						</div>
 					</div>
 
+					<div className="px-4 md:px-8 mt-auto md:mt-8">
+						<GradientBtnForModal
+							className={"w-full"}
+							htmlFor={"RepaymentProcessModal"}
+							setOpenProcessRepayment={setOpenProcessRepayment}
+							setProcessRepayment={setProcessRepayment}
+							onClick={approve(data.opportunityPoolAddress,data.repaymentAmount)}
+						>
+							Approve
+						</GradientBtnForModal>
+					</div>
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
 							className={"w-full"}
