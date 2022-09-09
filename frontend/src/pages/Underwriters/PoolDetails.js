@@ -11,6 +11,7 @@ import Loader from "../../uiTools/Loading/Loader";
 import { voteOpportunity } from "../../services/BackendConnectors/opportunityConnectors";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
+import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -20,7 +21,7 @@ const PoolDetails = () => {
 	const [info, setInfo] = useState([]);
 	const [kycDetails, setKycDetails] = useState();
 
-	console.log(opDetails ? opDetails.borrower : "");
+	console.log(opDetails ? opDetails : "");
 
 	const [loanPurpose, setLoanPurpose] = useState({
 		isSliced: false,
@@ -147,6 +148,14 @@ const PoolDetails = () => {
 		setLoading(false);
 	}
 
+	const viewDocument = (docCid, fileName) => {
+		if (!docCid) return null;
+		let url = getIPFSFileURL(docCid);
+		if (fileName) url += `/${fileName}`;
+		console.log(fileName);
+		window.open(url, "_blank");
+	};
+
 	return (
 		<div className={`${loading ? "" : ""}`}>
 			{loading && <Loader />}
@@ -270,13 +279,13 @@ const PoolDetails = () => {
 						<div className="mb-0 text-lg font-medium">Deals terms</div>
 					</div>
 					{/* section-3-2 --item  */}
-					<div className="rounded-box w-auto dark:bg-[#292C33] bg-[#64748B] overflow-hidden">
+					<div className="rounded-box w-auto dark:bg-[#292C33] bg-[#A0ABBB] overflow-hidden">
 						<div className="grid grid-cols-2 gap-[2px] my-0.5 md:my-0 md:grid-cols-3 xl:grid-cols-6">
 							{info ? (
 								info.map((e, i) => {
 									return (
 										<div className="flex justify-center flex-col items-center dark:bg-[#20232A] bg-[#D0D5DD] py-10">
-											<div className="font-normal text-base text-center dark:text-[#A0ABBB] text-[#64748B]">
+											<div className="font-medium text-base text-center dark:text-[#A0ABBB] text-[#64748B]">
 												{e.label}
 											</div>
 											<div className="font-medium text-xl text-center">
@@ -295,8 +304,24 @@ const PoolDetails = () => {
 				<div>
 					<div className="text-lg font-medium mt-10 mb-3">Collateral</div>
 					<div className="w-full dark:bg-[#20232A] bg-[#D0D5DD] rounded-xl p-3">
-						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg">
-							Name of documents - {opDetails?.collateral_document_name}
+						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg flex flex-col md:flex-row">
+							<span>
+								Name of documents <span className="text-white pr-1">-</span>
+							</span>
+							<span className="text-white">
+								{opDetails?.collateral_document_name}
+								<a
+									className="pl-1 text-sm text-[#5375FE] cursor-pointer"
+									onClick={() =>
+										viewDocument(
+											opDetails?.collateralDocument,
+											opDetails?.collateral_filename
+										)
+									}
+								>
+									(view document)
+								</a>
+							</span>
 						</div>
 						<div className="text-lg font-medium mb-1">Document descripton</div>
 						<div className="dark:text-[#D0D5DD] text-[#323A46] tracking-wide font-light text-lg px-1 mr-1 pr-6 items-start ">
