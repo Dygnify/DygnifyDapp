@@ -13,12 +13,12 @@
 .dark .active {
   color: #9281FF;
   background-color: #3A3C43;
-  border-radius: 0.8em;
+  /* border-radius: 0.8em; */
 }
 
 .active {
   background-color: #9281FF;
-  border-radius: 0.8em;
+  /* border-radius: 0.8em; */
   color: #fff;
 }
 

@@ -44,7 +44,7 @@ const UnderwriterCard = ({ data }) => {
 					let read = getDataURLFromFile(res);
 					read.onloadend = function () {
 						setLogoImgSrc(read.result);
-						console.log(read.result);
+						// console.log(read.result);
 					};
 				}
 			});
@@ -107,7 +107,7 @@ const UnderwriterCard = ({ data }) => {
 						disable={false}
 						onClick={() =>
 							path("/underwriterDashboard/poolDetail", {
-								state: { pool: poolDetails, images: logoImgSrc},
+								state: { pool: poolDetails, images: logoImgSrc },
 							})
 						}
 					>

@@ -16,7 +16,7 @@ const UnderwriterDashboard = () => {
 
 	return (
 		<div className={`${darkMode ? "dark" : ""} `}>
-			<div className="dark:bg-[#1E1E1E] bg-white dark:text-white text-black">
+			<div className="dark:bg-[#14171F] bg-[#F7F8F9] dark:text-[#FFFFFF] text-[#323A46]">
 				<Header
 					linkStatus={linkStatus}
 					darkMode={darkMode}
@@ -45,10 +45,10 @@ const UnderwriterDashboard = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className=" h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<ul className=" h-full  overflow-y-auto w-60  text-[#64748B] dark:bg-darkmode-900 bg-[#F7F8F9]  flex flex-col gap-2 lg:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-4 py-4 gap-2"
 									to="/underwriterDashboard/borrowRequest"
 									onClick={() => {
 										setLinkStatus(false);
@@ -62,7 +62,7 @@ const UnderwriterDashboard = () => {
 							</li>
 							<li className="font-medium text-center">
 								<NavLink
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-4 py-4 gap-2"
 									to="/underwriterDashboard/approvalHistory"
 									onClick={() => {
 										setLinkStatus(false);
