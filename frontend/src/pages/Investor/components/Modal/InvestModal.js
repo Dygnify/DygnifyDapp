@@ -28,9 +28,9 @@ const InvestModal = ({
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
-	console.log(approvedvalue, "👊");
 	const [error, setError] = useState({
-		err: true,
+		approveErr: false,
+		investErr: true,
 		msg: "",
 	});
 
@@ -76,18 +76,32 @@ const InvestModal = ({
 		const value = e.target.value;
 
 		const defaultErr = {
-			err: true,
+			approve: false,
+			invest: true,
 			msg: "",
 		};
 
 		const errObj = {
-			err: true,
+			approve: true,
+			invest: true,
 			msg: "Insufficient USDC to initiate transfer",
 		};
 
 		if (walletBal) {
 			if (+value > +walletBal) {
 				setError(errObj);
+			} else if (+value > +approvedvalue) {
+				setError({
+					approveErr: false,
+					investErr: true,
+					msg: "",
+				});
+			} else if (+value < +approvedvalue) {
+				setError({
+					approveErr: true,
+					investErr: false,
+					msg: "",
+				});
 			} else {
 				setError(defaultErr);
 			}
@@ -170,7 +184,7 @@ const InvestModal = ({
 							{process.env.REACT_APP_TOKEN_NAME}
 						</span>
 
-						{error.err && (
+						{error.msg.length > 0 && (
 							<p className="text-[0.875rem] text-error-500">{error.msg}</p>
 						)}
 					</div>
@@ -186,7 +200,7 @@ const InvestModal = ({
 										: approve(poolAddress, amount);
 							}} //if condition not true then investJunior will execute
 							className={`block font-semibold text-white ${
-								error.err
+								error.approveErr
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none `}
@@ -201,7 +215,7 @@ const InvestModal = ({
 								if (!error.err) isSenior ? investSenior() : investJunior();
 							}} //if condition not true then investJunior will execute
 							className={`block font-semibold text-white ${
-								error.err
+								error.investErr
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none`}
