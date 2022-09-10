@@ -99,7 +99,7 @@ const Invest = () => {
 	return (
 		<div className="">
 			<div className="mb-4">
-				<h2 className="text-white font-semibold text-[1.4375rem] lg:text-[2.0625rem] ">
+				<h2 className="font-semibold text-[1.4375rem] lg:text-[2.0625rem] ">
 					Investment pools
 				</h2>
 			</div>
