@@ -4,7 +4,10 @@ import TextField from "../../uiTools/Inputs/TextField";
 import InputGroup from "../../uiTools/Inputs/InputGroup";
 import TextArea from "../../uiTools/Inputs/TextArea";
 import FileUploader from "../Components/FileUploader";
-import { makeFileObjects, storeFiles } from "../../services/web3storageIPFS";
+import {
+	makeFileObjects,
+	storeFiles,
+} from "../../services/Helpers/web3storageIPFS";
 import { useLocation, useNavigate } from "react-router-dom";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
@@ -291,200 +294,194 @@ const EditBorrowerProfileNew = () => {
 				}) => (
 					<>
 						<div className={loading ? "blur-sm" : ""}>
-							<div className="mb-6">
-								<h2 className="text-xl font-medium">Company Details</h2>
-								<div
-									style={{
-										display: "flex",
-									}}
-									className="gap-3 w-full mx-0"
-								>
-									<FileUploader
-										label="Company Logo"
-										className="w-1/3"
-										handleFile={onLogoFileUpload}
+							<div className="font-semibold">
+								<div className="">
+									<h2 className="text-[1.4375rem] ">Company Details</h2>
+
+									<div className="mt-2 flex flex-col gap-2">
+										<div className=" flex flex-col gap-2 md:flex-row md:flex-wrap xl:justify-between">
+											<FileUploader
+												label="Company Logo"
+												className="md:w-[45%] xl:w-[30%]"
+												handleFile={onLogoFileUpload}
+												fileName={
+													profileState
+														? profileState.companyLogoFile.businessLogoFileName
+														: null
+												}
+											/>
+											<TextField
+												name="companyName"
+												label="Company Name"
+												placeholder="Enter Company Name"
+												className="md:w-[45%] md:ml-auto xl:ml-0 xl:w-[30%]"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyName}
+												error={
+													touched.companyName && errors.companyName
+														? errors.companyName
+														: null
+												}
+											/>
+											<TextField
+												name="companyRepName"
+												label="Company Representative Name"
+												placeholder="Enter Name"
+												className="md:w-[45%] xl:w-[30%]"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyRepName}
+												error={
+													touched.companyRepName && errors.companyRepName
+														? errors.companyRepName
+														: null
+												}
+											/>
+										</div>
+
+										<div className="">
+											<TextArea
+												name="companyBio"
+												label="Bio"
+												placeholder="Summary About the Organization/Company"
+												className="w-full"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyBio}
+											/>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-8 flex flex-col gap-3">
+									<h2 className="text-[1.4375rem] font-semibold">
+										KYB Documents
+									</h2>
+
+									<InputGroup
+										caption="Business Identify Proof"
+										name="bizIdFileName"
+										value={values.bizIdFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessIdentityFilesUpload}
+										onBlur={handleBlur}
+										error={error && "File required"}
 										fileName={
 											profileState
-												? profileState.companyLogoFile.businessLogoFileName
-												: null
+												? profileState.businessIdFile.businessIdFileName
+												: ""
 										}
 									/>
-									<TextField
-										name="companyName"
-										label="Company Name"
-										placeholder="Enter Company Name"
-										className="w-1/3"
-										onChange={handleChange}
+									<InputGroup
+										caption="Business Address Proof"
+										name="bizAddFileName"
+										value={values.bizAddFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessAddressFilesUpload}
 										onBlur={handleBlur}
-										value={values.companyName}
-										error={
-											touched.companyName && errors.companyName
-												? errors.companyName
-												: null
+										error={error && "File required"}
+										fileName={
+											profileState
+												? profileState.businessAddFile.businessAddFileName
+												: ""
 										}
 									/>
-									<TextField
-										name="companyRepName"
-										label="Company Representative Name"
-										placeholder="Enter Name"
-										className="w-1/3"
-										onChange={handleChange}
+									<InputGroup
+										caption="Business Incorporation Proof"
+										name="bizIncoFileName"
+										value={values.bizIncoFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessIncorporationFilesUpload}
 										onBlur={handleBlur}
-										value={values.companyRepName}
-										error={
-											touched.companyRepName && errors.companyRepName
-												? errors.companyRepName
-												: null
+										error={error && "File required"}
+										fileName={
+											profileState
+												? profileState.businessIncoFile.businessIncoFileName
+												: ""
+										}
+									/>
+									<InputGroup
+										caption="Business License Proof"
+										name="bizLicFileName"
+										value={values.bizLicFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessLicenseFilesUpload}
+										onBlur={handleBlur}
+										fileName={
+											profileState && hasKey
+												? profileState.businessLicFile.businessLicFileName
+												: ""
 										}
 									/>
 								</div>
-								<div>
-									<TextArea
-										name="companyBio"
-										label="Bio"
-										placeholder="Summary About the Organization/Company"
-										className="w-full"
-										onChange={handleChange}
-										onBlur={handleBlur}
-										value={values.companyBio}
-									/>
+
+								<div className="mb-6">
+									<h2 className="text-[1.1875rem] ">Socials</h2>
+
+									<div className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-3">
+										<TextField
+											name="website"
+											label="Website"
+											placeholder="Enter Website URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.website}
+											onBlur={handleBlur}
+										/>
+										<TextField
+											name="email"
+											label="Email Address"
+											placeholder="Enter Email Address"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											onBlur={handleBlur}
+											value={values.email}
+										/>
+										<TextField
+											name="twitter"
+											label="Twitter"
+											placeholder="Enter Twitter URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.twitter}
+											onBlur={handleBlur}
+										/>
+										<TextField
+											name="linkedin"
+											label="LinkedIn"
+											placeholder="Enter LinkedIn URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.linkedin}
+											onBlur={handleBlur}
+										/>
+									</div>
 								</div>
-							</div>
 
-							<div className="mb-6">
-								<h2 className="text-xl font-medium mb-2">KYB Documents</h2>
-								<InputGroup
-									caption="Business Identify Proof"
-									name="bizIdFileName"
-									value={values.bizIdFileName}
-									onChangeText={handleChange}
-									onChange={onBusinessIdentityFilesUpload}
-									onBlur={handleBlur}
-									error={error && "File required"}
-									fileName={
-										profileState
-											? profileState.businessIdFile.businessIdFileName
-											: ""
-									}
-								/>
-								<InputGroup
-									caption="Business Address Proof"
-									name="bizAddFileName"
-									value={values.bizAddFileName}
-									onChangeText={handleChange}
-									onChange={onBusinessAddressFilesUpload}
-									onBlur={handleBlur}
-									error={error && "File required"}
-									fileName={
-										profileState
-											? profileState.businessAddFile.businessAddFileName
-											: ""
-									}
-								/>
-								<InputGroup
-									caption="Business Incorporation Proof"
-									name="bizIncoFileName"
-									value={values.bizIncoFileName}
-									onChangeText={handleChange}
-									onChange={onBusinessIncorporationFilesUpload}
-									onBlur={handleBlur}
-									error={error && "File required"}
-									fileName={
-										profileState
-											? profileState.businessIncoFile.businessIncoFileName
-											: ""
-									}
-								/>
-								<InputGroup
-									caption="Business License Proof"
-									name="bizLicFileName"
-									value={values.bizLicFileName}
-									onChangeText={handleChange}
-									onChange={onBusinessLicenseFilesUpload}
-									onBlur={handleBlur}
-									fileName={
-										profileState && hasKey
-											? profileState.businessLicFile.businessLicFileName
-											: ""
-									}
-								/>
-							</div>
-							<div className="mb-6">
-								<h2 className="text-xl font-medium mb-2">Socials</h2>
-								<div className="w-full" style={{ display: "flex" }}>
-									<TextField
-										name="website"
-										label="Website"
-										placeholder="Enter Website URL"
-										className="w-1/2 mr-8"
-										onChange={handleChange}
-										value={values.website}
-										onBlur={handleBlur}
-									/>
-									<TextField
-										name="email"
-										label="Email Address"
-										placeholder="Enter Email Address"
-										className="w-1/2 ml-8"
-										onChange={handleChange}
-										onBlur={handleBlur}
-										value={values.email}
-									/>{" "}
+								{/* <button type="submit" onClick={() => console.log(values)}>
+									Submit
+								</button> */}
+
+								<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
+									<GradientButton
+										className="md:w-[40%] xl:w-[min(40%,25rem)]"
+										onClick={handleSubmit}
+									>
+										Save and Exit
+									</GradientButton>
+
+									<button
+										onClick={() =>
+											navigate("/borrower_dashboard/borrower_profile", {
+												state: oldBrJson,
+											})
+										}
+										className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)]"
+									>
+										Exit
+									</button>
 								</div>
-								<div className="w-full" style={{ display: "flex" }}>
-									<TextField
-										name="twitter"
-										label="Twitter"
-										placeholder="Enter Twitter URL"
-										className="w-1/2 mr-8"
-										onChange={handleChange}
-										value={values.twitter}
-										onBlur={handleBlur}
-									/>
-									<TextField
-										name="linkedin"
-										label="LinkedIn"
-										placeholder="Enter LinkedIn URL"
-										className="w-1/2 ml-8"
-										onChange={handleChange}
-										value={values.linkedin}
-										onBlur={handleBlur}
-									/>
-								</div>
-							</div>
-
-							<button type="submit" onClick={() => console.log(values)}>
-								Submit
-							</button>
-
-							<div
-								className={`my-10 justify-center flex-row-reverse ${
-									loading ? "blur-sm" : ""
-								}`}
-								style={{ display: "flex" }}
-							>
-								<GradientButton
-									className="font-medium ml-4"
-									onClick={handleSubmit}
-								>
-									Save and Exit
-								</GradientButton>
-
-								<button
-									style={{
-										borderRadius: "100px",
-										padding: "12px 24px",
-										color: "white",
-									}}
-									className="btn btn-wide btn-outline text-white mr-4 focus:outline-[#9281FF]"
-									onClick={() =>
-										navigate("/borrower_dashboard/borrower_profile", {
-											state: oldBrJson,
-										})
-									}
-								>
-									Exit
-								</button>
 							</div>
 						</div>
 					</>

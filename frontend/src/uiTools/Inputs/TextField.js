@@ -13,8 +13,8 @@ const TextField = ({
 }) => {
 	return text ? (
 		<div className={`${className}`}>
-			<label class="label">
-				<span class="text-white">{label}</span>
+			<label class="label text-lg">
+				<span class="text-white text-lg">{label}</span>
 			</label>
 			<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
 				<input
@@ -37,7 +37,7 @@ const TextField = ({
 		</div>
 	) : (
 		<div className={`${className}`}>
-			<label class="label">
+			<label class="label text-lg">
 				<span class="text-white">{label}</span>
 			</label>
 			<input
