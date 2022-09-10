@@ -52,16 +52,19 @@ const InvestModal = ({
 		setInvestProcessing(false);
 		console.log("done");
 	}
-	const hexToDecimal = (hex) => parseInt(hex, 16);
-	async function userAddress() {
-		const accounts = await window.ethereum.request({
-			method: "eth_requestAccounts",
-		});
 
-		const data = await allowance(accounts[0], process.env.REACT_APP_SENIORPOOL);
-		const newdata = hexToDecimal(data._hex);
-		setApprovedvalue(newdata);
+	async function userAddress() {
+		const contractAddress = isSenior
+			? process.env.REACT_APP_SENIORPOOL
+			: poolAddress;
+		const data = await allowance(
+			window.ethereum.selectedAddress,
+			contractAddress
+		);
+		setApprovedvalue(data);
 	}
+
+	console.log(approvedvalue, "----");
 
 	async function investJunior() {
 		setProcessFundModal(true);
@@ -76,14 +79,14 @@ const InvestModal = ({
 		const value = e.target.value;
 
 		const defaultErr = {
-			approve: false,
-			invest: true,
+			approveErr: false,
+			investErr: true,
 			msg: "",
 		};
 
 		const errObj = {
-			approve: true,
-			invest: true,
+			approveErr: true,
+			investErr: true,
 			msg: "Insufficient USDC to initiate transfer",
 		};
 
@@ -96,7 +99,7 @@ const InvestModal = ({
 					investErr: true,
 					msg: "",
 				});
-			} else if (+value < +approvedvalue) {
+			} else if (+value <= +approvedvalue) {
 				setError({
 					approveErr: true,
 					investErr: false,
@@ -191,10 +194,10 @@ const InvestModal = ({
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<label
-							htmlFor={`${error.err ? "" : "InvestProcessModal"}`}
+							htmlFor={`${error.approveErr ? "" : "InvestProcessModal"}`}
 							onClick={() => {
 								console.log(process.env.REACT_APP_SENIORPOOL);
-								if (!error.err)
+								if (!error.approveErr)
 									isSenior
 										? approve(process.env.REACT_APP_SENIORPOOL, amount)
 										: approve(poolAddress, amount);
@@ -210,9 +213,10 @@ const InvestModal = ({
 					</div>
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<label
-							htmlFor={`${error.err ? "" : "InvestProcessModal"}`}
+							htmlFor={`${error.investErr ? "" : "InvestProcessModal"}`}
 							onClick={() => {
-								if (!error.err) isSenior ? investSenior() : investJunior();
+								if (!error.investErr)
+									isSenior ? investSenior() : investJunior();
 							}} //if condition not true then investJunior will execute
 							className={`block font-semibold text-white ${
 								error.investErr

@@ -25,7 +25,7 @@ const InvestorDashboardNew = () => {
 					darkMode={darkMode}
 					setDarkMode={setDarkMode}
 				/>
-				<div className="drawer drawer-mobile">
+				<div className="drawer drawer-mobile border-t-[1px] border-t-[#B8C0CC] dark:border-t-[#20232A]">
 					<input
 						id="dashboard-sidebar"
 						type="checkbox"
@@ -49,16 +49,16 @@ const InvestorDashboardNew = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="h-full py-4 px-2 overflow-y-auto w-60  text-[#64748B] bg-neutral-50 dark:bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent lg:dark:bg-transparent">
+						<ul className="h-full py-4  overflow-y-auto w-60  text-[#64748B] bg-neutral-50 dark:bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent lg:dark:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-10 py-4 gap-2"
 									to="/investor-dashboard/overview"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-6">
+									<span>
 										<OverviewIcon />
 									</span>
 									Overview
@@ -66,13 +66,13 @@ const InvestorDashboardNew = () => {
 							</li>
 							<li className="font-medium text-center ">
 								<NavLink
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-10 py-4 gap-2"
 									to="/investor-dashboard/invest"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-7">
+									<span className="pl-1">
 										<InvestIcon />
 									</span>
 									Invest
@@ -80,13 +80,13 @@ const InvestorDashboardNew = () => {
 							</li>
 							<li className="font-medium text-center ">
 								<NavLink
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-10 py-4 gap-2"
 									to="/investor-dashboard/withdraw"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-6">
+									<span>
 										<WithdrawIcon />
 									</span>
 									Withdraw
@@ -94,13 +94,13 @@ const InvestorDashboardNew = () => {
 							</li>
 							<li className="font-medium text-center ">
 								<NavLink
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-10 py-4 gap-2"
 									to="/investor-dashboard/transaction"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-6">
+									<span>
 										<TransactionIcon />
 									</span>
 									Transaction

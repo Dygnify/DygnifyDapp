@@ -1,6 +1,8 @@
 const { ethers } = require("ethers");
 const ERC20 = require("../../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json");
 
+const hexToDecimal = (hex) => parseInt(hex, 16);
+
 const allowance = async (owner, spender) => {
 	if (typeof window.ethereum !== "undefined") {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -12,9 +14,12 @@ const allowance = async (owner, spender) => {
 			ERC20.abi,
 			signer
 		);
-
+		const sixDecimals = 6;
 		const data = await Contract.allowance(owner, spender);
-		return data;
+		const newdata = hexToDecimal(data._hex);
+		const finaldata = ethers.utils.formatUnits(newdata, sixDecimals);
+		console.log(finaldata);
+		return finaldata;
 	}
 };
 
