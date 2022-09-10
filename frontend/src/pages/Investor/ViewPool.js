@@ -110,11 +110,8 @@ const ViewPool = () => {
 								opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
 							);
 							// get the loan purpose
-							const {
-								isSliced,
-								firstText,
-								secondText,
-							} = getExtendableTextBreakup(opJson.loan_purpose, 200);
+							const { isSliced, firstText, secondText } =
+								getExtendableTextBreakup(opJson.loan_purpose, 200);
 
 							if (isSliced) {
 								setLoanPurpose({
@@ -260,7 +257,7 @@ const ViewPool = () => {
 					</div>
 
 					{/* social links */}
-					<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4">
+					<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4 text-white">
 						{companyDetails && companyDetails.linkedin ? (
 							<button
 								id="linkedin"
@@ -268,7 +265,7 @@ const ViewPool = () => {
 								className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer"
 							>
 								<LinkedIn className="w-6" />
-								<p className="hidden md:block font-medium">LinkedIn</p>
+								<p className="hidden md:block font-medium ">LinkedIn</p>
 							</button>
 						) : (
 							<></>
@@ -494,7 +491,7 @@ const ViewPool = () => {
 								</div>
 							</div>
 
-							<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4">
+							<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4 text-white">
 								{companyDetails && companyDetails.linkedin ? (
 									<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
 										<LinkedIn className="w-6" />
