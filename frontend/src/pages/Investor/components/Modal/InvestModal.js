@@ -10,6 +10,8 @@ import {
 //for send data import from paths--
 import { UserContext } from "../../../../Paths"; //
 import approve from "../../../../services/BackendConnectors/approve";
+import allowance from "../../../../services/BackendConnectors/allowance";
+import Loader from "../../../../uiTools/Loading/Loader";
 
 //
 
@@ -25,8 +27,10 @@ const InvestModal = ({
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
+	const [approvedvalue, setApprovedvalue] = useState();
+	console.log(approvedvalue, "👊");
 	const [error, setError] = useState({
-		err: false,
+		err: true,
 		msg: "",
 	});
 
@@ -37,6 +41,7 @@ const InvestModal = ({
 
 	useEffect(() => {
 		getWalletBal().then((data) => setWalletBal(data));
+		userAddress();
 	}, []);
 
 	async function investSenior() {
@@ -46,6 +51,16 @@ const InvestModal = ({
 		setSelected(null);
 		setInvestProcessing(false);
 		console.log("done");
+	}
+	const hexToDecimal = (hex) => parseInt(hex, 16);
+	async function userAddress() {
+		const accounts = await window.ethereum.request({
+			method: "eth_requestAccounts",
+		});
+
+		const data = await allowance(accounts[0], process.env.REACT_APP_SENIORPOOL);
+		const newdata = hexToDecimal(data._hex);
+		setApprovedvalue(newdata);
 	}
 
 	async function investJunior() {
@@ -61,7 +76,7 @@ const InvestModal = ({
 		const value = e.target.value;
 
 		const defaultErr = {
-			err: false,
+			err: true,
 			msg: "",
 		};
 
@@ -165,13 +180,16 @@ const InvestModal = ({
 							htmlFor={`${error.err ? "" : "InvestProcessModal"}`}
 							onClick={() => {
 								console.log(process.env.REACT_APP_SENIORPOOL);
-								if (!error.err) isSenior ? approve(process.env.REACT_APP_SENIORPOOL,amount) : approve(poolAddress,amount);
+								if (!error.err)
+									isSenior
+										? approve(process.env.REACT_APP_SENIORPOOL, amount)
+										: approve(poolAddress, amount);
 							}} //if condition not true then investJunior will execute
 							className={`block font-semibold text-white ${
 								error.err
-									? "bg-neutral-400 cursor-not-allowed"
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
-							}  text-center py-2 rounded-[1.8em] select-none`}
+							}  text-center py-2 rounded-[1.8em] select-none `}
 						>
 							Approve
 						</label>
@@ -184,7 +202,7 @@ const InvestModal = ({
 							}} //if condition not true then investJunior will execute
 							className={`block font-semibold text-white ${
 								error.err
-									? "bg-neutral-400 cursor-not-allowed"
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none`}
 						>

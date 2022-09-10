@@ -19,7 +19,8 @@ const PoolDetails = () => {
 	const [opDetails, setOpDetails] = useState();
 	const [companyDetails, setCompanyDetails] = useState();
 	const [info, setInfo] = useState([]);
-	const [kycDetails, setKycDetails] = useState();
+
+	const [idproof, setIdproof] = useState();
 
 	console.log(opDetails ? opDetails : "");
 
@@ -43,9 +44,14 @@ const PoolDetails = () => {
 		try {
 			const result = await axiosHttpService(kycOptions(refId));
 
-			if (result.res.status === "success") setKycDetails(result);
-			if (result.res.status === "error") {
-				setKycDetails(false);
+			if (result.res.status === "success") {
+				if (result.res.data.identities["passport"]) {
+					setIdproof(result.res.data.identities.passport);
+				} else if (result.res.data.identities["national_id"]) {
+					setIdproof(result.res.data.identities.national_id);
+				} else if (result.res.data.identities["drivinglicence"]) {
+					setIdproof(result.res.data.identities.drivinglicence);
+				}
 			}
 		} catch (error) {
 			console.log(error);
@@ -465,21 +471,9 @@ const PoolDetails = () => {
 				<div className="w-full my-3 mt-10 text-lg font-medium xl:w-1/2">
 					<div>KYC Details</div>
 					<DocumentCard
-						docName={
-							kycDetails
-								? kycDetails.res.data.identities.national_id_number.value
-								: ""
-						}
-						docCid={
-							kycDetails
-								? kycDetails.res.data.identities.national_id.value
-								: null
-						}
-						fileName={
-							kycDetails
-								? kycDetails.res.data.identities.national_id.type
-								: null
-						}
+						docName={idproof ? "Id proof" : ""}
+						docCid={idproof ? idproof.value : null}
+						fileName={idproof ? idproof.type : null}
 					/>
 				</div>
 

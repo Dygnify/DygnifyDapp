@@ -22,7 +22,7 @@ const UnderwriterDashboard = () => {
 					darkMode={darkMode}
 					setDarkMode={setDarkMode}
 				/>
-				<div className="drawer drawer-mobile">
+				<div className="drawer drawer-mobile border-t-[1px] border-t-[#B8C0CC] dark:border-t-[#20232A]">
 					<input
 						id="dashboard-sidebar"
 						type="checkbox"
@@ -40,7 +40,7 @@ const UnderwriterDashboard = () => {
 						</div>
 					</div>
 
-					<div className="drawer-side border-r-[#B8C0CC] dark:border-r-[#20232A] border-r-[1px]">
+					<div className="drawer-side pt-3 border-r-[#B8C0CC] dark:border-r-[#20232A] border-r-[1px]">
 						<label
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
