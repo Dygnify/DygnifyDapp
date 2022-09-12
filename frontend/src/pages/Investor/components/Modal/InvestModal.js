@@ -28,6 +28,7 @@ const InvestModal = ({
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState({
 		approveErr: false,
 		investErr: true,
@@ -117,7 +118,12 @@ const InvestModal = ({
 		<>
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
-				<div className="bg-neutral-50 dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+				{loading && <Loader />}
+				<div
+					className={`bg-neutral-50 dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8 ${
+						loading ? "blur-sm" : ""
+					}`}
+				>
 					<div className="flex justify-between px-4 md:px-8 md:border-b md:border-neutral-300 md:dark:border-darkmode-500 mt-[4em] md:mt-0 py-4">
 						<h3 className="font-semibold text-xl">Invest</h3>
 
@@ -197,10 +203,24 @@ const InvestModal = ({
 							htmlFor={`${error.approveErr ? "" : "InvestProcessModal"}`}
 							onClick={() => {
 								console.log(process.env.REACT_APP_SENIORPOOL);
-								if (!error.approveErr)
-									isSenior
+								if (!error.approveErr) {
+									setLoading(true);
+									const data = isSenior
 										? approve(process.env.REACT_APP_SENIORPOOL, amount)
 										: approve(poolAddress, amount);
+									data
+										.then(function (val) {
+											setLoading(false);
+											setError({
+												approveErr: true,
+												investErr: false,
+												msg: "",
+											});
+										})
+										.catch((error) => {
+											setLoading(false);
+										});
+								}
 							}} //if condition not true then investJunior will execute
 							className={`block font-semibold text-white ${
 								error.approveErr

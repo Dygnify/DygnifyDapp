@@ -40,9 +40,8 @@ const RepaymentModal = ({
 		console.log("💲");
 		setOpenProcessRepayment(true);
 		setProcessRepayment(true);
-		await repayment(data.opportunityPoolAddress);
+	   	await repayment(data.opportunityPoolAddress);
 		handleRepayment();
-
 		setProcessRepayment(false);
 	}
 
@@ -108,10 +107,8 @@ const RepaymentModal = ({
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
 							className={` w-full ${
-								!isApproved
-									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
-									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
-							}  text-center py-2 rounded-[1.8em] select-none`}
+								!isApproved ? "opacity-40 cursor-not-allowed" : ""
+							}`}
 							htmlFor={"RepaymentProcessModal"}
 							setOpenProcessRepayment={setOpenProcessRepayment}
 							setProcessRepayment={setProcessRepayment}
@@ -127,10 +124,8 @@ const RepaymentModal = ({
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
 							className={` w-full ${
-								!isInvest
-									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
-									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
-							}  text-center py-2 rounded-[1.8em] select-none`}
+								!isInvest ? "cursor-not-allowed opacity-40" : ""
+							} `}
 							htmlFor={"RepaymentProcessModal"}
 							setOpenProcessRepayment={setOpenProcessRepayment}
 							setProcessRepayment={setProcessRepayment}
