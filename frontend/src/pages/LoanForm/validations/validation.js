@@ -6,8 +6,7 @@ export const loanDetailsValidationSchema = Yup.object().shape({
 		.max(
 			process.env.REACT_APP_POOL_NAME,
 			"Pool name must be less then 50 characters"
-		)
-		.required(),
+		),
 	loan_type: Yup.mixed().label("Loan Type").required(),
 	loan_purpose: Yup.string().label("Loan Purpose").required(),
 	loan_amount: Yup.number().positive().label("Loan Amount").required(),

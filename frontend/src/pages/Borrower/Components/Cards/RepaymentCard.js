@@ -39,16 +39,18 @@ const RepaymentCard = ({
 
 	return (
 		<div className="my-gradient px-4 py-8 flex flex-col gap-5 rounded-xl md:w-[48%] xl:w-[32%] 2xl:w-[min(32%,30rem)]">
-			<h2 className="font-semibold text-[1.4375rem]">{poolName} </h2>
+			<h2 className="font-semibold text-[1.4375rem] text-black dark:text-white">
+				{poolName}
+			</h2>
 
 			<div className="flex flex-col gap-2">
-				<div className="font-semibold flex gap-1">
+				<div className=" flex gap-1">
 					<p>Capital Borrowed</p>
 
 					<img src={DollarImage} className="w-4 ml-auto" />
 					<p>{data?.opportunityAmount}</p>
 				</div>
-				<div className="font-semibold flex gap-1">
+				<div className=" flex gap-1">
 					{data?.isOverDue ? (
 						<p className="text-error-500">Overdue Amount</p>
 					) : (
@@ -61,7 +63,7 @@ const RepaymentCard = ({
 					</p>
 				</div>
 
-				<div className="font-semibold flex justify-between">
+				<div className=" flex justify-between">
 					<p>Due Date</p>
 					<p>{data?.nextDueDate}</p>
 				</div>

@@ -474,9 +474,9 @@ const EditBorrowerProfileNew = () => {
 									style={{
 										borderRadius: "100px",
 										padding: "12px 24px",
-										color: "white",
+										textTransform: "capitalize",
 									}}
-									className="btn btn-wide btn-outline text-white mr-4 focus:outline-[#9281FF]"
+									className="btn btn-wide btn-outline  mr-4 focus:outline-[#9281FF] text-black dark:text-white"
 									onClick={() =>
 										navigate("/borrower_dashboard/borrower_profile", {
 											state: oldBrJson,

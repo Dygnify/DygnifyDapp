@@ -32,7 +32,6 @@ export default function Details({ handleNext, handlePrev, formData }) {
 				formData.collateral_document &&
 				!formik.values.collateral_document[0].name
 			) {
-				
 				formik.values.collateral_document = formData.collateral_document;
 			}
 			console.log("clicked..", values);
@@ -42,7 +41,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
 	// console.log(formik.values.collateral_document[0].name);
 
 	return (
-		<div className="bg-[#20232A]  w-full mb-2 rounded-2xl mt-20 md:mt-10 px-5 py-5">
+		<div className="dark:bg-darkmode-800 bg-white w-full mb-2 rounded-2xl mt-20 md:mt-10 px-5 py-5">
 			<form onSubmit={formik.handleSubmit}>
 				<div className="justify-between md:flex md:gap-3">
 					<TextField

@@ -242,7 +242,7 @@ const BorrowerProfile = () => {
 								<h2 className="mb-6 text-2xl font-medium">Borrower Profile</h2>
 								<div
 									style={{ display: "flex", marginRight: 15 }}
-									className="flex-row justify-center items-center"
+									className="flex-row justify-center items-center "
 								>
 									<button
 										onClick={() => navigate("/borrower_dashboard/edit_profile")}
@@ -251,9 +251,14 @@ const BorrowerProfile = () => {
 											padding: "8px 16px",
 											display: "flex",
 										}}
-										className="btn btn-sm btn-outline text-white "
+										className="btn btn-sm btn-outline dark:text-white text-black"
 									>
-										<div style={{ marginRight: 2 }}>Create Profile</div>
+										<div
+											style={{ marginRight: 2, textTransform: "capitalize" }}
+											className="dark:text-white text-black"
+										>
+											Create Profile
+										</div>
 										<Edits />
 									</button>
 								</div>
@@ -312,9 +317,14 @@ const BorrowerProfile = () => {
 											padding: "8px 16px",
 											display: "flex",
 										}}
-										className="btn btn-sm btn-outline text-white "
+										className="btn btn-sm btn-outline dark:text-white text-black "
 									>
-										<div style={{ marginRight: 3 }}>Edit Profile</div>
+										<div
+											style={{ marginRight: 3 }}
+											className="text-black dark:text-white"
+										>
+											Edit Profile
+										</div>
 										<Edits />
 									</button>
 								</div>

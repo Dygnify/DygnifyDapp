@@ -55,7 +55,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 	}
 
 	return (
-		<div className="collapse collapse-arrow bg-darkmode-500 rounded-xl">
+		<div className="collapse collapse-arrow dark:bg-darkmode-500 bg-lightmode-200 rounded-xl">
 			<input type="checkbox" className="peer" />
 
 			<div className="collapse-title flex gap-4 md:gap-8 text-center">
@@ -92,15 +92,21 @@ const OpportunityCardCollapsible = ({ data }) => {
 							<div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
 								Capital requested
 							</div>
-							<div style={{ fontSize: 28, color: "white" }} className="mb-10">
-								{data ? data.opportunityAmount : "--"}{" "}
+							<div
+								style={{ fontSize: 28 }}
+								className="mb-10 text-black dark:text-white"
+							>
+								{data ? data.opportunityAmount : "--"}
 								{process.env.REACT_APP_TOKEN_NAME}
 							</div>
 							<div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
 								Total raised till now
 							</div>
 
-							<div style={{ fontSize: 28, color: "white" }}>
+							<div
+								style={{ fontSize: 28 }}
+								className="text-black dark:text-white"
+							>
 								{data && data.poolDisplayBalance
 									? data.poolDisplayBalance
 									: "-- "}

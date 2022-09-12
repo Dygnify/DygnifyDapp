@@ -26,8 +26,8 @@ const ProcessingRequestModal = ({
 				className="modal"
 			>
 				<div
-					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-					className="modal-box w-1/3 max-w-5xl p-0"
+					style={{ borderRadius: "16px" }}
+					className="bg-white dark:bg-darkmode-800 modal-box w-1/3 max-w-5xl p-0"
 				>
 					<button
 						for="ProcessModal"

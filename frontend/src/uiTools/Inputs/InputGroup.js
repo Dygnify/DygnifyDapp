@@ -16,7 +16,7 @@ const InputGroup = ({
 }) => {
 	return (
 		<div
-			className="bg-[#20232A]  w-full px-4 pb-4 mb-2"
+			className="bg-lightmode-300 dark:bg-darkmode-800  w-full px-4 pb-4 mb-2"
 			style={{ borderRadius: "17px" }}
 		>
 			<h2 className="pt-2">{caption}</h2>

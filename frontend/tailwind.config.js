@@ -89,6 +89,10 @@ module.exports = {
 					800: "#20232A",
 					900: "#14171F",
 				},
+				lightmode: {
+					200: "#E7EAEE",
+					300: "#D0D5DD",
+				},
 				shades: {
 					0: "#FFFFFF",
 					100: "#000000",

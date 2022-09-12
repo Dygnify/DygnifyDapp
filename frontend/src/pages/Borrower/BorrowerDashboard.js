@@ -18,7 +18,7 @@ const BorrowerDashboard = () => {
 
 	return (
 		<div className={`${darkMode ? "dark" : ""} `}>
-			<div className="dark:bg-darkmode-900">
+			<div className="bg-white dark:bg-darkmode-900 ">
 				<Header
 					linkStatus={linkStatus}
 					darkMode={darkMode}
@@ -33,7 +33,7 @@ const BorrowerDashboard = () => {
 						onChange={handleChange}
 					/>
 					<div
-						className={`py-4 drawer-content text-white ${
+						className={`py-4 drawer-content text-black dark:text-white ${
 							linkStatus ? "blur-sm lg:blur-none" : ""
 						}`}
 					>

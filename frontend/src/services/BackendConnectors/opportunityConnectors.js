@@ -9,8 +9,10 @@ const {
 	getTrimmedWalletAddress,
 	getDisplayAmount,
 } = require("../Helpers/displayTextHelper");
-const { getEthAddress } = require("./userConnectors/borrowerConnectors");
-const { getUserWalletAddress } = require("./userConnectors/commonConnectors");
+const {
+	getUserWalletAddress,
+	getEthAddress,
+} = require("./userConnectors/commonConnectors");
 
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";

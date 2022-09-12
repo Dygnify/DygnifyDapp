@@ -34,7 +34,7 @@ const TransactionsCard = ({ data, address }) => {
 	}, []);
 
 	return (
-		<div className="px-2 bg-darkmode-800 flex justify-around rounded-xl py-3 gap-4 md:gap-6 text-center">
+		<div className="px-2 bg-lightmode-200 dark:bg-darkmode-800 flex justify-around rounded-xl py-3 gap-4 md:gap-6 text-center">
 			<p className="w-1/3 md:w-1/6 my-auto ">{data?.opportunity_name}</p>
 			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">{date}</p>
 			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">
