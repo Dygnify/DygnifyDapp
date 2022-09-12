@@ -281,7 +281,7 @@ const BorrowerProfile = () => {
 								</button>
 							</div>
 
-							<div className="border border-r-[1.8rem] border-secondary-500 w-full md:w-[35rem] my-8 rounded-xl py-5 px-3 md:px-4 bg-darkmode-800">
+							<div className="border border-r-[1.8rem] border-secondary-500 w-full md:w-[35rem] my-8 rounded-xl py-5 px-3 md:px-4 bg-lightmode-200 dark:bg-darkmode-800">
 								{!kycStatus ? (
 									<label id="blockpass-kyc-connect">
 										<p className="font-semibold text-[1.1875rem]">
@@ -323,7 +323,7 @@ const BorrowerProfile = () => {
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<LinkedIn />
-											<p className="text-sm md:text-base">LinkedIn</p>
+											<p className="text-sm md:text-base">linkedIn</p>
 										</button>
 									) : (
 										<></>
@@ -335,7 +335,7 @@ const BorrowerProfile = () => {
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Email />
-											<p className="text-sm md:text-base">Email</p>
+											<p className="text-sm md:text-base">email</p>
 										</button>
 									) : (
 										<></>
@@ -347,7 +347,7 @@ const BorrowerProfile = () => {
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Website />
-											<p className="text-sm md:text-base">Website</p>
+											<p className="text-sm md:text-base">website</p>
 										</button>
 									) : (
 										<></>

@@ -57,7 +57,7 @@ const Selection = ({ onChange, value, placeholder, options }) => {
 
 	return (
 		<Select
-			className=" w-[80%] appearance-none rounded-lg bg-[#24272F] text-black active:bg-[#24272F]"
+			className=" w-[80%] appearance-none rounded-lg bg-lightmode-300 dark:bg-darkmode-700 text-black active:bg-[#24272F]"
 			placeholder={placeholder}
 			value={defaultValue(options, value)}
 			openMenuOnFocus={true}

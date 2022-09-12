@@ -99,19 +99,21 @@ export default function Final({
 						<div className="flex flex-col gap-2">
 							<div className="font-[500] flex justify-between md:justify-start md:gap-7">
 								<span className=" text-[#A0ABBB]">Pool Name</span>
-								<span className="text-[#fff]">{formData.loan_name}</span>
+								<span className="text-black dark:text-[#fff]">
+									{formData.loan_name}
+								</span>
 							</div>
 
 							<div className="font-[500] text-base flex justify-between md:justify-start md:gap-4">
 								<span className=" text-[#A0ABBB]">Loan Tenure</span>
-								<span className="text-[#fff]">
+								<span className="text-black dark:text-[#fff]">
 									{formData.loan_tenure ? `${formData.loan_tenure} Months` : ""}
 								</span>
 							</div>
 
 							<div className="font-[500] text-base flex justify-between md:justify-start  md:gap-3">
 								<span className=" text-[#A0ABBB]">Loan Interest</span>
-								<span className="text-[#fff]">
+								<span className="text-black dark:text-[#fff]">
 									{formData.loan_interest ? `${formData.loan_interest}%` : ""}
 								</span>
 							</div>
@@ -120,7 +122,7 @@ export default function Final({
 						<div className="mt-1 md:mt-0 flex flex-col gap-2">
 							<div className="font-[500] text-base w-full flex justify-between  md:gap-7">
 								<span className=" text-[#A0ABBB]"> Loan amount</span>
-								<span className="text-[#fff] text-right flex gap-1">
+								<span className="text-black dark:text-[#fff] text-right flex gap-1">
 									{formData.loan_amount ? (
 										<img src={Doller} className="w-5" />
 									) : (
@@ -132,7 +134,7 @@ export default function Final({
 
 							<div className="font-[500] text-base flex justify-between  md:gap-7">
 								<span className=" text-[#A0ABBB]">Repayment frequency</span>
-								<span className="text-[#fff] text-right">
+								<span className="text-black dark:text-[#fff] text-right">
 									{formData.payment_frequency
 										? `${formData.payment_frequency} Days`
 										: ""}
@@ -142,7 +144,7 @@ export default function Final({
 							<div className="font-[500] text-base flex justify-between  md:gap-7">
 								<span className="font-[500] text-[#A0ABBB]">Loan Type</span>
 
-								<span className="text-[#fff] text-right ">
+								<span className="text-black dark:text-[#fff] text-right ">
 									{formData.loan_type == 1 ? "Term Loan" : "Bullet Loan"}
 								</span>
 							</div>
@@ -151,7 +153,7 @@ export default function Final({
 
 					<div className="font-[500] text-base w-full md:flex gap-2">
 						<div className="text-[#A0ABBB] ">Loan&nbsp;Purpose</div>
-						<div className="text-[#fff]">
+						<div className="text-black dark:text-[#fff]">
 							{loanPurpose.isSliced ? (
 								<div>
 									{loanPurpose.firstText}
@@ -183,14 +185,14 @@ export default function Final({
 					<div className="flex flex-col md:justify-between gap-1 md:gap-2 md:flex-row">
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral document Name</span>
-							<span className="text-[#fff]">
+							<span className="text-black backdrop:dark:text-[#fff]">
 								{formData.collateral_document_name}
 							</span>
 						</div>
 
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral File</span>
-							<span className="text-[#fff]">
+							<span className="text-black dark:text-[#fff]">
 								{formData.collateral_document[0]?.name}
 							</span>
 						</div>
@@ -200,7 +202,7 @@ export default function Final({
 						<span className="text-[#A0ABBB]">
 							Collateral Document Description
 						</span>
-						<span className="text-[#fff]">
+						<span className="text-black dark:text-[#fff]">
 							{/* {formData.collateral_document_description} */}
 							{documentDescription.isSliced ? (
 								<div>
