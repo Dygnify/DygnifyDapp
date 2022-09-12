@@ -174,7 +174,7 @@ const LoanFormModal = ({
 				class="modal block backdrop-blur-xl backdrop-opacity-100 md:flex"
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
 			>
-				<div className="w-screen h-full modal-box max-w-full max-h-full rounded-none md:h-auto md:w-1/2 md:max-w-4xl bg-[#14171F] md:bg-[#20232A]  md:rounded-[16px]">
+				<div className="w-screen h-full modal-box max-w-full max-h-full rounded-none md:h-auto md:w-1/2 md:max-w-4xl bg-white dark:bg-[#14171F]   md:rounded-[16px]">
 					<div className="py-5 md:-mt-2 mb-5 md:py-0 flex justify-between items-center text-center md:border-b-2 md:border-b-[#292C33] -mx-5">
 						<h3 className="font-medium text-lg  md:border-b-[#292C33] ml-5 md:pb-3">
 							Create Borrow Request

@@ -14,7 +14,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 		<>
 			<input type="checkbox" id="drawdown-modal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
-				<div className="bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+				<div className="bg-white dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
 					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
 						<h3 className="font-semibold text-xl">Drawdown</h3>
 
@@ -31,11 +31,11 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 						<img
 							src={WalletImage}
 							style={{ aspectRatio: 1 / 1 }}
-							className="w-[4rem] mx-auto p-4 bg-purple-500 rounded-[50%]"
+							className="w-[4rem] mx-auto p-4 bg-[#9281FF] rounded-[50%]"
 							alt=""
 						/>
 
-						<div className="py-4 px-3 flex gap-1 bg-darkmode-500 rounded-md ">
+						<div className="py-4 px-3 flex gap-1 bg-[#D0D5DD] dark:bg-darkmode-500 rounded-md ">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
 
 							<img src={DollarImage} className="ml-auto w-[1rem]" />

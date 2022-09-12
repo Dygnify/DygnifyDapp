@@ -16,7 +16,7 @@ import KycCheckModal from "./Components/Modal/KycCheckModal";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
-	const [opportunities, setOpportunities] = useState([]);
+	const [opportunities, setOpportunities] = useState([{ hell: "" }]);
 	const [selected, setSelected] = useState(null);
 	const [kycSelected, setKycSelected] = useState();
 	const [borrowReqProcess, setBorrowReqProcess] = useState(false);

@@ -14,9 +14,9 @@ const TextField = ({
 	return text ? (
 		<div className={`${className}`}>
 			<label class="label text-lg">
-				<span class="text-white text-lg">{label}</span>
+				<span class="text-black dark:text-white text-lg">{label}</span>
 			</label>
-			<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
+			<div className="input input-bordered items-center flex justify-between bg-lightmode-200 dark:bg-[#24272F]">
 				<input
 					onChange={onChange}
 					onBlur={onBlur}
@@ -25,7 +25,7 @@ const TextField = ({
 					ref={reference}
 					type="text"
 					placeholder={placeholder}
-					className="outline-none w-[80%] appearance-none rounded-lg bg-[#24272F]"
+					className="outline-none w-[80%] appearance-none rounded-lg bg-lightmode-200 dark:bg-[#24272F]"
 				/>
 				<div className="text-gray-400 font-normal">{text}</div>
 			</div>
@@ -38,7 +38,7 @@ const TextField = ({
 	) : (
 		<div className={`${className}`}>
 			<label class="label text-lg">
-				<span class="text-white">{label}</span>
+				<span class="text-black dark:text-white">{label}</span>
 			</label>
 			<input
 				onChange={onChange}
@@ -48,10 +48,9 @@ const TextField = ({
 				ref={reference}
 				type="text"
 				placeholder={placeholder}
-				className="input input-bordered w-full"
+				className="input input-bordered w-full bg-lightmode-200 dark:bg-darkmode-800 dark:border-[#3A3C43] border-[#BBC0CC]"
 				style={{
-					backgroundColor: "#24272F",
-					border: "2px solid #3A3C43",
+					borderWidth: "1px",
 					borderRadius: "8px",
 				}}
 			/>

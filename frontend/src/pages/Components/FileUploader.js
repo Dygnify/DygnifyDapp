@@ -26,7 +26,7 @@ const FileUploader = ({
 		<>
 			<div className={`${className}`}>
 				<label class="label" style={{ marginBottom: 1 }}>
-					<span class="text-white">{label}</span>
+					<span class="text-black dark:text-white">{label}</span>
 				</label>
 				<div
 					style={{
@@ -34,14 +34,14 @@ const FileUploader = ({
 						display: "flex",
 						padding: "7px 12px",
 						borderWidth: 2,
-						border: "2px dashed #3A3C43",
+						border: "1px dashed #3A3C43",
 						borderRadius: "8px",
 					}}
-					className=" flex-row bg-[#24272F] items-center overflow-hidden"
+					className=" flex-row bg-lightmode-200 dark:bg-[#24272F] items-center overflow-hidden"
 				>
 					<input
 						type="button"
-						className="bg-[#30333A]"
+						className="bg-lightmode-300 dark:bg-[#30333A] text-black"
 						onClick={handleClick}
 						style={{
 							borderRadius: "37px",
@@ -52,8 +52,7 @@ const FileUploader = ({
 						}}
 						value="Choose file"
 					/>
-					{/* Choose file
-          </button> */}
+
 					<div
 						style={{
 							marginInline: "0.5em",

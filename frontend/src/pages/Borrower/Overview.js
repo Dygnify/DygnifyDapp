@@ -186,14 +186,14 @@ const Overview = () => {
 					<></>
 				)}
 
-				<div className="mt-6 lg:mt-12 flex flex-col gap-4 md:flex-row ">
+				<div className=" mt-6 lg:mt-12 flex flex-col gap-4 md:flex-row ">
 					<div className="card-gradient px-4 sm:px-6 md:px-3 pt-6 pb-3 rounded-xl md:flex flex-col justify-center md:w-[25%]">
 						{totalBorrowedAmt ? (
 							<div className="font-bold flex items-end gap-2 text-xl flex-wrap">
-								<h3 className="text-[1.75rem] md:text-3xl xl:text-5xl text-gradient">
-									{totalBorrowedAmt}
+								<h3 className="text-[1.75rem] md:text-3xl xl:text-5xl text-[#26E367]">
+									{totalBorrowedAmt}455
 								</h3>
-								<p className="text-xl text-gradient">
+								<p className="text-xl text-[#26E367]">
 									{process.env.REACT_APP_TOKEN_NAME}
 								</p>
 							</div>

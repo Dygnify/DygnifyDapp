@@ -39,7 +39,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 	};
 
 	return (
-		<div className="justify-between mb-2 dark:bg-[#20232A] bg-[#D0D5DD] rounded-lg flex px-4 py-3">
+		<div className="justify-between mb-2 bg-lightmode-300 dark:bg-[#20232A] rounded-lg flex px-4 py-3">
 			<div>
 				<p className="font-semibold text-[1.1875rem]">
 					{docName ? null : "view document"}

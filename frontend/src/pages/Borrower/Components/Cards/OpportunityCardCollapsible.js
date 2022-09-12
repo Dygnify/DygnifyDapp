@@ -38,7 +38,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 	}
 
 	return (
-		<div className="collapse collapse-arrow bg-darkmode-800 rounded-xl">
+		<div className="collapse collapse-arrow dark:bg-darkmode-500 bg-lightmode-200 rounded-xl">
 			<input type="checkbox" className="peer" />
 
 			<div className="collapse-title flex gap-4 md:gap-8 text-center">
