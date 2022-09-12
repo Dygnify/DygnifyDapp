@@ -8,28 +8,17 @@ import {
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import Website from "../../../SVGIcons/Website";
 
-const TransactionsCard = ({ data, address }) => {
-	const [userAddress, setUserAddress] = useState();
-	const [isDrawdown, setIsDrawdown] = useState();
+const TransactionsCard = ({ data }) => {
 	const [amount, setAmount] = useState();
 	const [date, setDate] = useState();
-
-	function getTransactionType() {
-		if (data.from.toUpperCase() === address.toUpperCase()) {
-			setUserAddress(getTrimmedWalletAddress(data.to));
-			setIsDrawdown(true);
-		} else {
-			setUserAddress(getTrimmedWalletAddress(data.from));
-			setIsDrawdown(false);
-		}
-	}
+	const [link, setLink] = useState();
 
 	useEffect(() => {
-		if (data && address) {
-			getTransactionType();
+		if (data) {
 			let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
 			setAmount(getDisplayAmount(amt));
 			setDate(convertDate(data.timeStamp));
+			setLink(`${process.env.REACT_APP_POLYGONSCAN_URL}/tx/${data.hash}`);
 		}
 	}, []);
 
@@ -38,11 +27,11 @@ const TransactionsCard = ({ data, address }) => {
 			<p className="w-1/3 md:w-1/6 my-auto ">{data?.opportunity_name}</p>
 			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">{date}</p>
 			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">
-				{isDrawdown ? "Drawdown" : "Repayment"}
+				{data?.isWithdraw ? "Repayment" : "Drawdown"}
 			</p>
 			<p className="flex gap-1 items-center w-1/3 md:w-1/6 my-auto justify-center">
 				<img src={DollarImage} className="w-4" />
-				{isDrawdown ? "-" : "+"}
+				{data?.isWithdraw ? "+" : "-"}
 				{amount}
 			</p>
 
@@ -68,7 +57,8 @@ const TransactionsCard = ({ data, address }) => {
 			)} */}
 			<a
 				className="hidden md:flex underline w-1/3 md:w-1/6 my-auto gap-1 items-center justify-center"
-				href={data?.link}
+				href={link}
+				target="_blank"
 			>
 				Polygonscan
 				<Website />

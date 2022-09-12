@@ -121,7 +121,7 @@ const LoanFormModal = ({
 			payment_frequency,
 			capital_loss: capital_loss ? capital_loss : "0",
 		};
-		console.log(collateral_document);
+
 		const loan_info = {
 			loan_name,
 			loan_purpose,
@@ -129,7 +129,7 @@ const LoanFormModal = ({
 		loan_info.collateral_document_name = rest.collateral_document_name;
 		loan_info.collateral_document_description =
 			rest.collateral_document_description;
-
+		loan_info.collateral_filename = collateral_document[0].name;
 		loan_info.companyDetails = brJson;
 
 		const [collateralHash, loanInfoHash] = await onFileUpload(

@@ -11,7 +11,9 @@ const tokenTransactions = (address, tokenAddress, page, offset) => {
 			page ? page : 1
 		}&offset=${offset ? offset : 10}&sort=desc&apikey=${
 			process.env.REACT_APP_POLYGONSCAN_APIKEY
-		}&contractaddress=${tokenAddress}`,
+		}&contractaddress=${
+			tokenAddress ? tokenAddress : process.env.REACT_APP_TEST_USDCTOKEN
+		}`,
 	};
 
 	return api_options;

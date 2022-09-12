@@ -2,25 +2,15 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
 
-const TransactionsCard = ({ data, address }) => {
-	const [isWithdraw, setIsWithdraw] = useState();
+const TransactionsCard = ({ data }) => {
 	const [link, setLink] = useState();
-
 	const [amount, setAmount] = useState();
 	const [date, setDate] = useState();
 
-	function getTransactionType() {
-		if (data.from.toUpperCase() === address.toUpperCase()) {
-			setIsWithdraw(true);
-		} else {
-			setIsWithdraw(false);
-		}
-	}
-
 	useEffect(() => {
 		if (data) {
-			getTransactionType();
 			let amt = ethers.utils.formatUnits(data.value, data.tokenDecimal);
 			setAmount(getDisplayAmount(amt));
 			setDate(convertDate(data.timeStamp));
@@ -28,41 +18,27 @@ const TransactionsCard = ({ data, address }) => {
 		}
 	}, []);
 	return (
-		<div
-			style={{ backgroundColor: "#20232A", borderRadius: "12px" }}
-			className=" mb-2"
-		>
-			<div
-				style={{ display: "flex" }}
-				className="collapse-title text-md font-light justify-around w-full"
-			>
-				<p className="w-1/6 text-center">New Opportunity</p>
-				<p className="w-1/6 text-center">{date}</p>
-				<p className="w-1/6 text-center">
-					{isWithdraw ? "Withdrawal" : "Deposit"}
-				</p>
+		<div className="px-2 bg-neutral-100 dark:bg-darkmode-800 flex justify-around rounded-xl py-3 gap-4 md:gap-6 text-center text-neutral-900 dark:text-neutral-50">
+			<p className="w-1/3 md:w-1/6 my-auto">{data?.opportunityName}</p>
+			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">{date}</p>
+			<p className="hidden md:block w-1/3 md:w-1/6 my-auto">
+				{data?.isWithdraw ? "Deposit" : "Withdrawal"}
+			</p>
 
-				<p className="flex-row w-1/6 text-center">
-					{isWithdraw ? "-" : "+"} {amount}
-				</p>
+			<p className="flex gap-1 items-center w-1/3 md:w-1/6 my-auto justify-center">
+				<img src={DollarImage} className="w-4" />
+				{data?.isWithdraw ? "+" : "-"}
+				{amount}
+			</p>
 
-				<p className="w-1/6 text-center">
-					<button
-						style={{
-							borderRadius: "35px",
-							padding: "5px 8px",
-							background:
-								"linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)",
-							border: "none",
-						}}
-						className="btn btn-xs btn-success"
-					>
-						Completed
-					</button>
-				</p>
+			<p className="w-1/3 md:w-1/6 my-auto transaction-button">
+				<button className="bg-gradient-to-r from-[#51B960] to-[#83DC90]">
+					Completed
+				</button>
+			</p>
 
-				{/* {data?.status === "Not Completed" && ( */}
-				{/* {data?.input === "deprecated" && (
+			{/* {data?.status === "Not Completed" && ( */}
+			{/* {data?.input === "deprecated" && (
 					<p className="w-1/6 text-center">
 						<button
 							style={{
@@ -95,10 +71,13 @@ const TransactionsCard = ({ data, address }) => {
 						</button>
 					</p>
 				)} */}
-				<a className="w-1/6 text-center underline" href={link} target="_blank">
-					Transaction
-				</a>
-			</div>
+			<a
+				className="hidden md:flex underline w-1/3 md:w-1/6 my-auto gap-1 items-center justify-center"
+				href={link}
+				target="_blank"
+			>
+				Transaction
+			</a>
 		</div>
 	);
 };

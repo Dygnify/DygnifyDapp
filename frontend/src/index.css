@@ -10,14 +10,24 @@
 	background-image: linear-gradient(81.75deg, #4b74ff 0%, #9281ff 100%);
 }
 
-.active {
+.dark .active {
 	color: #9281ff;
 	background-color: #3a3c43;
-	border-radius: 0.8em;
+	/* border-radius: 0.8em; */
+}
+
+.active {
+	background-color: #9281ff;
+	/* border-radius: 0.8em; */
+	color: #fff;
+}
+
+.dark .active > span > svg > path {
+	fill: #9281ff;
 }
 
 .active > span > svg > path {
-	fill: #9281ff;
+	fill: #fff;
 }
 
 .transaction-button > button {
@@ -104,4 +114,20 @@ input[type="number"] {
 
 .font-semibold {
 	font-weight: 400;
+}
+
+@media (min-width: 768px) {
+	.dark .landing-backgroundimage {
+		background-image: url("./assets/Dark_gradient.svg");
+		background-repeat: no-repeat;
+		background-position: 60% 45%;
+		background-size: 95%;
+	}
+
+	.landing-backgroundimage {
+		background-image: url("./assets/White_gradient.svg");
+		background-repeat: no-repeat;
+		background-position: 60% 45%;
+		background-size: 95%;
+	}
 }

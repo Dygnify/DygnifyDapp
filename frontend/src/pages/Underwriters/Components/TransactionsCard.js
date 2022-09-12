@@ -6,7 +6,6 @@ import { retrieveFiles } from "../../../services/Helpers/web3storageIPFS";
 
 const TransactionsCard = ({ data }) => {
 	const [companyName, setCompanyName] = useState();
-	const [poolName, setPoolName] = useState();
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
@@ -17,7 +16,6 @@ const TransactionsCard = ({ data }) => {
 					let opJson = JSON.parse(read.result);
 					if (opJson) {
 						setCompanyName(opJson.companyDetails?.companyName);
-						setPoolName(opJson.loan_name);
 					}
 				};
 			}
@@ -25,11 +23,11 @@ const TransactionsCard = ({ data }) => {
 	}, []);
 
 	return (
-		<div className="flex collapse-title font-light justify-between w-full flex-wrap overflow-hidden bg-[#20232A] rounded-xl mb-2 items-center pl-1 pr-1 md:pr-3">
-			<p className="w-1/3 md:w-1/6 font-light text-lg text-start pl-8 ">
-				{poolName}
+		<div className="flex collapse-title pr-0 justify-between w-full flex-wrap overflow-hidden dark:bg-[#20232A] bg-[#E7EAEE] rounded-xl mb-2 items-center">
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-start">
+			{data?.opportunityName}
 			</p>
-			<p className="w-1/3 md:w-1/6 font-light text-lg text-start pl-8">
+			<p className="w-1/3 md:w-1/6 font-light text-lg text-start">
 				{companyName}
 			</p>
 			<p className="w-1/3 md:w-1/6 font-light text-lg text-center hidden md:block">

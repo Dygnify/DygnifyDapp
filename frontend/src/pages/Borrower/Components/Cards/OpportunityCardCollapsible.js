@@ -5,23 +5,6 @@ import DoughnutChart from "../../../Components/DoughnutChart";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const OpportunityCardCollapsible = ({ data }) => {
-	const [poolName, setPoolName] = useState();
-
-	useEffect(() => {
-		// fetch the opportunity details from IPFS
-		retrieveFiles(data?.opportunityInfo, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
-					if (opJson) {
-						setPoolName(opJson.loan_name);
-					}
-				};
-			}
-		});
-	}, []);
-
 	function getStatus(index) {
 		let status = "";
 		switch (index) {
@@ -59,7 +42,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 			<input type="checkbox" className="peer" />
 
 			<div className="collapse-title flex gap-4 md:gap-8 text-center">
-				<p className="w-1/3 md:w-1/4  my-auto">{poolName}</p>
+				<p className="w-1/3 md:w-1/4  my-auto">{data?.opportunityName}</p>
 				<p className="md:flex gap-1 hidden items-center w-1/4  justify-center">
 					<img src={DollarImage} className="w-4" />
 					{data?.opportunityAmount}
@@ -69,14 +52,70 @@ const OpportunityCardCollapsible = ({ data }) => {
 			</div>
 
 			<div className="collapse-content">
-				<div
-					style={{ display: "flex" }}
-					className="justify-around py-10 w-full"
-				>
-					<div
-						style={{ borderRight: "1px solid #292C33", display: "flex" }}
-						className="w-1/2 text-center flex-row justify-around items-center"
-					>
+				<div className="font-semibold pt-8 pb-4">
+					<div className="hidden md:flex justify-evenly">
+						<div className="">
+							<DoughnutChart
+								data={[data.actualLoanAmount, data.poolBalance]}
+								color={["#5375FE", "#ffffff"]}
+								width={200}
+								labels={["Capital Requested", "Total Raised"]}
+								borderWidth={[1, 8]}
+								legendStyle={{ display: false }}
+							/>
+						</div>
+
+						<div className="flex gap-8 xl:gap-14 2xl:gap-[8vw] ">
+							<div className="border-r-2 border-darkmode-500 pr-6 xl:pr-12 2xl:pr-[6vw] flex flex-col justify-evenly">
+								<div className="">
+									<p className="text-neutral-300">Capital requested</p>
+
+									<p className="text-lg flex gap-1">
+										{data ? data.opportunityAmount : "--"}
+										<span>{process.env.REACT_APP_TOKEN_NAME}</span>
+									</p>
+								</div>
+
+								<div className="">
+									<p className="text-neutral-300">Total raised till now</p>
+									<p className="text-lg flex gap-1">
+										{data && data.poolDisplayBalance
+											? data.poolDisplayBalance
+											: "-- "}
+
+										<span>{process.env.REACT_APP_TOKEN_NAME}</span>
+									</p>
+								</div>
+							</div>
+							<div className="flex flex-col justify-evenly 2xl:pr-[6vw]">
+								<div>
+									<p className="text-neutral-300">Interest Rate</p>
+									<p className="text-lg">{data?.loanInterest}</p>
+								</div>
+
+								<div>
+									<p className="text-neutral-300">Loan Tenure</p>
+									<p className="text-lg">{data?.loanTenure}</p>
+								</div>
+							</div>
+
+							<div className="flex flex-col justify-evenly">
+								<div className="">
+									<p className="text-neutral-300">Payment Frequency</p>
+									<p className="text-lg">{data?.paymentFrequencyInDays}</p>
+								</div>
+
+								<div className="">
+									<p className="text-neutral-300">Loan Type</p>
+									<p className="text-lg">
+										{data?.loanType === 0 ? "Bullet Loan" : "Term Loan"}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div className="flex flex-col items-center md:hidden gap-6">
 						<DoughnutChart
 							data={[data.actualLoanAmount, data.poolBalance]}
 							color={["#5375FE", "#ffffff"]}
@@ -85,61 +124,51 @@ const OpportunityCardCollapsible = ({ data }) => {
 							borderWidth={[1, 8]}
 							legendStyle={{ display: false }}
 						/>
-						<div
-							style={{ display: "flex", color: "red" }}
-							className="flex-col "
-						>
-							<div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
-								Capital requested
-							</div>
-							<div
-								style={{ fontSize: 28 }}
-								className="mb-10 text-black dark:text-white"
-							>
-								{data ? data.opportunityAmount : "--"}
-								{process.env.REACT_APP_TOKEN_NAME}
-							</div>
-							<div style={{ fontSize: 16, fontWeight: 600, color: "#777E91" }}>
-								Total raised till now
+
+						<div className="flex w-full justify-around">
+							<div className="flex flex-col gap-3">
+								<div className="">
+									<p className="text-neutral-300">Capital requested</p>
+
+									<p className="text-lg flex gap-1">
+										<img src={DollarImage} className="w-4" />
+										{data ? data.opportunityAmount : "--"}
+									</p>
+								</div>
+
+								<div>
+									<p className="text-neutral-300">Interest Rate</p>
+									<p className="text-lg">{data?.loanInterest}</p>
+								</div>
+
+								<div>
+									<p className="text-neutral-300">Loan Tenure</p>
+									<p className="text-lg">{data?.loanTenure}</p>
+								</div>
 							</div>
 
-							<div
-								style={{ fontSize: 28 }}
-								className="text-black dark:text-white"
-							>
-								{data && data.poolDisplayBalance
-									? data.poolDisplayBalance
-									: "-- "}
-								{process.env.REACT_APP_TOKEN_NAME}
-							</div>
-						</div>
-					</div>
-					<div
-						style={{ borderLeft: "1px solid #292C33", display: "flex" }}
-						className="w-1/2 justify-evenly items-center"
-					>
-						<div style={{ display: "flex" }} className="flex-col">
-							<div className="mb-10">
-								<p className="font-light text-sm">Interest Rate</p>
-								<p className="font-medium text-lg">{data?.loanInterest}</p>
-							</div>
-							<div>
-								<p className="font-light text-sm">Payment Frequency</p>
-								<p className="font-medium text-lg">
-									{data?.paymentFrequencyInDays}
-								</p>
-							</div>
-						</div>
-						<div style={{ display: "flex" }} className="flex-col">
-							<div className="mb-10">
-								<p className="font-light text-sm">Loan Tenure</p>
-								<p className="font-medium text-lg">{data?.loanTenure}</p>
-							</div>
-							<div>
-								<p className="font-light text-sm">Loan Type</p>
-								<p className="font-medium text-lg">
-									{data?.loanType === 0 ? "Bullet Loan" : "Term Loan"}
-								</p>
+							<div className="flex flex-col gap-3">
+								<div className="">
+									<p className="text-neutral-300">Total raised till now</p>
+									<p className="text-lg flex gap-1">
+										<img src={DollarImage} className="w-4" />
+										{data && data.poolDisplayBalance
+											? data.poolDisplayBalance
+											: "-- "}
+									</p>
+								</div>
+
+								<div className="">
+									<p className="text-neutral-300">Payment Frequency</p>
+									<p className="text-lg">{data?.paymentFrequencyInDays}</p>
+								</div>
+
+								<div className="">
+									<p className="text-neutral-300">Loan Type</p>
+									<p className="text-lg">
+										{data?.loanType === 0 ? "Bullet Loan" : "Term Loan"}
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>

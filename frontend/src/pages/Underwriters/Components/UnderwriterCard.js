@@ -11,18 +11,18 @@ import dollarIcon from "../../../assets/Dollar-icon.svg";
 const UnderwriterCard = ({ data }) => {
 	const path = useNavigate();
 	const [companyName, setCompanyName] = useState();
-	const [poolName, setPoolName] = useState();
 	const [poolDetails, setPoolDetails] = useState();
 	const [logoImgSrc, setLogoImgSrc] = useState();
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
 		retrieveFiles(data?.opportunityInfo, true).then((res) => {
+			let opJson;
 			if (res) {
 				let read = getBinaryFileData(res);
 				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
+					opJson = JSON.parse(read.result);
+
 					if (opJson) {
-						setPoolName(opJson.loan_name);
 						setPoolDetails({ ...data, ...opJson });
 						setCompanyName(opJson.companyDetails?.companyName);
 						getCompanyLogo(
@@ -44,7 +44,7 @@ const UnderwriterCard = ({ data }) => {
 					let read = getDataURLFromFile(res);
 					read.onloadend = function () {
 						setLogoImgSrc(read.result);
-						console.log(read.result);
+						// console.log(read.result);
 					};
 				}
 			});
@@ -54,16 +54,16 @@ const UnderwriterCard = ({ data }) => {
 	}
 
 	return (
-		<div className="my-gradient text-white max-w-lg md:max-w-full rounded-2xl grid  grid-1 overflow-hidden  pt-7 lg:pt-0 lg:grid-cols-10  xl:pr-2 2xl:gap-3">
+		<div className="my-gradient dark:text-white text-black max-w-lg md:max-w-full rounded-2xl grid  grid-1 overflow-hidden  pt-7 lg:pt-0 lg:grid-cols-10  xl:pr-5 2xl:gap-3 md:px-2 lg:pr-5">
 			{/* section-1 */}
-			<div className="flex-row flex space-x-5 px-4 col-span-4 lg:pl-6 lg:pr-1">
+			<div className="flex-row flex space-x-5 px-4 col-span-4 lg:pl-5 lg:pr-1">
 				<img
 					src={logoImgSrc}
-					className="w-28 h-28 lg:my-auto rounded-full xl:w-36  xl:h-36 "
+					className="w-28 h-28 lg:my-auto rounded-full xl:w-36  xl:h-36 2xl:w-[7.5rem] 2xl:h-[7.5rem]"
 				/>
 				<div className="mt-7 -space-y-1 lg:hidden ">
 					<p className="font-medium text-2xl">
-						{poolName ? poolName : "Name of Pool"}
+						{data.opportunityName ? data.opportunityName : "Name of Pool"}
 					</p>
 					<p className="font-light text-sm">
 						{companyName ? companyName : "Name of Company"}
@@ -76,7 +76,7 @@ const UnderwriterCard = ({ data }) => {
 				<div className="mt-5 px-4 lg:pr-4 lg:pl-1 ">
 					<div className="hidden -space-y-1 lg:block lg:my-7 ">
 						<p className="font-medium text-2xl">
-							{poolName ? poolName : "Name of Pool"}
+							{data.opportunityName ? data.opportunityName : "Name of Pool"}
 						</p>
 						<p className="font-light text-sm">
 							{companyName ? companyName : "Name of Company"}
@@ -101,12 +101,14 @@ const UnderwriterCard = ({ data }) => {
 					</div>
 				</div>
 				{/* section-2-2*/}
-				<div className="flex mt-5 justify-center mb-5 px-4 lg:pr-4 lg:pl-1   ">
+				<div className="flex mt-5 justify-center mb-5  px-4  lg:px-1 ">
 					{/* add (place-items-center) for button center */}
 					<PrimaryButton
 						disable={false}
 						onClick={() =>
-							path("/underwriterDashboard/poolDetail", { state: poolDetails })
+							path("/underwriterDashboard/poolDetail", {
+								state: { pool: poolDetails, images: logoImgSrc },
+							})
 						}
 					>
 						View details

@@ -9,6 +9,10 @@ import {
 
 //for send data import from paths--
 import { UserContext } from "../../../../Paths"; //
+import approve from "../../../../services/BackendConnectors/approve";
+import allowance from "../../../../services/BackendConnectors/allowance";
+import Loader from "../../../../uiTools/Loading/Loader";
+
 //
 
 const InvestModal = ({
@@ -23,8 +27,10 @@ const InvestModal = ({
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
+	const [approvedvalue, setApprovedvalue] = useState();
 	const [error, setError] = useState({
-		err: false,
+		approveErr: false,
+		investErr: true,
 		msg: "",
 	});
 
@@ -35,6 +41,7 @@ const InvestModal = ({
 
 	useEffect(() => {
 		getWalletBal().then((data) => setWalletBal(data));
+		userAddress();
 	}, []);
 
 	async function investSenior() {
@@ -45,6 +52,19 @@ const InvestModal = ({
 		setInvestProcessing(false);
 		console.log("done");
 	}
+
+	async function userAddress() {
+		const contractAddress = isSenior
+			? process.env.REACT_APP_SENIORPOOL
+			: poolAddress;
+		const data = await allowance(
+			window.ethereum.selectedAddress,
+			contractAddress
+		);
+		setApprovedvalue(data);
+	}
+
+	console.log(approvedvalue, "----");
 
 	async function investJunior() {
 		setProcessFundModal(true);
@@ -59,18 +79,32 @@ const InvestModal = ({
 		const value = e.target.value;
 
 		const defaultErr = {
-			err: false,
+			approveErr: false,
+			investErr: true,
 			msg: "",
 		};
 
 		const errObj = {
-			err: true,
+			approveErr: true,
+			investErr: true,
 			msg: "Insufficient USDC to initiate transfer",
 		};
 
 		if (walletBal) {
 			if (+value > +walletBal) {
 				setError(errObj);
+			} else if (+value > +approvedvalue) {
+				setError({
+					approveErr: false,
+					investErr: true,
+					msg: "",
+				});
+			} else if (+value <= +approvedvalue) {
+				setError({
+					approveErr: true,
+					investErr: false,
+					msg: "",
+				});
 			} else {
 				setError(defaultErr);
 			}
@@ -83,8 +117,8 @@ const InvestModal = ({
 		<>
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
-				<div className="bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
-					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
+				<div className="bg-neutral-50 dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+					<div className="flex justify-between px-4 md:px-8 md:border-b md:border-neutral-300 md:dark:border-darkmode-500 mt-[4em] md:mt-0 py-4">
 						<h3 className="font-semibold text-xl">Invest</h3>
 
 						<label
@@ -104,7 +138,7 @@ const InvestModal = ({
 							alt=""
 						/>
 
-						<div className="py-4 px-3 flex gap-1 bg-darkmode-500 rounded-md">
+						<div className="py-4 px-3 flex gap-1 bg-neutral-200 dark:bg-darkmode-500 rounded-md">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
 
 							<img src={DollarImage} className="ml-auto w-[1rem]" />
@@ -147,26 +181,46 @@ const InvestModal = ({
 							placeholder="0.0"
 							onChange={handleAmount}
 							value={amount}
-							className="bg-darkmode-700 border-2 border-darkmode-50 outline-none p-2 pr-14 rounded-md placeholder:text-neutral-500 placeholder:font-semibold"
+							className="bg-neutral-100 dark:bg-darkmode-700 border-2 border-neutral-300 dark:border-darkmode-50 outline-none px-2 py-3 pr-14 rounded-md placeholder:text-neutral-500 placeholder:font-semibold"
 						/>
 						<span className="absolute right-7 md:right-11 text-neutral-500 top-10 font-semibold">
 							{process.env.REACT_APP_TOKEN_NAME}
 						</span>
 
-						{error.err && (
+						{error.msg.length > 0 && (
 							<p className="text-[0.875rem] text-error-500">{error.msg}</p>
 						)}
 					</div>
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<label
-							htmlFor={`${error.err ? "" : "InvestProcessModal"}`}
+							htmlFor={`${error.approveErr ? "" : "InvestProcessModal"}`}
 							onClick={() => {
-								if (!error.err) isSenior ? investSenior() : investJunior();
+								console.log(process.env.REACT_APP_SENIORPOOL);
+								if (!error.approveErr)
+									isSenior
+										? approve(process.env.REACT_APP_SENIORPOOL, amount)
+										: approve(poolAddress, amount);
 							}} //if condition not true then investJunior will execute
-							className={`block ${
-								error.err
-									? "bg-neutral-400 cursor-not-allowed"
+							className={`block font-semibold text-white ${
+								error.approveErr
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none `}
+						>
+							Approve
+						</label>
+					</div>
+					<div className="px-4 md:px-8 mt-auto md:mt-8">
+						<label
+							htmlFor={`${error.investErr ? "" : "InvestProcessModal"}`}
+							onClick={() => {
+								if (!error.investErr)
+									isSenior ? investSenior() : investJunior();
+							}} //if condition not true then investJunior will execute
+							className={`block font-semibold text-white ${
+								error.investErr
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none`}
 						>

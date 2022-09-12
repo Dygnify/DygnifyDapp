@@ -15,16 +15,14 @@ const InputGroup = ({
 	reference,
 }) => {
 	return (
-		<div
-			className="bg-lightmode-300 dark:bg-darkmode-800  w-full px-4 pb-4 mb-2"
-			style={{ borderRadius: "17px" }}
-		>
-			<h2 className="pt-2">{caption}</h2>
-			<div className="justify-between" style={{ display: "flex" }}>
+		<div className="bg-lightmode-300 dark:bg-darkmode-800  w-full px-4 pb-4 mb-2 rounded-2xl">
+			<h2 className="pt-2 font-bold text-[1.1875rem]">{caption}</h2>
+
+			<div className="flex flex-col gap-2 md:flex-row md:justify-between">
 				<TextField
 					label="Document Name"
 					placeholder="Enter Document Name"
-					className="w-1/2 mr-4"
+					className="md:w-[48%]"
 					name={name}
 					value={value}
 					error={error}
@@ -35,7 +33,7 @@ const InputGroup = ({
 
 				<FileUploader
 					label="Upload Document"
-					className="w-1/2 ml-4"
+					className="md:w-[48%]"
 					handleFile={onChange}
 					fileName={fileName}
 				/>

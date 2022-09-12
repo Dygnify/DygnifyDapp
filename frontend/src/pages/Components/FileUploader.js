@@ -32,7 +32,7 @@ const FileUploader = ({
 					style={{
 						// outline: "2px solid lightcoral",
 						display: "flex",
-						padding: "6px 4px",
+						padding: "7px 12px",
 						borderWidth: 2,
 						border: "1px dashed #3A3C43",
 						borderRadius: "8px",
@@ -46,7 +46,7 @@ const FileUploader = ({
 						style={{
 							borderRadius: "37px",
 							color: "white",
-							padding: "5px 20px",
+							padding: "4px 20px",
 							cursor: "pointer",
 							fontSize: 14,
 						}}

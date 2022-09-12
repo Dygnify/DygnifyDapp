@@ -234,190 +234,84 @@ const BorrowerProfile = () => {
 				<div className={`${loading ? "filter blur-sm" : ""}`}>
 					{selected && <KYBModal handleForm={handleForm} />}
 					{!profileStatus && (
-						<div className="flex-col " style={{ display: "flex" }}>
-							<div
-								className="flex-row justify-between items-start"
-								style={{ display: "flex" }}
-							>
-								<h2 className="mb-6 text-2xl font-medium">Borrower Profile</h2>
-								<div
-									style={{ display: "flex", marginRight: 15 }}
-									className="flex-row justify-center items-center "
+						<div className="">
+							<div className="flex items-center justify-between">
+								<h2 className="font-semibold text-[1.4375rem] lg:text-[2.0625rem]">
+									Borrower Profile
+								</h2>
+
+								<button
+									onClick={() => navigate("/borrower_dashboard/edit_profile")}
+									className="font-semibold border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
 								>
-									<button
-										onClick={() => navigate("/borrower_dashboard/edit_profile")}
-										style={{
-											borderRadius: "100px",
-											padding: "8px 16px",
-											display: "flex",
-										}}
-										className="btn btn-sm btn-outline dark:text-white text-black"
-									>
-										<div
-											style={{ marginRight: 2, textTransform: "capitalize" }}
-											className="dark:text-white text-black"
-										>
-											Create Profile
-										</div>
-										<Edits />
-									</button>
-								</div>
+									<p>Create Profile</p>
+									<Edits />
+								</button>
 							</div>
-							<p
-								className="justify-center"
-								style={{
-									color: "#64748B",
-									display: "flex",
-									marginTop: 40,
-								}}
-							>
+							<p className="justify-center flex text-[#64748B] mt-10">
 								Complete your profile.
 							</p>
 						</div>
 					)}
 					{profileStatus ? (
 						<>
-							<div
-								style={{ display: "flex" }}
-								className="justify-between items-center mb-6"
-							>
-								<div style={{ display: "flex" }}>
-									<div class="avatar">
-										<div class="w-16 rounded-full">
+							<div className="flex justify-between items-center">
+								<div className="flex gap-2 items-center ">
+									<div className="avatar">
+										<div className="rounded-full w-20">
 											<img src={logoImgSrc} />
 										</div>
 									</div>
-									<div
-										style={{ display: "flex" }}
-										className="flex-col justify-center ml-4"
-									>
-										<h4 style={{ fontSize: 23 }}>{companyName}</h4>
-										<p
-											style={{
-												fontSize: 19,
-												color: "#B8C0CC",
-											}}
-										>
-											{companyRepName}
-										</p>
+									<div className=" font-semibold ">
+										<p className="text-[1.1875rem]">{companyName}</p>
+										<p className="text-neutral-300">{companyRepName}</p>
 									</div>
 								</div>
-								<div
-									style={{ display: "flex" }}
-									className="flex-row justify-center items-center"
+
+								<button
+									onClick={() =>
+										navigate("/borrower_dashboard/edit_profile", {
+											state: borrowerJson ? borrowerJson : brJson,
+										})
+									}
+									className="border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
 								>
-									<button
-										onClick={() =>
-											navigate("/borrower_dashboard/edit_profile", {
-												state: borrowerJson ? borrowerJson : brJson,
-											})
-										}
-										style={{
-											borderRadius: "100px",
-											padding: "8px 16px",
-											display: "flex",
-										}}
-										className="btn btn-sm btn-outline dark:text-white text-black "
-									>
-										<div
-											style={{ marginRight: 3 }}
-											className="text-black dark:text-white"
-										>
-											Edit Profile
-										</div>
-										<Edits />
-									</button>
-								</div>
+									<p>Edit Profile</p>
+									<Edits />
+								</button>
 							</div>
 
-							<div
-								className="flex-row w-full mt-10 mb-10 gap-4"
-								style={{ display: "flex" }}
-							>
+							<div className="border border-r-[1.8rem] border-secondary-500 w-full md:w-[35rem] my-8 rounded-xl py-5 px-3 md:px-4 bg-darkmode-800">
 								{!kycStatus ? (
-									<label
-										className="w-1/2"
-										style={{
-											borderWidth: 1,
-											borderRightWidth: 20,
-											borderColor: "#5375FE",
-											borderRadius: "16px",
-											padding: "14px",
-											paddingRight: "60px",
-											cursor: "pointer",
-										}}
-										id="blockpass-kyc-connect"
-									>
-										<div
-											style={{
-												marginBottom: 4,
-												fontSize: 19,
-												fontWeight: 600,
-											}}
-										>
+									<label id="blockpass-kyc-connect">
+										<p className="font-semibold text-[1.1875rem]">
 											Complete your KYC
-										</div>
-										<div style={{ lineHeight: "19px" }}>
+										</p>
+										<p>
 											For Individuals - KYC verification includes verification
 											of Identity Details and document verification such as
 											utility bills as proof of address. Verifying your details
 											ensures that you have a smooth and secure experience with
 											us.
-										</div>
+										</p>
 									</label>
 								) : (
 									<></>
 								)}
-								{/* <label
-                htmlFor="kybModal"
-                className="w-1/2"
-                style={{
-                  borderWidth: 1,
-                  borderRightWidth: 20,
-
-                  borderColor: "#5375FE",
-                  borderRadius: "16px",
-                  padding: "14px",
-                  paddingRight: "60px",
-                  cursor: "pointer",
-                }}
-                onClick={() => setSelected(true)}
-              >
-                <div style={{ marginBottom: 4, fontSize: 19, fontWeight: 600 }}>
-                  Complete your KYB
-                </div>
-                <div style={{ lineHeight: "19px" }}>
-                  For Entities - KYB verification includes Identity and
-                  incorporation verification of your business. Verfifying your
-                  details ensures that you have a smooth and secure experience
-                  with us.
-                </div>
-              </label> */}
 							</div>
 
-							<div
-								style={{ display: "flex" }}
-								className="w-full justify-between items-center mb-6"
-							>
-								<div className="w-1/2">
-									<h5 className="text-lg" style={{ fontSize: 23 }}>
-										Socials
-									</h5>
-								</div>
-								<div style={{ display: "flex" }} className="w-1/2 justify-end">
+							<div className=" font-semibold flex flex-col md:flex-row md:justify-between gap-2">
+								<h2 className="text-[1.1875rem] md:text-2xl">Socials</h2>
+
+								<div className=" flex gap-1 md:gap-3">
 									{twitter ? (
 										<button
 											id="twitter"
-											style={{
-												borderRadius: "100px",
-												padding: "8px 16px",
-												border: "1px solid #64748B",
-											}}
-											className="ml-3 btn btn-sm btn-outline text-white"
 											onClick={redirectToURl}
+											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Twitter />
-											<div style={{ marginLeft: 2 }}>twitter</div>
+											<p className="text-sm md:text-base">twitter</p>
 										</button>
 									) : (
 										<></>
@@ -425,16 +319,11 @@ const BorrowerProfile = () => {
 									{linkedin ? (
 										<button
 											id="linkedin"
-											style={{
-												borderRadius: "100px",
-												padding: "8px 16px",
-												border: "1px solid #64748B",
-											}}
-											className="ml-3 btn btn-sm btn-outline text-white"
 											onClick={redirectToURl}
+											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<LinkedIn />
-											<div style={{ marginLeft: 2 }}>LinkedIn</div>
+											<p className="text-sm md:text-base">LinkedIn</p>
 										</button>
 									) : (
 										<></>
@@ -442,16 +331,11 @@ const BorrowerProfile = () => {
 									{email ? (
 										<button
 											id="email"
-											style={{
-												borderRadius: "100px",
-												padding: "8px 16px",
-												border: "1px solid #64748B",
-											}}
-											className="ml-3 btn btn-sm btn-outline text-white"
 											onClick={redirectForEmail}
+											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Email />
-											<div style={{ marginLeft: 2 }}>Email</div>
+											<p className="text-sm md:text-base">Email</p>
 										</button>
 									) : (
 										<></>
@@ -459,56 +343,28 @@ const BorrowerProfile = () => {
 									{website ? (
 										<button
 											id="website"
-											style={{
-												borderRadius: "100px",
-												padding: "8px 16px",
-												border: "1px solid #64748B",
-											}}
-											className="ml-3 btn btn-sm btn-outline text-white"
 											onClick={redirectToURl}
+											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Website />
-											<div style={{ marginLeft: 2 }}>Website</div>
+											<p className="text-sm md:text-base">Website</p>
 										</button>
 									) : (
 										<></>
 									)}
 								</div>
 							</div>
-							<div className="mb-6">
-								<h5 className="text-lg" style={{ fontSize: "23px" }}>
-									Bio
-								</h5>
-								<p
-									className="text-sm font-light text-justify"
-									style={{
-										fontSize: "18px",
-										fontWeight: 400,
-										lineHeight: "28px",
 
-										color: "#E6E6E6",
-									}}
-								>
-									{companyBio}
-								</p>
+							<div className="my-6">
+								<h2 className="text-2xl font-semibold">Bio</h2>
+								<p className="mt-1 text-lg">{companyBio}</p>
 							</div>
 
-							{/* <div className="mb-6">
-              <h5 className="text-lg">KYC Details</h5>
-              <DocumentCard docName={"Aadhar Card.pdf"} />
-              <DocumentCard docName={"Passport.pdf"} />
-            </div> */}
-							<div className="mb-6">
-								<h5 className="text-lg">KYB Details</h5>
-								<h6
-									style={{
-										marginTop: 10,
-										marginBottom: 3,
-										color: "#64748B",
-									}}
-								>
+							<div className="mb-8 font-semibold">
+								<h3 className="text-[1.1875rem] mb-3">KYB Details</h3>
+								<h5 className="text-[1.1875rem] text-neutral-400">
 									Business Identify Proof
-								</h6>
+								</h5>
 								<DocumentCard
 									docName={
 										brJson
@@ -533,15 +389,9 @@ const BorrowerProfile = () => {
 									}
 								/>
 
-								<h6
-									style={{
-										marginTop: 10,
-										marginBottom: 3,
-										color: "#64748B",
-									}}
-								>
+								<h5 className="text-[1.1875rem] text-neutral-400">
 									Business Address Proof
-								</h6>
+								</h5>
 								<DocumentCard
 									docName={
 										brJson
@@ -565,15 +415,9 @@ const BorrowerProfile = () => {
 											: null
 									}
 								/>
-								<h6
-									style={{
-										marginTop: 10,
-										marginBottom: 3,
-										color: "#64748B",
-									}}
-								>
+								<h5 className="text-[1.1875rem] text-neutral-400">
 									Business Incorporation Proof
-								</h6>
+								</h5>
 								<DocumentCard
 									docName={
 										brJson
@@ -597,15 +441,9 @@ const BorrowerProfile = () => {
 											: null
 									}
 								/>
-								<h6
-									style={{
-										marginTop: 10,
-										marginBottom: 3,
-										color: "#64748B",
-									}}
-								>
+								<h5 className="text-[1.1875rem] text-neutral-400">
 									Business License Proof
-								</h6>
+								</h5>
 								{hasKey ? (
 									<DocumentCard
 										docName={

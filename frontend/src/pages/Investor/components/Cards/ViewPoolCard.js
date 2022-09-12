@@ -14,7 +14,6 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
 	const [companyName, setCompanyName] = useState();
-	const [poolName, setPoolName] = useState(data?.poolName);
 	const [logoImgSrc, setLogoImgSrc] = useState();
 
 	useEffect(() => {
@@ -26,7 +25,6 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 					let opJson = JSON.parse(read.result);
 					if (opJson) {
 						setCompanyName(opJson.company_name);
-						setPoolName(opJson.loan_name);
 						getCompanyLogo(
 							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
 						);
@@ -80,14 +78,14 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-2xl font-semibold">{poolName}</p>
+					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
 					<p>{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-2xl font-semibold">{poolName}</p>
+					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
 					<p>{companyName}</p>
 				</div>
 
@@ -110,7 +108,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				</div>
 
 				<div className="">
-					<PrimaryButton className="w-[100%]" onClick={onClick}>
+					<PrimaryButton className="w-[100%] text-white" onClick={onClick}>
 						View Pool
 					</PrimaryButton>
 				</div>

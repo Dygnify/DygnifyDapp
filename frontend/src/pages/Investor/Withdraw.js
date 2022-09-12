@@ -52,7 +52,7 @@ const Withdraw = () => {
 							let spJson = JSON.parse(read.result);
 							if (spJson) {
 								let seniorInvestmentData = {};
-								seniorInvestmentData.poolName = spJson.poolName;
+								seniorInvestmentData.opportunityName = spJson.poolName;
 								seniorInvestmentData.opportunityAmount = getDisplayAmount(
 									await getWalletBal(process.env.REACT_APP_SENIORPOOL)
 								);

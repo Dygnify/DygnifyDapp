@@ -58,7 +58,7 @@ const InvestorOverview = () => {
 							let spJson = JSON.parse(read.result);
 							if (spJson) {
 								let seniorInvestmentData = {};
-								seniorInvestmentData.poolName = spJson.poolName;
+								seniorInvestmentData.opportunityName = spJson.poolName;
 								seniorInvestmentData.opportunityAmount = getDisplayAmount(
 									await getWalletBal(process.env.REACT_APP_SENIORPOOL)
 								);
@@ -106,7 +106,7 @@ const InvestorOverview = () => {
 					</h2>
 					<GradientButtonHeader
 						onClick={() => path("/investor-dashboard/invest")}
-						className="ml-auto"
+						className="ml-auto text-white"
 					>
 						+ Invest
 					</GradientButtonHeader>

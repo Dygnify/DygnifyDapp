@@ -31,7 +31,7 @@ const TransactionCard = ({ data, address }) => {
 		}
 	}, []);
 	return (
-		<div className="bg-darkmode-800 flex p-3 gap-4 rounded-lg justify-start">
+		<div className="bg-neutral-300 dark:bg-darkmode-800 flex p-3 gap-4 rounded-lg justify-start">
 			<p className=" w-1/3 md:w-1/4">{userAddress ? userAddress : ""}</p>
 			<p className=" w-1/3 md:w-1/4 pl-4 sm:pl-10 md:pl-2 xl:pl-5 2xl-8">
 				{isWithdraw ? "Withdrawal" : "Deposit"}

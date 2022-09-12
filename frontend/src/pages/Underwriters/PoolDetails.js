@@ -8,9 +8,10 @@ import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import Loader from "../../uiTools/Loading/Loader";
 
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
-import { getDataURLFromFile } from "../../services/Helpers/fileHelper";
 import { voteOpportunity } from "../../services/BackendConnectors/opportunityConnectors";
+import axiosHttpService from "../../services/axioscall";
+import { kycOptions } from "../../services/KYC/blockpass";
+import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -18,6 +19,11 @@ const PoolDetails = () => {
 	const [opDetails, setOpDetails] = useState();
 	const [companyDetails, setCompanyDetails] = useState();
 	const [info, setInfo] = useState([]);
+
+	const [idproof, setIdproof] = useState();
+
+	console.log(opDetails ? opDetails : "");
+
 	const [loanPurpose, setLoanPurpose] = useState({
 		isSliced: false,
 		firstText: "",
@@ -31,31 +37,30 @@ const PoolDetails = () => {
 	});
 
 	const [loading, setLoading] = useState(false);
-	//
-	const [logoImgSrc, setLogoImgSrc] = useState(""); //
 
-	const fetchPoolLogo = (imgcid) => {
-		if (imgcid) {
-			try {
-				retrieveFiles(imgcid, true).then((imgFile) => {
-					if (imgFile) {
-						let read = getDataURLFromFile(imgFile);
-						read.onloadend = function () {
-							setLogoImgSrc(read.result);
-						};
-					} else {
-						// set the empty logo image
-					}
-				});
-			} catch (error) {
-				console.log(error);
+	const [logoImgSrc, setLogoImgSrc] = useState("");
+
+	const checkForKycAndProfile = async (refId) => {
+		try {
+			const result = await axiosHttpService(kycOptions(refId));
+
+			if (result.res.status === "success") {
+				if (result.res.data.identities["passport"]) {
+					setIdproof(result.res.data.identities.passport);
+				} else if (result.res.data.identities["national_id"]) {
+					setIdproof(result.res.data.identities.national_id);
+				} else if (result.res.data.identities["drivinglicence"]) {
+					setIdproof(result.res.data.identities.drivinglicence);
+				}
 			}
+		} catch (error) {
+			console.log(error);
 		}
 	};
-	//
 
 	useEffect(() => {
-		setOpDetails(location.state);
+		setOpDetails(location.state.pool);
+		setLogoImgSrc(location.state.images);
 	}, [location.state]);
 
 	useEffect(() => {
@@ -63,9 +68,8 @@ const PoolDetails = () => {
 			loadInfo();
 			loadLoanPurpose();
 			setCompanyDetails(opDetails.companyDetails);
-			fetchPoolLogo(
-				opDetails.companyDetails?.companyLogoFile.businessLogoFileCID
-			);
+
+			checkForKycAndProfile(opDetails.borrower);
 		}
 	}, [opDetails]);
 
@@ -150,11 +154,19 @@ const PoolDetails = () => {
 		setLoading(false);
 	}
 
+	const viewDocument = (docCid, fileName) => {
+		if (!docCid) return null;
+		let url = getIPFSFileURL(docCid);
+		if (fileName) url += `/${fileName}`;
+		console.log(fileName);
+		window.open(url, "_blank");
+	};
+
 	return (
 		<div className={`${loading ? "" : ""}`}>
 			{loading && <Loader />}
 			{/* main container  */}
-			<div className={`${loading ? "blur-sm" : ""}`}>
+			<div className={`md:pt-7 ${loading ? "blur-sm" : ""}`}>
 				{/*section-1*/}
 				<div className="flex flex-col gap-6 overflow-hidden flex-wrap md:flex-row md:justify-between  ">
 					{/* section-1-1 --profile  */}
@@ -169,7 +181,7 @@ const PoolDetails = () => {
 							<div className="font-medium text-2xl -mb-1 xl:text-3xl">
 								{opDetails?.loan_name}
 							</div>
-							<div className="font-normal text-slate-500 xl:text-xl xl:font-light">
+							<div className="font-normal text-[#64748B]  xl:text-xl xl:font-light">
 								{companyDetails?.companyName}
 							</div>
 						</div>
@@ -242,7 +254,7 @@ const PoolDetails = () => {
 					<div className="mt-10 mb-3 text-lg font-medium">Deal Overview</div>
 
 					{/* Section-2-2 --text */}
-					<div className="text-[#D0D5DD]  tracking-wide font-light text-lg">
+					<div className="dark:text-[#D0D5DD] text-[323A46]  tracking-wide font-light text-lg">
 						{loanPurpose.isSliced ? (
 							<div>
 								{loanPurpose.firstText}
@@ -273,13 +285,13 @@ const PoolDetails = () => {
 						<div className="mb-0 text-lg font-medium">Deals terms</div>
 					</div>
 					{/* section-3-2 --item  */}
-					<div className="rounded-box w-auto bg-[#292C33] overflow-hidden">
+					<div className="rounded-box w-auto dark:bg-[#292C33] bg-[#A0ABBB] overflow-hidden">
 						<div className="grid grid-cols-2 gap-[2px] my-0.5 md:my-0 md:grid-cols-3 xl:grid-cols-6">
 							{info ? (
 								info.map((e, i) => {
 									return (
-										<div className="flex justify-center flex-col items-center bg-[#20232A] py-10">
-											<div className="font-normal text-base text-center text-[#A0ABBB]">
+										<div className="flex justify-center flex-col items-center dark:bg-[#20232A] bg-[#D0D5DD] py-10">
+											<div className="font-medium text-base text-center dark:text-[#A0ABBB] text-[#64748B]">
 												{e.label}
 											</div>
 											<div className="font-medium text-xl text-center">
@@ -297,12 +309,28 @@ const PoolDetails = () => {
 				{/*section-4  --Collateral*/}
 				<div>
 					<div className="text-lg font-medium mt-10 mb-3">Collateral</div>
-					<div className="w-full bg-[#20232A] rounded-xl p-3">
-						<div className="text-[#A0ABBB] font-medium text-lg">
-							Name of documents - {opDetails?.collateral_document_name}
+					<div className="w-full dark:bg-[#20232A] bg-[#D0D5DD] rounded-xl p-3">
+						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg flex flex-col md:flex-row">
+							<span>
+								Name of documents <span className="text-white pr-1">-</span>
+							</span>
+							<span className="text-white">
+								{opDetails?.collateral_document_name}
+								<a
+									className="pl-1 text-sm text-[#5375FE] cursor-pointer"
+									onClick={() =>
+										viewDocument(
+											opDetails?.collateralDocument,
+											opDetails?.collateral_filename
+										)
+									}
+								>
+									(view document)
+								</a>
+							</span>
 						</div>
 						<div className="text-lg font-medium mb-1">Document descripton</div>
-						<div className="text-[#D0D5DD]  tracking-wide font-light text-lg px-1 mr-1 pr-6 items-start ">
+						<div className="dark:text-[#D0D5DD] text-[#323A46] tracking-wide font-light text-lg px-1 mr-1 pr-6 items-start ">
 							{opDetails?.collateral_document_description}
 						</div>
 					</div>
@@ -347,7 +375,7 @@ const PoolDetails = () => {
 							<button
 								id="email"
 								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
-								//onClick={redirectForEmail}
+								// onClick={redirectForEmail}
 							>
 								<Email />
 								Email
@@ -398,7 +426,7 @@ const PoolDetails = () => {
 									id="linkedin"
 									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
 
-									//onClick={redirectToURl}
+									// onClick={redirectToURl}
 								>
 									<LinkedIn />
 									LinkedIn
@@ -435,14 +463,24 @@ const PoolDetails = () => {
 					</div>
 
 					{/* section-5-2 --Companybio*/}
-					<div className="text-[#D0D5DD]  tracking-wide font-light text-lg  items-start">
+					<div className="dark:text-[#D0D5DD] text-[#323A46] tracking-wide font-light text-lg  items-start">
 						{companyDetails ? companyDetails.companyBio : ""}
 					</div>
 				</div>
-				{/*section-6  --KYB detaial  */}
+				{/*section-6  --KYC detaial  */}
+				<div className="w-full my-3 mt-10 text-lg font-medium xl:w-1/2">
+					<div>KYC Details</div>
+					<DocumentCard
+						docName={idproof ? "Id proof" : ""}
+						docCid={idproof ? idproof.value : null}
+						fileName={idproof ? idproof.type : null}
+					/>
+				</div>
+
+				{/*section-7  --KYB detaial  */}
 				<div className="w-full my-3 mt-10 text-lg font-medium xl:w-1/2">
 					<div>KYB Details</div>
-					<h6 className="text-[#64748B] mt-10 mb-0.5">
+					<h6 className="dark:text-[#A0ABBB] text-[#4B5768] mt-10 mb-0.5">
 						Business Identify Proof
 					</h6>
 					<DocumentCard
@@ -463,7 +501,9 @@ const PoolDetails = () => {
 						}
 					/>
 
-					<h6 className="text-[#64748B]  mb-0.5">Business Address Proof</h6>
+					<h6 className="dark:text-[#A0ABBB] text-[#4B5768]  mb-0.5">
+						Business Address Proof
+					</h6>
 					<DocumentCard
 						docName={
 							companyDetails
@@ -481,7 +521,7 @@ const PoolDetails = () => {
 								: null
 						}
 					/>
-					<h6 className="text-[#64748B]  mb-0.5">
+					<h6 className="dark:text-[#A0ABBB] text-[#4B5768]  mb-0.5">
 						Business Incorporation Proof
 					</h6>
 					<DocumentCard
@@ -503,7 +543,9 @@ const PoolDetails = () => {
 					/>
 					{companyDetails && companyDetails.businessLicFile ? (
 						<>
-							<h6 className="text-[#64748B]  mb-0.5">Business License Proof</h6>
+							<h6 className="dark:text-[#A0ABBB] text-[#4B5768]  mb-0.5">
+								Business License Proof
+							</h6>
 							<DocumentCard
 								docName={
 									companyDetails

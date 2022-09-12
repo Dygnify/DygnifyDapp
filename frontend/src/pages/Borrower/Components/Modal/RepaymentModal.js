@@ -4,20 +4,40 @@ import { getWalletBal } from "../../../../services/BackendConnectors/userConnect
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
+import approve from "../../../../services/BackendConnectors/approve";
+import allowance from "../../../../services/BackendConnectors/allowance";
 
 const RepaymentModal = ({
 	data,
 	handleRepayment,
-	poolName,
 	setOpenProcessRepayment,
 	setProcessRepayment,
 }) => {
 	const [walletBal, setWalletBal] = useState();
+	const [approvedvalue, setApprovedvalue] = useState();
+	const [isInvest, setIsInvest] = useState(false);
+	const [isApproved, setIsApproved] = useState(false);
+
 	useEffect(() => {
-		getWalletBal().then((data) => setWalletBal(data));
+		getWalletBal().then((balance) => setWalletBal(balance));
+		getAllowance();
 	}, []);
 
+	async function getAllowance() {
+		const newdata = await allowance(
+			window.ethereum.selectedAddress,
+			data.opportunityPoolAddress
+		);
+		if (data.repaymentAmount <= newdata) {
+			setIsInvest(true);
+		} else {
+			setIsApproved(true);
+		}
+
+		setApprovedvalue(newdata);
+	}
 	async function onRepayment() {
+		console.log("💲");
 		setOpenProcessRepayment(true);
 		setProcessRepayment(true);
 		await repayment(data.opportunityPoolAddress);
@@ -62,7 +82,7 @@ const RepaymentModal = ({
 					<div className="px-4 md:px-8 mt-10 flex flex-col gap-1">
 						<div className="flex justify-between font-semibold">
 							<p>Pool Name</p>
-							<p>{poolName}</p>
+							<p>{data?.opportunityName}</p>
 						</div>
 
 						<div className="flex gap-1 font-semibold">
@@ -87,11 +107,34 @@ const RepaymentModal = ({
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
-							className={"w-full"}
+							className={` w-full ${
+								!isApproved
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none`}
 							htmlFor={"RepaymentProcessModal"}
 							setOpenProcessRepayment={setOpenProcessRepayment}
 							setProcessRepayment={setProcessRepayment}
-							onClick={onRepayment}
+							onClick={() =>
+								isApproved
+									? approve(data.opportunityPoolAddress, data.repaymentAmount)
+									: ""
+							}
+						>
+							Approve
+						</GradientBtnForModal>
+					</div>
+					<div className="px-4 md:px-8 mt-auto md:mt-8">
+						<GradientBtnForModal
+							className={` w-full ${
+								!isInvest
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none`}
+							htmlFor={"RepaymentProcessModal"}
+							setOpenProcessRepayment={setOpenProcessRepayment}
+							setProcessRepayment={setProcessRepayment}
+							onClick={() => (isInvest ? onRepayment() : "")}
 						>
 							Make Repayment
 						</GradientBtnForModal>

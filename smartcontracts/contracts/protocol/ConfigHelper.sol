@@ -135,4 +135,15 @@ library ConfigHelper {
                 uint256(ConfigOptions.Addresses.DygnifyTreasury)
             );
     }
+
+    function dygnifyKeeperAddress(DygnifyConfig config)
+        internal
+        view
+        returns (address)
+    {
+        return
+            config.getAddress(
+                uint256(ConfigOptions.Addresses.DygnifyKeeper)
+            );
+    }
 }

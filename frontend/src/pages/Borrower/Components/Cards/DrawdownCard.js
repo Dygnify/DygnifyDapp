@@ -12,7 +12,6 @@ const DrawdownCard = ({
 	setProcessDrawdown,
 }) => {
 	const [selected, setSelected] = useState(null);
-	const [poolName, setPoolName] = useState();
 
 	const handleDrawdown = () => {
 		setSelected(null);
@@ -25,21 +24,6 @@ const DrawdownCard = ({
 		loadDrawdownList(true);
 		setProcessDrawdown(false);
 	};
-
-	useEffect(() => {
-		// fetch the opportunity details from IPFS
-		retrieveFiles(data?.opportunityInfo, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
-					if (opJson) {
-						setPoolName(opJson.loan_name);
-					}
-				};
-			}
-		});
-	}, []);
 
 	return (
 		<div className="my-gradient px-4 py-8 flex flex-col gap-5 rounded-xl md:w-[48%] xl:w-[32%] 2xl:w-[min(32%,30rem)]">
@@ -71,7 +55,7 @@ const DrawdownCard = ({
 			{selected && (
 				<DrawdownModal
 					key={data?.id}
-					data={{ ...data, poolName }}
+					data={data}
 					handleDrawdown={handleDrawdown}
 					onDrawdown={onDrawdown}
 				/>

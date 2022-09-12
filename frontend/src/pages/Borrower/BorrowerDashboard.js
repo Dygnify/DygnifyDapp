@@ -24,7 +24,7 @@ const BorrowerDashboard = () => {
 					darkMode={darkMode}
 					setDarkMode={setDarkMode}
 				/>
-				<div className="drawer drawer-mobile">
+				<div className="drawer drawer-mobile border-t-[1px] border-t-[#B8C0CC] dark:border-t-[#20232A]">
 					<input
 						id="dashboard-sidebar"
 						type="checkbox"
@@ -46,16 +46,16 @@ const BorrowerDashboard = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="h-full  overflow-y-auto w-60  text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<ul className="h-full  overflow-y-auto w-60 pt-3 text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
 									to="/borrower_dashboard/overview"
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-6">
+									<span>
 										<OverviewIcon />
 									</span>
 									Overview
@@ -64,12 +64,12 @@ const BorrowerDashboard = () => {
 							<li className="font-medium text-center">
 								<NavLink
 									to="/borrower_dashboard/borrow_list"
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-6">
+									<span>
 										<BorIcon />
 									</span>
 									Borrow
@@ -78,12 +78,12 @@ const BorrowerDashboard = () => {
 							<li className="font-medium text-center">
 								<NavLink
 									to="/borrower_dashboard/transaction"
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-6">
+									<span>
 										<UnderIcon />
 									</span>
 									Transactions
@@ -93,12 +93,12 @@ const BorrowerDashboard = () => {
 							<li className="font-medium text-center">
 								<NavLink
 									to="/borrower_dashboard/borrower_profile"
-									className="flex ml-8 py-4 gap-2"
+									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
 								>
-									<span className="ml-6">
+									<span>
 										<ProfileIcon />
 									</span>
 									Profile

@@ -14,7 +14,6 @@ const PoolCard = ({ data }) => {
 	} = data;
 
 	const [companyName, setCompanyName] = useState();
-	const [poolName, setPoolName] = useState(data.poolName);
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
@@ -25,7 +24,6 @@ const PoolCard = ({ data }) => {
 					let opJson = JSON.parse(read.result);
 					if (opJson) {
 						setCompanyName(opJson.company_name);
-						setPoolName(opJson.loanName);
 					}
 				};
 			}
@@ -33,7 +31,7 @@ const PoolCard = ({ data }) => {
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[49%] lg:w-[100%] xl:w-[48%] my-gradient">
+		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient">
 			<div className="flex items-center gap-6">
 				<img
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
@@ -42,14 +40,14 @@ const PoolCard = ({ data }) => {
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-2xl font-semibold">{poolName}</p>
+					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
 					<p>{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-2xl font-semibold">{poolName}</p>
+					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
 					<p>{companyName}</p>
 				</div>
 

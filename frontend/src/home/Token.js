@@ -10,7 +10,10 @@ import opportunityOrigination from "../artifacts/contracts/protocol/OpportunityO
 import seniorPool from "../artifacts/contracts/protocol/SeniorPool.sol/SeniorPool.json";
 import opportunityPool from "../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json";
 import "./Token.css";
-import { getAllUnderReviewOpportunities } from "../services/BackendConnectors/opportunityConnectors";
+import {
+	getAllUnderReviewOpportunities,
+	getAllActiveOpportunities,
+} from "../services/BackendConnectors/opportunityConnectors";
 const tokenAddress = "0x7d7FE8dbb260a213322b0dEE20cB1ca2d313EBfE";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 
@@ -55,10 +58,16 @@ function Token() {
 	const [underWriter, setUnderWriter] = useState("");
 	const [opportunityIdForInvest, setOpportunityIdForInvest] = useState("");
 	const [underReviewOp, setUnderReviewOp] = useState([]);
+	const [activeOpportunityList, setActiveOpportunityList] = useState([]);
 
 	useEffect(async () => {
 		let op = await getAllUnderReviewOpportunities();
 		if (op && op.length) setUnderReviewOp(op);
+	}, []);
+
+	useEffect(async () => {
+		let op = await getAllActiveOpportunities();
+		if (op && op.length) setActiveOpportunityList(op);
 	}, []);
 
 	async function grantAdminRole(contractId, receiver) {
@@ -371,6 +380,9 @@ function Token() {
 						<table style={{ width: "100%" }}>
 							<tr>
 								<td style={{ backgroundColor: "grey", color: "black" }}>
+									Opportunity name
+								</td>
+								<td style={{ backgroundColor: "grey", color: "black" }}>
 									Borrower address
 								</td>
 								<td style={{ backgroundColor: "grey", color: "black" }}>
@@ -381,6 +393,7 @@ function Token() {
 								return (
 									<>
 										<tr>
+											<td>{item.opportunityName}</td>
 											<td>{item.borrower}</td>
 											<td>{item.id}</td>
 										</tr>
@@ -425,6 +438,32 @@ function Token() {
 				</button>
 
 				<br />
+				<div style={{ width: "80%" }}>
+					<table style={{ width: "100%" }}>
+						<tr>
+							<td style={{ backgroundColor: "grey", color: "black" }}>
+								Opportunity name
+							</td>
+							<td style={{ backgroundColor: "grey", color: "black" }}>
+								Opportunity Address
+							</td>
+							<td style={{ backgroundColor: "grey", color: "black" }}>
+								Opportunity id
+							</td>
+						</tr>
+						{activeOpportunityList.map((item) => {
+							return (
+								<>
+									<tr>
+										<td>{item.opportunityName}</td>
+										<td>{item.opportunityPoolAddress}</td>
+										<td>{item.id}</td>
+									</tr>
+								</>
+							);
+						})}
+					</table>
+				</div>
 				<br />
 				<input
 					type="text"

@@ -6,6 +6,7 @@ import "./DygnifyConfig.sol";
 import "../interfaces/IOpportunityPool.sol";
 import "../interfaces/IOpportunityOrigination.sol";
 import "./CollateralToken.sol";
+import "../interfaces/IDygnifyKeeper.sol";
 
 contract OpportunityOrigination is
     BaseUpgradeablePausable,
@@ -242,12 +243,13 @@ contract OpportunityOrigination is
             "Opportunity Pool is not created yet"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.Drawndown;
+        IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress()).addOpportunityInKeeper(id);
     }
 
-    function isDrawdown(bytes32 id) public view returns (bool) {
+    function isDrawdown(bytes32 id) public override view returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
-            uint8(opportunityToId[id].opportunityStatus) >=
+            uint8(opportunityToId[id].opportunityStatus) ==
             uint8(OpportunityStatus.Drawndown)
         ) return true;
         else return false;
@@ -269,9 +271,10 @@ contract OpportunityOrigination is
             "Opportunity Pool is not created yet"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.Repaid;
+        IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress()).removeOpportunityInKeeper(id);
     }
 
-    function isRepaid(bytes32 id) public view returns (bool) {
+    function isRepaid(bytes32 id) public override view returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==
@@ -280,7 +283,7 @@ contract OpportunityOrigination is
         else return false;
     }
 
-    function isActive(bytes32 id) external view returns (bool) {
+    function isActive(bytes32 id) external override view returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==
@@ -289,13 +292,14 @@ contract OpportunityOrigination is
         else return false;
     }
 
-    function getBorrower(bytes32 id) external view returns (address) {
+    function getBorrower(bytes32 id) external override view returns (address) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         return opportunityToId[id].borrower;
     }
 
     function getOpportunityPoolAddress(bytes32 id)
         external
+        override
         view
         returns (address)
     {
@@ -315,6 +319,7 @@ contract OpportunityOrigination is
 
     function getAlltheOpportunitiesOf(address borrower)
         external
+        override
         view
         returns (bytes32[] memory)
     {
@@ -325,6 +330,7 @@ contract OpportunityOrigination is
 
     function getUnderWritersOpportunities(address _underwriter)
         external
+        override
         view
         returns (bytes32[] memory)
     {
@@ -333,12 +339,36 @@ contract OpportunityOrigination is
         return opportunities;
     }
 
-    function getOpportunityNameOf(bytes32 _opportunityId)external view returns(string memory){
+    function getOpportunityNameOf(bytes32 _opportunityId)external override view returns(string memory){
         require(
             isOpportunity[_opportunityId] == true,
             "Opportunity ID doesn't exist"
         );
         Opportunity memory opportunityDetails = opportunityToId[_opportunityId];
         return opportunityDetails.opportunityName;
+    }
+
+    function markWriteOff(bytes32 id, address _pool) external override {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        require(
+            opportunityToId[id].opportunityStatus ==
+                OpportunityStatus.Drawndown,
+            "Opportunity pool is haven't drawdown yet."
+        );
+        require(
+            msg.sender == dygnifyConfig.dygnifyKeeperAddress(),
+            "Only dygnifyKeeper can mark it as writeoff"
+        );
+        opportunityToId[id].opportunityStatus = OpportunityStatus.WriteOff;
+        IOpportunityPool(_pool).writeOffOpportunity();
+    }
+
+    function isWriteOff(bytes32 id) public override view returns (bool) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        if (
+            uint8(opportunityToId[id].opportunityStatus) ==
+            uint8(OpportunityStatus.WriteOff)
+        ) return true;
+        else return false;
     }
 }
