@@ -27,7 +27,7 @@ const DrawdownCard = ({
 
 	return (
 		<div className="my-gradient px-4 py-8 flex flex-col gap-5 rounded-xl md:w-[48%] xl:w-[32%] 2xl:w-[min(32%,30rem)]">
-			<h2 className=" text-[1.4375rem]">{poolName}</h2>
+			<h2 className=" text-[1.4375rem]">{data?.opportunityName}</h2>
 
 			<div className="flex flex-col gap-2">
 				<div className=" flex gap-1">

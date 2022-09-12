@@ -23,7 +23,7 @@ const RepaymentCard = ({
 	return (
 		<div className="my-gradient px-4 py-8 flex flex-col gap-5 rounded-xl md:w-[48%] xl:w-[32%] 2xl:w-[min(32%,30rem)]">
 			<h2 className="font-semibold text-[1.4375rem] text-black dark:text-white">
-				{poolName}
+				{data?.opportunityName}
 			</h2>
 
 			<div className="flex flex-col gap-2">
