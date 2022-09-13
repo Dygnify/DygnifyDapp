@@ -32,6 +32,8 @@ const ViewSeniorPool = () => {
 
 	const [invest, setInvest] = useState(12);
 
+	const [transactionList, setTransactionList] = useState(13);
+
 	const handleDrawdown = () => {
 		setSelected(null);
 	};
@@ -76,30 +78,21 @@ const ViewSeniorPool = () => {
 	};
 
 	useEffect(() => {
-		console.log("%c useEffect called", "color:lightgreen;font-size:3rem");
-
-		setTimeout(() => {
-			axiosHttpService(
-				tokenTransactions(process.env.REACT_APP_SENIORPOOL)
-			).then((transactionDetails) => {
-				if (transactionDetails && transactionDetails.res) {
-					setTransactionData(transactionDetails.res.result);
-				}
-			});
-		}, 15000);
-
-		axiosHttpService(tokenTransactions(process.env.REACT_APP_SENIORPOOL)).then(
-			(transactionDetails) => {
-				if (transactionDetails && transactionDetails.res) {
-					setTransactionData(transactionDetails.res.result);
-				}
-			}
-		);
-
 		getWalletBal(process.env.REACT_APP_SENIORPOOL).then((amt) => {
 			setPoolAmount(getDisplayAmount(amt));
 		});
 	}, [invest]);
+
+	useEffect(() => {
+		axiosHttpService(tokenTransactions(process.env.REACT_APP_SENIORPOOL)).then(
+			(transactionDetails) => {
+				if (transactionDetails && transactionDetails.res) {
+					console.log("got transaction list");
+					setTransactionData(transactionDetails.res.result);
+				}
+			}
+		);
+	}, [transactionList]);
 
 	return (
 		<div className="">
@@ -115,6 +108,7 @@ const ViewSeniorPool = () => {
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
 						setInvest={setInvest}
+						setTransactionList={setTransactionList}
 					/>
 				) : null}
 				{processFundModal ? (

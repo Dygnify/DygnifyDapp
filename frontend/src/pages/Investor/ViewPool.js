@@ -47,6 +47,7 @@ const ViewPool = () => {
 
 	const [loading, setLoading] = useState(true);
 	const [invest, setInvest] = useState(12);
+	const [transactionList, setTransactionList] = useState(13);
 
 	const handleDrawdown = () => {
 		setSelected(null);
@@ -91,25 +92,6 @@ const ViewPool = () => {
 				}
 			});
 
-			setTimeout(() => {
-				axiosHttpService(tokenTransactions(poolData.opportunityPoolAddress))
-					.then((transactionDetails) => {
-						if (transactionDetails && transactionDetails.res) {
-							setTransactionData(transactionDetails.res.result);
-						}
-					})
-					.catch((error) => console.log(error));
-			}, 15000);
-
-			// get Pool Transaction Data
-			axiosHttpService(tokenTransactions(poolData.opportunityPoolAddress))
-				.then((transactionDetails) => {
-					if (transactionDetails && transactionDetails.res) {
-						setTransactionData(transactionDetails.res.result);
-					}
-				})
-				.catch((error) => console.log(error));
-
 			// fetch the opportunity details from IPFS
 			retrieveFiles(poolData.opportunityInfo, true).then((res) => {
 				if (res) {
@@ -143,6 +125,19 @@ const ViewPool = () => {
 			});
 		}
 	}, [poolData, invest]);
+
+	useEffect(() => {
+		if (poolData) {
+			// get Pool Transaction Data
+			axiosHttpService(tokenTransactions(poolData.opportunityPoolAddress))
+				.then((transactionDetails) => {
+					if (transactionDetails && transactionDetails.res) {
+						setTransactionData(transactionDetails.res.result);
+					}
+				})
+				.catch((error) => console.log(error));
+		}
+	}, [poolData, transactionList]);
 
 	function loadInfo() {
 		if (poolData) {
@@ -242,6 +237,7 @@ const ViewPool = () => {
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
 						setInvest={setInvest}
+						setTransactionList={setTransactionList}
 					/>
 				) : null}
 
