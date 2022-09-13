@@ -191,7 +191,7 @@ const Overview = () => {
 						{totalBorrowedAmt ? (
 							<div className="font-bold flex items-end gap-2 text-xl flex-wrap">
 								<h3 className="text-[1.75rem] md:text-3xl xl:text-5xl text-[#26E367]">
-									{totalBorrowedAmt}455
+									{totalBorrowedAmt}
 								</h3>
 								<p className="text-xl text-[#26E367]">
 									{process.env.REACT_APP_TOKEN_NAME}
