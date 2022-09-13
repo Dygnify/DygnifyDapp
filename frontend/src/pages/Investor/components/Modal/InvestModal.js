@@ -24,6 +24,7 @@ const InvestModal = ({
 	setProcessFundModal,
 	setInvestProcessing,
 	setSelected,
+	setInvest,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
@@ -51,7 +52,10 @@ const InvestModal = ({
 		await investInSeniorPool(amount);
 		setSelected(null);
 		setInvestProcessing(false);
-		console.log("done");
+		console.log("done senior invest");
+		setTimeout(() => {
+			setInvest(Math.random());
+		}, 1000);
 	}
 
 	async function userAddress() {
@@ -74,6 +78,9 @@ const InvestModal = ({
 		await investInJuniorPool(poolAddress, amount);
 		setSelected(null);
 		setInvestProcessing(false);
+		setTimeout(() => {
+			setInvest(Math.random());
+		}, 1000);
 	}
 
 	const handleAmount = (e) => {

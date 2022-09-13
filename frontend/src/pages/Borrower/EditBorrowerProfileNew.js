@@ -512,16 +512,10 @@ const EditBorrowerProfileNew = () => {
 									</div>
 								</div>
 
-								<div
-									className={`my-10 justify-center flex-row-reverse ${
-										loading ? "blur-sm" : ""
-									}`}
-									style={{ display: "flex" }}
-								>
+								<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
 									<GradientButton
-										className="font-medium ml-4"
+										className="md:w-[40%] xl:w-[min(40%,25rem)]"
 										onClick={handleSubmit}
-										type="submit"
 									>
 										Save and Exit
 									</GradientButton>
@@ -532,7 +526,7 @@ const EditBorrowerProfileNew = () => {
 												state: oldBrJson,
 											})
 										}
-										className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)] text-black dark:text-white"
+										className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)]"
 									>
 										Exit
 									</button>

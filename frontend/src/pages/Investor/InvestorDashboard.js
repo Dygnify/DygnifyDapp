@@ -11,7 +11,7 @@ import Header from "../Layout/Header";
 
 const InvestorDashboardNew = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
-	const [darkMode, setDarkMode] = useState(false);
+	const [darkMode, setDarkMode] = useState(true);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);
