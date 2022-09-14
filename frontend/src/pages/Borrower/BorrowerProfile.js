@@ -281,8 +281,8 @@ const BorrowerProfile = () => {
 								</button>
 							</div>
 
-							<div className="border border-r-[1.8rem] border-secondary-500 w-full md:w-[35rem] my-8 rounded-xl py-5 px-3 md:px-4 bg-lightmode-200 dark:bg-darkmode-800">
-								{!kycStatus ? (
+							{!kycStatus ? (
+								<div className="border border-r-[1.8rem] border-secondary-500 w-full md:w-[35rem] my-8 rounded-xl py-5 px-3 md:px-4 bg-lightmode-200 dark:bg-darkmode-800">
 									<label id="blockpass-kyc-connect">
 										<p className="font-semibold text-[1.1875rem]">
 											Complete your KYC
@@ -295,10 +295,10 @@ const BorrowerProfile = () => {
 											us.
 										</p>
 									</label>
-								) : (
-									<></>
-								)}
-							</div>
+								</div>
+							) : (
+								<></>
+							)}
 
 							<div className=" font-semibold flex flex-col md:flex-row md:justify-between gap-2">
 								<h2 className="text-[1.1875rem] md:text-2xl">Socials</h2>
