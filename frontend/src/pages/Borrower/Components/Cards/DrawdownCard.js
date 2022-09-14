@@ -31,7 +31,7 @@ const DrawdownCard = ({
 
 			<div className="flex flex-col gap-2">
 				<div className=" flex gap-1">
-					<p>Capital Borrowed</p>
+					<p>Capital Requested</p>
 					<img src={DollarImage} className="w-4 ml-auto" />
 					<p>{data?.opportunityAmount} </p>
 				</div>
