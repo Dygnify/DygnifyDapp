@@ -11,7 +11,7 @@ const GradientButton = ({
 		<button
 			onClick={onClick}
 			id={id}
-			className={`py-3 bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none text-white rounded-3xl ${className} focus:outline-[#9281FF]`}
+			className={`btn btn-wide py-3 bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none text-white rounded-3xl ${className} focus:outline-[#9281FF]`}
 			{...otherProps}
 		>
 			{children}

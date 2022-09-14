@@ -514,7 +514,7 @@ const EditBorrowerProfileNew = () => {
 
 								<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
 									<GradientButton
-										className="md:w-[40%] xl:w-[min(40%,25rem)]"
+										className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
 										onClick={handleSubmit}
 									>
 										Save and Exit
