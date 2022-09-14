@@ -30,6 +30,10 @@ const ViewSeniorPool = () => {
 	const [kycStatus, setKycStatus] = useState(1);
 	const [loading, setLoading] = useState(true);
 
+	const [invest, setInvest] = useState(12);
+
+	const [transactionList, setTransactionList] = useState(13);
+
 	const handleDrawdown = () => {
 		setSelected(null);
 	};
@@ -74,18 +78,21 @@ const ViewSeniorPool = () => {
 	};
 
 	useEffect(() => {
+		getWalletBal(process.env.REACT_APP_SENIORPOOL).then((amt) => {
+			setPoolAmount(getDisplayAmount(amt));
+		});
+	}, [invest]);
+
+	useEffect(() => {
 		axiosHttpService(tokenTransactions(process.env.REACT_APP_SENIORPOOL)).then(
 			(transactionDetails) => {
 				if (transactionDetails && transactionDetails.res) {
+					console.log("got transaction list");
 					setTransactionData(transactionDetails.res.result);
 				}
 			}
 		);
-
-		getWalletBal(process.env.REACT_APP_SENIORPOOL).then((amt) => {
-			setPoolAmount(getDisplayAmount(amt));
-		});
-	}, []);
+	}, [transactionList]);
 
 	return (
 		<div className="">
@@ -100,6 +107,8 @@ const ViewSeniorPool = () => {
 						setProcessFundModal={setProcessFundModal}
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
+						setInvest={setInvest}
+						setTransactionList={setTransactionList}
 					/>
 				) : null}
 				{processFundModal ? (
@@ -173,7 +182,7 @@ const ViewSeniorPool = () => {
 							{transactionData ? (
 								transactionData.map((item) => (
 									<TransactionCard
-										key={transactionData.blockHash}
+										key={item.hash}
 										data={item}
 										address={process.env.REACT_APP_SENIORPOOL}
 									/>
