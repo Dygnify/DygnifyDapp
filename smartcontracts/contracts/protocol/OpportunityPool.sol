@@ -11,6 +11,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "../interfaces/IOpportunityOrigination.sol";
 import "../interfaces/IInvestor.sol";
 import "../interfaces/IOpportunityPool.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 
 contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     DygnifyConfig public dygnifyConfig;
@@ -188,6 +189,9 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 .depositedAmount
                 .add(amount);
         } else if (_subpoolId == uint8(Subpool.JuniorSubpool)) {
+            require(
+                IERC721Upgradeable(dygnifyConfig.identityTokenAddress()).balanceOf(msg.sender) != 0, "KYC Of Investor is not done yet"
+            );
             require(
                 juniorSubpoolDetails.isPoolLocked == false,
                 "Junior Subpool is locked"
