@@ -7,6 +7,7 @@ import "../interfaces/IOpportunityPool.sol";
 import "../interfaces/IOpportunityOrigination.sol";
 import "./CollateralToken.sol";
 import "../interfaces/IDygnifyKeeper.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 
 contract OpportunityOrigination is
     BaseUpgradeablePausable,
@@ -56,9 +57,9 @@ contract OpportunityOrigination is
     function createOpportunity(
         CreateOpportunity memory _opportunityData
     ) external override nonReentrant whenNotPaused {
-        // KYC check (add)
-        // require(kycOf[msg.sender].isDoucument == kycOf[msg.sender].isLiveliness == kycOf[msg.sender].isAddress == kycOf[msg.sender].isAML == kycOf[msg.sender].imageHash == kycOf[msg.sender].result == true,"Please do your KYC before creating opportunity");
-
+        require(
+            IERC721Upgradeable(dygnifyConfig.identityTokenAddress()).balanceOf(_opportunityData.borrower) != 0, "KYC Of Borrower is not done yet"
+        );
         require(
             uint8(_opportunityData.loanType) <= uint8(LoanType.TermLoan),
             "LoanType : Out of range"

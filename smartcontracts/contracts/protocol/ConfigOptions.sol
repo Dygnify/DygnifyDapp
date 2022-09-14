@@ -15,7 +15,8 @@ library ConfigOptions {
         OpportunityOrigination,
         InvestorContract,
         DygnifyTreasury,
-        DygnifyKeeper
+        DygnifyKeeper,
+        IdentityToken
     }
 
     enum Numbers {
