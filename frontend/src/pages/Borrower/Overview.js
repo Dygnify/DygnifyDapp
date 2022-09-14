@@ -136,7 +136,7 @@ const Overview = () => {
 			totalRepaidAmt += op.totalRepaidAmount;
 		}
 		if (totalLoanAmt > 0) {
-			setTotalBorrowedAmt("$" + getDisplayAmount(totalLoanAmt));
+			setTotalBorrowedAmt(getDisplayAmount(totalLoanAmt));
 		}
 
 		totalRepaidAmt = totalRepaidAmt ? totalRepaidAmt : 0;
