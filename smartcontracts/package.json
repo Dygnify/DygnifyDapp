@@ -12,6 +12,7 @@
     "dotenv": "^16.0.0"
   },
   "dependencies": {
+    "@chainlink/contracts": "^0.4.1",
     "@openzeppelin/contracts-upgradeable": "^4.7.1",
     "solc": "^0.8.4"
   }

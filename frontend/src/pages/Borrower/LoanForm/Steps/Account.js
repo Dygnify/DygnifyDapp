@@ -75,7 +75,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							<label class="label">
 								<span class="text-white">Loan Tenure</span>
 							</label>
-							<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
+							<div className="input input-bordered items-center flex justify-between bg-lightmode-300 dark:bg-darkmode-700">
 								<Selection
 									onChange={(value) =>
 										formik.setFieldValue("loan_tenure", value.value)

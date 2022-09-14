@@ -16,7 +16,7 @@ import KycCheckModal from "./Components/Modal/KycCheckModal";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
-	const [opportunities, setOpportunities] = useState([{ hell: "" }]);
+	const [opportunities, setOpportunities] = useState([]);
 	const [selected, setSelected] = useState(null);
 	const [kycSelected, setKycSelected] = useState();
 	const [borrowReqProcess, setBorrowReqProcess] = useState(false);
@@ -75,7 +75,12 @@ const BorrowList = () => {
 		try {
 			const result = await axiosHttpService(kycOptions(refId));
 
-			if (result.res.status === "success") setKycStatus(true);
+			if (
+				result.res.status === "success" &&
+				result.res.data.status === "approved"
+			) {
+				setKycStatus(true);
+			}
 			if (result.res.status === "error") {
 				setKycStatus(false);
 			}

@@ -25,8 +25,8 @@ const FileUploader = ({
 	return (
 		<>
 			<div className={`${className}`}>
-				<label class="label" style={{ marginBottom: 1 }}>
-					<span class="text-black dark:text-white">{label}</span>
+				<label class="label text-lg" style={{ marginBottom: 1 }}>
+					<span class="text-black dark:text-white text-lg">{label}</span>
 				</label>
 				<div
 					style={{
@@ -41,7 +41,7 @@ const FileUploader = ({
 				>
 					<input
 						type="button"
-						className="bg-lightmode-300 dark:bg-[#30333A] text-black"
+						className="bg-gray-400 dark:bg-[#30333A] text-black"
 						onClick={handleClick}
 						style={{
 							borderRadius: "37px",
@@ -56,9 +56,9 @@ const FileUploader = ({
 					<div
 						style={{
 							marginInline: "0.5em",
-							color: "#c7cad1",
 							fontStyle: "italic",
 						}}
+						className="dark:text-[#c7cad1] text-gray-700"
 					>
 						{fileUploadedName ? fileUploadedName : fileName}
 					</div>

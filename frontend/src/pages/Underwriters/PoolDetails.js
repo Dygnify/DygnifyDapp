@@ -44,13 +44,16 @@ const PoolDetails = () => {
 		try {
 			const result = await axiosHttpService(kycOptions(refId));
 
-			if (result.res.status === "success") {
+			if (
+				result.res.status === "success" &&
+				result.res.data.status === "approved"
+			) {
 				if (result.res.data.identities["passport"]) {
 					setIdproof(result.res.data.identities.passport);
 				} else if (result.res.data.identities["national_id"]) {
 					setIdproof(result.res.data.identities.national_id);
-				} else if (result.res.data.identities["drivinglicence"]) {
-					setIdproof(result.res.data.identities.drivinglicence);
+				} else if (result.res.data.identities["driving_license"]) {
+					setIdproof(result.res.data.identities.driving_license);
 				}
 			}
 		} catch (error) {

@@ -22,6 +22,7 @@ import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 import DygnifyImage from "../../assets/Dygnify_Image.png";
 import UpArrow from "../SVGIcons/UpArrow";
+import DollarImage from "../../assets/Dollar-icon.svg";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -45,6 +46,8 @@ const ViewPool = () => {
 	const [investProcessing, setInvestProcessing] = useState();
 
 	const [loading, setLoading] = useState(true);
+	const [invest, setInvest] = useState(12);
+	const [transactionList, setTransactionList] = useState(13);
 
 	const handleDrawdown = () => {
 		setSelected(null);
@@ -89,15 +92,6 @@ const ViewPool = () => {
 				}
 			});
 
-			// get Pool Transaction Data
-			axiosHttpService(tokenTransactions(poolData.opportunityPoolAddress))
-				.then((transactionDetails) => {
-					if (transactionDetails && transactionDetails.res) {
-						setTransactionData(transactionDetails.res.result);
-					}
-				})
-				.catch((error) => console.log(error));
-
 			// fetch the opportunity details from IPFS
 			retrieveFiles(poolData.opportunityInfo, true).then((res) => {
 				if (res) {
@@ -130,7 +124,20 @@ const ViewPool = () => {
 				}
 			});
 		}
-	}, [poolData]);
+	}, [poolData, invest]);
+
+	useEffect(() => {
+		if (poolData) {
+			// get Pool Transaction Data
+			axiosHttpService(tokenTransactions(poolData.opportunityPoolAddress))
+				.then((transactionDetails) => {
+					if (transactionDetails && transactionDetails.res) {
+						setTransactionData(transactionDetails.res.result);
+					}
+				})
+				.catch((error) => console.log(error));
+		}
+	}, [poolData, transactionList]);
 
 	function loadInfo() {
 		if (poolData) {
@@ -229,6 +236,8 @@ const ViewPool = () => {
 						setProcessFundModal={setProcessFundModal}
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
+						setInvest={setInvest}
+						setTransactionList={setTransactionList}
 					/>
 				) : null}
 
@@ -350,10 +359,12 @@ const ViewPool = () => {
 									{poolData ? poolData.loanInterest : "--"}
 								</p>
 
-								<p className="font-semibold text-xl mb-1">
+								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
+									<img src={DollarImage} className="w-4" />
 									{poolData ? poolData.opportunityAmount : "--"}
 								</p>
-								<p className="font-semibold text-xl mb-1">
+								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
+									<img src={DollarImage} className="w-4" />
 									{poolBal ? poolBal : "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1">
@@ -458,7 +469,7 @@ const ViewPool = () => {
 							<>
 								{transactionData.map((item) => (
 									<TransactionCard
-										key={transactionData.blockHash}
+										key={item.hash}
 										data={item}
 										address={poolData.opportunityPoolAddress}
 									/>

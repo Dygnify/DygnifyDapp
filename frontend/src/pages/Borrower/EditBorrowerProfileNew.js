@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import TextField from "../../uiTools/Inputs/TextField";
 import InputGroup from "../../uiTools/Inputs/InputGroup";
@@ -11,22 +11,11 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import * as Yup from "yup";
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
-	const initialValues = {
-		companyName: "",
-		companyRepName: "",
-		companyBio: "",
-		bizIdFileName: "",
-		bizAddFileName: "",
-		bizLicFileName: "",
-		bizIncoFileName: "",
-		website: "",
-		email: "",
-		twitter: "",
-		linkedin: "",
-	};
+
 	const [profileState, setProfileState] = useState(null);
 	const [hasKey, setHasKey] = useState();
 	const [loading, setLoading] = useState();
@@ -48,6 +37,72 @@ const EditBorrowerProfileNew = () => {
 	let businessIncoFilesCID = "";
 
 	let allowSubmit = true;
+
+	const validationSchema = Yup.object().shape({
+		companyName: Yup.string().label("Company Name").required(),
+		companyRepName: Yup.string()
+			.label("Company Representative Name")
+			.required(),
+		companyBio: Yup.string().label("Company Bio").required(),
+		bizIdFileName: Yup.string().label("File Name").required(),
+		bizAddFileName: Yup.string().label("File Name").required(),
+		bizLicFileName: Yup.string().label("File Name").required(),
+		bizIncoFileName: Yup.string().label("File Name").required(),
+		website: Yup.string().label("Website").required(),
+	});
+
+	useEffect(() => {
+		console.log("location*****", location.state);
+		if (location.state) {
+			setProfileState(location.state);
+			setHasKey(location.state ? "businessLicFile" in location.state : true);
+		}
+	}, []);
+
+	const initialValues = {
+		companyName: profileState ? profileState.companyName : "",
+		companyRepName: profileState ? profileState.companyRepName : "",
+		companyBio: profileState ? profileState.companyBio : "",
+		bizIdFileName: profileState
+			? profileState.businessIdFile.businessIdDocName
+			: "",
+		bizAddFileName: profileState
+			? profileState.businessAddFile.businessAddDocName
+			: "",
+		bizLicFileName:
+			profileState && hasKey
+				? profileState.businessLicFile.businessLicDocName
+				: "Lic File",
+		bizIncoFileName: profileState
+			? profileState.businessIncoFile.businessIncoDocName
+			: "",
+		website: profileState ? profileState.website : "",
+		email: profileState ? profileState.email : "",
+		twitter: profileState ? profileState.twitter : "",
+		linkedin: profileState ? profileState.linkedin : "",
+	};
+
+	useEffect(() => {
+		if (profileState) {
+			const {
+				businessIdFile: IdFile,
+				businessAddFile: AddFile,
+				businessIncoFile: IncoFile,
+				businessLicFile: LicFile,
+				companyLogoFile: LogoFile,
+			} = profileState;
+
+			if (hasKey) {
+				businessLicFilesCID = LicFile.businessLicFileCID;
+			}
+
+			logoFileCID = LogoFile.businessLogoFileCID;
+			businessIdFilesCID = IdFile.businessIdFileCID;
+
+			businessAddFilesCID = AddFile.businessAddFileCID;
+			businessIncoFilesCID = IncoFile.businessIncoFileCID;
+		}
+	}, [profileState]);
 
 	const uploadFilesToIPFS = async (files) => {
 		try {
@@ -78,7 +133,8 @@ const EditBorrowerProfileNew = () => {
 			) &&
 			!location.state
 		) {
-			return setError(true);
+			setError(true);
+			setLoading(false);
 		}
 	};
 
@@ -100,6 +156,7 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const uploadBorrowerData = async (formData) => {
+		console.log(formData);
 		const {
 			companyName,
 			companyRepName,
@@ -113,14 +170,13 @@ const EditBorrowerProfileNew = () => {
 			twitter,
 			linkedin,
 		} = formData;
+		console.log(companyName);
 		setLoading(true);
 		try {
 			//Insert all the files in one array
 			validations();
-
 			let key = false;
 			if (businessLicenseFiles) key = true;
-
 			{
 				if (
 					businessIdentityFiles ||
@@ -134,7 +190,6 @@ const EditBorrowerProfileNew = () => {
 							logoFile ? logoFile : profileState.companyLogoFile
 						);
 					}
-
 				if (
 					(businessIdentityFiles && businessIdentityFiles.length) ||
 					profileState
@@ -145,7 +200,6 @@ const EditBorrowerProfileNew = () => {
 							: profileState.businessIdFile
 					);
 				}
-
 				if (
 					(businessAddressFiles && businessAddressFiles.length) ||
 					profileState
@@ -156,7 +210,6 @@ const EditBorrowerProfileNew = () => {
 							: profileState.businessAddFile
 					);
 				}
-
 				if (
 					(businessIncorporationFiles && businessIncorporationFiles.length) ||
 					profileState
@@ -167,7 +220,6 @@ const EditBorrowerProfileNew = () => {
 							: profileState.businessIncoFile
 					);
 				}
-
 				if (
 					(businessLicenseFiles &&
 						businessLicenseFiles.length &&
@@ -194,10 +246,9 @@ const EditBorrowerProfileNew = () => {
 						? logoFileCID
 						: profileState.companyLogoFile.businessLogoFileCID,
 				},
-
 				businessIdFile: {
 					businessIdDocName: businessIdentityFiles
-						? bizIdFileName.current.value
+						? bizIdFileName
 						: profileState.businessIdFile.businessIdDocName,
 					businessIdFileCID: businessIdentityFiles
 						? businessIdFilesCID
@@ -208,7 +259,7 @@ const EditBorrowerProfileNew = () => {
 				},
 				businessAddFile: {
 					businessAddDocName: businessAddressFiles
-						? bizAddFileName.current.value
+						? bizAddFileName
 						: profileState.businessAddFile.businessAddDocName,
 					businessAddFileCID: businessAddressFiles
 						? businessAddFilesCID
@@ -219,7 +270,7 @@ const EditBorrowerProfileNew = () => {
 				},
 				businessIncoFile: {
 					businessIncoDocName: businessIncorporationFiles
-						? bizIncoFileName.current.value
+						? bizIncoFileName
 						: profileState.businessIncoFile.businessIncoDocName,
 					businessIncoFileCID: businessIncorporationFiles
 						? businessIncoFilesCID
@@ -228,18 +279,16 @@ const EditBorrowerProfileNew = () => {
 						? businessIncorporationFiles[0].name
 						: profileState.businessIncoFile.businessIncoFileName,
 				},
-
 				website: website,
 				email: email,
 				twitter: twitter,
 				linkedin: linkedin,
 			};
-
 			if ((businessLicenseFiles || profileState) && (hasKey || key)) {
 				const licenseFile = {
 					businessLicFile: {
 						businessLicDocName: businessLicenseFiles
-							? bizLicFileName.current.value
+							? bizLicFileName
 							: profileState
 							? profileState.businessLicFile.businessLicDocName
 							: null,
@@ -251,16 +300,12 @@ const EditBorrowerProfileNew = () => {
 							: profileState?.businessLicFile.businessLicFileName,
 					},
 				};
-
 				borrowerJsonData = { ...borrowerJsonData, ...licenseFile };
 			}
-
 			checkEdited(borrowerJsonData);
-			console.log(borrowerJsonData, hasKey, key);
-			console.log(allowSubmit, "error", error);
+
 			if (allowSubmit && !error) {
 				console.log("Inside allow");
-
 				let file = makeFileObjects(borrowerJsonData, "borrower.json");
 				let borrowerDataCID = await storeFiles(file);
 				// Save this CID in the blockchain
@@ -282,6 +327,8 @@ const EditBorrowerProfileNew = () => {
 			<Formik
 				initialValues={initialValues}
 				onSubmit={(values) => uploadBorrowerData(values)}
+				validationSchema={validationSchema}
+				enableReinitialize={true}
 			>
 				{({
 					values,
@@ -349,6 +396,11 @@ const EditBorrowerProfileNew = () => {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												value={values.companyBio}
+												error={
+													touched.companyBio && errors.companyBio
+														? errors.companyBio
+														: null
+												}
 											/>
 										</div>
 									</div>
@@ -366,7 +418,7 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIdentityFilesUpload}
 										onBlur={handleBlur}
-										error={error && "File required"}
+										error={error ? "File required" : errors.bizIdFileName}
 										fileName={
 											profileState
 												? profileState.businessIdFile.businessIdFileName
@@ -380,7 +432,7 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessAddressFilesUpload}
 										onBlur={handleBlur}
-										error={error && "File required"}
+										error={error ? "File required" : errors.bizAddFileName}
 										fileName={
 											profileState
 												? profileState.businessAddFile.businessAddFileName
@@ -394,7 +446,7 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIncorporationFilesUpload}
 										onBlur={handleBlur}
-										error={error && "File required"}
+										error={error ? "File required" : errors.bizIncoFileName}
 										fileName={
 											profileState
 												? profileState.businessIncoFile.businessIncoFileName
@@ -428,6 +480,7 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											value={values.website}
 											onBlur={handleBlur}
+											error={errors.website}
 										/>
 										<TextField
 											name="email"
@@ -459,18 +512,9 @@ const EditBorrowerProfileNew = () => {
 									</div>
 								</div>
 
-								<button type="submit" onClick={() => console.log(values)}>
-									Submit
-								</button>
-
-								<div
-									className={`my-10 justify-center flex-row-reverse ${
-										loading ? "blur-sm" : ""
-									}`}
-									style={{ display: "flex" }}
-								>
+								<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
 									<GradientButton
-										className="font-medium ml-4"
+										className="md:w-[40%] xl:w-[min(40%,25rem)]"
 										onClick={handleSubmit}
 									>
 										Save and Exit
@@ -482,7 +526,7 @@ const EditBorrowerProfileNew = () => {
 												state: oldBrJson,
 											})
 										}
-										className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)] text-black dark:text-white"
+										className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)]"
 									>
 										Exit
 									</button>

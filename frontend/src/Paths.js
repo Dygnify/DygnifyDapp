@@ -26,6 +26,7 @@ import QueriesPoolDetails from "./pages/Borrower/QueriesPoolDetails";
 
 //reducer
 import { initialState, reducer } from "./reducer/UseReducer";
+import EditBorrowerProfileNew from "./pages/Borrower/EditBorrowerProfileNew";
 //
 
 export const UserContext = createContext(); //
@@ -71,7 +72,7 @@ const Paths = () => {
 						<Route path="underwriterQueries" element={<UnderwriterQueries />} />
 						<Route path="queriesPoolDetail" element={<QueriesPoolDetails />} />
 
-						<Route path="edit_profile" element={<EditBorrowerProfile />} />
+						<Route path="edit_profile" element={<EditBorrowerProfileNew />} />
 					</Route>
 				</Routes>
 			</UserContext.Provider>
