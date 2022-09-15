@@ -14,6 +14,8 @@ const RepaymentModal = ({
 	setProcessRepayment,
 	setwalletAddress,
 	settransactionId,
+	setpoolName,
+	setamounts,
 }) => {
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
@@ -45,10 +47,12 @@ const RepaymentModal = ({
 	async function onRepayment() {
 		setOpenProcessRepayment(true);
 		setProcessRepayment(true);
+		setpoolName(data?.opportunityName);
+		setamounts(approvedvalue);
 		setwalletAddress(data.opportunityPoolAddress);
-		const data = await repayment(data.opportunityPoolAddress);
-		settransactionId(data.opportunityPoolAddress);
-
+		const tx = await repayment(data.opportunityPoolAddress);
+		console.log(tx);
+		settransactionId(tx.hash);
 		handleRepayment();
 		setProcessRepayment(false);
 	}

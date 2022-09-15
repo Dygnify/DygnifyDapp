@@ -14,15 +14,20 @@ const ApprovalHistory = () => {
 
 	async function getHistory() {
 		let list = await getApprovalHistory();
-		console.log(list);
-		setTransactions(list);
+		if (list.success) {
+			setTransactions(list.opportunitiesList);
+		} else {
+			console.log(list.msg);
+		}
 	}
 
 	return (
 		<div className={`mb-16 -mx-4 ${loading ? "relative h-[80vh]" : ""}`}>
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
-				<h2 className="text-2xl mb-2 md:mb-12 ml-5  md:ml-7">Approval history</h2>
+				<h2 className="text-2xl mb-2 md:mb-12 ml-5  md:ml-7">
+					Approval history
+				</h2>
 				{transactions.length == 0 ? (
 					<div className="felx justify-center">
 						<div className="text-[#64748B] text-xl text-center mt-3">
