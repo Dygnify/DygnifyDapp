@@ -66,6 +66,7 @@ const repayment = async (poolAddress) => {
 
 		const transaction1 = await poolContract.repayment();
 		await transaction1.wait();
+		return transaction1;
 	}
 };
 const drawdown = async (poolAddress) => {

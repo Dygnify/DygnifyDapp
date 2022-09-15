@@ -469,10 +469,13 @@ const getAllUnderwriterOpportunities = async () => {
 					opportunities.push(obj);
 				}
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return null;

@@ -24,6 +24,9 @@ const InvestModal = ({
 	setProcessFundModal,
 	setInvestProcessing,
 	setSelected,
+	settxhash,
+	setcontractAdrress,
+	setAmounts,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
@@ -43,14 +46,19 @@ const InvestModal = ({
 	useEffect(() => {
 		getWalletBal().then((data) => setWalletBal(data));
 		userAddress();
-	}, []);
+	}, [loading]);
 
 	async function investSenior() {
+		setAmounts(amount);
+		setcontractAdrress(process.env.REACT_APP_SENIORPOOL);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
-		await investInSeniorPool(amount);
-		setSelected(null);
-		setInvestProcessing(false);
+		const data = await investInSeniorPool(amount);
+		if (data) {
+			settxhash(data.hash);
+			setSelected(null);
+			setInvestProcessing(false);
+		}
 		console.log("done");
 	}
 
@@ -68,12 +76,16 @@ const InvestModal = ({
 	console.log(approvedvalue, "----");
 
 	async function investJunior() {
+		setAmounts(amount);
+		setcontractAdrress(poolAddress);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
-
-		await investInJuniorPool(poolAddress, amount);
-		setSelected(null);
-		setInvestProcessing(false);
+		const data = await investInJuniorPool(poolAddress, amount);
+		if (data) {
+			settxhash(data.hash);
+			setSelected(null);
+			setInvestProcessing(false);
+		}
 	}
 
 	const handleAmount = (e) => {
@@ -128,7 +140,7 @@ const InvestModal = ({
 						<h3 className="font-semibold text-xl">Invest</h3>
 
 						<label
-							for="InvestModal"
+							htmlFor="InvestModal"
 							// onClick={() => handleDrawdown()}
 							className=" hover:text-primary-600 text-xl"
 						>

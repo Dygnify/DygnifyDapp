@@ -29,6 +29,9 @@ const ViewSeniorPool = () => {
 	const [investProcessing, setInvestProcessing] = useState();
 	const [kycStatus, setKycStatus] = useState(1);
 	const [loading, setLoading] = useState(true);
+	const [txhash, settxhash] = useState("");
+	const [contractAdrress, setcontractAdrress] = useState("");
+	const [amounts, setAmounts] = useState("");
 
 	const handleDrawdown = () => {
 		setSelected(null);
@@ -87,23 +90,33 @@ const ViewSeniorPool = () => {
 		});
 	}, []);
 
+	
 	return (
 		<div className="">
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				{selected ? (
 					<InvestModal
-						handleDrawdown={handleDrawdown}
+						handleDrawdown={handleDrawdown} //no use check it
 						isSenior={true}
 						poolName={poolName}
 						estimatedAPY={estimatedAPY}
 						setProcessFundModal={setProcessFundModal}
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
+						settxhash={settxhash}
+						setcontractAdrress={setcontractAdrress}
+						setAmounts={setAmounts}
 					/>
 				) : null}
 				{processFundModal ? (
-					<ProcessingFundsModal investProcessing={investProcessing} />
+					<ProcessingFundsModal
+						investProcessing={investProcessing}
+						invest={true}
+						txhash={txhash}
+						contractAddress={contractAdrress}
+						amounts={amounts}
+					/>
 				) : (
 					<></>
 				)}

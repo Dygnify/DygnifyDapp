@@ -13,16 +13,21 @@ import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 
 import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";
 import Loader from "../../uiTools/Loading/Loader";
+import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 
 const Withdraw = () => {
 	const [seniorPool, setSeniorPool] = useState();
 	const [juniorPools, setJuniorPools] = useState([]);
-	const [selected, setSelected] = useState(true);
+	const [selected, setSelected] = useState(null);
 	const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
 	const [walletBal, setWalletBal] = useState();
 	const [showModal, setShowModal] = useState(false);
-
+	const [processFundModal, setProcessFundModal] = useState();
+	const [investProcessing, setInvestProcessing] = useState();
 	const [loading, setLoading] = useState(true);
+	const [txhash, settxhash] = useState("");
+	const [contractAdrress, setcontractAdrress] = useState("");
+	const [amounts, setAmounts] = useState("");
 
 	const handleForm = () => {
 		setSelected(null);
@@ -102,7 +107,23 @@ const Withdraw = () => {
 						userWalletBal={walletBal}
 						data={selected}
 						setShowModal={setShowModal}
+						setProcessFundModal={setProcessFundModal}
+						setInvestProcessing={setInvestProcessing}
+						settxhash={settxhash}
+						setcontractAdrress={setcontractAdrress}
+						setAmounts={setAmounts}
 					/>
+				)}
+				{processFundModal ? (
+					<ProcessingFundsModal
+						investProcessing={investProcessing}
+						invest={false}
+						txhash={txhash}
+						contractAddress={contractAdrress}
+						amounts={amounts}
+					/>
+				) : (
+					<></>
 				)}
 
 				<div className="">

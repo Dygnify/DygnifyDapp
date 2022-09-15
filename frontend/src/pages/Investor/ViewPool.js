@@ -45,6 +45,9 @@ const ViewPool = () => {
 	const [investProcessing, setInvestProcessing] = useState();
 
 	const [loading, setLoading] = useState(true);
+	const [txhash, settxhash] = useState("");
+	const [contractAdrress, setcontractAdrress] = useState("");
+	const [amounts, setAmounts] = useState("");
 
 	const handleDrawdown = () => {
 		setSelected(null);
@@ -229,11 +232,20 @@ const ViewPool = () => {
 						setProcessFundModal={setProcessFundModal}
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
+						settxhash={settxhash}
+						setcontractAdrress={setcontractAdrress}
+						setAmounts={setAmounts}
 					/>
 				) : null}
 
 				{processFundModal ? (
-					<ProcessingFundsModal investProcessing={investProcessing} />
+					<ProcessingFundsModal
+						investProcessing={investProcessing}
+						invest={true}
+						txhash={txhash}
+						contractAddress={contractAdrress}
+						amounts={amounts}
+					/>
 				) : (
 					<></>
 				)}

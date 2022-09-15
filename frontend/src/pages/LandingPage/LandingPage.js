@@ -14,16 +14,16 @@ const LandingPage = () => {
 
 	return (
 		<div className={`${darkMode ? "dark" : ""}`}>
-			<div className="dark:bg-[#000000] w-full  bg-white dark:text-white text-black pb-20 md:pb-32 xl:pb-20 md:h-screen">
+			<div className="dark:bg-[#000000] bg-white dark:text-white text-black pb-20 md:pb-32 xl:pb-20 w-full h-full">
 				<div className="landing-backgroundimage">
 					<Header darkMode={darkMode} setDarkMode={setDarkMode} />
-					<div>
+					<div className="px-4">
 						<div className="flex-col items-center flex pt-20 xl:pt-10">
-							<h1 className="text-4xl font-bold text-center w-[90%] px-auto md:w-[78%] md:text-5xl xl:text-[3.1rem] xl:w-[50%] 2xl:text-[3.5]">
+							<h1 className="text-4xl font-bold text-center w-[90%]  md:w-[78%] md:text-5xl xl:text-[3.1rem] xl:w-[50%] 2xl:text-[3.5]">
 								Democratising Credit Flow to Small Business
 							</h1>
 
-							<h6 className="font-medium text-base w-[80%] text-center mx-auto my-6 md:w-[55%] xl:w-[33%] 2xl:w-[30%]">
+							<h6 className="font-medium text-base w-[80%] text-center my-6 md:w-[55%] xl:w-[33%] 2xl:w-[30%]">
 								DeFi platform enabling stable, attractive yields for digital
 								asset investors via purpose-based investments in emerging market
 								opportunities

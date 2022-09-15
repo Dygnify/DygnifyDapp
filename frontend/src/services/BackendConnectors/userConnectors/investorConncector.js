@@ -21,6 +21,7 @@ const withdrawAllJunior = async (poolAddress) => {
 
 		const transaction1 = await poolContract.withdrawAll(0); // 0 is juniorpool ID
 		await transaction1.wait();
+		return transaction1;
 	}
 };
 
@@ -41,6 +42,7 @@ const withdrawSeniorPoolInvestment = async (amount) => {
 			if (amount && amount > 0) {
 				let transaction = await contract.withdrawWithLP(amount);
 				await transaction.wait();
+				return transaction;
 			}
 		}
 	} catch (error) {
@@ -228,7 +230,8 @@ const getJuniorWithdrawableOp = async () => {
 					ethers.utils.formatUnits(estimatedAPY[1].toString(), sixDecimals) *
 						100 +
 					"%";
-				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable =
+					await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals
@@ -293,6 +296,7 @@ const investInSeniorPool = async (amount) => {
 			amount = ethers.utils.parseUnits(amount, sixDecimals);
 			let transaction = await contract.stake(amount);
 			await transaction.wait();
+			return transaction;
 		}
 	} catch (error) {
 		console.log(error);
@@ -312,6 +316,7 @@ const investInJuniorPool = async (poolAddress, amount) => {
 			amount = ethers.utils.parseUnits(amount, sixDecimals);
 			let transaction = await contract.deposit("0", amount); //0 denotes junior subpool
 			await transaction.wait();
+			return transaction;
 		}
 	} catch (error) {
 		console.log(error);
