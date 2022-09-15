@@ -21,6 +21,8 @@ const InvestModal = ({
 	poolName,
 	poolLimit,
 	estimatedAPY,
+	investableAmount,
+	investableDisplayAmount,
 	setProcessFundModal,
 	setInvestProcessing,
 	setSelected,
@@ -96,36 +98,67 @@ const InvestModal = ({
 
 	const handleAmount = (e) => {
 		const value = e.target.value;
+		let investInputCode = 0;
 
+		// 0
 		const defaultErr = {
 			approveErr: false,
 			investErr: true,
 			msg: "",
 		};
 
-		const errObj = {
+		// 1
+		const allowedInvest = {
+			approveErr: true,
+			investErr: false,
+			msg: "",
+		};
+
+		// 2
+		const insufficientBalErr = {
 			approveErr: true,
 			investErr: true,
 			msg: "Insufficient USDC to initiate transfer",
 		};
 
+		// 3
+		const investableErr = {
+			approveErr: true,
+			investErr: true,
+			msg: "Can't approve / invest more than Investable Amount",
+		};
+
 		if (walletBal) {
 			if (+value > +walletBal) {
-				setError(errObj);
+				setError(insufficientBalErr);
+				investInputCode = 2;
 			} else if (+value > +approvedvalue) {
-				setError({
-					approveErr: false,
-					investErr: true,
-					msg: "",
-				});
+				setError(defaultErr);
+				investInputCode = 0;
 			} else if (+value <= +approvedvalue) {
-				setError({
-					approveErr: true,
-					investErr: false,
-					msg: "",
-				});
+				setError(allowedInvest);
+				investInputCode = 1;
 			} else {
 				setError(defaultErr);
+				investInputCode = 0;
+			}
+		}
+
+		if (investableAmount) {
+			if (+value > +investableAmount) {
+				setError(investableErr);
+				investInputCode = 3;
+			} else {
+				if (investInputCode === 0) {
+					setError(defaultErr);
+				}
+
+				if (investInputCode === 1) {
+					setError(allowedInvest);
+				}
+				if (investInputCode === 2) {
+					setError(insufficientBalErr);
+				}
 			}
 		}
 
@@ -191,8 +224,22 @@ const InvestModal = ({
 
 						<div className="flex justify-between font-semibold">
 							<p className="">Estimated APY</p>
-							<p className="">{estimatedAPY}%</p>
+							<p className="">
+								{estimatedAPY}
+								{isSenior ? "%" : ""}
+							</p>
 						</div>
+
+						{!isSenior ? (
+							<div className="flex gap-1 font-semibold">
+								<p className="">Investable Amount</p>
+
+								<img src={DollarImage} className="ml-auto w-[1rem]" />
+								<p className="">{investableDisplayAmount}</p>
+							</div>
+						) : (
+							<></>
+						)}
 					</div>
 
 					<div className="relative px-4 md:px-8 mt-8 flex flex-col gap-1">

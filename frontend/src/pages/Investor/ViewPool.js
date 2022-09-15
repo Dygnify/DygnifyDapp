@@ -233,6 +233,8 @@ const ViewPool = () => {
 						poolName={poolData?.opportunityName}
 						poolLimit={poolData?.opportunityAmount}
 						estimatedAPY={poolData?.loanInterest}
+						investableAmount={poolData?.investableAmount}
+						investableDisplayAmount={poolData?.investableDisplayAmount}
 						setProcessFundModal={setProcessFundModal}
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
