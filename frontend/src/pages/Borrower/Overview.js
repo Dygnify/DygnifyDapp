@@ -41,6 +41,8 @@ const Overview = () => {
 	const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 	const [openProcessRepayment, setOpenProcessRepayment] = useState();
 	const [processRepayment, setProcessRepayment] = useState();
+	const [transactionId, settransactionId] = useState("");
+	const [walletAddress, setwalletAddress] = useState("");
 
 	const handleForm = () => {
 		setSelected(null);
@@ -330,13 +332,19 @@ const Overview = () => {
 									loadRepaymentList={setLoadRepaymentList}
 									setOpenProcessRepayment={setOpenProcessRepayment}
 									setProcessRepayment={setProcessRepayment}
+									setwalletAddress={setwalletAddress}
+									settransactionId={settransactionId}
 								/>
 							))}
 						</div>
 					)}
 
 					{openProcessRepayment && (
-						<ProcessingRepaymentModal processRepayment={processRepayment} />
+						<ProcessingRepaymentModal
+							processRepayment={processRepayment}
+							transactionId={transactionId}
+							walletAddress={walletAddress}
+						/>
 					)}
 				</div>
 				<div className="">

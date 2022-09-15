@@ -12,6 +12,8 @@ const RepaymentModal = ({
 	handleRepayment,
 	setOpenProcessRepayment,
 	setProcessRepayment,
+	setwalletAddress,
+	settransactionId,
 }) => {
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
@@ -28,23 +30,28 @@ const RepaymentModal = ({
 			window.ethereum.selectedAddress,
 			data.opportunityPoolAddress
 		);
+		console.log(data.repaymentAmount, "--", newdata);
+
 		if (data.repaymentAmount <= newdata) {
 			setIsInvest(true);
+			setIsApproved(false);
 		} else {
 			setIsApproved(true);
+			setIsInvest(false);
 		}
 
 		setApprovedvalue(newdata);
 	}
 	async function onRepayment() {
-		console.log("💲");
 		setOpenProcessRepayment(true);
 		setProcessRepayment(true);
-	   	await repayment(data.opportunityPoolAddress);
+		setwalletAddress(data.opportunityPoolAddress);
+		const data = await repayment(data.opportunityPoolAddress);
+		settransactionId(data.opportunityPoolAddress);
+
 		handleRepayment();
 		setProcessRepayment(false);
 	}
-
 	return (
 		<div>
 			<input type="checkbox" id="repayment-modal" className="modal-toggle" />
@@ -109,14 +116,15 @@ const RepaymentModal = ({
 							className={` w-full ${
 								!isApproved ? "opacity-40 cursor-not-allowed" : ""
 							}`}
-							htmlFor={"RepaymentProcessModal"}
+							htmlFor={isApproved ? "RepaymentProcessModal" : ""}
 							setOpenProcessRepayment={setOpenProcessRepayment}
 							setProcessRepayment={setProcessRepayment}
-							onClick={() =>
-								isApproved
-									? approve(data.opportunityPoolAddress, data.repaymentAmount)
-									: ""
-							}
+							onClick={() => {
+								if (isApproved)
+									approve(data.opportunityPoolAddress, data.repaymentAmount);
+								setIsApproved(false);
+								setIsInvest(true);
+							}}
 						>
 							Approve
 						</GradientBtnForModal>
@@ -126,7 +134,7 @@ const RepaymentModal = ({
 							className={` w-full ${
 								!isInvest ? "cursor-not-allowed opacity-40" : ""
 							} `}
-							htmlFor={"RepaymentProcessModal"}
+							htmlFor={isInvest ? "RepaymentProcessModal" : ""}
 							setOpenProcessRepayment={setOpenProcessRepayment}
 							setProcessRepayment={setProcessRepayment}
 							onClick={() => (isInvest ? onRepayment() : "")}

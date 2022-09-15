@@ -14,6 +14,11 @@ const WithdrawFundsModal = ({
 	data,
 	showModal,
 	setShowModal,
+	setProcessFundModal,
+	setInvestProcessing,
+	settxhash,
+	setcontractAdrress,
+	setAmounts,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [error, setError] = useState({
@@ -22,13 +27,31 @@ const WithdrawFundsModal = ({
 	});
 
 	async function withdrawJunior() {
-		await withdrawAllJunior(data.opportunityPoolAddress);
-		handleForm();
+		setProcessFundModal(true);
+		setInvestProcessing(true);
+		setAmounts(amount);
+		setcontractAdrress(data.opportunityPoolAddress);
+		const data = await withdrawAllJunior(data.opportunityPoolAddress);
+		if (data) {
+			settxhash(data.hash);
+			setShowModal(false);
+			handleForm();
+			setInvestProcessing(false);
+		}
 	}
 
 	async function withdrawSeniorPool() {
-		await withdrawSeniorPoolInvestment(amount);
-		handleForm();
+		setProcessFundModal(true);
+		setInvestProcessing(true);
+		setAmounts(amount);
+		setcontractAdrress(process.env.REACT_APP_SENIORPOOL);
+		const data = await withdrawSeniorPoolInvestment(amount);
+		if (data) {
+			settxhash(data.hash);
+			setShowModal(false);
+			handleForm();
+			setInvestProcessing(false);
+		}
 	}
 
 	const handleAmount = (e) => {
@@ -120,7 +143,7 @@ const WithdrawFundsModal = ({
 					<div className="relative px-4 md:px-8 mt-8 flex flex-col gap-1">
 						{data.isSeniorPool ? (
 							<>
-								<label for="investModalAmount" className="font-semibold">
+								<label htmlFor="investModalAmount" className="font-semibold">
 									Enter Amount
 								</label>
 								<input
@@ -147,6 +170,7 @@ const WithdrawFundsModal = ({
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
+							htmlFor="WithdrawProcessModal"
 							className="w-full"
 							disable={true}
 							onClick={() => {

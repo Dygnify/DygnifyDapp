@@ -15,7 +15,6 @@ const loantenure = [
 	{ value: 36, label: 36 },
 ];
 
-const loantype = ["Bullet Loan", "Term Loan"];
 const paymentfrequency = [
 	{ value: 30, label: 30 },
 	{ value: 60, label: 60 },
@@ -35,6 +34,9 @@ export default function Account({ formData, handleNext, handleForm }) {
 			handleNext(values, false);
 		},
 	});
+	const [outlineType, setoutlineType] = useState(false);
+	const [outlineLoan, setoutlineLoan] = useState(false);
+	const [outlinePay, setoutlinePay] = useState(false);
 	return (
 		<>
 			<div className=" flex flex-col mt-20 md:mt-14 md:px-5 ">
@@ -73,32 +75,25 @@ export default function Account({ formData, handleNext, handleForm }) {
 					<div className="md:flex md:gap-3">
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
-								<span class="text-white">Loan Tenure</span>
+								<span class="text-white">Loan&nbsp;Tenure</span>
 							</label>
-							<div className="input input-bordered items-center flex justify-between bg-lightmode-300 dark:bg-darkmode-700">
+							<div
+								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
+									outlineLoan
+										? "outline outline-2 outline-offset-2 outline-[#3A3C43]"
+										: ""
+								}`}
+							>
 								<Selection
 									onChange={(value) =>
 										formik.setFieldValue("loan_tenure", value.value)
 									}
 									value={formik.values.loan_tenure}
-									placeholder="Loan Tenure"
+									placeholder="Loan&nbsp;Tenure"
 									options={loantenure}
+									focus={setoutlineLoan}
 								></Selection>
-								{/* <select
-									name="loan_tenure"
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									className="outline-none w-[80%] appearance-none rounded-lg bg-[#24272F]"
-									value={formik.values.loan_tenure}
-									id="loan_tenure"
-								>
-									<option className="hidden">Enter Loan Tenure</option>
-									{loantenure.map((val, ind) => (
-										<option className="text-base" key={val} value={val}>
-											{val}
-										</option>
-									))}
-								</select> */}
+
 								<div className="text-gray-400">Months</div>
 							</div>
 							{formik.touched.loan_tenure && formik.errors.loan_tenure ? (
@@ -110,31 +105,25 @@ export default function Account({ formData, handleNext, handleForm }) {
 
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
-								<span class="text-white">Repayment Frequency</span>
+								<span class="text-white">Repayment&nbsp;Frequency</span>
 							</label>
-							<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
+							<div
+								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
+									outlinePay
+										? "outline outline-2 outline-offset-2 outline-[#3A3C43]"
+										: ""
+								}`}
+							>
 								<Selection
 									onChange={(value) =>
 										formik.setFieldValue("payment_frequency", value.value)
 									}
 									value={formik.values.payment_frequency}
-									placeholder="Enter Repayment"
+									placeholder="Enter&nbsp;Repayment"
 									options={paymentfrequency}
+									focus={setoutlinePay}
 								></Selection>
-								{/* <select
-									name="payment_frequency"
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									className="outline-none w-[80%] appearance-none rounded-lg bg-[#24272F]"
-									value={formik.values.payment_frequency}
-								>
-									<option className="hidden">Enter Repayment</option>
-									{paymentfrequency.map((val, ind) => (
-										<option key={val} className="text-base" value={val}>
-											{val}
-										</option>
-									))}
-								</select> */}
+
 								<div className="text-gray-400">Days</div>
 							</div>
 							{formik.touched.payment_frequency &&
@@ -162,9 +151,15 @@ export default function Account({ formData, handleNext, handleForm }) {
 						></TextField>
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
 							<label class="label">
-								<span class="text-white">Loan Type</span>
+								<span class="text-white mb-1">Loan Type</span>
 							</label>
-							<div className="input input-bordered items-center flex justify-between bg-[#24272F]">
+							<div
+								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
+									outlineType
+										? "outline outline-2 outline-offset-2 outline-[#3A3C43]"
+										: ""
+								}`}
+							>
 								<Selection
 									onChange={(value) =>
 										formik.setFieldValue("loan_type", value.value)
@@ -172,33 +167,9 @@ export default function Account({ formData, handleNext, handleForm }) {
 									value={formik.values.loan_type}
 									placeholder="Enter Repayment"
 									options={loantypes}
+									focus={setoutlineType}
 								></Selection>
 							</div>
-
-							{/* <select
-								className="input input-bordered w-full"
-								style={{
-									backgroundColor: "#24272F",
-									border: "2px solid #3A3C43",
-									borderRadius: "8px",
-								}}
-								name="loan_type"
-								defaultValue={"0"}
-								value={formik.values.loan_type}
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								error={
-									formik.touched.loan_type && formik.errors.loan_type
-										? formik.errors.loan_type
-										: null
-								}
-							>
-								{loantype.map((val, ind) => (
-									<option value={ind} key={val} className="text-base">
-										{val}
-									</option>
-								))}
-							</select> */}
 
 							{formik.touched.loan_type && formik.errors.loan_type ? (
 								<p style={{ color: "red" }}>

@@ -1,7 +1,13 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 
-const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
+const ProcessingRepaymentModal = ({
+	processRepayment,
+	handleRepayment,
+	transactionId,
+	walletAddress,
+}) => {
 	console.log(processRepayment, "in fund process modal");
 
 	const navigate = useNavigate();
@@ -101,7 +107,9 @@ const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
 										Transaction ID
 									</small>
 									<p style={{ fontSize: 14, color: "white" }}>
-										0msaae8979faweawqt977
+										{transactionId
+											? getTrimmedWalletAddress(transactionId,25)
+											: "--"}
 									</p>
 								</div>
 							</div>
@@ -117,7 +125,9 @@ const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
 									Receipient's wallet address
 								</small>
 								<p style={{ fontSize: 14, color: "white" }}>
-									0msaae8979faweawqt977asfsaf8798
+									{walletAddress
+										? getTrimmedWalletAddress(walletAddress,25)
+										: "--"}
 								</p>
 							</div>
 						</div>
