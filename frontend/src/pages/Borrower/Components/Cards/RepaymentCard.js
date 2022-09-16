@@ -10,6 +10,10 @@ const RepaymentCard = ({
 	setOpenProcessRepayment,
 	setProcessRepayment,
 	loadRepaymentList,
+	setwalletAddress,
+	settransactionId,
+	setpoolName,
+	setamounts,
 }) => {
 	const [selected, setSelected] = useState(null);
 	const handleRepayment = async () => {
@@ -63,9 +67,15 @@ const RepaymentCard = ({
 			</div>
 			{selected && (
 				<RepaymentModal
+					setOpenProcessRepayment={setOpenProcessRepayment}
+					setProcessRepayment={setProcessRepayment}
 					key={data?.id}
 					data={selected}
 					handleRepayment={handleRepayment}
+					setwalletAddress={setwalletAddress}
+					settransactionId={settransactionId}
+					setpoolName={setpoolName}
+					setamounts={setamounts}
 				></RepaymentModal>
 			)}
 		</div>

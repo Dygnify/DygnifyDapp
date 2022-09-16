@@ -28,10 +28,13 @@ const getApprovalHistory = async () => {
 					opportunitiesList.push(obj);
 				}
 			}
-			return opportunitiesList;
+			return { opportunitiesList, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return 0;

@@ -38,7 +38,12 @@ const Invest = () => {
 			console.log("reached");
 			const result = await axiosHttpService(kycOptions(refId));
 			console.log(result, result.res.status);
-			if (result.res.status === "success") setKycStatus(true);
+			if (
+				result.res.status === "success" &&
+				result.res.data.status === "approved"
+			) {
+				setKycStatus(true);
+			}
 			if (result.res.status === "error") {
 				setKycStatus(false);
 			}

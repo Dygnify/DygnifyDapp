@@ -373,9 +373,21 @@ const getAllActiveOpportunities = async () => {
 						opportunityPool.abi,
 						provider
 					);
+					let juniorPooldata = await poolContract.juniorSubpoolDetails();
 					let poolBal = await poolContract.poolBalance();
 					let obj = getOpportunity(opportunity);
+					let investableAmount =
+						+juniorPooldata[1].toString() - +juniorPooldata[2].toString();
+
+					investableAmount = ethers.utils.formatUnits(
+						investableAmount,
+						sixDecimals
+					);
+					obj.investableAmount = investableAmount;
+					obj.investableDisplayAmount = getDisplayAmount(investableAmount);
+
 					poolBal = ethers.utils.formatUnits(poolBal, sixDecimals);
+
 					obj.isFull = parseFloat(poolBal) >= parseFloat(obj.actualLoanAmount);
 					opportunities.push(obj);
 				}
@@ -469,10 +481,13 @@ const getAllUnderwriterOpportunities = async () => {
 					opportunities.push(obj);
 				}
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return null;

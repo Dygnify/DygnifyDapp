@@ -1,7 +1,15 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
+import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
-const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
+const ProcessingRepaymentModal = ({
+	processRepayment,
+	transactionId,
+	walletAddress,
+	poolName,
+	amounts,
+}) => {
 	console.log(processRepayment, "in fund process modal");
 
 	const navigate = useNavigate();
@@ -24,7 +32,6 @@ const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
 					<label
 						for="RepaymentProcessModal"
 						className="btn btn-ghost absolute right-2 top-2 pb-2"
-						onClick={() => handleRepayment()}
 					>
 						✕
 					</label>
@@ -50,8 +57,12 @@ const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
 						className="justify-center mb-2"
 					>
 						{processRepayment
-							? "Repayment of 10,000 USDC of pool poolName is under progress. "
-							: "You successfully repaid 10,000 USDC of pool poolName"}
+							? `Repayment of ${getDisplayAmount(
+									amounts
+							  )} USDC of pool ${poolName} is under progress. `
+							: `You successfully repaid ${getDisplayAmount(
+									amounts
+							  )} USDC of pool ${poolName}`}
 					</p>
 
 					<div
@@ -101,7 +112,9 @@ const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
 										Transaction ID
 									</small>
 									<p style={{ fontSize: 14, color: "white" }}>
-										0msaae8979faweawqt977
+										{transactionId
+											? getTrimmedWalletAddress(transactionId, 25)
+											: "--"}
 									</p>
 								</div>
 							</div>
@@ -117,7 +130,9 @@ const ProcessingRepaymentModal = ({ processRepayment, handleRepayment }) => {
 									Receipient's wallet address
 								</small>
 								<p style={{ fontSize: 14, color: "white" }}>
-									0msaae8979faweawqt977asfsaf8798
+									{walletAddress
+										? getTrimmedWalletAddress(walletAddress, 25)
+										: "--"}
 								</p>
 							</div>
 						</div>

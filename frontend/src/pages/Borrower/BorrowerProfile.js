@@ -58,7 +58,12 @@ const BorrowerProfile = () => {
 
 	const checkKyc = (refId) => {
 		axiosHttpService(kycOptions(refId)).then((result) => {
-			if (result.res.status === "success") setKycStatus(true);
+			if (
+				result.res.status === "success" &&
+				result.res.data.status === "approved"
+			) {
+				setKycStatus(true);
+			}
 			if (result.res.status === "error") {
 				setKycStatus(false);
 			}

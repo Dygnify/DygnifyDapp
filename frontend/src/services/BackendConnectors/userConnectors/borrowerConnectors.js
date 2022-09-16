@@ -56,16 +56,21 @@ const updateBorrowerDetails = async (cid) => {
 const repayment = async (poolAddress) => {
 	if (typeof window.ethereum !== "undefined") {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
-		console.log({ provider });
 		const signer = provider.getSigner();
-		const poolContract = new ethers.Contract(
-			poolAddress,
-			opportunityPool.abi,
-			signer
-		);
 
-		const transaction1 = await poolContract.repayment();
-		await transaction1.wait();
+		const iface = new ethers.utils.Interface(["function repayment()"]);
+
+		const data = iface.encodeFunctionData("repayment", []);
+
+		const transaction = {
+			to: poolAddress,
+			data: data,
+			gasLimit: "0x7A120",
+			from: window.ethereum.selectedAddress,
+		};
+		const tx = await signer.sendTransaction(transaction);
+		await tx.wait();
+		return tx;
 	}
 };
 const drawdown = async (poolAddress) => {

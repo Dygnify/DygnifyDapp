@@ -10,15 +10,30 @@ import WithdrawIcon from "../../pages/../uiTools/Icons/WithdrawIcon";
 import Header from "../Layout/Header";
 
 const InvestorDashboardNew = () => {
+	const theme = () => {
+		let dm = localStorage.getItem("dark-mode");
+
+		if (!dm) {
+			localStorage.setItem("dark-mode", true);
+			dm = true;
+		}
+
+		console.log("%c", "font-size:3rem;color:lightpink", dm);
+
+		return dm;
+	};
 	const [linkStatus, setLinkStatus] = useState(false);
-	const [darkMode, setDarkMode] = useState(true);
+	const [darkMode, setDarkMode] = useState(theme());
+
+	console.log("%ctheme", "font-size:3rem;color:lightgreen;");
+	console.log(darkMode);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);
 	};
 
 	return (
-		<div className={`${darkMode ? "dark" : ""} `}>
+		<div className={`${darkMode ? "dark" : ""}`}>
 			<div className="bg-neutral-50 dark:bg-darkmode-900 text-neutral-700 dark:text-white">
 				<Header
 					linkStatus={linkStatus}

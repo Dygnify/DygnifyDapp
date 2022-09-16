@@ -523,7 +523,7 @@ const EditBorrowerProfileNew = () => {
 										Exit
 									</button>
 									<GradientButton
-										className="md:w-[40%] xl:w-[min(40%,25rem)]"
+										className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
 										onClick={handleSubmit}
 									>
 										Save and Exit

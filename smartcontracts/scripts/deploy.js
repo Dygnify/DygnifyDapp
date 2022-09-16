@@ -80,6 +80,24 @@ async function main() {
 	await investor.deployed();
 	console.log("REACT_APP_INVESTOR = ", investor.address);
 
+	// DygnifyTreasury
+	const DygnifyTreasury = await hre.ethers.getContractFactory(
+		"DygnifyTreasury"
+	);
+	const dygnifyTreasury = await DygnifyTreasury.deploy();
+
+	await dygnifyTreasury.deployed();
+	console.log("REACT_APP_DYGNIFYTREASURY = ", dygnifyTreasury.address);
+
+	// DygnifyKeeper
+	const DygnifyKeeper = await hre.ethers.getContractFactory(
+		"DygnifyKeeper"
+	);
+	const dygnifyKeeper = await DygnifyKeeper.deploy();
+
+	await dygnifyKeeper.deployed();
+	console.log("REACT_APP_DYGNIFYKEEPER = ", dygnifyKeeper.address);
+
 	// Initialize the Dygnify config
 	// Set all the addresses
 	await dygnifyConfig.setAddress(1, lpToken.address);
@@ -92,6 +110,8 @@ async function main() {
 	await dygnifyConfig.setAddress(5, collateralToken.address);
 	await dygnifyConfig.setAddress(6, opportunityOrigination.address);
 	await dygnifyConfig.setAddress(7, investor.address);
+	await dygnifyConfig.setAddress(8, dygnifyTreasury.address);
+	await dygnifyConfig.setAddress(9, dygnifyKeeper.address);
 	console.log("DygnifyConfig configured successfully");
 
 	// Set all numbers
@@ -123,6 +143,10 @@ async function main() {
 	);
 	// Initialize the investor contract
 	await investor.initialize(dygnifyConfig.address);
+	// Initialize the dygnifyTreasury contract
+	await dygnifyTreasury.initialize(dygnifyConfig.address); 
+	// Initialize the dygnifyKeeper contract
+	await dygnifyKeeper.initialize(dygnifyConfig.address, 90); // 90 is threshold for loan writeoff
 	console.log("All contracts initilaized successfully");
 }
 

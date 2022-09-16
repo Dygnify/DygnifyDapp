@@ -17,8 +17,10 @@ const BorrowRequest = () => {
 
 	async function getUnderReviewOpportunity() {
 		let list = await getAllUnderwriterOpportunities();
-		if (list) {
-			setOpportunities(list);
+		if (list.success) {
+			setOpportunities(list.opportunities);
+		} else {
+			console.log(list.msg);
 		}
 	}
 

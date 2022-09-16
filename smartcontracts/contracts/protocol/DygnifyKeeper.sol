@@ -2,7 +2,6 @@
 pragma solidity 0.8.4;
 
 import "./BaseUpgradeablePausable.sol";
-import "./ConfigHelper.sol";
 import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 import "./DygnifyConfig.sol";
 import "../interfaces/IOpportunityOrigination.sol";

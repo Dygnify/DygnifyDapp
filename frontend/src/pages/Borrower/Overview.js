@@ -41,6 +41,10 @@ const Overview = () => {
 	const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 	const [openProcessRepayment, setOpenProcessRepayment] = useState();
 	const [processRepayment, setProcessRepayment] = useState();
+	const [transactionId, settransactionId] = useState("");
+	const [walletAddress, setwalletAddress] = useState("");
+	const [poolName, setpoolName] = useState("");
+	const [amounts, setamounts] = useState("");
 
 	const handleForm = () => {
 		setSelected(null);
@@ -79,7 +83,12 @@ const Overview = () => {
 	const checkForKycAndProfile = async (refId) => {
 		try {
 			const result = await axiosHttpService(kycOptions(refId));
-			if (result.res.status === "success") setKycStatus(true);
+			if (
+				result.res.status === "success" &&
+				result.res.data.status === "approved"
+			) {
+				setKycStatus(true);
+			}
 			if (result.res.status === "error") {
 				setKycStatus(false);
 			}
@@ -131,7 +140,7 @@ const Overview = () => {
 			totalRepaidAmt += op.totalRepaidAmount;
 		}
 		if (totalLoanAmt > 0) {
-			setTotalBorrowedAmt("$" + getDisplayAmount(totalLoanAmt));
+			setTotalBorrowedAmt(getDisplayAmount(totalLoanAmt));
 		}
 
 		totalRepaidAmt = totalRepaidAmt ? totalRepaidAmt : 0;
@@ -325,13 +334,23 @@ const Overview = () => {
 									loadRepaymentList={setLoadRepaymentList}
 									setOpenProcessRepayment={setOpenProcessRepayment}
 									setProcessRepayment={setProcessRepayment}
+									setwalletAddress={setwalletAddress}
+									settransactionId={settransactionId}
+									setpoolName={setpoolName}
+									setamounts={setamounts}
 								/>
 							))}
 						</div>
 					)}
 
 					{openProcessRepayment && (
-						<ProcessingRepaymentModal processRepayment={processRepayment} />
+						<ProcessingRepaymentModal
+							processRepayment={processRepayment}
+							transactionId={transactionId}
+							walletAddress={walletAddress}
+							poolName={poolName}
+							amounts={amounts}
+						/>
 					)}
 				</div>
 				<div className="">

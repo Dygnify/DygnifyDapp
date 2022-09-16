@@ -35,6 +35,15 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 		fetchStatus();
 	}, [location]);
 
+	const changeTheme = () => {
+		setDarkMode((prev) => {
+			console.log(prev);
+			localStorage.setItem("dark-mode", !prev);
+
+			return !prev;
+		});
+	};
+
 	return (
 		<>
 			<div className="flex gap-4 sm:gap-8 px-2  sm:px-4 md:px-6 py-2 relative items-center bg-transparent  text-neutral-700 dark:text-white">
@@ -51,7 +60,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						type="checkbox"
 						id="themeToggle"
 						checked={darkMode}
-						onChange={() => setDarkMode((prev) => !prev)}
+						onChange={changeTheme}
 						className="hidden"
 					/>
 					<label htmlFor="themeToggle">{darkMode ? <Light /> : <Dark />}</label>
