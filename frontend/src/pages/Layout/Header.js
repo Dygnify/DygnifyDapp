@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GradientButton from "../../uiTools/Button/GradientButtonHeader";
 import WalletWhiteSmall from "../SVGIcons/WalletWhiteSmall";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LogoImage from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import Wallet from "../../uiTools/Icons/Wallet";
@@ -18,6 +18,7 @@ import Light from "../../uiTools/Icons/Light";
 const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	const [status, setStatus] = useState(false);
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	const fetchStatus = async () => {
 		const getStatus = await isConnected();
@@ -51,6 +52,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						className="md:w-40 h-11  w-28 md:h-16"
 						src={LogoImage}
 						alt="company logo"
+						onClick={() => navigate("/")}
 					/>
 				</div>
 				<div className="ml-auto p-3 bg-darkmode-500 rounded-md">
