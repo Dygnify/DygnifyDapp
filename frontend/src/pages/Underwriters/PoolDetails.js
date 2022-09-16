@@ -150,8 +150,10 @@ const PoolDetails = () => {
 	async function vote(voteID) {
 		setLoading(true);
 		const result = await voteOpportunity(opDetails.id, voteID);
-		if (result) {
+		if (result.success) {
 			updateStatus(voteID);
+		} else {
+			console.log(result.msg);
 		}
 
 		setLoading(false);
@@ -199,7 +201,7 @@ const PoolDetails = () => {
 								className={
 									!status.approve
 										? "rounded-full h-12 w-[29%]  transition ease-linear duration-500 overflow-hidden border-2 border-[#10B981] btn btn-xs btn-outline text-[#10B981] text-base  capitalize font-medium md:px-14"
-										: "rounded-3xl py-1 px-2 approved-btn capitalize text-[#000000]  md:h-8 md:mr-10"
+										: "rounded-3xl py-1 px-2 approved-btn capitalize text-[#000000] font-medium md:h-8 md:mr-10"
 								}
 							>
 								{status.approve ? "Approved" : "Approve"}
@@ -214,7 +216,7 @@ const PoolDetails = () => {
 								className={
 									!status.reject
 										? "rounded-full h-12 w-[29%] transition ease-linear duration-500 overflow-hidden  border-2 border-[#EF4444] btn btn-xs btn-outline text-[#EF4444] text-base  capitalize font-medium md:px-14"
-										: "rounded-3xl py-1 px-2 rejected-btn capitalize text-[#000000]  md:h-8 md:mr-10"
+										: "rounded-3xl py-1 px-2 rejected-btn capitalize text-[#000000]  font-medium md:h-8 md:mr-10"
 								}
 							>
 								{status.reject ? "Rejected" : "Reject"}
