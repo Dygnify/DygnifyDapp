@@ -163,12 +163,15 @@ const voteOpportunity = async (id, vote) => {
 			);
 			const transaction1 = await contract.voteOpportunity(id, vote);
 			await transaction1.wait();
-			return true;
+			return { transaction1, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
-	return false;
+	// return false;
 };
 
 // to fetch opportunity by id
