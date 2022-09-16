@@ -150,9 +150,7 @@ const WithdrawFundsModal = ({
 							className="w-full"
 							disable={true}
 							onClick={() => {
-								if (data) {
-								}
-								data.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
+								data?.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
 							}}
 						>
 							Withdraw Funds
