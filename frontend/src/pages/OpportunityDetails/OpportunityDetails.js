@@ -15,7 +15,10 @@ const ApprovedOpportunities = () => {
 	useEffect(() => {
 		const dataFetch = async () => {
 			const temp = await getOpportunityAt(id);
-			setTarget(temp);
+			if (temp.success) setTarget(temp.data);
+			else {
+				console.log(temp.msg);
+			}
 		};
 		dataFetch();
 	}, [id]);

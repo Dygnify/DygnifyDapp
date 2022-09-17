@@ -63,8 +63,10 @@ const Overview = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			let opportunities = await getDrawdownOpportunities();
-			if (opportunities && opportunities.length) {
-				setDrawdownList(opportunities);
+			if (opportunities.success) {
+				setDrawdownList(opportunities.opportunities);
+			} else {
+				console.log(opportunities.msg);
 			}
 
 			setLoading(false);
@@ -117,16 +119,18 @@ const Overview = () => {
 				"font-size:3rem; color:lightblue"
 			);
 			let opportunities = await getOpportunitiesWithDues();
-			if (opportunities && opportunities.length) {
+			if (opportunities.success) {
 				//sort the list based on date
-				opportunities.sort(sortByProperty("epochDueDate"));
-				setRepaymentList(opportunities);
+				opportunities.opportunities.sort(sortByProperty("epochDueDate"));
+				setRepaymentList(opportunities.opportunities);
 
 				// set next due date and amount
-				setNextDueAmount(opportunities[0].repaymentAmount);
-				setNextDueDate(opportunities[0].nextDueDate);
+				setNextDueAmount(opportunities.opportunities[0].repaymentAmount);
+				setNextDueDate(opportunities.opportunities[0].nextDueDate);
 
 				console.log(repaymentList, nextDueAmount);
+			} else {
+				console.log(opportunities.msg);
 			}
 		};
 		fetchData();

@@ -62,7 +62,10 @@ function Token() {
 
 	useEffect(async () => {
 		let op = await getAllUnderReviewOpportunities();
-		if (op && op.length) setUnderReviewOp(op);
+		if (op.success) setUnderReviewOp(op.opportunities);
+		else {
+			console.log(op.msg);
+		}
 	}, []);
 
 	useEffect(async () => {
