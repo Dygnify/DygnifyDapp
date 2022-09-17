@@ -41,8 +41,10 @@ const BorrowList = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			let op = await getDrawdownOpportunities();
-			if (op && op.length) {
-				setData(op);
+			if (op.success) {
+				setData(op.opportunities);
+			} else {
+				console.log(op.msg);
 			}
 
 			setLoading(false);

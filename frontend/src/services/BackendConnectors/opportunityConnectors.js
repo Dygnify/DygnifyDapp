@@ -197,6 +197,7 @@ const voteOpportunity = async (id, vote) => {
 	// return false;
 };
 
+// rohan
 // to fetch opportunity by id
 const getOpportunityAt = async (id) => {
 	try {
@@ -212,10 +213,14 @@ const getOpportunityAt = async (id) => {
 			console.log("check");
 			let tx = await contract.opportunityToId(id);
 			let { obj } = getOpportunity(tx);
-			return obj;
+			return { obj, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 	return null;
 };
@@ -243,10 +248,14 @@ const getAllUnderReviewOpportunities = async () => {
 					opportunities.push(obj);
 				}
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return 0;
@@ -299,10 +308,14 @@ const getDrawdownOpportunities = async () => {
 					opportunities.push(obj);
 				}
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return undefined;
@@ -366,14 +379,20 @@ const getOpportunitiesWithDues = async () => {
 					opportunities.push(obj);
 				}
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return undefined;
 };
+
+// ankit
 
 const getAllActiveOpportunities = async () => {
 	try {
