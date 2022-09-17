@@ -56,9 +56,10 @@ const Invest = () => {
 
 	useEffect(() => {
 		try {
-			getAllActiveOpportunities().then((juniorPool) => {
-				if (juniorPool && juniorPool.length) {
-					setJuniorPools(juniorPool);
+			getAllActiveOpportunities().then((res) => {
+				console.log("*****", res);
+				if (res.opportunities && res.opportunities.length) {
+					setJuniorPools(res.opportunities);
 					setJuniorPoolLoading(false);
 				} else {
 					setJuniorPoolLoading(false);
@@ -158,7 +159,7 @@ const Invest = () => {
 								<p className="text-neutral-500 text-lg">
 									{juniorPoolLoading
 										? ""
-										: "No senior pool investments are available."}
+										: "No junior pool investments are available."}
 								</p>
 							</div>
 						) : (

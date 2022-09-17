@@ -1,6 +1,6 @@
 const { ethers } = require("ethers");
 const dygnifyToken = require("../../../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json");
-
+const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 
 const getEthAddress = async () => {
@@ -38,16 +38,18 @@ const requestAccount = async (metaMask) => {
 };
 
 const isConnected = async () => {
-	if (window.ethereum) {
-		let connectionStatus = await window.ethereum.isConnected();
-		console.log(connectionStatus);
-		let chainId = window.ethereum.networkVersion;
-		console.log(chainId);
-		if (chainId == "80001" && connectionStatus == true) {
-			return connectionStatus;
+	try {
+		if (window.ethereum) {
+			let connectionStatus = await window.ethereum.isConnected();
+			let chainId = window.ethereum.networkVersion;
+			if (chainId == "80001" && connectionStatus == true) {
+				return connectionStatus;
+			}
 		}
+		return false;
+	} catch (error) {
+		Sentry.captureException(error);
 	}
-	return false;
 };
 
 const convertDate = (epochTimestamp) => {

@@ -66,7 +66,7 @@ function Token() {
 	}, []);
 
 	useEffect(async () => {
-		let op = await getAllActiveOpportunities();
+		let { opportunities: op } = await getAllActiveOpportunities();
 		if (op && op.length) setActiveOpportunityList(op);
 	}, []);
 

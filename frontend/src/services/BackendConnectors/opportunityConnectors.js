@@ -17,6 +17,8 @@ const {
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
 
+const Sentry = require("@sentry/react");
+
 const createOpportunity = async (formData) => {
 	if (!formData) {
 		return false;
@@ -395,10 +397,14 @@ const getAllActiveOpportunities = async () => {
 					opportunities.push(obj);
 				}
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return undefined;
@@ -448,10 +454,15 @@ const getAllWithdrawableOpportunities = async () => {
 					}
 				}
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return [];
@@ -487,6 +498,8 @@ const getAllUnderwriterOpportunities = async () => {
 			return { opportunities, success: true };
 		}
 	} catch (error) {
+		Sentry.captureException(error);
+
 		return {
 			success: false,
 			msg: error.message,
@@ -509,10 +522,15 @@ const getOpportunityName = async (poolAddress) => {
 				opportunityPool.abi,
 				provider
 			);
-			return await poolContract.getOpportunityName();
+			const opName = await poolContract.getOpportunityName();
+			return { opName, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 	return "";
 };
