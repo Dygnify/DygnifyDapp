@@ -14,6 +14,7 @@ const {
 	getEthAddress,
 } = require("./userConnectors/commonConnectors");
 
+const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
 
@@ -67,38 +68,49 @@ const createOpportunity = async (formData) => {
 };
 
 function getOpportunity(opportunity) {
-	if (!opportunity) {
-		return undefined;
+	try {
+		if (!opportunity) {
+			return undefined;
+		}
+
+		// Create the opportunity object
+		let obj = {};
+		obj.id = opportunity.opportunityID.toString();
+		obj.borrower = opportunity.borrower.toString();
+		obj.opportunityName = opportunity.opportunityName.toString();
+		obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
+		obj.opportunityInfo = opportunity.opportunityInfo.toString();
+		obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
+		let amount = ethers.utils.formatUnits(opportunity.loanAmount, sixDecimals);
+		obj.opportunityAmount = getDisplayAmount(amount);
+		obj.actualLoanAmount = amount;
+		obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
+		let loanInt = ethers.utils.formatUnits(
+			opportunity.loanInterest,
+			sixDecimals
+		);
+		obj.loanActualInterest = loanInt;
+		obj.loanInterest = loanInt.toString() + "%";
+		obj.paymentFrequencyInDays =
+			opportunity.paymentFrequencyInDays.toString() + " Days";
+		obj.collateralDocument = opportunity.collateralDocument.toString();
+		obj.capitalLoss = ethers.utils
+			.formatUnits(opportunity.capitalLoss, sixDecimals)
+			.toString();
+		obj.status = opportunity.opportunityStatus.toString();
+		obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
+
+		obj.createdOn = convertDate(opportunity.createdOn);
+		obj.epochCreationDate = opportunity.createdOn.toString();
+
+		return { obj, success: true };
+	} catch (error) {
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
-
-	// Create the opportunity object
-	let obj = {};
-	obj.id = opportunity.opportunityID.toString();
-	obj.borrower = opportunity.borrower.toString();
-	obj.opportunityName = opportunity.opportunityName.toString();
-	obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
-	obj.opportunityInfo = opportunity.opportunityInfo.toString();
-	obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-	let amount = ethers.utils.formatUnits(opportunity.loanAmount, sixDecimals);
-	obj.opportunityAmount = getDisplayAmount(amount);
-	obj.actualLoanAmount = amount;
-	obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
-	let loanInt = ethers.utils.formatUnits(opportunity.loanInterest, sixDecimals);
-	obj.loanActualInterest = loanInt;
-	obj.loanInterest = loanInt.toString() + "%";
-	obj.paymentFrequencyInDays =
-		opportunity.paymentFrequencyInDays.toString() + " Days";
-	obj.collateralDocument = opportunity.collateralDocument.toString();
-	obj.capitalLoss = ethers.utils
-		.formatUnits(opportunity.capitalLoss, sixDecimals)
-		.toString();
-	obj.status = opportunity.opportunityStatus.toString();
-	obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
-
-	obj.createdOn = convertDate(opportunity.createdOn);
-	obj.epochCreationDate = opportunity.createdOn.toString();
-
-	return obj;
 }
 
 // to fetch created opportunities of specific borrower
@@ -118,7 +130,7 @@ const getOpportunitysOf = async () => {
 			let opportunities = [];
 			for (const op of data) {
 				let tx = await contract.opportunityToId(op);
-				let obj = getOpportunity(tx);
+				let { obj } = getOpportunity(tx);
 				if (
 					obj.opportunityPoolAddress &&
 					obj.opportunityPoolAddress !== nullAddress
@@ -166,6 +178,7 @@ const voteOpportunity = async (id, vote) => {
 			return { transaction1, success: true };
 		}
 	} catch (error) {
+		Sentry.captureException(error);
 		return {
 			success: false,
 			msg: error.message,
@@ -188,7 +201,7 @@ const getOpportunityAt = async (id) => {
 
 			console.log("check");
 			let tx = await contract.opportunityToId(id);
-			let obj = getOpportunity(tx);
+			let { obj } = getOpportunity(tx);
 			return obj;
 		}
 	} catch (error) {
@@ -216,7 +229,7 @@ const getAllUnderReviewOpportunities = async () => {
 
 				let tx = await contract.opportunityToId(id);
 				if (tx.opportunityStatus.toString() === "0") {
-					let obj = getOpportunity(tx);
+					let { obj } = getOpportunity(tx);
 					opportunities.push(obj);
 				}
 			}
@@ -271,7 +284,7 @@ const getDrawdownOpportunities = async () => {
 				let loanAmount = ethers.utils.formatUnits(tx.loanAmount, sixDecimals);
 				console.log(poolBalance.toString());
 				if (parseInt(poolBalance) >= parseInt(loanAmount)) {
-					let obj = getOpportunity(tx);
+					let { obj } = getOpportunity(tx);
 					opportunities.push(obj);
 				}
 			}
@@ -327,7 +340,7 @@ const getOpportunitiesWithDues = async () => {
 						sixDecimals
 					);
 
-					let obj = getOpportunity(tx);
+					let { obj } = getOpportunity(tx);
 					obj.nextDueDate = convertDate(repaymentDate);
 					obj.epochDueDate = repaymentDate.toString();
 					obj.repaymentAmount = repaymentAmount;
@@ -378,7 +391,7 @@ const getAllActiveOpportunities = async () => {
 					);
 					let juniorPooldata = await poolContract.juniorSubpoolDetails();
 					let poolBal = await poolContract.poolBalance();
-					let obj = getOpportunity(opportunity);
+					let { obj } = getOpportunity(opportunity);
 					let investableAmount =
 						+juniorPooldata[1].toString() - +juniorPooldata[2].toString();
 
@@ -438,7 +451,7 @@ const getAllWithdrawableOpportunities = async () => {
 							await signer.getAddress()
 						);
 						const estimatedAPY = await poolContract.juniorYieldPerecentage();
-						let obj = getOpportunity(tx);
+						let { obj } = getOpportunity(tx);
 						obj.capitalInvested = userStakingAmt;
 						obj.estimatedAPY = estimatedAPY;
 						obj.yieldGenerated = userStakingAmt * estimatedAPY;
@@ -480,13 +493,14 @@ const getAllUnderwriterOpportunities = async () => {
 			for (let i = 0; i < opportunityList.length; i++) {
 				let tx = await contract.opportunityToId(opportunityList[i]);
 				if (tx.opportunityStatus.toString() === "0") {
-					let obj = getOpportunity(tx);
+					let { obj } = getOpportunity(tx);
 					opportunities.push(obj);
 				}
 			}
 			return { opportunities, success: true };
 		}
 	} catch (error) {
+		Sentry.captureException(error);
 		return {
 			success: false,
 			msg: error.message,

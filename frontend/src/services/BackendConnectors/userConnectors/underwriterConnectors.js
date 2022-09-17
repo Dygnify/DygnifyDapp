@@ -2,6 +2,7 @@ const { ethers } = require("ethers");
 const { getOpportunity } = require("../opportunityConnectors");
 const { getEthAddress } = require("./commonConnectors");
 const opportunityOrigination = require("../../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
+const Sentry = require("@sentry/react");
 
 const getApprovalHistory = async () => {
 	try {
@@ -24,13 +25,14 @@ const getApprovalHistory = async () => {
 				let tx = await contract.opportunityToId(opportunities[i]);
 				if (tx.opportunityStatus.toString() !== "0") {
 					//neglecting non voted opoortunities.
-					let obj = getOpportunity(tx);
+					let { obj } = getOpportunity(tx);
 					opportunitiesList.push(obj);
 				}
 			}
 			return { opportunitiesList, success: true };
 		}
 	} catch (error) {
+		Sentry.captureException(error);
 		return {
 			success: false,
 			msg: error.message,

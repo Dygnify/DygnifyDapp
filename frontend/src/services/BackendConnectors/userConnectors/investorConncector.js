@@ -77,7 +77,7 @@ const getTotalInvestmentOfInvestor = async () => {
 			totalInvestment += seniorInvestment;
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
-				let obj = await getOpportunity(tx);
+				let { obj } = await getOpportunity(tx);
 
 				const poolContract = new ethers.Contract(
 					obj.opportunityPoolAddress,
@@ -123,7 +123,7 @@ const getTotalYieldOfInvestor = async () => {
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
 				if (tx.opportunityStatus.toString() === "7") {
-					let obj = await getOpportunity(tx);
+					let {obj} = await getOpportunity(tx);
 
 					const poolContract = new ethers.Contract(
 						obj.opportunityPoolAddress,
@@ -208,7 +208,7 @@ const getJuniorWithdrawableOp = async () => {
 			let opportunityList = [];
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
-				let obj = await getOpportunity(tx);
+				let {obj} = await getOpportunity(tx);
 
 				const poolContract = new ethers.Contract(
 					obj.opportunityPoolAddress,

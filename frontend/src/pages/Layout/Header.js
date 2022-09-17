@@ -33,7 +33,16 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 
 	useEffect(() => {
 		fetchStatus();
+		darkModeStatus();
 	}, [location]);
+
+	function darkModeStatus() {
+		if (localStorage.getItem("dark-mode") === "false") {
+			setDarkMode(false);
+		} else {
+			setDarkMode(true);
+		}
+	}
 
 	const changeTheme = () => {
 		setDarkMode((prev) => {
@@ -49,13 +58,13 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 			<div className="flex gap-4 sm:gap-8 px-2  sm:px-4 md:px-6 py-2 relative items-center bg-transparent  text-neutral-700 dark:text-white">
 				<div className="">
 					<img
-						className="md:w-40 h-11  w-28 md:h-16"
+						className="md:w-40 h-11 w-28 md:h-16"
 						src={LogoImage}
 						alt="company logo"
 						onClick={() => navigate("/")}
 					/>
 				</div>
-				<div className="ml-auto p-3 bg-darkmode-500 rounded-md">
+				<label className="ml-auto p-3 themetoggle-box rounded-full" htmlFor="themeToggle">
 					<input
 						type="checkbox"
 						id="themeToggle"
@@ -63,8 +72,8 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						onChange={changeTheme}
 						className="hidden"
 					/>
-					<label htmlFor="themeToggle">{darkMode ? <Light /> : <Dark />}</label>
-				</div>
+					<label htmlFor="themeToggle" className="themetoggle">{darkMode ? <Light /> : <Dark />}</label>
+				</label>
 
 				{!status ? (
 					<div className="">
