@@ -12,6 +12,8 @@ const RepaymentCard = ({
 	loadRepaymentList,
 	setwalletAddress,
 	settransactionId,
+	setpoolName,
+	setamounts,
 	setUpdateRepayment,
 }) => {
 	const [selected, setSelected] = useState(null);
@@ -73,6 +75,8 @@ const RepaymentCard = ({
 					handleRepayment={handleRepayment}
 					setwalletAddress={setwalletAddress}
 					settransactionId={settransactionId}
+					setpoolName={setpoolName}
+					setamounts={setamounts}
 					setUpdateRepayment={setUpdateRepayment}
 				></RepaymentModal>
 			)}

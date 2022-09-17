@@ -73,7 +73,7 @@ const ProcessingFundsModal = ({
 
 								<div className="flex flex-col gap-1 md:mx-auto">
 									<p className="text-neutral-400">Transaction ID</p>
-									<p className="font-semibold">
+									<p className="font-semibold pl-1">
 										{txhash ? getTrimmedWalletAddress(txhash, 25) : "--"}
 									</p>
 								</div>
@@ -88,7 +88,7 @@ const ProcessingFundsModal = ({
 						</div>
 
 						<div className="border-2 border-neutral-300 dark:border-neutral-500 rounded-[1.8em] mt-8">
-							<p className="text-black cursor-pointer font-semibold py-3 text-center">
+							<p className="text-black dark:text-white cursor-pointer font-semibold py-3 text-center">
 								<span
 									onClick={() => {
 										path("/investor-dashboard/transaction");

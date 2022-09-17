@@ -10,7 +10,7 @@ const DashboardHeader = ({
 }) => {
 	return (
 		<div className="flex items-center">
-			<h2 className="text-2xl lg:text-[2.1rem] w-[50%]">
+			<h2 className="text-2xl lg:text-[2.1rem] w-[50%] font-rubik">
 				Borrower's Dashboard
 			</h2>
 			<label

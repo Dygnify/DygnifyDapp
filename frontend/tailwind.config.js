@@ -99,6 +99,9 @@ module.exports = {
 				},
 			},
 		},
+		fontFamily: {
+			rubik: ["Rubik", "sans-serif"],
+		},
 	},
 	// daisyui: {
 	// 	themes: [

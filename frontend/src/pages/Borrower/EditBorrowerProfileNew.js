@@ -52,7 +52,6 @@ const EditBorrowerProfileNew = () => {
 	});
 
 	useEffect(() => {
-		console.log("location*****", location.state);
 		if (location.state) {
 			setProfileState(location.state);
 			setHasKey(location.state ? "businessLicFile" in location.state : true);
@@ -513,13 +512,6 @@ const EditBorrowerProfileNew = () => {
 								</div>
 
 								<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
-									<GradientButton
-										className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
-										onClick={handleSubmit}
-									>
-										Save and Exit
-									</GradientButton>
-
 									<button
 										onClick={() =>
 											navigate("/borrower_dashboard/borrower_profile", {
@@ -530,6 +522,12 @@ const EditBorrowerProfileNew = () => {
 									>
 										Exit
 									</button>
+									<GradientButton
+										className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
+										onClick={handleSubmit}
+									>
+										Save and Exit
+									</GradientButton>
 								</div>
 							</div>
 						</div>

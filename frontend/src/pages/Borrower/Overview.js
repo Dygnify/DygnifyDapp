@@ -43,6 +43,8 @@ const Overview = () => {
 	const [processRepayment, setProcessRepayment] = useState();
 	const [transactionId, settransactionId] = useState("");
 	const [walletAddress, setwalletAddress] = useState("");
+	const [poolName, setpoolName] = useState("");
+	const [amounts, setamounts] = useState("");
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 
@@ -341,6 +343,8 @@ const Overview = () => {
 									setwalletAddress={setwalletAddress}
 									settransactionId={settransactionId}
 									setUpdateRepayment={setUpdateRepayment}
+									setpoolName={setpoolName}
+									setamounts={setamounts}
 								/>
 							))}
 						</div>
@@ -351,6 +355,8 @@ const Overview = () => {
 							processRepayment={processRepayment}
 							transactionId={transactionId}
 							walletAddress={walletAddress}
+							poolName={poolName}
+							amounts={amounts}
 						/>
 					)}
 				</div>
