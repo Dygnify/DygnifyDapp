@@ -6,6 +6,7 @@ import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import approve from "../../../../services/BackendConnectors/approve";
 import allowance from "../../../../services/BackendConnectors/allowance";
+import Loader from "../../../../uiTools/Loading/Loader";
 
 const RepaymentModal = ({
 	data,
@@ -16,11 +17,13 @@ const RepaymentModal = ({
 	settransactionId,
 	setpoolName,
 	setamounts,
+	setUpdateRepayment,
 }) => {
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
 	const [isInvest, setIsInvest] = useState(false);
 	const [isApproved, setIsApproved] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		getWalletBal().then((balance) => setWalletBal(balance));
@@ -55,12 +58,18 @@ const RepaymentModal = ({
 		settransactionId(res.tx.hash);
 		handleRepayment();
 		setProcessRepayment(false);
+		setUpdateRepayment(Math.random());
 	}
 	return (
 		<div>
 			<input type="checkbox" id="repayment-modal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
-				<div className="bg-white dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
+				{loading && <Loader />}
+				<div
+					className={`bg-white dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8 ${
+						loading ? "blur-sm" : ""
+					}`}
+				>
 					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
 						<h3 className="font-semibold text-xl">Repayment</h3>
 
@@ -124,10 +133,22 @@ const RepaymentModal = ({
 							setOpenProcessRepayment={setOpenProcessRepayment}
 							setProcessRepayment={setProcessRepayment}
 							onClick={() => {
-								if (isApproved)
-									approve(data.opportunityPoolAddress, data.repaymentAmount);
-								setIsApproved(false);
-								setIsInvest(true);
+								if (isApproved) {
+									setLoading(true);
+									const data = approve(
+										data.opportunityPoolAddress,
+										data.repaymentAmount
+									);
+									data
+										.then(function (val) {
+											setLoading(false);
+											setIsApproved(false);
+											setIsInvest(true);
+										})
+										.catch((error) => {
+											setLoading(false);
+										});
+								}
 							}}
 						>
 							Approve
