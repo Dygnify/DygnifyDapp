@@ -72,7 +72,13 @@ const Overview = () => {
 			setLoading(false);
 		};
 		fetchData();
-		getUserWalletAddress().then((address) => checkForKycAndProfile(address));
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				checkForKycAndProfile(res.address);
+			} else {
+				console.log(res.msg);
+			}
+		});
 	}, [loadDrawdownList]);
 
 	function sortByProperty(property) {

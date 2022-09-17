@@ -90,10 +90,14 @@ const BorrowerProfile = () => {
 		// make the call to get borrower specific cid to fetch the data
 		// currently we'll mock the cid
 		console.log("reached use Effect BOrrower");
-		getUserWalletAddress().then((address) => {
-			checkKyc(address);
-			{
-				!kycStatus && loadBlockpassWidget(address);
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				checkKyc(res.address);
+				{
+					!kycStatus && loadBlockpassWidget(res.address);
+				}
+			} else {
+				console.log(res.msg);
 			}
 		});
 

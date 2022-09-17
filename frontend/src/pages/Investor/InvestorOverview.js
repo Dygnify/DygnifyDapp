@@ -74,9 +74,11 @@ const InvestorOverview = () => {
 							if (spJson) {
 								let seniorInvestmentData = {};
 								seniorInvestmentData.opportunityName = spJson.poolName;
-								seniorInvestmentData.opportunityAmount = getDisplayAmount(
-									await getWalletBal(process.env.REACT_APP_SENIORPOOL)
+								const { balance } = await getWalletBal(
+									process.env.REACT_APP_SENIORPOOL
 								);
+								seniorInvestmentData.opportunityAmount =
+									getDisplayAmount(balance);
 
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +

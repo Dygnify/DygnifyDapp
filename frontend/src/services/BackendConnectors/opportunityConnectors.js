@@ -46,7 +46,7 @@ const createOpportunity = async (formData) => {
 				? ethers.utils.parseUnits(formData.capital_loss, sixDecimals)
 				: 0;
 			const opData = [
-				borrowerAdd,
+				borrowerAdd.address,
 				formData.loan_name,
 				formData.loanInfoHash,
 				formData.loan_type,
@@ -61,7 +61,6 @@ const createOpportunity = async (formData) => {
 			await transaction1.wait();
 			return { transaction1, success: true };
 		}
-		
 	} catch (error) {
 		Sentry.captureException(error);
 		return {
@@ -197,7 +196,6 @@ const voteOpportunity = async (id, vote) => {
 	// return false;
 };
 
-// rohan
 // to fetch opportunity by id
 const getOpportunityAt = async (id) => {
 	try {
@@ -391,8 +389,6 @@ const getOpportunitiesWithDues = async () => {
 
 	return undefined;
 };
-
-// ankit
 
 const getAllActiveOpportunities = async () => {
 	try {

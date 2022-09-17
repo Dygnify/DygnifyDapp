@@ -76,10 +76,14 @@ const getUserWalletAddress = async () => {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const signer = provider.getSigner();
 			const address = await signer.getAddress();
-			return address;
+			return { address, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 	return undefined;
 };
@@ -99,10 +103,17 @@ const getWalletBal = async (address) => {
 			const bal = await contract.balanceOf(
 				address ? address : await signer.getAddress()
 			);
-			return ethers.utils.formatUnits(bal, sixDecimals);
+			return {
+				balance: ethers.utils.formatUnits(bal, sixDecimals),
+				success: true,
+			};
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return 0;
