@@ -36,7 +36,11 @@ const Withdraw = () => {
 	useEffect(() => {
 		getUserSeniorPoolInvestment()
 			.then((data) => {
-				setSeniorPoolInvestment(data);
+				if (data.success) {
+					setSeniorPoolInvestment(data.data);
+				} else {
+					console.log(data.msg);
+				}
 			})
 			.catch((error) => console.log("Failed to get senior pool investment"))
 			.finally(() => setLoading(false));
@@ -88,7 +92,11 @@ const Withdraw = () => {
 		try {
 			const fetchData = async () => {
 				const opportunities = await getJuniorWithdrawableOp();
-				setJuniorPools(opportunities);
+				if (opportunities.success)
+					setJuniorPools(opportunities.opportunityList);
+				else {
+					console.log(opportunities.msg);
+				}
 			};
 			fetchData();
 		} catch (error) {

@@ -58,19 +58,21 @@ const InvestModal = ({
 		setProcessFundModal(true);
 		setInvestProcessing(true);
 		const data = await investInSeniorPool(amount);
-		if (data) {
-			settxhash(data.hash);
+		if (data.success) {
+			settxhash(data.transaction.hash);
 			setSelected(null);
 			setInvestProcessing(false);
-		}
-		console.log("done senior invest");
-		setTimeout(() => {
-			setInvest(Math.random());
-		}, 1000);
+			console.log("done senior invest");
+			setTimeout(() => {
+				setInvest(Math.random());
+			}, 1000);
 
-		setTimeout(() => {
-			setTransactionList(Math.random());
-		}, 15000);
+			setTimeout(() => {
+				setTransactionList(Math.random());
+			}, 15000);
+		} else {
+			console.log(data?.msg);
+		}
 	}
 
 	async function userAddress() {
@@ -92,19 +94,21 @@ const InvestModal = ({
 		setProcessFundModal(true);
 		setInvestProcessing(true);
 		const data = await investInJuniorPool(poolAddress, amount);
-		if (data) {
-			settxhash(data.hash);
+		if (data.success) {
+			settxhash(data.transaction.hash);
 			setSelected(null);
 			setInvestProcessing(false);
 
-		setTimeout(() => {
-			setInvest(Math.random());
-		}, 1000);
+			setTimeout(() => {
+				setInvest(Math.random());
+			}, 1000);
 
-		setTimeout(() => {
-			console.log("getting transaction data after 15s");
-			setTransactionList(Math.random());
-		}, 15000);
+			setTimeout(() => {
+				console.log("getting transaction data after 15s");
+				setTransactionList(Math.random());
+			}, 15000);
+		} else {
+			console.log(data.msg);
 		}
 	}
 

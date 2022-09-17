@@ -46,11 +46,13 @@ const WithdrawFundsModal = ({
 		setAmounts(amount);
 		setcontractAdrress(process.env.REACT_APP_SENIORPOOL);
 		const data = await withdrawSeniorPoolInvestment(amount);
-		if (data) {
-			settxhash(data.hash);
+		if (data.success) {
+			settxhash(data.transaction.hash);
 			setShowModal(false);
 			handleForm();
 			setInvestProcessing(false);
+		} else {
+			console.log(data?.msg);
 		}
 	}
 
