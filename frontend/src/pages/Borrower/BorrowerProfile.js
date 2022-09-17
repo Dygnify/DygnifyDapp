@@ -98,13 +98,14 @@ const BorrowerProfile = () => {
 		});
 
 		const fetchData = async () => {
+			console.log("#######");
 			getBorrowerDetails()
-				.then((borrowerCID) => {
-					if (!borrowerCID) {
+				.then((res) => {
+					if (!res.borrowerCid) {
 						setLoading(false);
 						return setProfileStatus(false);
 					}
-					retrieveFiles(borrowerCID, true)
+					retrieveFiles(res.borrowerCID, true)
 						.then((data) => {
 							if (data) {
 								let read = getBinaryFileData(data);

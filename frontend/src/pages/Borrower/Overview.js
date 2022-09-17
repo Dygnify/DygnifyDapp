@@ -93,9 +93,9 @@ const Overview = () => {
 				setKycStatus(false);
 			}
 
-			getBorrowerDetails().then((borrowerCID) => {
-				console.log(borrowerCID);
-				if (borrowerCID) setProfileStatus(true);
+			getBorrowerDetails().then((res) => {
+				console.log(res.borrowerCid);
+				if (res.borrowerCid) setProfileStatus(true);
 				else {
 					setProfileStatus(false);
 				}

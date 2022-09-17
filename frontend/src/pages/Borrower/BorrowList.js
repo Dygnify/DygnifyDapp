@@ -85,9 +85,8 @@ const BorrowList = () => {
 				setKycStatus(false);
 			}
 
-			getBorrowerDetails().then((borrowerCID) => {
-				console.log(borrowerCID);
-				if (borrowerCID) setProfileStatus(true);
+			getBorrowerDetails().then((res) => {
+				if (res.borrowerCid) setProfileStatus(true);
 				else setProfileStatus(false);
 			});
 		} catch (error) {
