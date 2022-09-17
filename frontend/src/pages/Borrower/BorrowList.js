@@ -61,12 +61,13 @@ const BorrowList = () => {
 
 	useEffect(() => {
 		getOpportunitysOf()
-			.then(({ opportunities }) => {
-				if (opportunities && opportunities.length) {
-					opportunities.sort(sortByProperty("epochCreationDate"));
-					setOpportunities(opportunities);
+			.then((res) => {
+				if (res.success) {
+					res.opportunities.sort(sortByProperty("epochCreationDate"));
+					setOpportunities(res.opportunities);
+				} else {
+					console.log(res.msg);
 				}
-				console.log(opportunities);
 			})
 			.catch((error) => console.log(error));
 	}, [updateRepayment]);
