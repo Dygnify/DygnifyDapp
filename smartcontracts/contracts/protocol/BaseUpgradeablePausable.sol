@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./PauserPausable.sol";
 
 /**
@@ -19,10 +20,17 @@ contract BaseUpgradeablePausable is
   Initializable,
   AccessControlUpgradeable,
   PauserPausable,
-  ReentrancyGuardUpgradeable
+  ReentrancyGuardUpgradeable,
+  UUPSUpgradeable
 {
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
   using SafeMathUpgradeable for uint256;
+
+  function _authorizeUpgrade(address newImplementation)
+        internal
+        override
+        onlyAdmin()
+    {}
 
   function _BaseUpgradeablePausable_init(address owner) public onlyInitializing() {
     require(owner != address(0), "Owner cannot be the zero address");
