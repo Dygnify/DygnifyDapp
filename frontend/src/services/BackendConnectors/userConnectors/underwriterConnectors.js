@@ -14,7 +14,8 @@ const getApprovalHistory = async () => {
 				opportunityOrigination.abi,
 				provider
 			);
-			const underWriter = await getEthAddress();
+			const { result } = await getEthAddress();
+			const underWriter = result;
 			const opportunities = await contract.getUnderWritersOpportunities(
 				underWriter
 			);

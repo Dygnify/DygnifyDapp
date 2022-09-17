@@ -59,12 +59,17 @@ const createOpportunity = async (formData) => {
 			];
 			const transaction1 = await contract.createOpportunity(opData);
 			await transaction1.wait();
+			return { transaction1, success: true };
 		}
-		return true;
+		
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
-	return false;
+	// return false;
 };
 
 function getOpportunity(opportunity) {
@@ -125,7 +130,8 @@ const getOpportunitysOf = async () => {
 				provider
 			);
 
-			let borrower = await getEthAddress();
+			let { result } = await getEthAddress();
+			let borrower = result;
 			const data = await contract.getOpportunityOf(borrower);
 			let opportunities = [];
 			for (const op of data) {
@@ -152,10 +158,14 @@ const getOpportunitysOf = async () => {
 				}
 				opportunities.push(obj);
 			}
-			return opportunities;
+			return { opportunities, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return 0;
@@ -252,7 +262,8 @@ const getDrawdownOpportunities = async () => {
 				provider
 			);
 
-			let borrower = await getEthAddress();
+			let { result } = await getEthAddress();
+			let borrower = result;
 			const data = await contract.getOpportunityOf(borrower);
 			let opportunities = [];
 			for (const opportunity of data) {
@@ -313,7 +324,8 @@ const getOpportunitiesWithDues = async () => {
 				return;
 			}
 
-			let borrower = await getEthAddress();
+			let { result } = await getEthAddress();
+			let borrower = result;
 			const data = await contract.getOpportunityOf(borrower);
 			let opportunities = [];
 			for (const opportunity of data) {
@@ -427,7 +439,8 @@ const getAllWithdrawableOpportunities = async () => {
 				provider
 			);
 
-			let borrower = await getEthAddress();
+			let { result } = await getEthAddress();
+			let borrower = result;
 			const count = await contract.getOpportunityOf(borrower);
 			let opportunities = [];
 
@@ -481,7 +494,8 @@ const getAllUnderwriterOpportunities = async () => {
 				provider
 			);
 
-			let underWriter = await getEthAddress();
+			let { result } = await getEthAddress();
+			let underWriter = result;
 			const opportunityList = await contract.getUnderWritersOpportunities(
 				underWriter
 			);

@@ -1,14 +1,24 @@
 const { ethers } = require("ethers");
 const dygnifyToken = require("../../../artifacts/contracts/protocol/old/TestUSDCToken.sol/TestUSDCToken.json");
+const Sentry = require("@sentry/react");
 
 const sixDecimals = 6;
 
 const getEthAddress = async () => {
-	const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-	// Prompt user for account connections
-	await provider.send("eth_requestAccounts", []);
-	const signer = provider.getSigner();
-	return await signer.getAddress();
+	try {
+		const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+		// Prompt user for account connections
+		await provider.send("eth_requestAccounts", []);
+		const signer = provider.getSigner();
+		const result = await signer.getAddress();
+		return { result, success: true };
+	} catch (error) {
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
 };
 
 const requestAccount = async (metaMask) => {
