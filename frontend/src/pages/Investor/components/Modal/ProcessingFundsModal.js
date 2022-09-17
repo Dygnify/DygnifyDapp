@@ -40,13 +40,20 @@ const ProcessingFundsModal = ({
 							<p className="text-5xl font-bold">
 								{!investProcessing ? `Yay! 🎉` : "In Progress ⏱"}
 							</p>
-
-							<p className="text-xl font-semibold mt-1">
-								{investProcessing
-									? `${data} is in progress`
-									: `${data} was successful`}
-							</p>
-
+							<div className="flex justify-center items-center gap-2">
+								<p className="text-xl font-semibold mt-1">
+									{investProcessing
+										? `${data} is in progress`
+										: `${data} was successful`}
+								</p>
+								<div
+									class={
+										investProcessing
+											? "animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"
+											: ""
+									}
+								></div>
+							</div>
 							{!investProcessing ? (
 								<p className="font-semibold text-base">
 									You successfully invested

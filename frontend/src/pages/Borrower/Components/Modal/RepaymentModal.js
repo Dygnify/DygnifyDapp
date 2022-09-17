@@ -26,7 +26,13 @@ const RepaymentModal = ({
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		getWalletBal().then((balance) => setWalletBal(balance));
+		getWalletBal().then((res) => {
+			if (res.success) {
+				setWalletBal(res.balance);
+			} else {
+				console.log(res.msg);
+			}
+		});
 		getAllowance();
 	}, []);
 

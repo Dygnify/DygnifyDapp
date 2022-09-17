@@ -45,8 +45,12 @@ const Withdraw = () => {
 			.catch((error) => console.log("Failed to get senior pool investment"))
 			.finally(() => setLoading(false));
 
-		getWalletBal().then((data) => {
-			setWalletBal(getDisplayAmount(data));
+		getWalletBal().then((res) => {
+			if (res.success) {
+				setWalletBal(getDisplayAmount(res.balance));
+			} else {
+				console.log(res.msg);
+			}
 		});
 	}, []);
 
@@ -62,9 +66,12 @@ const Withdraw = () => {
 							if (spJson) {
 								let seniorInvestmentData = {};
 								seniorInvestmentData.opportunityName = spJson.poolName;
-								seniorInvestmentData.opportunityAmount = getDisplayAmount(
-									await getWalletBal(process.env.REACT_APP_SENIORPOOL)
+								const { balance } = await getWalletBal(
+									process.env.REACT_APP_SENIORPOOL
 								);
+
+								seniorInvestmentData.opportunityAmount =
+									getDisplayAmount(balance);
 
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +

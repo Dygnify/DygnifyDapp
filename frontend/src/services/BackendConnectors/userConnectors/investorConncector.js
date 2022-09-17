@@ -58,7 +58,8 @@ const withdrawSeniorPoolInvestment = async (amount) => {
 };
 
 const getTotalInvestmentOfInvestor = async () => {
-	let investorAddress = await getEthAddress();
+	let { result } = await getEthAddress();
+	let investorAddress = result;
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -82,7 +83,7 @@ const getTotalInvestmentOfInvestor = async () => {
 			totalInvestment += seniorInvestment;
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
-				let obj = await getOpportunity(tx);
+				let { obj } = await getOpportunity(tx);
 
 				const poolContract = new ethers.Contract(
 					obj.opportunityPoolAddress,
@@ -109,7 +110,8 @@ const getTotalInvestmentOfInvestor = async () => {
 };
 
 const getTotalYieldOfInvestor = async () => {
-	let investorAddress = await getEthAddress();
+	let { result } = await getEthAddress();
+	let investorAddress = result;
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -132,7 +134,7 @@ const getTotalYieldOfInvestor = async () => {
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
 				if (tx.opportunityStatus.toString() === "7") {
-					let obj = await getOpportunity(tx);
+					let { obj } = await getOpportunity(tx);
 
 					const poolContract = new ethers.Contract(
 						obj.opportunityPoolAddress,
@@ -207,7 +209,8 @@ const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
 };
 
 const getJuniorWithdrawableOp = async () => {
-	let investorAddress = await getEthAddress();
+	let { result } = await getEthAddress();
+	let investorAddress = result;
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -229,7 +232,7 @@ const getJuniorWithdrawableOp = async () => {
 			let opportunityList = [];
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
-				let obj = await getOpportunity(tx);
+				let { obj } = await getOpportunity(tx);
 
 				const poolContract = new ethers.Contract(
 					obj.opportunityPoolAddress,

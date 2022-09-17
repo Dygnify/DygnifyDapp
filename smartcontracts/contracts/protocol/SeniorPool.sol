@@ -18,7 +18,7 @@ import "./ConfigOptions.sol";
 /// @notice This contract creates a dygnify staking dApp that rewards users for
 ///         locking up their USDC stablecoin with Dygnify
 
-contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
+contract SeniorPool is BaseUpgradeablePausable {
     using SafeMathUpgradeable for uint256;
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
@@ -82,8 +82,6 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         investmentLockinInMonths = dygnifyConfig.getSeniorPoolLockinMonths();
         sharePrice = 0;
     }
-
-    function _authorizeUpgrade(address newImplementation) internal override {}
 
     /// @notice Locks the user's USDC within the contract
     /// @dev If the user already staked USDC, then calculate the previous yeild first

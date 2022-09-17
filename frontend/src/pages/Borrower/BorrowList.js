@@ -41,24 +41,32 @@ const BorrowList = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			let op = await getDrawdownOpportunities();
-			if (op && op.length) {
-				setData(op);
+			if (op.success) {
+				setData(op.opportunities);
+			} else {
+				console.log(op.msg);
 			}
 
 			setLoading(false);
 		};
 		fetchData();
-		getUserWalletAddress().then((address) => checkForKycAndProfile(address));
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				checkForKycAndProfile(res.address);
+			} else {
+				console.log(res.msg);
+			}
+		});
 	}, []);
 
 	useEffect(() => {
 		getOpportunitysOf()
-			.then((opportunityList) => {
-				if (opportunityList && opportunityList.length) {
-					opportunityList.sort(sortByProperty("epochCreationDate"));
-					setOpportunities(opportunityList);
+			.then(({ opportunities }) => {
+				if (opportunities && opportunities.length) {
+					opportunities.sort(sortByProperty("epochCreationDate"));
+					setOpportunities(opportunities);
 				}
-				console.log(opportunityList);
+				console.log(opportunities);
 			})
 			.catch((error) => console.log(error));
 	}, [updateRepayment]);

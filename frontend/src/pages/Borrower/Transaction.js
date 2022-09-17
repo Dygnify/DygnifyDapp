@@ -11,15 +11,20 @@ const Transaction = () => {
 	useEffect(async () => {
 		console.log("reached");
 
-		getUserWalletAddress().then((address) => {
-			getTokenTransactions(address, process.env.REACT_APP_TEST_USDCTOKEN).then(
-				(trxData) => {
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				getTokenTransactions(
+					res.address,
+					process.env.REACT_APP_TEST_USDCTOKEN
+				).then((trxData) => {
 					if (trxData) {
 						setTransactions(trxData);
 					}
 					setLoading(false);
-				}
-			);
+				});
+			} else {
+				console.log(res.msg);
+			}
 		});
 	}, []);
 

@@ -30,7 +30,13 @@ const Invest = () => {
 	});
 
 	useEffect(() => {
-		getUserWalletAddress().then((address) => checkForKyc(address));
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				checkForKyc(res.address);
+			} else {
+				console.log(res.msg);
+			}
+		});
 	}, []);
 
 	const checkForKyc = async (refId) => {
@@ -81,9 +87,10 @@ const Invest = () => {
 					if (spJson) {
 						let seniorInvestmentData = {};
 						seniorInvestmentData.opportunityName = spJson.poolName;
-						seniorInvestmentData.opportunityAmount = getDisplayAmount(
-							await getWalletBal(process.env.REACT_APP_SENIORPOOL)
+						const { balance } = await getWalletBal(
+							process.env.REACT_APP_SENIORPOOL
 						);
+						seniorInvestmentData.opportunityAmount = getDisplayAmount(balance);
 						seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
 						seniorInvestmentData.poolDescription = spJson.poolDescription;
 						seniorInvestmentData.isFull = false;

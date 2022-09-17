@@ -80,7 +80,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							<div
 								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
 									outlineLoan
-										? "outline outline-2 outline-offset-2 outline-[#3A3C43]"
+										? "outline outline-2 outline-offset-2 dark:outline-[#3A3C43] outline-[#E7EAEE]"
 										: ""
 								}`}
 							>
@@ -110,7 +110,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							<div
 								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
 									outlinePay
-										? "outline outline-2 outline-offset-2 outline-[#3A3C43]"
+										? "outline outline-2 outline-offset-2 dark:outline-[#3A3C43] outline-[#E7EAEE]"
 										: ""
 								}`}
 							>
@@ -156,7 +156,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 							<div
 								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
 									outlineType
-										? "outline outline-2 outline-offset-2 outline-[#3A3C43]"
+										? "outline outline-2 outline-offset-2 dark:outline-[#3A3C43] outline-[#E7EAEE]"
 										: ""
 								}`}
 							>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
 const customStyles = {
@@ -100,9 +100,23 @@ const customStylesLightmode = {
 	}),
 };
 const Selection = ({ onChange, value, placeholder, options, focus }) => {
+	const [darkMode, setDarkMode] = useState(true);
+
 	const defaultValue = (options, value) => {
 		return options ? options.find((options) => options.value == value) : "";
 	};
+
+	useEffect(() => {
+		darkModeStatus();
+	}, []);
+
+	function darkModeStatus() {
+		if (localStorage.getItem("dark-mode") === "false") {
+			setDarkMode(false);
+		} else {
+			setDarkMode(true);
+		}
+	}
 
 	return (
 		<Select
@@ -110,7 +124,7 @@ const Selection = ({ onChange, value, placeholder, options, focus }) => {
 			placeholder={placeholder}
 			value={defaultValue(options, value)}
 			openMenuOnFocus={true}
-			styles={true ? customStyles : customStylesLightmode}
+			styles={darkMode ? customStyles : customStylesLightmode}
 			onChange={(value) => onChange(value)}
 			options={options}
 			onFocus={() => {

@@ -73,7 +73,13 @@ const ViewPool = () => {
 
 	useEffect(() => {
 		getUserWalletAddress()
-			.then((address) => loadBlockpassWidget(address))
+			.then((res) => {
+				if (res.success) {
+					loadBlockpassWidget(res.address);
+				} else {
+					console.log(res.msg);
+				}
+			})
 			.finally(() => setLoading(false));
 		if (location?.state) {
 			setPoolData(location.state);
@@ -89,9 +95,11 @@ const ViewPool = () => {
 			loadInfo();
 			console.log(poolData);
 			// get pool balance
-			getWalletBal(poolData.opportunityPoolAddress).then((amt) => {
-				if (amt) {
-					setPoolBal(getDisplayAmount(amt));
+			getWalletBal(poolData.opportunityPoolAddress).then((res) => {
+				if (res.success) {
+					setPoolBal(getDisplayAmount(res.balance));
+				} else {
+					console.log(res.msg);
 				}
 			});
 

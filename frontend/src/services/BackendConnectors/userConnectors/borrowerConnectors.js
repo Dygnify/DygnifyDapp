@@ -19,7 +19,8 @@ const getBorrowerDetails = async (address) => {
 
 			if (!address) {
 				Sentry.captureMessage("Address not found", "info");
-				address = await getEthAddress();
+				let { result } = await getEthAddress();
+				address = result;
 			}
 
 			if (address) {

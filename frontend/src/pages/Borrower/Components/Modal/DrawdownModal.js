@@ -7,7 +7,13 @@ import DollarImage from "../../../../assets/Dollar-icon.svg";
 const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 	const [walletBal, setWalletBal] = useState();
 	useEffect(() => {
-		getWalletBal().then((data) => setWalletBal(data));
+		getWalletBal().then((res) => {
+			if (res.success) {
+				setWalletBal(res.balance);
+			} else {
+				console.log(res.msg);
+			}
+		});
 	}, []);
 
 	return (

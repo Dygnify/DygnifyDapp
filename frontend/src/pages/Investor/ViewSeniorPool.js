@@ -60,7 +60,13 @@ const ViewSeniorPool = () => {
 	useEffect(() => {
 		if (!kycStatus) {
 			getUserWalletAddress()
-				.then((address) => loadBlockpassWidget(address))
+				.then((res) => {
+					if (res.success) {
+						loadBlockpassWidget(res.address);
+					} else {
+						console.log(res.msg);
+					}
+				})
 				.finally(() => setLoading(false));
 		} else setLoading(false);
 	}, []);
@@ -81,8 +87,12 @@ const ViewSeniorPool = () => {
 	};
 
 	useEffect(() => {
-		getWalletBal(process.env.REACT_APP_SENIORPOOL).then((amt) => {
-			setPoolAmount(getDisplayAmount(amt));
+		getWalletBal(process.env.REACT_APP_SENIORPOOL).then((res) => {
+			if (res.success) {
+				setPoolAmount(getDisplayAmount(res.balance));
+			} else {
+				console.log(res.msg);
+			}
 		});
 	}, [invest]);
 
@@ -97,7 +107,6 @@ const ViewSeniorPool = () => {
 		);
 	}, [transactionList]);
 
-	
 	return (
 		<div className="">
 			{loading && <Loader />}

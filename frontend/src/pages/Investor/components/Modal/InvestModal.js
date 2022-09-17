@@ -48,7 +48,13 @@ const InvestModal = ({
 	//
 
 	useEffect(() => {
-		getWalletBal().then((data) => setWalletBal(data));
+		getWalletBal().then((res) => {
+			if (res.success) {
+				setWalletBal(res.balance);
+			} else {
+				console.log(res.msg);
+			}
+		});
 		userAddress();
 	}, [loading]);
 
