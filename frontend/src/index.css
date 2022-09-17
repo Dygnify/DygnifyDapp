@@ -135,7 +135,7 @@ input[type="number"] {
 }
 
 .dark .themetoggle-box {
-	box-shadow: 0px 0.5px 10px white;
+	box-shadow: 0px 0.5px 10px rgba(255, 255, 255, 0.7);
 }
 
 .dark .themetoggle>svg>path {

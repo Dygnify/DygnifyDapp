@@ -58,7 +58,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 			<div className="flex gap-4 sm:gap-8 px-2  sm:px-4 md:px-6 py-2 relative items-center bg-transparent  text-neutral-700 dark:text-white">
 				<div className="">
 					<img
-						className="md:w-40 h-11 w-28 md:h-16"
+						className="md:w-40 h-11 w-28 md:h-16 cursor-pointer"
 						src={LogoImage}
 						alt="company logo"
 						onClick={() => navigate("/")}

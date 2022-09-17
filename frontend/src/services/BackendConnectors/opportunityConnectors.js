@@ -18,8 +18,6 @@ const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
 
-const Sentry = require("@sentry/react");
-
 const createOpportunity = async (formData) => {
 	if (!formData) {
 		return false;

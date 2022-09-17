@@ -139,8 +139,7 @@ const LoanFormModal = ({
 		loanDetails = { ...loanDetails, collateralHash, loanInfoHash, loan_name };
 		// sending data in backend to create opportunity with hash code
 
-		const { success } = await createOpportunity(loanDetails);
-		const result = success;
+		const result = await createOpportunity(loanDetails);
 		console.log(result);
 		console.log("submitsss", loanDetails);
 		setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);

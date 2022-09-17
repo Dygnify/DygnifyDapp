@@ -105,11 +105,12 @@ const BorrowerProfile = () => {
 			console.log("#######");
 			getBorrowerDetails()
 				.then((res) => {
+					console.log(res, "--");
 					if (!res.borrowerCid) {
 						setLoading(false);
 						return setProfileStatus(false);
 					}
-					retrieveFiles(res.borrowerCID, true)
+					retrieveFiles(res.borrowerCid, true)
 						.then((data) => {
 							if (data) {
 								let read = getBinaryFileData(data);

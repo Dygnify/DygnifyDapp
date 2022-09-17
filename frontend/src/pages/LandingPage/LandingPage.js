@@ -49,7 +49,7 @@ const LandingPage = () => {
 									Invest
 								</GradientButton>
 							</div>
-							<div className="flex flex-col justify-center items-center">
+							<div className="flex flex-col justify-center items-center pt-1">
 								<img
 									src={darkMode ? BorrowImage : BorrowImageLightmode}
 									className="w-72 px-auto xl:w-[18rem] 2xl:w-[21rem]"
