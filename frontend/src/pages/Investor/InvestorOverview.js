@@ -33,15 +33,30 @@ const InvestorOverview = () => {
 
 	async function updateSummery() {
 		let amount = await getTotalInvestmentOfInvestor();
-		setTotalInvestment(amount);
+
+		if (amount.success) {
+			setTotalInvestment(amount.totalInvestment);
+		} else {
+			console.log(amount.msg);
+		}
+
 		let yieldEarned = await getTotalYieldOfInvestor();
-		setTotalYield(yieldEarned);
+
+		if (yieldEarned.success) {
+			setTotalYield(yieldEarned.totalYield);
+		} else {
+			console.log(yieldEarned.msg);
+		}
 	}
 
 	useEffect(() => {
 		getUserSeniorPoolInvestment()
 			.then((data) => {
-				setSeniorPoolInvestment(data);
+				if (data.success) {
+					setSeniorPoolInvestment(data.data);
+				} else {
+					console.log(data.msg);
+				}
 			})
 			.catch((error) => console.log("Failed to get senior pool investment"))
 			.finally(() => setSeniorPoolLoading(false));
@@ -66,6 +81,7 @@ const InvestorOverview = () => {
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +
 									seniorPoolInvestment.withdrawableAmt;
+
 								seniorInvestmentData.capitalInvested =
 									getDisplayAmount(totalInvestment);
 								const { sharePrice, displaySharePrice } =
@@ -88,7 +104,12 @@ const InvestorOverview = () => {
 	useEffect(async () => {
 		await updateSummery();
 		const junorPools = await getJuniorWithdrawableOp();
-		setJuniorPool(junorPools);
+		if (junorPools.success) {
+			setJuniorPool(junorPools.opportunityList);
+		} else {
+			console.log(junorPools.msg);
+		}
+
 		setJuniorPoolLoading(false);
 	}, []);
 

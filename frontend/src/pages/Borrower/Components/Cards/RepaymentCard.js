@@ -14,6 +14,7 @@ const RepaymentCard = ({
 	settransactionId,
 	setpoolName,
 	setamounts,
+	setUpdateRepayment,
 }) => {
 	const [selected, setSelected] = useState(null);
 	const handleRepayment = async () => {
@@ -76,6 +77,7 @@ const RepaymentCard = ({
 					settransactionId={settransactionId}
 					setpoolName={setpoolName}
 					setamounts={setamounts}
+					setUpdateRepayment={setUpdateRepayment}
 				></RepaymentModal>
 			)}
 		</div>

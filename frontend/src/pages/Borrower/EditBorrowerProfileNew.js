@@ -46,7 +46,7 @@ const EditBorrowerProfileNew = () => {
 		companyBio: Yup.string().label("Company Bio").required(),
 		bizIdFileName: Yup.string().label("File Name").required(),
 		bizAddFileName: Yup.string().label("File Name").required(),
-		bizLicFileName: Yup.string().label("File Name").required(),
+		bizLicFileName: Yup.string().label("File Name"),
 		bizIncoFileName: Yup.string().label("File Name").required(),
 		website: Yup.string().label("Website").required(),
 	});
@@ -71,7 +71,7 @@ const EditBorrowerProfileNew = () => {
 		bizLicFileName:
 			profileState && hasKey
 				? profileState.businessLicFile.businessLicDocName
-				: "Lic File",
+				: "",
 		bizIncoFileName: profileState
 			? profileState.businessIncoFile.businessIncoDocName
 			: "",

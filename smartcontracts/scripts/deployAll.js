@@ -108,6 +108,15 @@ async function main() {
 	await dygnifyKeeper.deployed();
 	console.log("REACT_APP_DYGNIFYKEEPER = ", dygnifyKeeper.address);
 
+    // I
+	const IdentityToken = await hre.ethers.getContractFactory(
+		"IdentityToken"
+	);
+	const identityToken = await IdentityToken.deploy();
+
+	await identityToken.deployed();
+	console.log("REACT_APP_IdentityToken = ", identityToken.address);
+
 	// Initialize the Dygnify config
 	// Set all the addresses
 	await dygnifyConfig.setAddress(1, lpToken.address);
@@ -122,6 +131,7 @@ async function main() {
 	await dygnifyConfig.setAddress(7, investor.address);
 	await dygnifyConfig.setAddress(8, dygnifyTreasury.address);
 	await dygnifyConfig.setAddress(9, dygnifyKeeper.address);
+	await dygnifyConfig.setAddress(10, identityToken.address);
 	console.log("DygnifyConfig configured successfully");
 
 	// Set all numbers
@@ -157,6 +167,8 @@ async function main() {
 	await dygnifyTreasury.initialize(dygnifyConfig.address); 
 	// Initialize the dygnifyKeeper contract
 	await dygnifyKeeper.initialize(dygnifyConfig.address, 1); // 90 is threshold for loan writeoff
+    // Initialize the identityToken contract
+	await identityToken.initialize();
 	console.log("All contracts initilaized successfully");
 }
 

@@ -5,6 +5,7 @@ const investor = require("../../../artifacts/contracts/protocol/Investor.sol/Inv
 const opportunityOrigination = require("../../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
 const { requestAccount, getEthAddress } = require("./commonConnectors");
 const { getOpportunity } = require("../opportunityConnectors");
+const Sentry = require("@sentry/react");
 
 const sixDecimals = 6;
 
@@ -42,11 +43,15 @@ const withdrawSeniorPoolInvestment = async (amount) => {
 			if (amount && amount > 0) {
 				let transaction = await contract.withdrawWithLP(amount);
 				await transaction.wait();
-				return transaction;
+				return { transaction, success: true };
 			}
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return undefined;
@@ -73,7 +78,7 @@ const getTotalInvestmentOfInvestor = async () => {
 			);
 			let totalInvestment = 0;
 			let obj = await getUserSeniorPoolInvestment();
-			let seniorInvestment = obj.stakingAmt;
+			let seniorInvestment = obj.data.stakingAmt;
 			totalInvestment += seniorInvestment;
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
@@ -91,10 +96,14 @@ const getTotalInvestmentOfInvestor = async () => {
 				);
 				totalInvestment += parseFloat(stakingBal);
 			}
-			return totalInvestment;
+			return { totalInvestment, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 	return 0;
 };
@@ -146,10 +155,14 @@ const getTotalYieldOfInvestor = async () => {
 					totalYield += opportunityYieldEarned;
 				}
 			}
-			return totalYield;
+			return { totalYield, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 	return 0;
 };
@@ -166,7 +179,11 @@ const getSeniorPoolSharePrice = async () => {
 			return ethers.utils.formatUnits(sharePrice, sixDecimals) * 100;
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 	return 0;
 };
@@ -182,7 +199,11 @@ const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
 		backendSharePrice > defaultSharePrice
 			? backendSharePrice
 			: defaultSharePrice;
-	return { sharePrice: sharePrice, displaySharePrice: sharePrice + "%" };
+	return {
+		sharePrice: sharePrice,
+		displaySharePrice: sharePrice + "%",
+		success: true,
+	};
 };
 
 const getJuniorWithdrawableOp = async () => {
@@ -243,10 +264,14 @@ const getJuniorWithdrawableOp = async () => {
 				opportunityList.push(obj);
 			}
 			console.log(opportunityList);
-			return opportunityList;
+			return { opportunityList, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 	return [];
 };
@@ -267,21 +292,29 @@ const getUserSeniorPoolInvestment = async () => {
 			let data = await contract.getUserInvestment();
 			if (data) {
 				return {
-					stakingAmt: parseFloat(
-						ethers.utils.formatUnits(data.stakingAmt, sixDecimals)
-					),
-					withdrawableAmt: parseFloat(
-						ethers.utils.formatUnits(data.withdrawableAmt, sixDecimals)
-					),
+					data: {
+						stakingAmt: parseFloat(
+							ethers.utils.formatUnits(data.stakingAmt, sixDecimals)
+						),
+						withdrawableAmt: parseFloat(
+							ethers.utils.formatUnits(data.withdrawableAmt, sixDecimals)
+						),
+					},
+					success: true,
 				};
 			}
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 
 	return undefined;
 };
+
 const investInSeniorPool = async (amount) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
@@ -296,10 +329,14 @@ const investInSeniorPool = async (amount) => {
 			amount = ethers.utils.parseUnits(amount, sixDecimals);
 			let transaction = await contract.stake(amount);
 			await transaction.wait();
-			return transaction;
+			return { transaction, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 };
 const investInJuniorPool = async (poolAddress, amount) => {
@@ -316,10 +353,14 @@ const investInJuniorPool = async (poolAddress, amount) => {
 			amount = ethers.utils.parseUnits(amount, sixDecimals);
 			let transaction = await contract.deposit("0", amount); //0 denotes junior subpool
 			await transaction.wait();
-			return transaction;
+			return { transaction, success: true };
 		}
 	} catch (error) {
-		console.log(error);
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
 	}
 };
 

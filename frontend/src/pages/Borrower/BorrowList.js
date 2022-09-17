@@ -25,6 +25,7 @@ const BorrowList = () => {
 	const [loading, setLoading] = useState();
 	const [kycStatus, setKycStatus] = useState();
 	const [profileStatus, setProfileStatus] = useState();
+	const [updateRepayment, setUpdateRepayment] = useState(12);
 
 	const handleForm = () => {
 		setSelected(null);
@@ -60,7 +61,7 @@ const BorrowList = () => {
 				console.log(opportunityList);
 			})
 			.catch((error) => console.log(error));
-	}, []);
+	}, [updateRepayment]);
 
 	function sortByProperty(property) {
 		return function (a, b) {
@@ -85,9 +86,8 @@ const BorrowList = () => {
 				setKycStatus(false);
 			}
 
-			getBorrowerDetails().then((borrowerCID) => {
-				console.log(borrowerCID);
-				if (borrowerCID) setProfileStatus(true);
+			getBorrowerDetails().then((res) => {
+				if (res.borrowerCid) setProfileStatus(true);
 				else setProfileStatus(false);
 			});
 		} catch (error) {
@@ -139,7 +139,11 @@ const BorrowList = () => {
 				) : (
 					<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 						{data.map((item) => (
-							<DrawdownCard key={item?.id} data={item} />
+							<DrawdownCard
+								key={item?.id}
+								data={item}
+								setUpdateRepayment={setUpdateRepayment}
+							/>
 						))}
 					</div>
 				)}
