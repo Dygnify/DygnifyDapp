@@ -35,8 +35,8 @@ const LoanFormModal = ({
 
 	useEffect(async () => {
 		getBorrowerDetails()
-			.then((borrowerCID) => {
-				retrieveFiles(borrowerCID, true)
+			.then((res) => {
+				retrieveFiles(res.borrowerCid, true)
 					.then((data) => {
 						let read = getBinaryFileData(data);
 						read.onloadend = function () {
