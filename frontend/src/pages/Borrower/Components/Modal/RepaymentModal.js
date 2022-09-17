@@ -14,6 +14,7 @@ const RepaymentModal = ({
 	setProcessRepayment,
 	setwalletAddress,
 	settransactionId,
+	setUpdateRepayment,
 }) => {
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
@@ -51,6 +52,7 @@ const RepaymentModal = ({
 
 		handleRepayment();
 		setProcessRepayment(false);
+		setUpdateRepayment(Math.random());
 	}
 	return (
 		<div>

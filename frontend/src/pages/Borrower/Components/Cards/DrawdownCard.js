@@ -10,6 +10,7 @@ const DrawdownCard = ({
 	loadDrawdownList,
 	setOpenProcessDrawdown,
 	setProcessDrawdown,
+	setUpdateRepayment,
 }) => {
 	const [selected, setSelected] = useState(null);
 
@@ -23,6 +24,7 @@ const DrawdownCard = ({
 		setSelected(null);
 		loadDrawdownList(true);
 		setProcessDrawdown(false);
+		setUpdateRepayment(Math.random());
 	};
 
 	return (

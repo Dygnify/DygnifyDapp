@@ -12,6 +12,7 @@ const RepaymentCard = ({
 	loadRepaymentList,
 	setwalletAddress,
 	settransactionId,
+	setUpdateRepayment,
 }) => {
 	const [selected, setSelected] = useState(null);
 	const handleRepayment = async () => {
@@ -72,6 +73,7 @@ const RepaymentCard = ({
 					handleRepayment={handleRepayment}
 					setwalletAddress={setwalletAddress}
 					settransactionId={settransactionId}
+					setUpdateRepayment={setUpdateRepayment}
 				></RepaymentModal>
 			)}
 		</div>

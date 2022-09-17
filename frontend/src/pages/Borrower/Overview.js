@@ -44,6 +44,8 @@ const Overview = () => {
 	const [transactionId, settransactionId] = useState("");
 	const [walletAddress, setwalletAddress] = useState("");
 
+	const [updateRepayment, setUpdateRepayment] = useState(12);
+
 	const handleForm = () => {
 		setSelected(null);
 		setKycSelected(null);
@@ -108,6 +110,10 @@ const Overview = () => {
 	// get all upcoming reapayments
 	useEffect(() => {
 		const fetchData = async () => {
+			console.log(
+				"%cFetching Repayment Cards",
+				"font-size:3rem; color:lightblue"
+			);
 			let opportunities = await getOpportunitiesWithDues();
 			if (opportunities && opportunities.length) {
 				//sort the list based on date
@@ -122,7 +128,7 @@ const Overview = () => {
 			}
 		};
 		fetchData();
-	}, [loadRepaymentList]);
+	}, [loadRepaymentList, updateRepayment]);
 
 	useEffect(() => {
 		// set total borrowed amount
@@ -334,6 +340,7 @@ const Overview = () => {
 									setProcessRepayment={setProcessRepayment}
 									setwalletAddress={setwalletAddress}
 									settransactionId={settransactionId}
+									setUpdateRepayment={setUpdateRepayment}
 								/>
 							))}
 						</div>
@@ -365,6 +372,7 @@ const Overview = () => {
 									loadDrawdownList={setLoadDrawdownList}
 									setOpenProcessDrawdown={setOpenProcessDrawdown}
 									setProcessDrawdown={setProcessDrawdown}
+									setUpdateRepayment={setUpdateRepayment}
 								/>
 							))}
 						</div>
