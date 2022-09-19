@@ -131,7 +131,9 @@ const Overview = () => {
 				setRepaymentList(opportunities.opportunities);
 
 				// set next due date and amount
-				setNextDueAmount(opportunities.opportunities[0].repaymentAmount);
+				setNextDueAmount(
+					getDisplayAmount(opportunities.opportunities[0].repaymentAmount)
+				);
 				setNextDueDate(opportunities.opportunities[0].nextDueDate);
 
 				console.log(repaymentList, nextDueAmount);
