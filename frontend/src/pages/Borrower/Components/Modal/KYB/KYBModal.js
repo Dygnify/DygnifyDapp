@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createOpportunity } from "../../../../../components/transaction/TransactionHelper";
-
 import Stepper from "./Stepper";
-import StepperControl from "./StepperControl";
 import axiosHttpService from "../../../../../services/axioscall";
 import {
 	pinataCall,

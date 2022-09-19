@@ -9,7 +9,7 @@ const Sentry = require("@sentry/react");
 
 const sixDecimals = 6;
 
-const withdrawAllJunior = async (poolAddress) => {
+export const withdrawAllJunior = async (poolAddress) => {
 	if (typeof window.ethereum !== "undefined") {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		console.log({ provider });
@@ -26,7 +26,7 @@ const withdrawAllJunior = async (poolAddress) => {
 	}
 };
 
-const withdrawSeniorPoolInvestment = async (amount) => {
+export const withdrawSeniorPoolInvestment = async (amount) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -57,7 +57,7 @@ const withdrawSeniorPoolInvestment = async (amount) => {
 	return undefined;
 };
 
-const getTotalInvestmentOfInvestor = async () => {
+export const getTotalInvestmentOfInvestor = async () => {
 	let { result } = await getEthAddress();
 	let investorAddress = result;
 	try {
@@ -109,7 +109,7 @@ const getTotalInvestmentOfInvestor = async () => {
 	return 0;
 };
 
-const getTotalYieldOfInvestor = async () => {
+export const getTotalYieldOfInvestor = async () => {
 	let { result } = await getEthAddress();
 	let investorAddress = result;
 	try {
@@ -168,7 +168,8 @@ const getTotalYieldOfInvestor = async () => {
 	}
 	return 0;
 };
-const getSeniorPoolSharePrice = async () => {
+
+export const getSeniorPoolSharePrice = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -190,7 +191,7 @@ const getSeniorPoolSharePrice = async () => {
 	return 0;
 };
 
-const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
+export const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
 	let sharePrice;
 	// 10 will be the default in case we didn't get default share price
 	defaultSharePrice = defaultSharePrice ? defaultSharePrice : 10;
@@ -208,7 +209,7 @@ const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
 	};
 };
 
-const getJuniorWithdrawableOp = async () => {
+export const getJuniorWithdrawableOp = async () => {
 	let { result } = await getEthAddress();
 	let investorAddress = result;
 	try {
@@ -254,8 +255,7 @@ const getJuniorWithdrawableOp = async () => {
 					ethers.utils.formatUnits(estimatedAPY[1].toString(), sixDecimals) *
 						100 +
 					"%";
-				let investorWithdrawable =
-					await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals
@@ -279,7 +279,7 @@ const getJuniorWithdrawableOp = async () => {
 	return [];
 };
 
-const getUserSeniorPoolInvestment = async () => {
+export const getUserSeniorPoolInvestment = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -318,7 +318,7 @@ const getUserSeniorPoolInvestment = async () => {
 	return undefined;
 };
 
-const investInSeniorPool = async (amount) => {
+export const investInSeniorPool = async (amount) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -342,7 +342,8 @@ const investInSeniorPool = async (amount) => {
 		};
 	}
 };
-const investInJuniorPool = async (poolAddress, amount) => {
+
+export const investInJuniorPool = async (poolAddress, amount) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -365,17 +366,4 @@ const investInJuniorPool = async (poolAddress, amount) => {
 			msg: error.message,
 		};
 	}
-};
-
-module.exports = {
-	withdrawAllJunior,
-	withdrawSeniorPoolInvestment,
-	getTotalYieldOfInvestor,
-	getTotalInvestmentOfInvestor,
-	getSeniorPoolSharePrice,
-	getSeniorPoolDisplaySharePrice,
-	getJuniorWithdrawableOp,
-	getUserSeniorPoolInvestment,
-	investInJuniorPool,
-	investInSeniorPool,
 };

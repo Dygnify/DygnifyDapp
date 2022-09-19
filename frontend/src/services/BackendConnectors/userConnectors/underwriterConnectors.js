@@ -4,7 +4,7 @@ const { getEthAddress } = require("./commonConnectors");
 const opportunityOrigination = require("../../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
 const Sentry = require("@sentry/react");
 
-const getApprovalHistory = async () => {
+export const getApprovalHistory = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -42,5 +42,3 @@ const getApprovalHistory = async () => {
 
 	return 0;
 };
-
-module.exports = { getApprovalHistory };

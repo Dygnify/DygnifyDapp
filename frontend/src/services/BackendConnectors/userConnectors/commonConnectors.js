@@ -3,7 +3,7 @@ const dygnifyToken = require("../../../artifacts/contracts/protocol/old/TestUSDC
 const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 
-const getEthAddress = async () => {
+export const getEthAddress = async () => {
 	try {
 		const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
 		// Prompt user for account connections
@@ -20,7 +20,7 @@ const getEthAddress = async () => {
 	}
 };
 
-const requestAccount = async (metaMask) => {
+export const requestAccount = async (metaMask) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			let provider = window.ethereum;
@@ -56,7 +56,7 @@ const requestAccount = async (metaMask) => {
 	}
 };
 
-const isConnected = async () => {
+export const isConnected = async () => {
 	try {
 		if (window.ethereum) {
 			let connectionStatus = await window.ethereum.isConnected();
@@ -71,7 +71,7 @@ const isConnected = async () => {
 	}
 };
 
-const convertDate = (epochTimestamp) => {
+export const convertDate = (epochTimestamp) => {
 	function pad(s) {
 		return s < 10 ? "0" + s : s;
 	}
@@ -80,7 +80,7 @@ const convertDate = (epochTimestamp) => {
 	return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join("/");
 };
 
-const getUserWalletAddress = async () => {
+export const getUserWalletAddress = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -99,7 +99,7 @@ const getUserWalletAddress = async () => {
 	return undefined;
 };
 
-const getWalletBal = async (address) => {
+export const getWalletBal = async (address) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -128,13 +128,4 @@ const getWalletBal = async (address) => {
 	}
 
 	return 0;
-};
-
-module.exports = {
-	getEthAddress,
-	requestAccount,
-	isConnected,
-	convertDate,
-	getUserWalletAddress,
-	getWalletBal,
 };
