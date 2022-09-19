@@ -22,7 +22,8 @@ export const getTokenTransactions = async (address, tokenAddress) => {
 				) {
 					opportunityName = "Senior Pool";
 				} else {
-					opportunityName = await getOpportunityName(poolAddress);
+					const { opName } = await getOpportunityName(poolAddress);
+					opportunityName = opName;
 				}
 
 				if (opportunityName) {

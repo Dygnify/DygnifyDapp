@@ -524,7 +524,10 @@ const getAllUnderwriterOpportunities = async () => {
 				underWriter
 			);
 			if (!opportunityList) {
-				return null;
+				return {
+					success: false,
+					msg: "opportunityList not available",
+				}
 			}
 
 			let opportunities = [];
@@ -544,8 +547,6 @@ const getAllUnderwriterOpportunities = async () => {
 			msg: error.message,
 		};
 	}
-
-	return null;
 };
 
 const getOpportunityName = async (poolAddress) => {

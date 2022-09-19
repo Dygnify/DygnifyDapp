@@ -202,7 +202,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 								Cancel
 							</label>
 						</div>
-						<div className="md:pr-40 lg:pr-10 xl:pr-0">
+						<div className="md:pr-40 lg:pr-10 xl:pr-0 py-2">
 							<GradientButton type="submit">Next</GradientButton>
 						</div>
 					</div>
