@@ -42,10 +42,6 @@ const BorrowerProfile = () => {
 	const [hasKey, setHaskey] = useState();
 	const brJson = location.state;
 
-	const brJsonLocationState = useRef();
-
-	console.log("new", brJson, profileStatus);
-
 	useEffect(() => {
 		loadBorrowerProfileData();
 		if (brJson) fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
@@ -89,7 +85,7 @@ const BorrowerProfile = () => {
 	useEffect(async () => {
 		// make the call to get borrower specific cid to fetch the data
 		// currently we'll mock the cid
-		console.log("reached use Effect BOrrower");
+		console.log("reached use Effect Borrower");
 		getUserWalletAddress().then((res) => {
 			if (res.success) {
 				checkKyc(res.address);
@@ -123,9 +119,15 @@ const BorrowerProfile = () => {
 								};
 							}
 						})
-						.catch((e) => console.log(e));
+						.catch((e) => {
+							console.log(e);
+							setLoading(false);
+						});
 				})
-				.catch((e) => console.log(e));
+				.catch((e) => {
+					console.log(e);
+					setLoading(false);
+				});
 		};
 
 		if (!location.state) fetchData();
@@ -202,6 +204,8 @@ const BorrowerProfile = () => {
 			}
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
