@@ -117,6 +117,8 @@ const BorrowerProfile = () => {
 									setHaskey(brJson ? "businessLicFile" in brJson : false);
 									console.log(brJson);
 								};
+							} else {
+								setLoading(false);
 							}
 						})
 						.catch((e) => {
