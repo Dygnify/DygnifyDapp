@@ -6,8 +6,10 @@ import LoanFormModal from "./Components/Modal/LoanFormModal";
 import DashboardHeader from "./DashboardHeader";
 import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
-import { getDrawdownOpportunities } from "../../services/BackendConnectors/opportunityConnectors";
-import { getOpportunitiesWithDues } from "../../services/BackendConnectors/opportunityConnectors";
+import {
+	getOpportunitiesWithDues,
+	getDrawdownOpportunities,
+} from "../../services/BackendConnectors/opportunityConnectors";
 import DoughnutChart from "../Components/DoughnutChart";
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import Loader from "../../uiTools/Loading/Loader";
@@ -131,7 +133,9 @@ const Overview = () => {
 				setRepaymentList(opportunities.opportunities);
 
 				// set next due date and amount
-				setNextDueAmount(opportunities.opportunities[0].repaymentAmount);
+				setNextDueAmount(
+					getDisplayAmount(opportunities.opportunities[0].repaymentAmount)
+				);
 				setNextDueDate(opportunities.opportunities[0].nextDueDate);
 
 				console.log(repaymentList, nextDueAmount);

@@ -6,7 +6,7 @@ const opportunityPool = require("../../../artifacts/contracts/protocol/Opportuni
 
 const Sentry = require("@sentry/react");
 
-const getBorrowerDetails = async (address) => {
+export const getBorrowerDetails = async (address) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -41,7 +41,7 @@ const getBorrowerDetails = async (address) => {
 	return undefined;
 };
 
-const updateBorrowerDetails = async (cid) => {
+export const updateBorrowerDetails = async (cid) => {
 	try {
 		if (typeof window.ethereum !== "undefined" && cid) {
 			await requestAccount();
@@ -71,7 +71,7 @@ const updateBorrowerDetails = async (cid) => {
 	return undefined;
 };
 
-const repayment = async (poolAddress) => {
+export const repayment = async (poolAddress) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -100,7 +100,7 @@ const repayment = async (poolAddress) => {
 		};
 	}
 };
-const drawdown = async (poolAddress) => {
+export const drawdown = async (poolAddress) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -124,11 +124,4 @@ const drawdown = async (poolAddress) => {
 			msg: error.message,
 		};
 	}
-};
-
-module.exports = {
-	getBorrowerDetails,
-	updateBorrowerDetails,
-	repayment,
-	drawdown,
 };

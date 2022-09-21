@@ -18,7 +18,7 @@ const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
 
-const createOpportunity = async (formData) => {
+export const createOpportunity = async (formData) => {
 	if (!formData) {
 		return false;
 	}
@@ -71,7 +71,7 @@ const createOpportunity = async (formData) => {
 	// return false;
 };
 
-function getOpportunity(opportunity) {
+export function getOpportunity(opportunity) {
 	try {
 		if (!opportunity) {
 			return undefined;
@@ -118,7 +118,7 @@ function getOpportunity(opportunity) {
 }
 
 // to fetch created opportunities of specific borrower
-const getOpportunitysOf = async () => {
+export const getOpportunitysOf = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			// await requestAccount();
@@ -170,7 +170,7 @@ const getOpportunitysOf = async () => {
 	return 0;
 };
 
-const voteOpportunity = async (id, vote) => {
+export const voteOpportunity = async (id, vote) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -197,7 +197,7 @@ const voteOpportunity = async (id, vote) => {
 };
 
 // to fetch opportunity by id
-const getOpportunityAt = async (id) => {
+export const getOpportunityAt = async (id) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -223,7 +223,7 @@ const getOpportunityAt = async (id) => {
 	return null;
 };
 
-const getAllUnderReviewOpportunities = async () => {
+export const getAllUnderReviewOpportunities = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -259,7 +259,7 @@ const getAllUnderReviewOpportunities = async () => {
 	return 0;
 };
 
-const getDrawdownOpportunities = async () => {
+export const getDrawdownOpportunities = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -318,7 +318,7 @@ const getDrawdownOpportunities = async () => {
 
 	return undefined;
 };
-const getOpportunitiesWithDues = async () => {
+export const getOpportunitiesWithDues = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -390,7 +390,7 @@ const getOpportunitiesWithDues = async () => {
 	return undefined;
 };
 
-const getAllActiveOpportunities = async () => {
+export const getAllActiveOpportunities = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -448,7 +448,7 @@ const getAllActiveOpportunities = async () => {
 	return undefined;
 };
 
-const getAllWithdrawableOpportunities = async () => {
+export const getAllWithdrawableOpportunities = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -507,7 +507,7 @@ const getAllWithdrawableOpportunities = async () => {
 	return [];
 };
 
-const getAllUnderwriterOpportunities = async () => {
+export const getAllUnderwriterOpportunities = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -524,7 +524,10 @@ const getAllUnderwriterOpportunities = async () => {
 				underWriter
 			);
 			if (!opportunityList) {
-				return null;
+				return {
+					success: false,
+					msg: "opportunityList not available",
+				};
 			}
 
 			let opportunities = [];
@@ -544,11 +547,9 @@ const getAllUnderwriterOpportunities = async () => {
 			msg: error.message,
 		};
 	}
-
-	return null;
 };
 
-const getOpportunityName = async (poolAddress) => {
+export const getOpportunityName = async (poolAddress) => {
 	if (!poolAddress || poolAddress === nullAddress) {
 		return;
 	}
@@ -572,18 +573,4 @@ const getOpportunityName = async (poolAddress) => {
 		};
 	}
 	return "";
-};
-module.exports = {
-	createOpportunity,
-	getOpportunity,
-	getOpportunitysOf,
-	voteOpportunity,
-	getOpportunityAt,
-	getAllUnderReviewOpportunities,
-	getDrawdownOpportunities,
-	getOpportunitiesWithDues,
-	getAllActiveOpportunities,
-	getAllWithdrawableOpportunities,
-	getAllUnderwriterOpportunities,
-	getOpportunityName,
 };

@@ -17,6 +17,7 @@ const LoanFormModal = ({
 	handleForm,
 	setBorrowReqProcess,
 	setProcessModal,
+	setUpdateRepayment,
 }) => {
 	const path = useNavigate();
 
@@ -139,11 +140,17 @@ const LoanFormModal = ({
 		loanDetails = { ...loanDetails, collateralHash, loanInfoHash, loan_name };
 		// sending data in backend to create opportunity with hash code
 
-		const result = await createOpportunity(loanDetails);
-		console.log(result);
+		const res = await createOpportunity(loanDetails);
+		if (res.success) {
+			console.log(res.success);
+		} else {
+			console.log(res.msg);
+		}
+
 		console.log("submitsss", loanDetails);
 		setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
 		setBorrowReqProcess(false);
+		setUpdateRepayment(Math.random());
 	};
 
 	const handleNext = (newData, value) => {

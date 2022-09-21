@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 const TextField = ({
 	label,
 	placeholder,
@@ -11,12 +11,22 @@ const TextField = ({
 	reference,
 	text,
 }) => {
+	const [loanAmOutline, setLoanAmOutline] = useState(false);
+
 	return text ? (
 		<div className={`${className}`}>
 			<label class="label text-lg">
 				<span class="text-black dark:text-white text-lg">{label}</span>
 			</label>
-			<div className="input input-bordered items-center flex justify-between bg-lightmode-200 dark:bg-[#24272F]">
+			<div
+				className={`input input-bordered items-center flex justify-between bg-lightmode-200 dark:bg-[#24272F]
+			
+			${
+				loanAmOutline
+					? "outline outline-2 outline-offset-2 dark:outline-[#3A3C43] outline-[#E7EAEE] "
+					: ""
+			}`}
+			>
 				<input
 					onChange={onChange}
 					onBlur={onBlur}

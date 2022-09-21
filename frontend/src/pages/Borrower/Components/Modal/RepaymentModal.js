@@ -141,11 +141,11 @@ const RepaymentModal = ({
 							onClick={() => {
 								if (isApproved) {
 									setLoading(true);
-									const data = approve(
+									const approvePromise = approve(
 										data.opportunityPoolAddress,
 										data.repaymentAmount
 									);
-									data
+									approvePromise
 										.then(function (val) {
 											setLoading(false);
 											setIsApproved(false);

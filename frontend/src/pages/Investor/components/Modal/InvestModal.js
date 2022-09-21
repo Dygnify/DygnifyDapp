@@ -75,7 +75,7 @@ const InvestModal = ({
 
 			setTimeout(() => {
 				setTransactionList(Math.random());
-			}, 15000);
+			}, 20000);
 		} else {
 			console.log(data?.msg);
 		}
