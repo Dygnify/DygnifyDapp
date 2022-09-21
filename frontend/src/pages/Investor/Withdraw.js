@@ -29,6 +29,8 @@ const Withdraw = () => {
 	const [contractAdrress, setcontractAdrress] = useState("");
 	const [amounts, setAmounts] = useState("");
 
+	const [updateSenior, setUpdateSenior] = useState(12);
+
 	const handleForm = () => {
 		setSelected(null);
 	};
@@ -39,6 +41,8 @@ const Withdraw = () => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
 				} else {
+					console.log("error senior pool investment");
+					setSeniorPool(null);
 					console.log(data.msg);
 				}
 			})
@@ -52,11 +56,12 @@ const Withdraw = () => {
 				console.log(res.msg);
 			}
 		});
-	}, []);
+	}, [updateSenior]);
 
 	useEffect(() => {
 		if (seniorPoolInvestment) {
 			// fetch data from IPFS
+
 			retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
 				if (res) {
 					let read = getBinaryFileData(res);
@@ -84,6 +89,11 @@ const Withdraw = () => {
 								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
 									seniorPoolInvestment.withdrawableAmt
 								);
+								console.log(
+									"%cSenior pool card values",
+									"font-size:3rem; color: lightpink"
+								);
+								console.log(seniorInvestmentData);
 								setSeniorPool(seniorInvestmentData);
 							}
 						} catch (error) {
@@ -127,6 +137,7 @@ const Withdraw = () => {
 						settxhash={settxhash}
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
+						setUpdateSenior={setUpdateSenior}
 					/>
 				)}
 				{processFundModal ? (
@@ -175,6 +186,7 @@ const Withdraw = () => {
 							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
 								{juniorPools.map((item) => (
 									<WithdrawCard
+										key={Math.random()}
 										data={item}
 										isSeniorPool={false}
 										setSelected={setSelected}

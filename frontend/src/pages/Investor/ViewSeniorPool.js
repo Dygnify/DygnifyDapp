@@ -100,7 +100,10 @@ const ViewSeniorPool = () => {
 		axiosHttpService(tokenTransactions(process.env.REACT_APP_SENIORPOOL)).then(
 			(transactionDetails) => {
 				if (transactionDetails && transactionDetails.res) {
-					console.log("got transaction list");
+					console.log(
+						"%cgot transaction list",
+						"font-size:2rem; color: lightpink;"
+					);
 					setTransactionData(transactionDetails.res.result);
 				}
 			}

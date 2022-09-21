@@ -19,6 +19,7 @@ const WithdrawFundsModal = ({
 	settxhash,
 	setcontractAdrress,
 	setAmounts,
+	setUpdateSenior,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [error, setError] = useState({
@@ -54,6 +55,8 @@ const WithdrawFundsModal = ({
 		} else {
 			console.log(data?.msg);
 		}
+
+		setUpdateSenior(Math.random());
 	}
 
 	const handleAmount = (e) => {

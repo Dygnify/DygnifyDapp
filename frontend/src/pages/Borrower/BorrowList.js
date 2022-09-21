@@ -119,6 +119,7 @@ const BorrowList = () => {
 					setBorrowReqProcess={setBorrowReqProcess}
 					setSelected={setSelected}
 					setProcessModal={setProcessModal}
+					setUpdateRepayment={setUpdateRepayment}
 				/>
 			)}
 

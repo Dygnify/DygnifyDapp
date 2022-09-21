@@ -53,14 +53,14 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 				</div>
 
 				<div className="flex flex-col gap-1 font-semibold">
-					<div className="flex gap-1">
+					<div className="flex gap-1 items-center">
 						<p className="">Pool Size</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
 						<p className="">{opportunityAmount}</p>
 					</div>
 
-					<div className="flex gap-1">
+					<div className="flex gap-1 items-center">
 						<p className="">Capital Invested</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
@@ -72,7 +72,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 						<p className=" ml-auto">{estimatedAPY}</p>
 					</div>
 
-					<div className="flex gap-1">
+					<div className="flex gap-1 items-center">
 						<p className="">Available for Withdrawal</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" />
