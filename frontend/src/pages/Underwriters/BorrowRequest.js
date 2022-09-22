@@ -3,15 +3,20 @@ import React, { useState, useEffect } from "react";
 import UnderwriterCard from "./Components/UnderwriterCard";
 import Loader from "../../uiTools/Loading/Loader";
 import { getAllUnderwriterOpportunities } from "../../services/BackendConnectors/opportunityConnectors";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const BorrowRequest = () => {
 	const [opportunities, setOpportunities] = useState([]);
+
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "error in underwriter",
+	});
 
 	const [loading, setLoading] = useState(true);
 
 	useEffect(async () => {
 		await getUnderReviewOpportunity();
-
 		setLoading(false);
 	}, []);
 
@@ -21,12 +26,14 @@ const BorrowRequest = () => {
 			setOpportunities(list.opportunities);
 		} else {
 			console.log(list.msg);
+			setErrormsg({ status: list.success, msg: list.msg });
 		}
 	}
 
 	return (
 		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>
 			{loading && <Loader />}
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				<div className="md:pl-1 lg:pl-2 xl:pl-2 dark:text-white text-black">
 					<div className="mb-2">
