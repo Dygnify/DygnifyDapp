@@ -70,20 +70,37 @@ const Withdraw = () => {
 									process.env.REACT_APP_SENIORPOOL
 								);
 
-								seniorInvestmentData.opportunityAmount =
-									getDisplayAmount(balance);
+								seniorInvestmentData.opportunityAmount = getDisplayAmount(
+									balance
+								);
 
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +
 									seniorPoolInvestment.withdrawableAmt;
-								seniorInvestmentData.capitalInvested =
-									getDisplayAmount(totalInvestment);
-								const { sharePrice, displaySharePrice } =
-									await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
-								seniorInvestmentData.estimatedAPY = displaySharePrice;
-								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-									seniorPoolInvestment.withdrawableAmt
+								seniorInvestmentData.capitalInvested = getDisplayAmount(
+									totalInvestment
 								);
+								const {
+									sharePrice,
+									displaySharePrice,
+								} = await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
+								seniorInvestmentData.estimatedAPY = displaySharePrice;
+								let realPossibleWithdrawAmt =
+									(balance * (100 - sharePrice)) / 100;
+
+								if (
+									balance >=
+									(seniorPoolInvestment.withdrawableAmt * (100 + sharePrice)) /
+										100
+								) {
+									seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+										seniorPoolInvestment.withdrawableAmt
+									);
+								} else {
+									seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+										realPossibleWithdrawAmt
+									);
+								}
 								setSeniorPool(seniorInvestmentData);
 							}
 						} catch (error) {
