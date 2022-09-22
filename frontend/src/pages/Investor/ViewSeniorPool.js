@@ -27,7 +27,7 @@ const ViewSeniorPool = () => {
 	const [selected, setSelected] = useState(null);
 	const [processFundModal, setProcessFundModal] = useState();
 	const [investProcessing, setInvestProcessing] = useState();
-	const [kycStatus, setKycStatus] = useState(1);
+	const [kycStatus, setKycStatus] = useState();
 	const [loading, setLoading] = useState(true);
 	const [txhash, settxhash] = useState("");
 	const [contractAdrress, setcontractAdrress] = useState("");
