@@ -20,9 +20,14 @@ export const withdrawAllJunior = async (poolAddress) => {
 			signer
 		);
 
-		const transaction1 = await poolContract.withdrawAll(0); // 0 is juniorpool ID
-		await transaction1.wait();
-		return transaction1;
+		const transaction = await poolContract.withdrawAll(0); // 0 is juniorpool ID
+		await transaction.wait();
+		return { transaction, success: true };
+	} else {
+		return {
+			success: false,
+			msg: "Please connect your wallet!",
+		};
 	}
 };
 
@@ -255,7 +260,8 @@ export const getJuniorWithdrawableOp = async () => {
 					ethers.utils.formatUnits(estimatedAPY[1].toString(), sixDecimals) *
 						100 +
 					"%";
-				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable =
+					await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals

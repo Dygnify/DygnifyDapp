@@ -33,11 +33,13 @@ const WithdrawFundsModal = ({
 		setAmounts(amount);
 		setcontractAdrress(data.opportunityPoolAddress);
 		const withdrawalData = await withdrawAllJunior(data.opportunityPoolAddress);
-		if (withdrawalData) {
-			settxhash(withdrawalData.hash);
+		if (withdrawalData.success) {
+			settxhash(withdrawalData.transaction.hash);
 			setShowModal(false);
 			handleForm();
 			setInvestProcessing(false);
+		} else {
+			console.log(withdrawalData.msg);
 		}
 	}
 

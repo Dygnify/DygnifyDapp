@@ -37,7 +37,7 @@ const InvestModal = ({
 	const [approvedvalue, setApprovedvalue] = useState();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState({
-		approveErr: false,
+		approveErr: true,
 		investErr: true,
 		msg: "",
 	});
@@ -150,6 +150,13 @@ const InvestModal = ({
 			msg: "Can't approve / invest more than Investable Amount",
 		};
 
+		// 4
+		const invalidErr = {
+			approveErr: true,
+			investErr: true,
+			msg: "Invalid Amount",
+		};
+
 		if (walletBal) {
 			if (+value > +walletBal) {
 				setError(insufficientBalErr);
@@ -181,6 +188,21 @@ const InvestModal = ({
 				if (investInputCode === 2) {
 					setError(insufficientBalErr);
 				}
+			}
+		}
+
+		if (+value <= 0 || !value) {
+			setError(invalidErr);
+		} else {
+			if (investInputCode === 0) {
+				setError(defaultErr);
+			}
+
+			if (investInputCode === 1) {
+				setError(allowedInvest);
+			}
+			if (investInputCode === 2) {
+				setError(insufficientBalErr);
 			}
 		}
 
