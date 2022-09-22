@@ -18,15 +18,10 @@ const InvestorDashboardNew = () => {
 			dm = true;
 		}
 
-		console.log("%c", "font-size:3rem;color:lightpink", dm);
-
 		return dm;
 	};
 	const [linkStatus, setLinkStatus] = useState(false);
 	const [darkMode, setDarkMode] = useState(theme());
-
-	console.log("%ctheme", "font-size:3rem;color:lightgreen;");
-	console.log(darkMode);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);

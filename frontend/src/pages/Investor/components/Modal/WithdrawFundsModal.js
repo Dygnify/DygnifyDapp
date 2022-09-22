@@ -19,6 +19,7 @@ const WithdrawFundsModal = ({
 	settxhash,
 	setcontractAdrress,
 	setAmounts,
+	setUpdateSenior,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [error, setError] = useState({
@@ -32,11 +33,13 @@ const WithdrawFundsModal = ({
 		setAmounts(amount);
 		setcontractAdrress(data.opportunityPoolAddress);
 		const withdrawalData = await withdrawAllJunior(data.opportunityPoolAddress);
-		if (withdrawalData) {
-			settxhash(withdrawalData.hash);
+		if (withdrawalData.success) {
+			settxhash(withdrawalData.transaction.hash);
 			setShowModal(false);
 			handleForm();
 			setInvestProcessing(false);
+		} else {
+			console.log(withdrawalData.msg);
 		}
 	}
 
@@ -54,6 +57,8 @@ const WithdrawFundsModal = ({
 		} else {
 			console.log(data?.msg);
 		}
+
+		setUpdateSenior(Math.random());
 	}
 
 	const handleAmount = (e) => {
