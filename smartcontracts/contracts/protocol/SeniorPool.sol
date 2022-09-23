@@ -12,6 +12,7 @@ import "./BaseUpgradeablePausable.sol";
 import "../interfaces/IOpportunityOrigination.sol";
 import "../interfaces/IOpportunityPool.sol";
 import "./ConfigOptions.sol";
+import "./Constants.sol";
 
 /// @title SeniorPool
 /// @author DNyanesh Warade
@@ -29,6 +30,7 @@ contract SeniorPool is BaseUpgradeablePausable {
         uint256 amount;
     }
 
+
     // userAddress => InvestmentTimestamp
     mapping(address => InvestmentTimestamp[]) private stackingAmount;
     // userAddress => amount available for Withdrawal
@@ -43,8 +45,6 @@ contract SeniorPool is BaseUpgradeablePausable {
     ILPToken private lpToken;
     uint256 public investmentLockinInMonths;
     uint256 public seniorPoolBal;
-    uint256 public constant oneday = 60 * 60 * 24;
-    uint256 public constant oneMonth = 30 * oneday;
     uint256 public sharePrice;
 
     struct KYC {
@@ -171,7 +171,7 @@ contract SeniorPool is BaseUpgradeablePausable {
 
         uint256 stakingAmount;
         uint256 withdrawableAmount;
-        uint256 lockinTime = investmentLockinInMonths * oneMonth;
+        uint256 lockinTime = investmentLockinInMonths * Constants.oneMonth();
         InvestmentTimestamp[] memory arr = stackingAmount[msg.sender];
         for (uint256 i = 0; i < arr.length; i++) {
             if (arr[i].timestamp + lockinTime <= block.timestamp) {
@@ -214,7 +214,7 @@ contract SeniorPool is BaseUpgradeablePausable {
 
         // calculate the amount available for investment first
         uint256 stakingAmount;
-        uint256 lockinTime = investmentLockinInMonths * oneMonth;
+        uint256 lockinTime = investmentLockinInMonths * Constants.oneMonth();
         InvestmentTimestamp[] storage arr = stackingAmount[msg.sender];
         for (uint256 i = 0; i < arr.length; i++) {
             if (arr[i].timestamp + lockinTime <= block.timestamp) {

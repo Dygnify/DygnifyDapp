@@ -90,13 +90,13 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
         lpToken = ILPToken(dygnifyConfig.lpTokenAddress());
-        _setRoleAdmin(Constants.getSeniorPoolRole(), ADMIN_ROLE);
+        _setRoleAdmin(Constants.getSeniorPoolRole(),Constants.getAdminRole());
         _setupRole(
             Constants.getSeniorPoolRole(),
             dygnifyConfig.seniorPoolAddress()
         );
-        _setRoleAdmin(Constants.getBorrowerRole(), ADMIN_ROLE);
-        _setRoleAdmin(Constants.getPoolLockerRole(), ADMIN_ROLE);
+        _setRoleAdmin(Constants.getBorrowerRole(),Constants.getAdminRole());
+        _setRoleAdmin(Constants.getPoolLockerRole(),Constants.getAdminRole());
         _setupRole(Constants.getPoolLockerRole(), owner);
         address borrower = opportunityOrigination.getBorrower(_opportunityID);
         _setupRole(Constants.getBorrowerRole(), borrower);
@@ -902,7 +902,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             seniorSubpoolDetails.totalDepositable;
 
         if (poolBalance > estimatedSeniorPoolAmount) {
-            uint256 remainingAmount = poolBalance - estimatedSeniorPoolAmount;
+            // uint256 remainingAmount = poolBalance - estimatedSeniorPoolAmount;
             usdcToken.transfer(
                 dygnifyConfig.seniorPoolAddress(),
                 estimatedSeniorPoolAmount

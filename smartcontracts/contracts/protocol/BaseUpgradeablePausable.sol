@@ -8,6 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./PauserPausable.sol";
+import "./Constants.sol";
 
 /**
  * @title BaseUpgradeablePausable contract
@@ -23,7 +24,7 @@ contract BaseUpgradeablePausable is
   ReentrancyGuardUpgradeable,
   UUPSUpgradeable
 {
-  bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+
   using SafeMathUpgradeable for uint256;
 
   function _authorizeUpgrade(address newImplementation)
@@ -38,15 +39,15 @@ contract BaseUpgradeablePausable is
     __Pausable_init_unchained();
     __ReentrancyGuard_init_unchained();
 
-    _setupRole(ADMIN_ROLE, owner);
-    _setupRole(PAUSER_ROLE, owner);
+    _setupRole(Constants.getAdminRole(), owner);
+    _setupRole(Constants.pauserRole(), owner);
 
-    _setRoleAdmin(PAUSER_ROLE, ADMIN_ROLE);
-    _setRoleAdmin(ADMIN_ROLE, ADMIN_ROLE);
+    _setRoleAdmin(Constants.pauserRole(), Constants.getAdminRole());
+    _setRoleAdmin(Constants.getAdminRole(), Constants.getAdminRole());
   }
 
   function isAdmin() public view returns (bool) {
-    return hasRole(ADMIN_ROLE, _msgSender());
+    return hasRole(Constants.getAdminRole(), _msgSender());
   }
 
   modifier onlyAdmin() {

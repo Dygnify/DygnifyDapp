@@ -57,18 +57,27 @@ export const requestAccount = async (metaMask) => {
 };
 
 export const isConnected = async () => {
-	try {
+	
 		if (window.ethereum) {
-			let connectionStatus = await window.ethereum.isConnected();
-			let chainId = window.ethereum.networkVersion;
-			if (chainId == "80001" && connectionStatus == true) {
-				return connectionStatus;
+			
+			let chainId = window.ethereum.chainId;
+			if(chainId!== "0x13881"){
+				const temp = await window.provider.request({
+					method: "wallet_switchEthereumChain",
+					params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
+				});
 			}
-		}
+			if (chainId == "0x13881") {
+				console.log("test1")
+				const provider = new ethers.providers.Web3Provider(window.ethereum);
+				const account = await provider.send("eth_requestAccounts", []);
+			}
+			return true;
+
+		}else{
 		return false;
-	} catch (error) {
-		Sentry.captureException(error);
-	}
+		}
+	
 };
 
 export const convertDate = (epochTimestamp) => {

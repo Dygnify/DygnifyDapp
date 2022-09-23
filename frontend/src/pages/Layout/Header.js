@@ -32,6 +32,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	}
 
 	useEffect(() => {
+		
 		fetchStatus();
 		darkModeStatus();
 	}, [location]);

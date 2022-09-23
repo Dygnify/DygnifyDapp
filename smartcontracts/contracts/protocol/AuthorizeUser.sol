@@ -9,7 +9,6 @@ import "./DygnifyConfig.sol";
 contract AuthorizeUser is BaseUpgradeablePausable, IAuthorizeUser {
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
-    bytes32 public constant AUTHORIZE_USER_ROLE = keccak256("AUTHORIZE_USER");
     mapping(address => bool) public authorizedUserList;
 
     event AuthorizeUserListed(address indexed member);
@@ -25,9 +24,9 @@ contract AuthorizeUser is BaseUpgradeablePausable, IAuthorizeUser {
         require(owner != address(0), "Invalid Owner");
         _BaseUpgradeablePausable_init(owner);
 
-        _setupRole(AUTHORIZE_USER_ROLE, owner);
+        _setupRole(Constants.getAurthorizeUser(), owner);
 
-        _setRoleAdmin(AUTHORIZE_USER_ROLE, ADMIN_ROLE);
+        _setRoleAdmin(Constants.getAurthorizeUser(), Constants.getAdminRole());
     }
 
     function addToauthorizedUserList(address _user)
@@ -62,7 +61,7 @@ contract AuthorizeUser is BaseUpgradeablePausable, IAuthorizeUser {
 
     modifier onlyAuthorizeUserRole() {
         require(
-            hasRole(AUTHORIZE_USER_ROLE, _msgSender()),
+            hasRole(Constants.getAurthorizeUser(), _msgSender()),
             "Must have AUTHORIZE_USER_ROLE to perform this action"
         );
         _;
