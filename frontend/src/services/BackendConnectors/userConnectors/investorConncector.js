@@ -10,6 +10,8 @@ const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 
 export const withdrawAllJunior = async (poolAddress) => {
+	Sentry.captureMessage("withdrawAllJunior", "info");
+
 	if (typeof window.ethereum !== "undefined") {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		console.log({ provider });
@@ -24,6 +26,7 @@ export const withdrawAllJunior = async (poolAddress) => {
 		await transaction.wait();
 		return { transaction, success: true };
 	} else {
+		Sentry.captureMessage("Wallet connect error", "warning");
 		return {
 			success: false,
 			msg: "Please connect your wallet!",
@@ -32,7 +35,15 @@ export const withdrawAllJunior = async (poolAddress) => {
 };
 
 export const withdrawSeniorPoolInvestment = async (amount) => {
+	Sentry.captureMessage("withdrawSeniorPoolInvestment", "info");
 	try {
+		if (!amount || amount <= 0) {
+			Sentry.captureMessage("Invalid amount", "warning");
+			return {
+				success: false,
+				msg: "Invalid Amount",
+			};
+		}
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -50,6 +61,12 @@ export const withdrawSeniorPoolInvestment = async (amount) => {
 				await transaction.wait();
 				return { transaction, success: true };
 			}
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -58,11 +75,10 @@ export const withdrawSeniorPoolInvestment = async (amount) => {
 			msg: error.message,
 		};
 	}
-
-	return undefined;
 };
 
 export const getTotalInvestmentOfInvestor = async () => {
+	Sentry.captureMessage("getTotalInvestmentOfInvestor", "info");
 	let { result } = await getEthAddress();
 	let investorAddress = result;
 	try {
@@ -103,6 +119,12 @@ export const getTotalInvestmentOfInvestor = async () => {
 				totalInvestment += parseFloat(stakingBal);
 			}
 			return { totalInvestment, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -111,10 +133,10 @@ export const getTotalInvestmentOfInvestor = async () => {
 			msg: error.message,
 		};
 	}
-	return 0;
 };
 
 export const getTotalYieldOfInvestor = async () => {
+	Sentry.captureMessage("getTotalYieldOfInvestor", "info");
 	let { result } = await getEthAddress();
 	let investorAddress = result;
 	try {
@@ -163,6 +185,12 @@ export const getTotalYieldOfInvestor = async () => {
 				}
 			}
 			return { totalYield, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -171,10 +199,10 @@ export const getTotalYieldOfInvestor = async () => {
 			msg: error.message,
 		};
 	}
-	return 0;
 };
 
 export const getSeniorPoolSharePrice = async () => {
+	Sentry.captureMessage("getSeniorPoolSharePrice", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -184,7 +212,15 @@ export const getSeniorPoolSharePrice = async () => {
 				provider
 			);
 			let sharePrice = await contract.sharePrice();
-			return ethers.utils.formatUnits(sharePrice, sixDecimals) * 100;
+			sharePrice = ethers.utils.formatUnits(sharePrice, sixDecimals) * 100;
+
+			return { sharePrice, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -193,28 +229,32 @@ export const getSeniorPoolSharePrice = async () => {
 			msg: error.message,
 		};
 	}
-	return 0;
 };
 
 export const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
+	Sentry.captureMessage("getSeniorPoolDisplaySharePrice", "info");
 	let sharePrice;
 	// 10 will be the default in case we didn't get default share price
 	defaultSharePrice = defaultSharePrice ? defaultSharePrice : 10;
-	let backendSharePrice = parseFloat(await getSeniorPoolSharePrice()).toFixed(
-		2
-	);
-	sharePrice =
-		backendSharePrice > defaultSharePrice
-			? backendSharePrice
-			: defaultSharePrice;
-	return {
-		sharePrice: sharePrice,
-		displaySharePrice: sharePrice + "%",
-		success: true,
-	};
+
+	let backendSharePrice = await getSeniorPoolSharePrice();
+
+	if (backendSharePrice.success) {
+		sharePrice = parseFloat(backendSharePrice.sharePrice).toFixed(2);
+		sharePrice =
+			sharePrice > defaultSharePrice ? sharePrice : defaultSharePrice;
+		return {
+			sharePrice: sharePrice,
+			displaySharePrice: sharePrice + "%",
+			success: true,
+		};
+	} else {
+		return backendSharePrice;
+	}
 };
 
 export const getJuniorWithdrawableOp = async () => {
+	Sentry.captureMessage("getJuniorWithdrawableOp", "info");
 	let { result } = await getEthAddress();
 	let investorAddress = result;
 	try {
@@ -274,6 +314,12 @@ export const getJuniorWithdrawableOp = async () => {
 			}
 			console.log(opportunityList);
 			return { opportunityList, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -282,10 +328,10 @@ export const getJuniorWithdrawableOp = async () => {
 			msg: error.message,
 		};
 	}
-	return [];
 };
 
 export const getUserSeniorPoolInvestment = async () => {
+	Sentry.captureMessage("getUserSeniorPoolInvestment", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -312,6 +358,12 @@ export const getUserSeniorPoolInvestment = async () => {
 					success: true,
 				};
 			}
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -325,6 +377,7 @@ export const getUserSeniorPoolInvestment = async () => {
 };
 
 export const investInSeniorPool = async (amount) => {
+	Sentry.captureMessage("investInSeniorPool", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -339,6 +392,12 @@ export const investInSeniorPool = async (amount) => {
 			let transaction = await contract.stake(amount);
 			await transaction.wait();
 			return { transaction, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -350,6 +409,7 @@ export const investInSeniorPool = async (amount) => {
 };
 
 export const investInJuniorPool = async (poolAddress, amount) => {
+	Sentry.captureMessage("investInJuniorPool", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -364,6 +424,12 @@ export const investInJuniorPool = async (poolAddress, amount) => {
 			let transaction = await contract.deposit("0", amount); //0 denotes junior subpool
 			await transaction.wait();
 			return { transaction, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);

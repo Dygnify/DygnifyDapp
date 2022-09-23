@@ -318,12 +318,16 @@ export const getDrawdownOpportunities = async () => {
 
 	return undefined;
 };
+
 export const getOpportunitiesWithDues = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			if (!provider) {
-				return;
+				return {
+					success: false,
+					msg: "Invalid provider",
+				};
 			}
 			const contract = new ethers.Contract(
 				process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
@@ -332,7 +336,10 @@ export const getOpportunitiesWithDues = async () => {
 			);
 
 			if (!contract) {
-				return;
+				return {
+					success: false,
+					msg: "Invalid contract",
+				};
 			}
 
 			let { result } = await getEthAddress();

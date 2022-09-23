@@ -88,6 +88,11 @@ export const getUserWalletAddress = async () => {
 			const signer = provider.getSigner();
 			const address = await signer.getAddress();
 			return { address, success: true };
+		} else {
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -117,6 +122,11 @@ export const getWalletBal = async (address) => {
 			return {
 				balance: ethers.utils.formatUnits(bal, sixDecimals),
 				success: true,
+			};
+		} else {
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
 			};
 		}
 	} catch (error) {

@@ -86,13 +86,23 @@ const InvestorOverview = () => {
 
 								seniorInvestmentData.capitalInvested =
 									getDisplayAmount(totalInvestment);
-								const { sharePrice, displaySharePrice } =
-									await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
-								seniorInvestmentData.estimatedAPY = displaySharePrice;
-								seniorInvestmentData.yieldGenerated = getDisplayAmount(
-									parseFloat((totalInvestment * sharePrice) / 100)
+
+								const price = await getSeniorPoolDisplaySharePrice(
+									spJson.estimatedAPY
 								);
-								setSeniorPool(seniorInvestmentData);
+
+								if (price.success) {
+									const { sharePrice, displaySharePrice } = price;
+									seniorInvestmentData.estimatedAPY = displaySharePrice;
+									seniorInvestmentData.yieldGenerated = getDisplayAmount(
+										parseFloat((totalInvestment * sharePrice) / 100)
+									);
+
+									setSeniorPool(seniorInvestmentData);
+								} else {
+									setSeniorPool(null);
+									console.log(price.msg);
+								}
 							}
 						} catch (error) {
 							console.log(error);

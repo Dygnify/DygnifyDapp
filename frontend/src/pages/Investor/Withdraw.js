@@ -83,18 +83,22 @@ const Withdraw = () => {
 									seniorPoolInvestment.withdrawableAmt;
 								seniorInvestmentData.capitalInvested =
 									getDisplayAmount(totalInvestment);
-								const { sharePrice, displaySharePrice } =
-									await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
-								seniorInvestmentData.estimatedAPY = displaySharePrice;
-								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-									seniorPoolInvestment.withdrawableAmt
+
+								const price = await getSeniorPoolDisplaySharePrice(
+									spJson.estimatedAPY
 								);
-								console.log(
-									"%cSenior pool card values",
-									"font-size:3rem; color: lightpink"
-								);
-								console.log(seniorInvestmentData);
-								setSeniorPool(seniorInvestmentData);
+
+								if (price.success) {
+									const { sharePrice, displaySharePrice } = price;
+									seniorInvestmentData.estimatedAPY = displaySharePrice;
+									seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+										seniorPoolInvestment.withdrawableAmt
+									);
+									setSeniorPool(seniorInvestmentData);
+								} else {
+									setSeniorPool(null);
+									console.log(price.msg);
+								}
 							}
 						} catch (error) {
 							console.log(error);
