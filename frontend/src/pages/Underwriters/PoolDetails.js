@@ -12,6 +12,7 @@ import { voteOpportunity } from "../../services/BackendConnectors/opportunityCon
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
+import default_profile from "../../assets/default_profile.svg";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -178,7 +179,7 @@ const PoolDetails = () => {
 					<div className="flex items-center gap-6 ">
 						<div>
 							<img
-								src={logoImgSrc}
+								src={logoImgSrc ? logoImgSrc : default_profile}
 								className="w-20 h-20 rounded-full lg:w-24 lg:h-24 xl:w-28  xl:h-28"
 							></img>
 						</div>
@@ -345,7 +346,7 @@ const PoolDetails = () => {
 				<div className="flex flex-col w-full">
 					<div className="flex items-center gap-2 text-lg font-medium mt-10 ">
 						<img
-							src={logoImgSrc}
+							src={logoImgSrc ? logoImgSrc : default_profile}
 							className="w-16 h-16 rounded-full md:hidden"
 						></img>
 						Borrower Details

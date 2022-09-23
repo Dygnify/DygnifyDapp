@@ -131,13 +131,16 @@ const RepaymentModal = ({
 					</div>
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<GradientBtnForModal
-							className={` w-full ${
-								!isApproved ? "opacity-40 cursor-not-allowed" : ""
-							}`}
+						<label
+							// className={` w-full ${
+							// 	!isApproved ? "opacity-40 cursor-not-allowed" : ""
+							// }`}
+							className={`block font-semibold text-white ${
+								!isApproved
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none `}
 							htmlFor={isApproved ? "RepaymentProcessModal" : ""}
-							setOpenProcessRepayment={setOpenProcessRepayment}
-							setProcessRepayment={setProcessRepayment}
 							onClick={() => {
 								if (isApproved) {
 									setLoading(true);
@@ -158,20 +161,23 @@ const RepaymentModal = ({
 							}}
 						>
 							Approve
-						</GradientBtnForModal>
+						</label>
 					</div>
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<GradientBtnForModal
-							className={` w-full ${
-								!isInvest ? "cursor-not-allowed opacity-40" : ""
-							} `}
+						<label
+							// className={` w-full ${
+							// 	!isInvest ? "cursor-not-allowed opacity-40" : ""
+							// } `}
+							className={`block font-semibold text-white ${
+								!isInvest
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none`}
 							htmlFor={isInvest ? "RepaymentProcessModal" : ""}
-							setOpenProcessRepayment={setOpenProcessRepayment}
-							setProcessRepayment={setProcessRepayment}
 							onClick={() => (isInvest ? onRepayment() : "")}
 						>
 							Make Repayment
-						</GradientBtnForModal>
+						</label>
 					</div>
 				</div>
 			</div>

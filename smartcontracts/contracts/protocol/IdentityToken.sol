@@ -9,14 +9,12 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Burnab
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "./Constants.sol";
 
 contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     CountersUpgradeable.Counter private _tokenIdCounter;
-    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
     function initialize() initializer public {
         __ERC721_init("IdentityToken", "ID");
@@ -27,24 +25,24 @@ contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgr
         __UUPSUpgradeable_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(PAUSER_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
-        _grantRole(UPGRADER_ROLE, msg.sender);
+        _grantRole(Constants.pauserRole(), msg.sender);
+        _grantRole(Constants.minterRole(), msg.sender);
+        _grantRole(Constants.upgraderRole(), msg.sender);
     }
 
     function _baseURI() internal pure override returns (string memory) {
         return "ipfs://";
     }
 
-    function pause() public onlyRole(PAUSER_ROLE) {
+    function pause() public onlyRole(Constants.pauserRole()) {
         _pause();
     }
 
-    function unpause() public onlyRole(PAUSER_ROLE) {
+    function unpause() public onlyRole(Constants.pauserRole()) {
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
+    function safeMint(address to, string memory uri) public onlyRole(Constants.minterRole()) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
@@ -62,7 +60,7 @@ contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgr
 
     function _authorizeUpgrade(address newImplementation)
         internal
-        onlyRole(UPGRADER_ROLE)
+        onlyRole(Constants.upgraderRole())
         override
     {}
 

@@ -21,8 +21,8 @@ const paymentfrequency = [
 	{ value: 90, label: 90 },
 ];
 const loantypes = [
-	{ value: 0, label: "Bullet Loan" },
 	{ value: 1, label: "Term Loan" },
+	{ value: 0, label: "Bullet Loan" },
 ];
 
 export default function Account({ formData, handleNext, handleForm }) {
@@ -202,7 +202,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 								Cancel
 							</label>
 						</div>
-						<div className="md:pr-40 lg:pr-10 xl:pr-0 py-2">
+						<div className="md:pr-40 lg:pr-10 xl:pr-0 py-1">
 							<GradientButton type="submit">Next</GradientButton>
 						</div>
 					</div>

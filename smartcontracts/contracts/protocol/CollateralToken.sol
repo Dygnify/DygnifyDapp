@@ -24,10 +24,7 @@ contract CollateralToken is
     DygnifyConfig public dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
 
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     CountersUpgradeable.Counter private _tokenIdCounter;
-    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
     function initialize(DygnifyConfig config, address _minterRole)
         public
@@ -45,29 +42,28 @@ contract CollateralToken is
         __AccessControl_init();
         __ERC721Burnable_init();
         __UUPSUpgradeable_init();
-
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
-        _grantRole(PAUSER_ROLE, owner);
-        _grantRole(MINTER_ROLE, owner);
-        _grantRole(MINTER_ROLE, _minterRole);
-        _grantRole(UPGRADER_ROLE, owner);
+        _grantRole(Constants.pauserRole(), owner);
+        _grantRole(Constants.minterRole(), owner);
+        _grantRole(Constants.minterRole(), _minterRole);
+        _grantRole(Constants.upgraderRole(), owner);
     }
 
     function _baseURI() internal pure override returns (string memory) {
         return "ipfs://";
     }
 
-    function pause() public onlyRole(PAUSER_ROLE) {
+    function pause() public onlyRole(Constants.pauserRole()) {
         _pause();
     }
 
-    function unpause() public onlyRole(PAUSER_ROLE) {
+    function unpause() public onlyRole(Constants.pauserRole()) {
         _unpause();
     }
 
     function safeMint(address to, string memory uri)
         public
-        onlyRole(MINTER_ROLE)
+        onlyRole(Constants.minterRole())
     {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
@@ -86,7 +82,7 @@ contract CollateralToken is
     function _authorizeUpgrade(address newImplementation)
         internal
         override
-        onlyRole(UPGRADER_ROLE)
+        onlyRole(Constants.upgraderRole())
     {}
 
     // The following functions are overrides required by Solidity.

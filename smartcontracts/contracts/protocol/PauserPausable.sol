@@ -3,6 +3,7 @@ pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "./Constants.sol";
 
 /**
  * @title PauserPausable
@@ -13,7 +14,6 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
  */
 
 contract PauserPausable is AccessControlUpgradeable, PausableUpgradeable {
-  bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
   // solhint-disable-next-line func-name-mixedcase
   function __PauserPausable__init() public initializer {
@@ -48,7 +48,7 @@ contract PauserPausable is AccessControlUpgradeable, PausableUpgradeable {
   }
 
   modifier onlyPauserRole() {
-    require(hasRole(PAUSER_ROLE, _msgSender()), "Must have pauser role to perform this action");
+    require(hasRole(Constants.pauserRole(), _msgSender()), "Must have pauser role to perform this action");
     _;
   }
 }

@@ -20,7 +20,10 @@ const nullAddress = "0x0000000000000000000000000000000000000000";
 
 export const createOpportunity = async (formData) => {
 	if (!formData) {
-		return false;
+		return {
+			success: false,
+			msg: "formData is undefined or empty",
+		};
 	}
 	try {
 		let borrowerAdd = await getUserWalletAddress();
@@ -60,6 +63,11 @@ export const createOpportunity = async (formData) => {
 			const transaction1 = await contract.createOpportunity(opData);
 			await transaction1.wait();
 			return { transaction1, success: true };
+		} else {
+			return {
+				success: false,
+				msg: "please connect your wallet",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -68,13 +76,15 @@ export const createOpportunity = async (formData) => {
 			msg: error.message,
 		};
 	}
-	// return false;
 };
 
 export function getOpportunity(opportunity) {
 	try {
 		if (!opportunity) {
-			return undefined;
+			return {
+				success: false,
+				msg: "opportunity is undefined",
+			};
 		}
 
 		// Create the opportunity object
@@ -158,6 +168,11 @@ export const getOpportunitysOf = async () => {
 				opportunities.push(obj);
 			}
 			return { opportunities, success: true };
+		} else {
+			return {
+				success: false,
+				msg: "please connect your wallet",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -185,6 +200,11 @@ export const voteOpportunity = async (id, vote) => {
 			const transaction1 = await contract.voteOpportunity(id, vote);
 			await transaction1.wait();
 			return { transaction1, success: true };
+		} else {
+			return {
+				success: false,
+				msg: "please connect your wallet",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -546,6 +566,11 @@ export const getAllUnderwriterOpportunities = async () => {
 				}
 			}
 			return { opportunities, success: true };
+		} else {
+			return {
+				success: false,
+				msg: "please connect your wallet",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);

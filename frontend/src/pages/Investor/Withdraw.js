@@ -91,9 +91,24 @@ const Withdraw = () => {
 								if (price.success) {
 									const { sharePrice, displaySharePrice } = price;
 									seniorInvestmentData.estimatedAPY = displaySharePrice;
-									seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-										seniorPoolInvestment.withdrawableAmt
-									);
+
+									let realPossibleWithdrawAmt =
+										(balance * (100 - sharePrice)) / 100;
+
+									if (
+										balance >=
+										(seniorPoolInvestment.withdrawableAmt *
+											(100 + sharePrice)) /
+											100
+									) {
+										seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+											seniorPoolInvestment.withdrawableAmt
+										);
+									} else {
+										seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+											realPossibleWithdrawAmt
+										);
+									}
 									setSeniorPool(seniorInvestmentData);
 								} else {
 									setSeniorPool(null);

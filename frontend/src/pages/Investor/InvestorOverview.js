@@ -203,7 +203,7 @@ const InvestorOverview = () => {
 
 							<div className="flex items-center md:flex-col md:items-start gap-1">
 								<p className="text-sm lg:text-base text-[#64748B]  flex gap-1 items-center">
-									<span className="inline-block w-3 h-2 bg-[#F790F9] rounded-3xl"></span>
+									<span className="inline-block w-3 h-2 bg-white rounded-3xl"></span>
 									Total Yield Earned
 								</p>
 
@@ -224,12 +224,12 @@ const InvestorOverview = () => {
 					</div>
 
 					{/* child 2 */}
-					<div className="card-gradient md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
+					{/* <div className="card-gradient md:w-1/2 px-2 py-4 flex flex-col gap-4 rounded-xl 2xl:justify-center xl:px-6 ">
 						<p className="text-sm lg:text-base font-semibold  sm:px-4">
 							Growth of investment on reinvesting everything for
 						</p>
 						<LineChart />
-					</div>
+					</div> */}
 				</div>
 
 				<div className="flex flex-col gap-5 mt-[4em] md:mt-[5em]">
