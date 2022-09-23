@@ -24,6 +24,8 @@ export const getBorrowerDetails = async (address) => {
 			}
 
 			if (address) {
+				Sentry.captureMessage("Address received", "info");
+
 				const borrowerCid = await contract.borrowerProfile(address);
 				return { borrowerCid, success: true };
 			}

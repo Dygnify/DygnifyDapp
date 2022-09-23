@@ -27,7 +27,7 @@ const ViewSeniorPool = () => {
 	const [selected, setSelected] = useState(null);
 	const [processFundModal, setProcessFundModal] = useState();
 	const [investProcessing, setInvestProcessing] = useState();
-	const [kycStatus, setKycStatus] = useState(1);
+	const [kycStatus, setKycStatus] = useState();
 	const [loading, setLoading] = useState(true);
 	const [txhash, settxhash] = useState("");
 	const [contractAdrress, setcontractAdrress] = useState("");
@@ -100,7 +100,10 @@ const ViewSeniorPool = () => {
 		axiosHttpService(tokenTransactions(process.env.REACT_APP_SENIORPOOL)).then(
 			(transactionDetails) => {
 				if (transactionDetails && transactionDetails.res) {
-					console.log("got transaction list");
+					console.log(
+						"%cgot transaction list",
+						"font-size:2rem; color: lightpink;"
+					);
 					setTransactionData(transactionDetails.res.result);
 				}
 			}

@@ -17,6 +17,7 @@ const LoanFormModal = ({
 	handleForm,
 	setBorrowReqProcess,
 	setProcessModal,
+	setUpdateRepayment,
 }) => {
 	const path = useNavigate();
 
@@ -149,6 +150,7 @@ const LoanFormModal = ({
 		console.log("submitsss", loanDetails);
 		setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
 		setBorrowReqProcess(false);
+		setUpdateRepayment(Math.random());
 	};
 
 	const handleNext = (newData, value) => {

@@ -29,6 +29,8 @@ const Withdraw = () => {
 	const [contractAdrress, setcontractAdrress] = useState("");
 	const [amounts, setAmounts] = useState("");
 
+	const [updateSenior, setUpdateSenior] = useState(12);
+
 	const handleForm = () => {
 		setSelected(null);
 	};
@@ -39,6 +41,8 @@ const Withdraw = () => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
 				} else {
+					console.log("error senior pool investment");
+					setSeniorPool(null);
 					console.log(data.msg);
 				}
 			})
@@ -52,11 +56,12 @@ const Withdraw = () => {
 				console.log(res.msg);
 			}
 		});
-	}, []);
+	}, [updateSenior]);
 
 	useEffect(() => {
 		if (seniorPoolInvestment) {
 			// fetch data from IPFS
+
 			retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
 				if (res) {
 					let read = getBinaryFileData(res);
@@ -70,20 +75,37 @@ const Withdraw = () => {
 									process.env.REACT_APP_SENIORPOOL
 								);
 
-								seniorInvestmentData.opportunityAmount =
-									getDisplayAmount(balance);
+								seniorInvestmentData.opportunityAmount = getDisplayAmount(
+									balance
+								);
 
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +
 									seniorPoolInvestment.withdrawableAmt;
-								seniorInvestmentData.capitalInvested =
-									getDisplayAmount(totalInvestment);
-								const { sharePrice, displaySharePrice } =
-									await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
-								seniorInvestmentData.estimatedAPY = displaySharePrice;
-								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-									seniorPoolInvestment.withdrawableAmt
+								seniorInvestmentData.capitalInvested = getDisplayAmount(
+									totalInvestment
 								);
+								const {
+									sharePrice,
+									displaySharePrice,
+								} = await getSeniorPoolDisplaySharePrice(spJson.estimatedAPY);
+								seniorInvestmentData.estimatedAPY = displaySharePrice;
+								let realPossibleWithdrawAmt =
+									(balance * (100 - sharePrice)) / 100;
+
+								if (
+									balance >=
+									(seniorPoolInvestment.withdrawableAmt * (100 + sharePrice)) /
+										100
+								) {
+									seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+										seniorPoolInvestment.withdrawableAmt
+									);
+								} else {
+									seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+										realPossibleWithdrawAmt
+									);
+								}
 								setSeniorPool(seniorInvestmentData);
 							}
 						} catch (error) {
@@ -127,6 +149,7 @@ const Withdraw = () => {
 						settxhash={settxhash}
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
+						setUpdateSenior={setUpdateSenior}
 					/>
 				)}
 				{processFundModal ? (
@@ -175,6 +198,7 @@ const Withdraw = () => {
 							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
 								{juniorPools.map((item) => (
 									<WithdrawCard
+										key={Math.random()}
 										data={item}
 										isSeniorPool={false}
 										setSelected={setSelected}
