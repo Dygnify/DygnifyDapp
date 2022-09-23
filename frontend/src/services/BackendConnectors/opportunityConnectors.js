@@ -218,6 +218,7 @@ export const voteOpportunity = async (id, vote) => {
 
 // to fetch opportunity by id
 export const getOpportunityAt = async (id) => {
+	Sentry.captureMessage("getOpportunityAt", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -232,6 +233,12 @@ export const getOpportunityAt = async (id) => {
 			let tx = await contract.opportunityToId(id);
 			let { obj } = getOpportunity(tx);
 			return { obj, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -244,6 +251,7 @@ export const getOpportunityAt = async (id) => {
 };
 
 export const getAllUnderReviewOpportunities = async () => {
+	Sentry.captureMessage("getAllUnderReviewOpportunities", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -267,6 +275,12 @@ export const getAllUnderReviewOpportunities = async () => {
 				}
 			}
 			return { opportunities, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -280,6 +294,7 @@ export const getAllUnderReviewOpportunities = async () => {
 };
 
 export const getDrawdownOpportunities = async () => {
+	Sentry.captureMessage("getDrawdownOpportunities", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -327,6 +342,12 @@ export const getDrawdownOpportunities = async () => {
 				}
 			}
 			return { opportunities, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -340,6 +361,7 @@ export const getDrawdownOpportunities = async () => {
 };
 
 export const getOpportunitiesWithDues = async () => {
+	Sentry.captureMessage("getOpportunitiesWithDues", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -405,6 +427,12 @@ export const getOpportunitiesWithDues = async () => {
 				}
 			}
 			return { opportunities, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);

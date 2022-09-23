@@ -19,6 +19,7 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 
 import Loader from "../../uiTools/Loading/Loader";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -40,6 +41,10 @@ const BorrowerProfile = () => {
 	const [profileStatus, setProfileStatus] = useState(true);
 	const [kycStatus, setKycStatus] = useState(false);
 	const [hasKey, setHaskey] = useState();
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 	const brJson = location.state;
 
 	useEffect(() => {
@@ -94,6 +99,10 @@ const BorrowerProfile = () => {
 				}
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 
@@ -248,6 +257,7 @@ const BorrowerProfile = () => {
 		<>
 			<div className="relative mb-16">
 				{loading && <Loader />}
+				<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 				<div className={`${loading ? "filter blur-sm" : ""}`}>
 					{selected && <KYBModal handleForm={handleForm} />}
 					{!profileStatus && (

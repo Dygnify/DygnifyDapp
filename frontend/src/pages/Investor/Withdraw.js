@@ -14,6 +14,7 @@ import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const Withdraw = () => {
 	const [seniorPool, setSeniorPool] = useState();
@@ -30,6 +31,10 @@ const Withdraw = () => {
 	const [amounts, setAmounts] = useState("");
 
 	const [updateSenior, setUpdateSenior] = useState(12);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	const handleForm = () => {
 		setSelected(null);
@@ -44,6 +49,10 @@ const Withdraw = () => {
 					console.log("error senior pool investment");
 					setSeniorPool(null);
 					console.log(data.msg);
+					setErrormsg({
+						status: !data.status,
+						msg: data.msg,
+					});
 				}
 			})
 			.catch((error) => console.log("Failed to get senior pool investment"))
@@ -54,6 +63,10 @@ const Withdraw = () => {
 				setWalletBal(getDisplayAmount(res.balance));
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 	}, [updateSenior]);
@@ -71,12 +84,22 @@ const Withdraw = () => {
 							if (spJson) {
 								let seniorInvestmentData = {};
 								seniorInvestmentData.opportunityName = spJson.poolName;
-								const { balance } = await getWalletBal(
+								const res = await getWalletBal(
 									process.env.REACT_APP_SENIORPOOL
 								);
 
-								seniorInvestmentData.opportunityAmount =
-									getDisplayAmount(balance);
+								let balance;
+
+								if (res.success) {
+									balance = res.balance;
+									seniorInvestmentData.opportunityAmount =
+										getDisplayAmount(balance);
+								} else {
+									setErrormsg({
+										status: !res.success,
+										msg: res.msg,
+									});
+								}
 
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +
@@ -113,6 +136,10 @@ const Withdraw = () => {
 								} else {
 									setSeniorPool(null);
 									console.log(price.msg);
+									setErrormsg({
+										status: !price.status,
+										msg: price.msg,
+									});
 								}
 							}
 						} catch (error) {
@@ -132,6 +159,10 @@ const Withdraw = () => {
 					setJuniorPools(opportunities.opportunityList);
 				else {
 					console.log(opportunities.msg);
+					setErrormsg({
+						status: !opportunities.status,
+						msg: opportunities.msg,
+					});
 				}
 			};
 			fetchData();
@@ -143,6 +174,7 @@ const Withdraw = () => {
 	return (
 		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>
 			{loading && <Loader />}
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				{selected && (
 					<WithdrawFundsModal

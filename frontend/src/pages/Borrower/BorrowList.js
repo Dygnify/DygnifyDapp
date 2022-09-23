@@ -13,6 +13,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -26,6 +27,10 @@ const BorrowList = () => {
 	const [kycStatus, setKycStatus] = useState();
 	const [profileStatus, setProfileStatus] = useState();
 	const [updateRepayment, setUpdateRepayment] = useState(12);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	const handleForm = () => {
 		setSelected(null);
@@ -45,6 +50,10 @@ const BorrowList = () => {
 				setData(op.opportunities);
 			} else {
 				console.log(op.msg);
+				setErrormsg({
+					status: !op.success,
+					msg: op.msg,
+				});
 			}
 
 			setLoading(false);
@@ -55,6 +64,10 @@ const BorrowList = () => {
 				checkForKycAndProfile(res.address);
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 	}, []);
@@ -106,6 +119,7 @@ const BorrowList = () => {
 
 	return (
 		<div className="">
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<DashboardHeader
 				setSelected={setSelected}
 				kycStatus={kycStatus}

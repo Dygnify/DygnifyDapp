@@ -62,27 +62,23 @@ export const requestAccount = async (metaMask) => {
 };
 
 export const isConnected = async () => {
-	
-		if (window.ethereum) {
-			
-			let chainId = window.ethereum.chainId;
-			if(chainId!== "0x13881"){
-				const temp = await window.provider.request({
-					method: "wallet_switchEthereumChain",
-					params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
-				});
-			}
-			if (chainId == "0x13881") {
-				console.log("test1")
-				const provider = new ethers.providers.Web3Provider(window.ethereum);
-				const account = await provider.send("eth_requestAccounts", []);
-			}
-			return true;
-
-		}else{
-		return false;
+	if (window.ethereum) {
+		let chainId = window.ethereum.chainId;
+		if (chainId !== "0x13881") {
+			const temp = await window.provider.request({
+				method: "wallet_switchEthereumChain",
+				params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
+			});
 		}
-	
+		if (chainId == "0x13881") {
+			console.log("test1");
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const account = await provider.send("eth_requestAccounts", []);
+		}
+		return true;
+	} else {
+		return false;
+	}
 };
 
 export const convertDate = (epochTimestamp) => {
@@ -95,6 +91,7 @@ export const convertDate = (epochTimestamp) => {
 };
 
 export const getUserWalletAddress = async () => {
+	Sentry.captureMessage("getUserWalletAddress", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -103,6 +100,7 @@ export const getUserWalletAddress = async () => {
 			const address = await signer.getAddress();
 			return { address, success: true };
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
 				msg: "Please connect your wallet!",
@@ -119,6 +117,7 @@ export const getUserWalletAddress = async () => {
 };
 
 export const getWalletBal = async (address) => {
+	Sentry.captureMessage("getWalletBal", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -138,6 +137,7 @@ export const getWalletBal = async (address) => {
 				success: true,
 			};
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
 				msg: "Please connect your wallet!",

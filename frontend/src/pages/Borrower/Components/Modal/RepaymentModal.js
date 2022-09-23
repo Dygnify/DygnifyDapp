@@ -7,6 +7,7 @@ import DollarImage from "../../../../assets/Dollar-icon.svg";
 import approve from "../../../../services/BackendConnectors/approve";
 import allowance from "../../../../services/BackendConnectors/allowance";
 import Loader from "../../../../uiTools/Loading/Loader";
+import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
 
 const RepaymentModal = ({
 	data,
@@ -24,6 +25,10 @@ const RepaymentModal = ({
 	const [isInvest, setIsInvest] = useState(false);
 	const [isApproved, setIsApproved] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	useEffect(() => {
 		getWalletBal().then((res) => {
@@ -31,6 +36,10 @@ const RepaymentModal = ({
 				setWalletBal(res.balance);
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 		getAllowance();
@@ -68,6 +77,7 @@ const RepaymentModal = ({
 	}
 	return (
 		<div>
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<input type="checkbox" id="repayment-modal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
 				{loading && <Loader />}

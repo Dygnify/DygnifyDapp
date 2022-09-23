@@ -3,10 +3,15 @@ import TransactionsCard from "./Components/Cards/TransactionsCard";
 import Loader from "../../uiTools/Loading/Loader";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import { getTokenTransactions } from "../../services/Helpers/transactionsHelper";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const Transaction = () => {
 	const [transactions, setTransactions] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	useEffect(async () => {
 		console.log("reached");
@@ -24,6 +29,10 @@ const Transaction = () => {
 				});
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 	}, []);
@@ -31,6 +40,7 @@ const Transaction = () => {
 	return (
 		<div className={`relative mb-16 ${loading ? "h-[100vh]" : ""}`}>
 			{loading && <Loader />}
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<div className={` ${loading ? "filter blur-sm " : ""}`}>
 				<h2 className="font-semibold text-[1.4375rem] lg:text-[2.0625rem]">
 					Transaction History

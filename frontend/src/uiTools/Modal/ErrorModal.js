@@ -12,7 +12,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
 				className="modal"
 			>
-				<div class="relative p-4 w-full max-w-md h-full md:h-auto">
+				<div class="relative p-4 w-full max-w-md h-full md:h-auto z-50">
 					<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
 						<button
 							type="button"

@@ -12,6 +12,7 @@ import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Loader from "../../uiTools/Loading/Loader";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const Invest = () => {
 	const path = useNavigate();
@@ -28,6 +29,10 @@ const Invest = () => {
 		loanInterest: "",
 		isFull: "",
 	});
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	useEffect(() => {
 		getUserWalletAddress().then((res) => {
@@ -35,6 +40,10 @@ const Invest = () => {
 				checkForKyc(res.address);
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 	}, []);
@@ -87,14 +96,24 @@ const Invest = () => {
 					if (spJson) {
 						let seniorInvestmentData = {};
 						seniorInvestmentData.opportunityName = spJson.poolName;
-						const { balance } = await getWalletBal(
-							process.env.REACT_APP_SENIORPOOL
-						);
-						seniorInvestmentData.opportunityAmount = getDisplayAmount(balance);
-						seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
-						seniorInvestmentData.poolDescription = spJson.poolDescription;
-						seniorInvestmentData.isFull = false;
-						setSeniorPool(seniorInvestmentData);
+						const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
+
+						if (res.success) {
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								res.balance
+							);
+							seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
+							seniorInvestmentData.poolDescription = spJson.poolDescription;
+							seniorInvestmentData.isFull = false;
+							setSeniorPool(seniorInvestmentData);
+						} else {
+							console.log(res.msg);
+							setErrormsg({
+								status: !res.success,
+								msg: res.msg,
+							});
+						}
+
 						setSeniorPoolLoading(false);
 					}
 				};
@@ -111,6 +130,7 @@ const Invest = () => {
 
 	return (
 		<div className="">
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<div className="mb-4">
 				<h2 className="font-semibold text-[1.4375rem] lg:text-[2.0625rem] ">
 					Investment pools

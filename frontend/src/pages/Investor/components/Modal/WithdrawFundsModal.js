@@ -7,6 +7,7 @@ import {
 
 import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
+import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
 
 const WithdrawFundsModal = ({
 	userWalletBal,
@@ -27,6 +28,11 @@ const WithdrawFundsModal = ({
 		msg: "",
 	});
 
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
+
 	async function withdrawJunior() {
 		setProcessFundModal(true);
 		setInvestProcessing(true);
@@ -40,6 +46,10 @@ const WithdrawFundsModal = ({
 			setInvestProcessing(false);
 		} else {
 			console.log(withdrawalData.msg);
+			setErrormsg({
+				status: !withdrawalData.status,
+				msg: withdrawalData.msg,
+			});
 		}
 	}
 
@@ -56,6 +66,10 @@ const WithdrawFundsModal = ({
 			setInvestProcessing(false);
 		} else {
 			console.log(data?.msg);
+			setErrormsg({
+				status: !data.status,
+				msg: data.msg,
+			});
 		}
 
 		setUpdateSenior(Math.random());
@@ -87,6 +101,7 @@ const WithdrawFundsModal = ({
 
 	return (
 		<>
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<input
 				type="checkbox"
 				id="WithdrawModal"

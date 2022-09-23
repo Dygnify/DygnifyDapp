@@ -12,6 +12,7 @@ import { UserContext } from "../../../../Paths"; //
 import approve from "../../../../services/BackendConnectors/approve";
 import allowance from "../../../../services/BackendConnectors/allowance";
 import Loader from "../../../../uiTools/Loading/Loader";
+import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
 
 //
 
@@ -42,6 +43,11 @@ const InvestModal = ({
 		msg: "",
 	});
 
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
+
 	//for send data using useContext--
 	const { state, dispatch } = useContext(UserContext); //
 	dispatch({ type: "USER", payload: amount }); //
@@ -53,6 +59,10 @@ const InvestModal = ({
 				setWalletBal(res.balance);
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 		userAddress();
@@ -78,6 +88,10 @@ const InvestModal = ({
 			}, 20000);
 		} else {
 			console.log(data?.msg);
+			setErrormsg({
+				status: !data.status,
+				msg: data.msg,
+			});
 		}
 	}
 
@@ -115,6 +129,10 @@ const InvestModal = ({
 			}, 15000);
 		} else {
 			console.log(data.msg);
+			setErrormsg({
+				status: !data.status,
+				msg: data.msg,
+			});
 		}
 	}
 
@@ -214,6 +232,7 @@ const InvestModal = ({
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
 				{loading && <Loader />}
+				<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 				<div
 					className={`bg-neutral-50 dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8 ${
 						loading ? "blur-sm" : ""

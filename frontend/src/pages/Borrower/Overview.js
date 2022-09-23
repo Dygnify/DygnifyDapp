@@ -20,6 +20,7 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 import ProcessingRepaymentModal from "./Components/Modal/ProcessingRepaymentModal";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const Overview = () => {
 	const [drawdownList, setDrawdownList] = useState([]);
@@ -49,6 +50,10 @@ const Overview = () => {
 	const [amounts, setamounts] = useState("");
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	const handleForm = () => {
 		setSelected(null);
@@ -69,6 +74,10 @@ const Overview = () => {
 				setDrawdownList(opportunities.opportunities);
 			} else {
 				console.log(opportunities.msg);
+				setErrormsg({
+					status: !opportunities.success,
+					msg: opportunities.msg,
+				});
 			}
 
 			setLoading(false);
@@ -79,6 +88,10 @@ const Overview = () => {
 				checkForKycAndProfile(res.address);
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 	}, [loadDrawdownList]);
@@ -141,6 +154,10 @@ const Overview = () => {
 				console.log(repaymentList, nextDueAmount);
 			} else {
 				console.log(opportunities.msg);
+				setErrormsg({
+					status: !opportunities.success,
+					msg: opportunities.msg,
+				});
 			}
 		};
 		fetchData();
@@ -180,6 +197,7 @@ const Overview = () => {
 
 	return (
 		<>
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			{loading && <Loader />}
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				<DashboardHeader

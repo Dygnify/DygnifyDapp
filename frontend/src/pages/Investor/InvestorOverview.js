@@ -16,6 +16,7 @@ import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
 import { getBinaryFileData } from "../../services/Helpers/fileHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import Loader from "../../uiTools/Loading/Loader";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const InvestorOverview = () => {
 	const [totalInvestment, setTotalInvestment] = useState(0);
@@ -28,6 +29,10 @@ const InvestorOverview = () => {
 	const [loading, setLoading] = useState(true);
 	const [seniorPoolLoading, setSeniorPoolLoading] = useState(true);
 	const [juniorPoolLoading, setJuniorPoolLoading] = useState(true);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	const path = useNavigate();
 
@@ -38,6 +43,10 @@ const InvestorOverview = () => {
 			setTotalInvestment(amount.totalInvestment);
 		} else {
 			console.log(amount.msg);
+			setErrormsg({
+				status: !amount.status,
+				msg: amount.msg,
+			});
 		}
 
 		let yieldEarned = await getTotalYieldOfInvestor();
@@ -46,6 +55,10 @@ const InvestorOverview = () => {
 			setTotalYield(yieldEarned.totalYield);
 		} else {
 			console.log(yieldEarned.msg);
+			setErrormsg({
+				status: !yieldEarned.status,
+				msg: yieldEarned.msg,
+			});
 		}
 	}
 
@@ -56,6 +69,10 @@ const InvestorOverview = () => {
 					setSeniorPoolInvestment(data.data);
 				} else {
 					console.log(data.msg);
+					setErrormsg({
+						status: !data.status,
+						msg: data.msg,
+					});
 				}
 			})
 			.catch((error) => console.log("Failed to get senior pool investment"))
@@ -74,18 +91,27 @@ const InvestorOverview = () => {
 							if (spJson) {
 								let seniorInvestmentData = {};
 								seniorInvestmentData.opportunityName = spJson.poolName;
-								const { balance } = await getWalletBal(
+								const res = await getWalletBal(
 									process.env.REACT_APP_SENIORPOOL
 								);
-								seniorInvestmentData.opportunityAmount =
-									getDisplayAmount(balance);
 
-								let totalInvestment =
-									seniorPoolInvestment.stakingAmt +
-									seniorPoolInvestment.withdrawableAmt;
+								if (res.success) {
+									seniorInvestmentData.opportunityAmount = getDisplayAmount(
+										res.balance
+									);
 
-								seniorInvestmentData.capitalInvested =
-									getDisplayAmount(totalInvestment);
+									let totalInvestment =
+										seniorPoolInvestment.stakingAmt +
+										seniorPoolInvestment.withdrawableAmt;
+
+									seniorInvestmentData.capitalInvested =
+										getDisplayAmount(totalInvestment);
+								} else {
+									setErrormsg({
+										status: !res.success,
+										msg: res.msg,
+									});
+								}
 
 								const price = await getSeniorPoolDisplaySharePrice(
 									spJson.estimatedAPY
@@ -102,6 +128,10 @@ const InvestorOverview = () => {
 								} else {
 									setSeniorPool(null);
 									console.log(price.msg);
+									setErrormsg({
+										status: !price.status,
+										msg: price.msg,
+									});
 								}
 							}
 						} catch (error) {
@@ -120,6 +150,10 @@ const InvestorOverview = () => {
 			setJuniorPool(junorPools.opportunityList);
 		} else {
 			console.log(junorPools.msg);
+			setErrormsg({
+				status: !junorPools.status,
+				msg: junorPools.msg,
+			});
 		}
 
 		setJuniorPoolLoading(false);
@@ -132,6 +166,7 @@ const InvestorOverview = () => {
 	return (
 		<div className="lg:relative">
 			{loading && <Loader />}
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				<div className="flex items-center mb-8">
 					<h2 className="text-[1.4rem] lg:text-[1.75rem] w-[50%] font-semibold">

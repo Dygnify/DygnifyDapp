@@ -5,12 +5,17 @@ import { useEffect } from "react";
 import { getOpportunityAt } from "../../components/transaction/TransactionHelper";
 import { retrieveFiles } from "../../services/web3storageIPFS";
 import LogoImage from "../../assets/logo.png";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const ApprovedOpportunities = () => {
 	const { id } = useParams({});
 	const [target, setTarget] = useState({});
 	const [cid, setCid] = useState("");
 	const [loanInfo, setLoanInfo] = useState({});
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	useEffect(() => {
 		const dataFetch = async () => {
@@ -18,6 +23,10 @@ const ApprovedOpportunities = () => {
 			if (temp.success) setTarget(temp.data);
 			else {
 				console.log(temp.msg);
+				setErrormsg({
+					status: !temp.success,
+					msg: temp.msg,
+				});
 			}
 		};
 		dataFetch();
@@ -42,6 +51,7 @@ const ApprovedOpportunities = () => {
 
 	return (
 		<>
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<style>{"body { background-color: #7165e3 }"}</style>
 			<Box
 				sx={{

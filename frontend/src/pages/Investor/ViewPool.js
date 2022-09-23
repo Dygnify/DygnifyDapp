@@ -23,6 +23,7 @@ import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 import DygnifyImage from "../../assets/Dygnify_Image.png";
 import UpArrow from "../SVGIcons/UpArrow";
 import DollarImage from "../../assets/Dollar-icon.svg";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -53,6 +54,11 @@ const ViewPool = () => {
 	const [transactionList, setTransactionList] = useState(13);
 	const [isFullStatus, setIsFullStatus] = useState();
 
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
+
 	const handleDrawdown = () => {
 		setSelected(null);
 	};
@@ -79,6 +85,10 @@ const ViewPool = () => {
 					loadBlockpassWidget(res.address);
 				} else {
 					console.log(res.msg);
+					setErrormsg({
+						status: !res.success,
+						msg: res.msg,
+					});
 				}
 			})
 			.finally(() => setLoading(false));
@@ -102,6 +112,10 @@ const ViewPool = () => {
 					setPoolBal(getDisplayAmount(res.balance));
 				} else {
 					console.log(res.msg);
+					setErrormsg({
+						status: !res.success,
+						msg: res.msg,
+					});
 				}
 			});
 
@@ -237,6 +251,7 @@ const ViewPool = () => {
 	return (
 		<div>
 			{loading && <Loader />}
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				{selected ? (
 					<InvestModal

@@ -3,21 +3,32 @@ import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal"
 import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
+import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
 
 const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 	const [walletBal, setWalletBal] = useState();
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
+
 	useEffect(() => {
 		getWalletBal().then((res) => {
 			if (res.success) {
 				setWalletBal(res.balance);
 			} else {
 				console.log(res.msg);
+				setErrormsg({
+					status: !res.success,
+					msg: res.msg,
+				});
 			}
 		});
 	}, []);
 
 	return (
 		<>
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<input type="checkbox" id="drawdown-modal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
 				<div className="bg-white dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
