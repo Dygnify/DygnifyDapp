@@ -145,7 +145,7 @@ export default function Final({
 								<span className="font-[500] text-[#A0ABBB]">Loan Type</span>
 
 								<span className="text-black dark:text-[#fff] text-right ">
-									{formData.loan_type == 1 ? "Term Loan" : "Bullet Loan"}
+									{formData.loan_type === "1" ? "Term Loan" : "Bullet Loan"}
 								</span>
 							</div>
 						</div>
@@ -185,7 +185,7 @@ export default function Final({
 					<div className="flex flex-col md:justify-between gap-1 md:gap-2 md:flex-row">
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral document Name</span>
-							<span className="text-black backdrop:dark:text-[#fff]">
+							<span className="text-black dark:text-[#fff]">
 								{formData.collateral_document_name}
 							</span>
 						</div>

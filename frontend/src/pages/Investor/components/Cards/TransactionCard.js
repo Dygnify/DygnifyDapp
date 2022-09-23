@@ -5,6 +5,7 @@ import {
 	getTrimmedWalletAddress,
 	getDisplayAmount,
 } from "../../../../services/Helpers/displayTextHelper";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const TransactionCard = ({ data, address }) => {
 	const [userAddress, setUserAddress] = useState();
@@ -36,10 +37,13 @@ const TransactionCard = ({ data, address }) => {
 			<p className=" w-1/3 md:w-1/4 pl-4 sm:pl-10 md:pl-2 xl:pl-5 2xl-8">
 				{isWithdraw ? "Withdrawal" : "Deposit"}
 			</p>
-			<p className=" w-1/3 md:w-1/4 text-right pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
+			<p className=" w-1/3 md:w-1/4 flex justify-end pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
 				{amount ? (
 					<>
-						{isWithdraw ? "-" : "+"} {amount}
+						<div className="flex gap-1">
+							<img src={DollarImage} className="w-4" />
+							{isWithdraw ? "-" : "+"} {amount}
+						</div>
 					</>
 				) : (
 					""

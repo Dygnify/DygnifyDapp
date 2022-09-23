@@ -108,7 +108,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 								<div className="">
 									<p className="text-neutral-300">Loan Type</p>
 									<p className="text-lg">
-										{data?.loanType === 0 ? "Bullet Loan" : "Term Loan"}
+										{data?.loanType === "0" ? "Bullet Loan" : "Term Loan"}
 									</p>
 								</div>
 							</div>

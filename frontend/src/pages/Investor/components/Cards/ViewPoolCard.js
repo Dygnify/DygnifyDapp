@@ -38,8 +38,11 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 		return (
 			<div
 				style={{
-					backgroundImage:
-						"linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)",
+					backgroundImage: `${
+						isFullStatus
+							? "linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)"
+							: "linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)"
+					}`,
 				}}
 				className={`${className} text-black px-3 rounded-2xl`}
 			>

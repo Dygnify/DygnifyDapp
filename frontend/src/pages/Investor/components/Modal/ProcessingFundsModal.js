@@ -46,13 +46,11 @@ const ProcessingFundsModal = ({
 										? `${data} is in progress`
 										: `${data} was successful`}
 								</p>
-								<div
-									class={
-										investProcessing
-											? "animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"
-											: ""
-									}
-								></div>
+								{investProcessing ? (
+									<div class="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></div>
+								) : (
+									<></>
+								)}
 							</div>
 							{!investProcessing ? (
 								<p className="font-semibold text-base">
@@ -88,8 +86,10 @@ const ProcessingFundsModal = ({
 
 							<div className="flex flex-col gap-1">
 								<p className="text-neutral-400">Contract Address</p>
-								<p className="font-semibold">
-									{contractAddress ? contractAddress : "--"}
+								<p className="font-semibold overflow-hidden">
+									{contractAddress
+										? getTrimmedWalletAddress(contractAddress, 25)
+										: "--"}
 								</p>
 							</div>
 						</div>

@@ -19,7 +19,7 @@ const TextField = ({
 				<span class="text-black dark:text-white text-lg">{label}</span>
 			</label>
 			<div
-				className={`input input-bordered items-center flex justify-between bg-lightmode-200 dark:bg-[#24272F]
+				className={`input input-bordered items-center flex justify-between bg-lightmode-200 dark:bg-[#24272F] 
 			
 			${
 				loanAmOutline
@@ -29,7 +29,13 @@ const TextField = ({
 			>
 				<input
 					onChange={onChange}
-					onBlur={onBlur}
+					onFocus={() => {
+						setLoanAmOutline(loanAmOutline ? false : true);
+					}}
+					onBlur={(e) => {
+						setLoanAmOutline(loanAmOutline ? false : true);
+						onBlur(e);
+					}}
 					name={name}
 					value={value}
 					ref={reference}

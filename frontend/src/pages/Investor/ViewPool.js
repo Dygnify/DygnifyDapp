@@ -51,6 +51,7 @@ const ViewPool = () => {
 	const [amounts, setAmounts] = useState("");
 	const [invest, setInvest] = useState(12);
 	const [transactionList, setTransactionList] = useState(13);
+	const [isFullStatus, setIsFullStatus] = useState();
 
 	const handleDrawdown = () => {
 		setSelected(null);
@@ -86,6 +87,7 @@ const ViewPool = () => {
 			setKycStatus(
 				location.state?.kycStatus ? location.state?.kycStatus : false
 			);
+			setIsFullStatus(location.state.isFull ? location.state.isFull : false);
 		}
 	}, []);
 
@@ -402,13 +404,27 @@ const ViewPool = () => {
 							htmlFor={kycStatus ? "InvestModal" : ""}
 							id={kycStatus ? "" : "blockpass-kyc-connect"}
 							onClick={() => {
-								if (kycStatus) return setSelected(true);
+								if (kycStatus && !isFullStatus) return setSelected(true);
 								else return null;
 							}}
-							className="cursor-pointer text-center py-2 bg-gradient-to-r from-[#4b74ff] to-[#9281ff] rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%] text-white"
+							className={`block font-semibold text-white ${
+								isFullStatus
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none`}
+							// className="cursor-pointer text-center py-2 bg-gradient-to-r from-[#4b74ff] to-[#9281ff] rounded-[1.8em] sm:w-[50%] sm:mx-auto md:w-[100%] text-white"
 						>
 							{kycStatus ? "Invest" : "Complete your KYC"}
 						</label>
+						{isFullStatus ? (
+							<div className="flex  justify-center  font-semibold text-sm text-[#FBBF24]">
+								<div className="text-center">
+									Note - Cannot invest as opportunity is full
+								</div>
+							</div>
+						) : (
+							<></>
+						)}
 					</div>
 				</div>
 
@@ -485,22 +501,30 @@ const ViewPool = () => {
 
 				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
 					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
-
-					<div className="mt-6 flex flex-col gap-3">
-						{transactionData?.length ? (
-							<>
-								{transactionData.map((item) => (
-									<TransactionCard
-										key={item.hash}
-										data={item}
-										address={poolData.opportunityPoolAddress}
-									/>
-								))}
-							</>
-						) : (
-							<p>Transaction details are not available at this moment</p>
-						)}
+					<div className=" mt-8 py-6  justify-start gap-4    flex font-bold border-y border-neutral-300 dark:border-darkmode-500">
+						<p className="w-1/3 md:w-1/4 pl-4">Address</p>
+						<p className="w-1/3 md:w-1/4 pl-4 sm:pl-10 md:pl-3 xl:pl-5">Type</p>
+						<p className="w-1/3 md:w-1/4  text-end pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
+							Amount
+						</p>
+						<p className="hidden md:block w-1/3 md:w-1/4 text-end pr-4 ">
+							Date
+						</p>
 					</div>
+
+					{transactionData?.length ? (
+						<div className="mt-6 flex flex-col gap-3">
+							{transactionData.map((item) => (
+								<TransactionCard
+									key={item.hash}
+									data={item}
+									address={poolData.opportunityPoolAddress}
+								/>
+							))}
+						</div>
+					) : (
+						<p>Transaction details are not available at this moment</p>
+					)}
 				</div>
 
 				<div className="mt-[5em] md:w-[58%]">

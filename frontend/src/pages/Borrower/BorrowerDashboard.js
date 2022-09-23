@@ -46,7 +46,7 @@ const BorrowerDashboard = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className="h-full  overflow-y-auto w-60 pt-3 text-[#64748B] bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
+						<ul className="h-full  overflow-y-auto w-60 pt-3 text-[#64748B] lg:dark:bg-transparent bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
 									to="/borrower_dashboard/overview"
