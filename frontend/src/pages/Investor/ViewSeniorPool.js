@@ -199,6 +199,16 @@ const ViewSeniorPool = () => {
 
 				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
 					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
+					<div className=" mt-8 py-6  justify-start gap-4    flex font-bold border-y border-neutral-300 dark:border-darkmode-500">
+						<p className="w-1/3 md:w-1/4 pl-4">Address</p>
+						<p className="w-1/3 md:w-1/4 pl-4 sm:pl-10 md:pl-3 xl:pl-5">Type</p>
+						<p className="w-1/3 md:w-1/4  text-end pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
+							Amount
+						</p>
+						<p className="hidden md:block w-1/3 md:w-1/4 text-end pr-4 ">
+							Date
+						</p>
+					</div>
 					{transactionData?.length > 0 ? (
 						<div className="mt-6 flex flex-col gap-3">
 							{transactionData ? (

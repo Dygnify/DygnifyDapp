@@ -31,6 +31,11 @@ export const getApprovalHistory = async () => {
 				}
 			}
 			return { opportunitiesList, success: true };
+		} else {
+			return {
+				success: false,
+				msg: "please connect your wallet",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);

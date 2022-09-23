@@ -7,6 +7,7 @@ import {
 } from "../../../services/Helpers/fileHelper";
 import { retrieveFiles } from "../../../services/Helpers/web3storageIPFS";
 import dollarIcon from "../../../assets/Dollar-icon.svg";
+import default_profile from "../../../assets/default_profile.svg";
 
 const UnderwriterCard = ({ data }) => {
 	const path = useNavigate();
@@ -58,7 +59,7 @@ const UnderwriterCard = ({ data }) => {
 			{/* section-1 */}
 			<div className="flex-row flex space-x-5 px-4 col-span-4 lg:pl-5 lg:pr-1">
 				<img
-					src={logoImgSrc}
+					src={logoImgSrc ? logoImgSrc : default_profile}
 					className="w-28 h-28 lg:my-auto rounded-full xl:w-36  xl:h-36 2xl:w-[7.5rem] 2xl:h-[7.5rem]"
 				/>
 				<div className="mt-7 -space-y-1 lg:hidden ">

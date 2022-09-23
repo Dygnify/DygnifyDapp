@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useEffect, useRef } from "react";
 import GradientButton from "../../../../uiTools/Button/GradientButton";
 import FileFields from "../../../../uiTools/Inputs/FileFields";
 import InputGroup from "../../../../uiTools/Inputs/InputGroup";
@@ -38,6 +39,13 @@ export default function Details({ handleNext, handlePrev, formData }) {
 			handleNext(values, true);
 		},
 	});
+
+	const inputRef = useRef();
+
+	useEffect(() => {
+		inputRef.current.focus();
+	}, []);
+
 	// console.log(formik.values.collateral_document[0].name);
 
 	return (
@@ -49,6 +57,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
 						value={formik.values.collateral_document_name}
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
+						reference={inputRef}
 						error={
 							formik.touched.collateral_document_name &&
 							formik.errors.collateral_document_name

@@ -63,7 +63,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 								}}
 								data-modal-toggle="popup-modal"
 								type="button"
-								class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+								className={`py-2 px-6 bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none text-white rounded-3xl focus:outline-[#9281FF]`}
 							>
 								Go to back
 							</button>
