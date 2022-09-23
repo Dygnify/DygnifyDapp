@@ -26,7 +26,7 @@ const BorrowRequest = () => {
 			setOpportunities(list.opportunities);
 		} else {
 			console.log(list.msg);
-			setErrormsg({ status: list.success, msg: list.msg });
+			setErrormsg({ status: !list.success, msg: list.msg });
 		}
 	}
 

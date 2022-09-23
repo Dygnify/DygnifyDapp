@@ -6,7 +6,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 			<input
 				type="checkbox"
 				className="modal-toggle"
-				checked={!errormsg.status}
+				checked={errormsg.status}
 			/>
 			<div
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
@@ -19,7 +19,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 							class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
 							data-modal-toggle="popup-modal"
 							onClick={() => {
-								setErrormsg({ status: true, msg: "" });
+								setErrormsg({ status: false, msg: "" });
 							}}
 						>
 							<svg
@@ -59,7 +59,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 							<button
 								onClick={() => {
 									// navigate("/borrower_dashboard/borrow_list");
-									setErrormsg({ status: true, msg: "" });
+									setErrormsg({ status: false, msg: "" });
 								}}
 								data-modal-toggle="popup-modal"
 								type="button"
