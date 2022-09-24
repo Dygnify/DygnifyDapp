@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import * as Yup from "yup";
+import Loader from "../../uiTools/Loading/Loader";
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
@@ -155,24 +156,22 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const uploadBorrowerData = async (formData) => {
-		console.log(formData);
-		const {
-			companyName,
-			companyRepName,
-			companyBio,
-			bizIdFileName,
-			bizAddFileName,
-			bizLicFileName,
-			bizIncoFileName,
-			website,
-			email,
-			twitter,
-			linkedin,
-		} = formData;
-		console.log(companyName);
 		setLoading(true);
 		try {
-			//Insert all the files in one array
+			const {
+				companyName,
+				companyRepName,
+				companyBio,
+				bizIdFileName,
+				bizAddFileName,
+				bizLicFileName,
+				bizIncoFileName,
+				website,
+				email,
+				twitter,
+				linkedin,
+			} = formData;
+
 			validations();
 			let key = false;
 			if (businessLicenseFiles) key = true;
@@ -313,7 +312,7 @@ const EditBorrowerProfileNew = () => {
 				await updateBorrowerDetails(borrowerDataCID);
 				console.log("upload successful");
 			}
-			navigate("/borrower_dashboard/borrower_profile", {
+			navigate("/borrowerDashboard/borrowerProfile", {
 				state: borrowerJsonData,
 			});
 		} catch (error) {
@@ -322,7 +321,9 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	return (
-		<div>
+		<div className={`${loading ? "relative" : ""}`}>
+			{loading && <Loader />}
+
 			<Formik
 				initialValues={initialValues}
 				onSubmit={(values) => uploadBorrowerData(values)}
@@ -510,26 +511,25 @@ const EditBorrowerProfileNew = () => {
 										/>
 									</div>
 								</div>
-
-								<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
-									<button
-										onClick={() =>
-											navigate("/borrower_dashboard/borrower_profile", {
-												state: oldBrJson,
-											})
-										}
-										className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)]"
-									>
-										Exit
-									</button>
-									<GradientButton
-										className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
-										onClick={handleSubmit}
-									>
-										Save and Exit
-									</GradientButton>
-								</div>
 							</div>
+						</div>
+						<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
+							<button
+								onClick={() =>
+									navigate("/borrowerDashboard/borrowerProfile", {
+										state: oldBrJson,
+									})
+								}
+								className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)]"
+							>
+								Exit
+							</button>
+							<GradientButton
+								className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
+								onClick={handleSubmit}
+							>
+								Save and Exit
+							</GradientButton>
 						</div>
 					</>
 				)}

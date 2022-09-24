@@ -49,7 +49,7 @@ const BorrowList = () => {
 			if (op.success) {
 				setData(op.opportunities);
 			} else {
-				console.log(op.msg);
+				console.log(op.msg, "+++++++++++");
 				setErrormsg({
 					status: !op.success,
 					msg: op.msg,

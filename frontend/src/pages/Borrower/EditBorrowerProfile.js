@@ -10,7 +10,6 @@ import {
 } from "../../services/Helpers/web3storageIPFS";
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { useLocation, useNavigate } from "react-router-dom";
-// import Loading from "../Components/Loading";
 
 import Loader from "../../uiTools/Loading/Loader";
 
@@ -322,7 +321,7 @@ const EditBorrowerProfile = () => {
 				await updateBorrowerDetails(borrowerDataCID);
 				console.log("upload successful");
 			}
-			navigate("/borrower_dashboard/borrower_profile", {
+			navigate("/borrowerDashboard/borrowerProfile", {
 				state: borrowerJsonData,
 			});
 		} catch (error) {
@@ -495,7 +494,7 @@ const EditBorrowerProfile = () => {
 					}}
 					className="btn btn-wide btn-outline text-black dark:text-white mr-4 focus:outline-[#9281FF]"
 					onClick={() =>
-						navigate("/borrower_dashboard/borrower_profile", {
+						navigate("/borrowerDashboard/borrowerProfile", {
 							state: oldBrJson,
 						})
 					}

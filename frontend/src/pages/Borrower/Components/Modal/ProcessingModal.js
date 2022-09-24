@@ -99,7 +99,7 @@ const ProcessingRequestModal = ({
 						<p
 							className="text-black dark:text-white cursor-pointer font-semibold py-2 sm:py-3 text-center"
 							onClick={() => {
-								navigate("/borrower_dashboard/borrow_list");
+								navigate("/borrowerDashboard/borrowList");
 								setSelected(false);
 								setProcessModal(false);
 							}}

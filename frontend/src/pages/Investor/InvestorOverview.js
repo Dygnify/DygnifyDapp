@@ -173,7 +173,7 @@ const InvestorOverview = () => {
 						Investor's Dashboard
 					</h2>
 					<GradientButtonHeader
-						onClick={() => path("/investor-dashboard/invest")}
+						onClick={() => path("/investorDashboard/invest")}
 						className="ml-auto text-white"
 					>
 						+ Invest

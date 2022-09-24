@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Stepper from "./Stepper";
 import axiosHttpService from "../../../../../services/axioscall";
 import {
@@ -12,7 +11,6 @@ import LicenseFinal from "./Steps/LicenseFinal";
 
 const KYBModal = ({ handleForm }) => {
 	const [processed, setProcessed] = useState(false);
-	const path = useNavigate();
 
 	const [formData, setFormData] = useState({
 		identityDocName: "",

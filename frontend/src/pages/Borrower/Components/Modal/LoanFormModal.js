@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { createOpportunity } from "../../../../services/BackendConnectors/opportunityConnectors";
 import { getBorrowerDetails } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import Stepper from "../../LoanForm/Stepper";
@@ -19,8 +18,6 @@ const LoanFormModal = ({
 	setProcessModal,
 	setUpdateRepayment,
 }) => {
-	const path = useNavigate();
-
 	const [formData, setFormData] = useState({
 		loan_name: "",
 		loan_type: "1",
@@ -147,7 +144,6 @@ const LoanFormModal = ({
 			console.log(res.msg);
 		}
 
-		console.log("submitsss", loanDetails);
 		setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
 		setBorrowReqProcess(false);
 		setUpdateRepayment(Math.random());

@@ -58,7 +58,6 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 							</h3>
 							<button
 								onClick={() => {
-									// navigate("/borrower_dashboard/borrow_list");
 									setErrormsg({ status: false, msg: "" });
 								}}
 								data-modal-toggle="popup-modal"

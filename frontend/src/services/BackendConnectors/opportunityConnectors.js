@@ -310,6 +310,7 @@ export const getDrawdownOpportunities = async () => {
 			let opportunities = [];
 			for (const opportunity of data) {
 				let tx = await contract.opportunityToId(opportunity);
+				console.log(tx, "&&&%%%%%%%%%");
 
 				if (
 					!tx.opportunityPoolAddress ||

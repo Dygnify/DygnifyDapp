@@ -60,8 +60,8 @@ const KycCheckModal = ({ kycStatus, profileStatus }) => {
 						onClick={() =>
 							navigate(
 								!kycStatus && profileStatus
-									? `/borrower_dashboard/borrower_profile`
-									: `/borrower_dashboard/edit_profile`
+									? `/borrowerDashboard/borrowerProfile`
+									: `/borrowerDashboard/editProfile`
 							)
 						}
 					>

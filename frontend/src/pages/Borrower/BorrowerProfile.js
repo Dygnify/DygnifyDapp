@@ -45,6 +45,7 @@ const BorrowerProfile = () => {
 		status: false,
 		msg: "",
 	});
+	const [profileErrorMsg, setProfileErrorMsg] = useState();
 	const brJson = location.state;
 
 	useEffect(() => {
@@ -110,30 +111,34 @@ const BorrowerProfile = () => {
 			console.log("#######");
 			getBorrowerDetails()
 				.then((res) => {
-					console.log(res, "--");
-					if (!res.borrowerCid) {
-						setLoading(false);
-						return setProfileStatus(false);
-					}
-					retrieveFiles(res.borrowerCid, true)
-						.then((data) => {
-							if (data) {
-								let read = getBinaryFileData(data);
-								read.onloadend = function () {
-									let brJson = JSON.parse(read.result);
-									loadBorrowerData(brJson);
-									setborrowerJson(brJson);
-									setHaskey(brJson ? "businessLicFile" in brJson : false);
-									console.log(brJson);
-								};
-							} else {
-								setLoading(false);
-							}
-						})
-						.catch((e) => {
-							console.log(e);
+					if (res.success) {
+						if (!res.borrowerCid) {
 							setLoading(false);
-						});
+							return setProfileStatus(false);
+						}
+						retrieveFiles(res.borrowerCid, true)
+							.then((data) => {
+								if (data) {
+									let read = getBinaryFileData(data);
+									read.onloadend = function () {
+										let brJson = JSON.parse(read.result);
+										loadBorrowerData(brJson);
+										setborrowerJson(brJson);
+										setHaskey(brJson ? "businessLicFile" in brJson : false);
+										console.log(brJson);
+									};
+								} else {
+									setLoading(false);
+								}
+							})
+							.catch((e) => {
+								console.log(e);
+								setLoading(false);
+							});
+					} else {
+						console.log(res.msg);
+						setErrormsg({ status: res.success, msg: res.msg });
+					}
 				})
 				.catch((e) => {
 					console.log(e);
@@ -268,7 +273,7 @@ const BorrowerProfile = () => {
 								</h2>
 
 								<button
-									onClick={() => navigate("/borrower_dashboard/edit_profile")}
+									onClick={() => navigate("/borrowerDashboard/editProfile")}
 									className="font-semibold border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
 								>
 									<p>Create Profile</p>
@@ -286,7 +291,13 @@ const BorrowerProfile = () => {
 								<div className="flex gap-2 items-center ">
 									<div className="avatar">
 										<div className="rounded-full w-20">
-											<img src={logoImgSrc} />
+											<img
+												src={
+													logoImgSrc
+														? logoImgSrc
+														: require("../../assets/noImage.jpeg")
+												}
+											/>
 										</div>
 									</div>
 									<div className=" font-semibold ">
@@ -297,7 +308,7 @@ const BorrowerProfile = () => {
 
 								<button
 									onClick={() =>
-										navigate("/borrower_dashboard/edit_profile", {
+										navigate("/borrowerDashboard/editProfile", {
 											state: borrowerJson ? borrowerJson : brJson,
 										})
 									}
@@ -328,7 +339,7 @@ const BorrowerProfile = () => {
 							)}
 
 							<div className=" font-semibold flex flex-col md:flex-row md:justify-between gap-2">
-								<h2 className="text-[1.1875rem] md:text-2xl">Socials</h2>
+								{/* <h2 className="text-[1.1875rem] md:text-2xl">Socials</h2> */}
 
 								<div className=" flex gap-1 md:gap-3">
 									{twitter ? (

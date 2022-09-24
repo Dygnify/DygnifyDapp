@@ -150,7 +150,7 @@ const ProcessingRepaymentModal = ({
 		// 					alignSelf: "center",
 		// 					display: "flex",
 		// 				}}
-		// 				onClick={() => navigate("/borrower_dashboard/transaction")}
+		// 				onClick={() => navigate("/borrowerDashboard/transaction")}
 		// 			>
 		// 				<p>View Transaction</p>
 		// 			</div>
@@ -237,7 +237,7 @@ const ProcessingRepaymentModal = ({
 							<p className="text-black dark:text-white cursor-pointer font-semibold py-3 text-center">
 								<span
 									onClick={() => {
-										navigate("/borrower_dashboard/transaction");
+										navigate("/borrowerDashboard/transaction");
 									}}
 								>
 									<p>View Transaction</p>

@@ -43,7 +43,7 @@ const LandingPage = () => {
 								</h6>
 								<GradientButton
 									onClick={() => {
-										path("/investor-dashboard/overview");
+										path("/investorDashboard/overview");
 									}}
 								>
 									Invest
@@ -60,7 +60,7 @@ const LandingPage = () => {
 								</h6>
 								<GradientButton
 									onClick={() => {
-										path("/borrower_dashboard/overview");
+										path("/borrowerDashboard/overview");
 									}}
 								>
 									Borrow

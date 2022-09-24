@@ -49,7 +49,7 @@ const BorrowerDashboard = () => {
 						<ul className="h-full  overflow-y-auto w-60 pt-3 text-[#64748B] lg:dark:bg-transparent bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
-									to="/borrower_dashboard/overview"
+									to="/borrowerDashboard/overview"
 									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);
@@ -63,7 +63,7 @@ const BorrowerDashboard = () => {
 							</li>
 							<li className="font-medium text-center">
 								<NavLink
-									to="/borrower_dashboard/borrow_list"
+									to="/borrowerDashboard/borrowList"
 									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);
@@ -77,7 +77,7 @@ const BorrowerDashboard = () => {
 							</li>
 							<li className="font-medium text-center">
 								<NavLink
-									to="/borrower_dashboard/transaction"
+									to="/borrowerDashboard/transaction"
 									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);
@@ -92,7 +92,7 @@ const BorrowerDashboard = () => {
 
 							<li className="font-medium text-center">
 								<NavLink
-									to="/borrower_dashboard/borrower_profile"
+									to="/borrowerDashboard/borrowerProfile"
 									className="flex pl-11 py-4 gap-2"
 									onClick={() => {
 										setLinkStatus(false);

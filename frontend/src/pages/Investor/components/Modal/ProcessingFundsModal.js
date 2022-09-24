@@ -98,7 +98,7 @@ const ProcessingFundsModal = ({
 							<p className="text-black dark:text-white cursor-pointer font-semibold py-3 text-center">
 								<span
 									onClick={() => {
-										path("/investor-dashboard/transaction");
+										path("/investorDashboard/transaction");
 									}}
 								>
 									View Transaction

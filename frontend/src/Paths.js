@@ -42,7 +42,7 @@ const Paths = () => {
 					<Route path="/token" element={<Token />} />
 
 					{/* // rename */}
-					<Route path="/investor-dashboard" element={<InvestorDashboard />}>
+					<Route path="/investorDashboard" element={<InvestorDashboard />}>
 						<Route index element={<Navigate to="overview" />} />
 						<Route path="overview" element={<InvestorOverview />} />
 						<Route path="invest" element={<Invest />} />
@@ -62,17 +62,17 @@ const Paths = () => {
 						<Route path="approvalHistory" element={<ApprovalHistory />} />
 					</Route>
 
-					<Route path="/borrower_dashboard" element={<BorrowerDashboard />}>
+					<Route path="/borrowerDashboard" element={<BorrowerDashboard />}>
 						<Route index element={<Navigate to="overview" />} />
 						<Route path="overview" element={<Overview />} />
 
-						<Route path="borrow_list" element={<BorrowList />} />
+						<Route path="borrowList" element={<BorrowList />} />
 						<Route path="transaction" element={<Transaction />} />
-						<Route path="borrower_profile" element={<BorrowerProfile />} />
+						<Route path="borrowerProfile" element={<BorrowerProfile />} />
 						<Route path="underwriterQueries" element={<UnderwriterQueries />} />
 						<Route path="queriesPoolDetail" element={<QueriesPoolDetails />} />
 
-						<Route path="edit_profile" element={<EditBorrowerProfileNew />} />
+						<Route path="editProfile" element={<EditBorrowerProfileNew />} />
 					</Route>
 				</Routes>
 			</UserContext.Provider>

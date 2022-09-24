@@ -3,7 +3,6 @@ import GradientButton from "../../uiTools/Button/GradientButtonHeader";
 import WalletWhiteSmall from "../SVGIcons/WalletWhiteSmall";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoImage from "../../assets/logo.png";
-import { Link } from "react-router-dom";
 import Wallet from "../../uiTools/Icons/Wallet";
 import Hamburger from "../../uiTools/Icons/Hamburger";
 import Cross from "../../assets/cross.svg";
@@ -32,7 +31,6 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	}
 
 	useEffect(() => {
-		
 		fetchStatus();
 		darkModeStatus();
 	}, [location]);
@@ -65,7 +63,10 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						onClick={() => navigate("/")}
 					/>
 				</div>
-				<label className="ml-auto p-3 themetoggle-box rounded-full" htmlFor="themeToggle">
+				<label
+					className="ml-auto p-3 themetoggle-box rounded-full"
+					htmlFor="themeToggle"
+				>
 					<input
 						type="checkbox"
 						id="themeToggle"
@@ -73,7 +74,9 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						onChange={changeTheme}
 						className="hidden"
 					/>
-					<label htmlFor="themeToggle" className="themetoggle">{darkMode ? <Light /> : <Dark />}</label>
+					<label htmlFor="themeToggle" className="themetoggle">
+						{darkMode ? <Light /> : <Dark />}
+					</label>
 				</label>
 
 				{!status ? (

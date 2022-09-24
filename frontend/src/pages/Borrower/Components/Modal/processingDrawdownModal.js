@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
 	console.log(processDrawdown, "in fund process modal");
@@ -81,7 +81,7 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown }) => {
 
 						<div
 							className="border-2 border-neutral-500 rounded-[1.8em] mt-8"
-							onClick={() => navigate("/borrower_dashboard/transaction")}
+							onClick={() => navigate("/borrowerDashboard/transaction")}
 						>
 							<p className="cursor-pointer font-semibold py-3 text-center">
 								View Transaction

@@ -1,6 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import GradientButton from "../../uiTools/Button/GradientButton";
 
 const DashboardHeader = ({
 	setSelected,

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { PieChart } from "recharts";
-import axiosHttpService from "../../services/axioscall";
+import { NavLink, Outlet } from "react-router-dom";
 import OverviewIcon from "../../pages/../uiTools/Icons/OverviewIcon";
 import InvestIcon from "../../pages/../uiTools/Icons/InvestIcon";
 import TransactionIcon from "../../pages/../uiTools/Icons/TransactionIcon";
@@ -63,7 +61,7 @@ const InvestorDashboardNew = () => {
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex pl-10 py-4 gap-2"
-									to="/investor-dashboard/overview"
+									to="/investorDashboard/overview"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
@@ -77,7 +75,7 @@ const InvestorDashboardNew = () => {
 							<li className="font-medium text-center ">
 								<NavLink
 									className="flex pl-10 py-4 gap-2"
-									to="/investor-dashboard/invest"
+									to="/investorDashboard/invest"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
@@ -91,7 +89,7 @@ const InvestorDashboardNew = () => {
 							<li className="font-medium text-center ">
 								<NavLink
 									className="flex pl-10 py-4 gap-2"
-									to="/investor-dashboard/withdraw"
+									to="/investorDashboard/withdraw"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
@@ -105,7 +103,7 @@ const InvestorDashboardNew = () => {
 							<li className="font-medium text-center ">
 								<NavLink
 									className="flex pl-10 py-4 gap-2"
-									to="/investor-dashboard/transaction"
+									to="/investorDashboard/transaction"
 									onClick={() => {
 										setLinkStatus(false);
 									}}

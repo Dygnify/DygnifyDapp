@@ -29,6 +29,12 @@ export const getBorrowerDetails = async (address) => {
 				const borrowerCid = await contract.borrowerProfile(address);
 				return { borrowerCid, success: true };
 			}
+		} else {
+			Sentry.captureMessage("Wallet not connected", "warning");
+			return {
+				success: false,
+				msg: "please connect your wallet",
+			};
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -46,7 +52,6 @@ export const updateBorrowerDetails = async (cid) => {
 		if (typeof window.ethereum !== "undefined" && cid) {
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			console.log({ provider });
 			const signer = provider.getSigner();
 			const contract = new ethers.Contract(
 				process.env.REACT_APP_BORROWER,
@@ -59,6 +64,12 @@ export const updateBorrowerDetails = async (cid) => {
 
 			return { success: true };
 		}
+
+		Sentry.captureMessage("Wallet not connected", "warning");
+		return {
+			success: false,
+			msg: "please connect your wallet",
+		};
 	} catch (error) {
 		Sentry.captureException(error);
 
@@ -91,6 +102,11 @@ export const repayment = async (poolAddress) => {
 			await tx.wait();
 			return { tx, success: true };
 		}
+		Sentry.captureMessage("Wallet not connected", "warning");
+		return {
+			success: false,
+			msg: "please connect your wallet",
+		};
 	} catch (error) {
 		Sentry.captureException(error);
 
@@ -116,6 +132,11 @@ export const drawdown = async (poolAddress) => {
 			await transaction1.wait();
 			return { success: true };
 		}
+		Sentry.captureMessage("Wallet not connected", "warning");
+		return {
+			success: false,
+			msg: "please connect your wallet",
+		};
 	} catch (error) {
 		Sentry.captureException(error);
 
