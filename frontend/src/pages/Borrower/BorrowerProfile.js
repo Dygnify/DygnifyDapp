@@ -339,7 +339,7 @@ const BorrowerProfile = () => {
 							)}
 
 							<div className=" font-semibold flex flex-col md:flex-row md:justify-between gap-2">
-								{/* <h2 className="text-[1.1875rem] md:text-2xl">Socials</h2> */}
+								<h2 className="text-[1.1875rem] md:text-2xl">Socials</h2>
 
 								<div className=" flex gap-1 md:gap-3">
 									{twitter ? (
