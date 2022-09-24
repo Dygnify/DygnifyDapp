@@ -45,14 +45,6 @@ const Withdraw = () => {
 			.then((data) => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
-				} else {
-					console.log("error senior pool investment");
-					setSeniorPool(null);
-					console.log(data.msg);
-					setErrormsg({
-						status: !data.status,
-						msg: data.msg,
-					});
 				}
 			})
 			.catch((error) => console.log("Failed to get senior pool investment"))
@@ -92,8 +84,9 @@ const Withdraw = () => {
 
 								if (res.success) {
 									balance = res.balance;
-									seniorInvestmentData.opportunityAmount =
-										getDisplayAmount(balance);
+									seniorInvestmentData.opportunityAmount = getDisplayAmount(
+										balance
+									);
 								} else {
 									setErrormsg({
 										status: !res.success,
@@ -104,8 +97,9 @@ const Withdraw = () => {
 								let totalInvestment =
 									seniorPoolInvestment.stakingAmt +
 									seniorPoolInvestment.withdrawableAmt;
-								seniorInvestmentData.capitalInvested =
-									getDisplayAmount(totalInvestment);
+								seniorInvestmentData.capitalInvested = getDisplayAmount(
+									totalInvestment
+								);
 
 								const price = await getSeniorPoolDisplaySharePrice(
 									spJson.estimatedAPY
@@ -155,14 +149,8 @@ const Withdraw = () => {
 		try {
 			const fetchData = async () => {
 				const opportunities = await getJuniorWithdrawableOp();
-				if (opportunities.success)
+				if (opportunities.success) {
 					setJuniorPools(opportunities.opportunityList);
-				else {
-					console.log(opportunities.msg);
-					setErrormsg({
-						status: !opportunities.status,
-						msg: opportunities.msg,
-					});
 				}
 			};
 			fetchData();
