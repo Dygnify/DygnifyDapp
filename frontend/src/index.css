@@ -141,3 +141,7 @@ input[type="number"] {
 .dark .themetoggle>svg>path {
 	fill: white;
 }
+
+.dark .CreateProfileIcon>svg>path {
+	fill: #fff;
+}
