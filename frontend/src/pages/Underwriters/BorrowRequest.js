@@ -45,7 +45,7 @@ const BorrowRequest = () => {
 
 				{opportunities.length === 0 ? (
 					<div className="justify-center  flex ">
-						<div className=" text-sm md:text-xl my-10">
+						<div className=" text-[#64748B] text-xl text-center mt-3">
 							No Borrow requests are present at the moment.
 						</div>
 					</div>

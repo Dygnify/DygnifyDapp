@@ -19,6 +19,7 @@ const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
 
 export const createOpportunity = async (formData) => {
+	Sentry.captureMessage("createOpportunity", "info");
 	if (!formData) {
 		return {
 			success: false,
@@ -64,9 +65,10 @@ export const createOpportunity = async (formData) => {
 			await transaction1.wait();
 			return { transaction1, success: true };
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
-				msg: "please connect your wallet",
+				msg: "please connect your wallet!",
 			};
 		}
 	} catch (error) {
@@ -79,6 +81,7 @@ export const createOpportunity = async (formData) => {
 };
 
 export function getOpportunity(opportunity) {
+	Sentry.captureMessage("getOpportunity", "info");
 	try {
 		if (!opportunity) {
 			return {
@@ -129,6 +132,7 @@ export function getOpportunity(opportunity) {
 
 // to fetch created opportunities of specific borrower
 export const getOpportunitysOf = async () => {
+	Sentry.captureMessage("getOpportunitysOf", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			// await requestAccount();
@@ -169,9 +173,10 @@ export const getOpportunitysOf = async () => {
 			}
 			return { opportunities, success: true };
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
-				msg: "please connect your wallet",
+				msg: "please connect your wallet!",
 			};
 		}
 	} catch (error) {
@@ -181,11 +186,10 @@ export const getOpportunitysOf = async () => {
 			msg: error.message,
 		};
 	}
-
-	return 0;
 };
 
 export const voteOpportunity = async (id, vote) => {
+	Sentry.captureMessage("voteOpportunity", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -201,9 +205,10 @@ export const voteOpportunity = async (id, vote) => {
 			await transaction1.wait();
 			return { transaction1, success: true };
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
-				msg: "please connect your wallet",
+				msg: "please connect your wallet!",
 			};
 		}
 	} catch (error) {
@@ -213,7 +218,6 @@ export const voteOpportunity = async (id, vote) => {
 			msg: error.message,
 		};
 	}
-	// return false;
 };
 
 // to fetch opportunity by id
@@ -564,6 +568,7 @@ export const getAllWithdrawableOpportunities = async () => {
 };
 
 export const getAllUnderwriterOpportunities = async () => {
+	Sentry.captureMessage("getAllUnderwriterOpportunities", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -580,6 +585,9 @@ export const getAllUnderwriterOpportunities = async () => {
 				underWriter
 			);
 			if (!opportunityList) {
+				// opportunityList.toString() === ""
+				Sentry.captureMessage("opportunityList not available", "info");
+
 				return {
 					success: false,
 					msg: "opportunityList not available",
@@ -596,6 +604,7 @@ export const getAllUnderwriterOpportunities = async () => {
 			}
 			return { opportunities, success: true };
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
 				msg: "please connect your wallet",

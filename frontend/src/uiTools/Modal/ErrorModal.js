@@ -37,7 +37,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 							</svg>
 							<span class="sr-only">Close modal</span>
 						</button>
-						<div class="p-6 text-center">
+						<div class="p-6 text-center overflow-hidden">
 							<svg
 								aria-hidden="true"
 								class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200"

@@ -13,9 +13,14 @@ import {
 
 import Dark from "../../uiTools/Icons/Dark";
 import Light from "../../uiTools/Icons/Light";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	const [status, setStatus] = useState(false);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -26,7 +31,12 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	};
 
 	async function hitRequestAccount() {
-		await requestAccount(true);
+		const result = await requestAccount(true);
+		if (result.success) {
+			fetchStatus();
+		} else {
+			setErrormsg({ status: !result.success, msg: result.msg });
+		}
 		fetchStatus();
 	}
 
@@ -78,6 +88,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						{darkMode ? <Light /> : <Dark />}
 					</label>
 				</label>
+				<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 
 				{!status ? (
 					<div className="">

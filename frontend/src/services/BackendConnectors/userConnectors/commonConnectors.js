@@ -4,6 +4,8 @@ const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 
 export const getEthAddress = async () => {
+	Sentry.captureMessage("getEthAddress", "info");
+
 	try {
 		const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
 		// Prompt user for account connections
@@ -21,6 +23,7 @@ export const getEthAddress = async () => {
 };
 
 export const requestAccount = async (metaMask) => {
+	Sentry.captureMessage("requestAccount", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			let provider = window.ethereum;
@@ -47,6 +50,7 @@ export const requestAccount = async (metaMask) => {
 
 			return { success: true };
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
 				msg: "please connect your wallet",
