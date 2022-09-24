@@ -274,7 +274,7 @@ const BorrowerProfile = () => {
 
 								<button
 									onClick={() => navigate("/borrowerDashboard/editProfile")}
-									className="font-semibold border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
+									className="CreateProfileIcon font-semibold border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
 								>
 									<p>Create Profile</p>
 									<Edits />
