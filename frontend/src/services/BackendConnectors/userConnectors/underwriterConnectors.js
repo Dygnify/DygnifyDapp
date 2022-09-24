@@ -5,6 +5,7 @@ const opportunityOrigination = require("../../../artifacts/contracts/protocol/Op
 const Sentry = require("@sentry/react");
 
 export const getApprovalHistory = async () => {
+	Sentry.captureMessage("getApprovalHistory", "info");
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -32,9 +33,10 @@ export const getApprovalHistory = async () => {
 			}
 			return { opportunitiesList, success: true };
 		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
 				success: false,
-				msg: "please connect your wallet",
+				msg: "please connect your wallet!",
 			};
 		}
 	} catch (error) {

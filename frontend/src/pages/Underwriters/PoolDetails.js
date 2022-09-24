@@ -13,6 +13,7 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 import default_profile from "../../assets/default_profile.svg";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -20,6 +21,10 @@ const PoolDetails = () => {
 	const [opDetails, setOpDetails] = useState();
 	const [companyDetails, setCompanyDetails] = useState();
 	const [info, setInfo] = useState([]);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	const [idproof, setIdproof] = useState();
 
@@ -155,6 +160,7 @@ const PoolDetails = () => {
 			updateStatus(voteID);
 		} else {
 			console.log(result.msg);
+			setErrormsg({ status: !result.success, msg: result.msg });
 		}
 
 		setLoading(false);
@@ -172,6 +178,7 @@ const PoolDetails = () => {
 		<div className={`${loading ? "" : ""}`}>
 			{loading && <Loader />}
 			{/* main container  */}
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<div className={`md:pt-7 ${loading ? "blur-sm" : ""}`}>
 				{/*section-1*/}
 				<div className="flex flex-col gap-6 overflow-hidden flex-wrap md:flex-row md:justify-between  ">

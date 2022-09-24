@@ -12,6 +12,7 @@ import {
 	makeFileObjects,
 	retrieveFiles,
 } from "../../../../services/Helpers/web3storageIPFS";
+import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
 
 const LoanFormModal = ({
 	handleForm,
@@ -33,6 +34,10 @@ const LoanFormModal = ({
 	const [currentStep, setCurrentStep] = useState(1);
 	const [brJson, setBrJson] = useState();
 	const [checkBox, setCheckBox] = useState(false);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	useEffect(async () => {
 		getBorrowerDetails()
@@ -145,6 +150,7 @@ const LoanFormModal = ({
 			console.log(res.success);
 		} else {
 			console.log(res.msg);
+			setErrormsg({ status: !res.success, msg: res.msg });
 		}
 
 		console.log("submitsss", loanDetails);
@@ -208,6 +214,7 @@ const LoanFormModal = ({
 
 					<div className="md:-mx-5 -mx-2 pb-2 md:mt-4">
 						<Stepper steps={steps} currentStep={currentStep} />
+						<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 						<div>{displayStep(currentStep)}</div>
 					</div>
 				</div>

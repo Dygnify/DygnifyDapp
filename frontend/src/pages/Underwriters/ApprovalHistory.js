@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import TransactionsCard from "../Underwriters/Components/TransactionsCard";
 import { getApprovalHistory } from "../../services/BackendConnectors/userConnectors/underwriterConnectors";
 import Loader from "../../uiTools/Loading/Loader";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const ApprovalHistory = () => {
 	const [transactions, setTransactions] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 
 	useEffect(async () => {
 		await getHistory();
@@ -18,12 +23,15 @@ const ApprovalHistory = () => {
 			setTransactions(list.opportunitiesList);
 		} else {
 			console.log(list.msg);
+			setErrormsg({ status: !list.success, msg: list.msg });
 		}
 	}
 
 	return (
 		<div className={`mb-16 -mx-4 ${loading ? "relative h-[80vh]" : ""}`}>
 			{loading && <Loader />}
+			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
+
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				<h2 className="text-2xl mb-2 md:mb-12 ml-5  md:ml-7">
 					Approval history

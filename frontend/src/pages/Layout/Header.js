@@ -14,9 +14,14 @@ import {
 
 import Dark from "../../uiTools/Icons/Dark";
 import Light from "../../uiTools/Icons/Light";
+import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	const [status, setStatus] = useState(false);
+	const [errormsg, setErrormsg] = useState({
+		status: false,
+		msg: "",
+	});
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -27,7 +32,12 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	};
 
 	async function hitRequestAccount() {
-		await requestAccount(true);
+		const result = await requestAccount(true);
+		if (result.success) {
+			fetchStatus();
+		} else {
+			setErrormsg({ status: !result.success, msg: result.msg });
+		}
 		fetchStatus();
 	}
 
@@ -65,7 +75,10 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						onClick={() => navigate("/")}
 					/>
 				</div>
-				<label className="ml-auto p-3 themetoggle-box rounded-full" htmlFor="themeToggle">
+				<label
+					className="ml-auto p-3 themetoggle-box rounded-full"
+					htmlFor="themeToggle"
+				>
 					<input
 						type="checkbox"
 						id="themeToggle"
@@ -73,8 +86,11 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 						onChange={changeTheme}
 						className="hidden"
 					/>
-					<label htmlFor="themeToggle" className="themetoggle">{darkMode ? <Light /> : <Dark />}</label>
+					<label htmlFor="themeToggle" className="themetoggle">
+						{darkMode ? <Light /> : <Dark />}
+					</label>
 				</label>
+				<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 
 				{!status ? (
 					<div className="">
