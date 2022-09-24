@@ -153,7 +153,7 @@ const Invest = () => {
 						{seniorPool ? (
 							<ViewPoolCard
 								onClick={() =>
-									path("/investor-dashboard/viewSeniorPool", {
+									path("/investorDashboard/viewSeniorPool", {
 										state: {
 											...seniorPool,
 											kycStatus: kycStatus,
@@ -196,7 +196,7 @@ const Invest = () => {
 										data={item}
 										key={item.id}
 										onClick={() =>
-											path("/investor-dashboard/viewPool", {
+											path("/investorDashboard/viewPool", {
 												state: {
 													...item,
 													kycStatus: kycStatus,
