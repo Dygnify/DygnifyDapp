@@ -312,7 +312,7 @@ const BorrowerProfile = () => {
 											state: borrowerJson ? borrowerJson : brJson,
 										})
 									}
-									className="border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
+									className="CreateProfileIcon border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
 								>
 									<p>Edit Profile</p>
 									<Edits />
@@ -338,30 +338,31 @@ const BorrowerProfile = () => {
 								<></>
 							)}
 
-							<div className=" font-semibold flex flex-col md:flex-row md:justify-between gap-2">
+							<div className=" font-semibold flex flex-col md:flex-row md:justify-between gap-2 mt-10">
 								{/* <h2 className="text-[1.1875rem] md:text-2xl">Socials</h2> */}
+								<h2 className="text-2xl font-semibold">Bio</h2>
 
-								<div className=" flex gap-1 md:gap-3">
-									{twitter ? (
+								<div className=" flex gap-1 md:gap-3 ">
+									{!twitter ? (
 										<button
 											id="twitter"
 											onClick={redirectToURl}
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Twitter />
-											<p className="text-sm md:text-base">twitter</p>
+											<p className="text-xs md:text-base">twitter</p>
 										</button>
 									) : (
 										<></>
 									)}
-									{linkedin ? (
+									{!linkedin ? (
 										<button
 											id="linkedin"
 											onClick={redirectToURl}
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<LinkedIn />
-											<p className="text-sm md:text-base">linkedIn</p>
+											<p className="text-xs md:text-base">linkedIn</p>
 										</button>
 									) : (
 										<></>
@@ -373,7 +374,7 @@ const BorrowerProfile = () => {
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Email />
-											<p className="text-sm md:text-base">email</p>
+											<p className="text-xs md:text-base">email</p>
 										</button>
 									) : (
 										<></>
@@ -385,7 +386,7 @@ const BorrowerProfile = () => {
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Website />
-											<p className="text-sm md:text-base">website</p>
+											<p className="text-xs md:text-base">website</p>
 										</button>
 									) : (
 										<></>
@@ -394,7 +395,6 @@ const BorrowerProfile = () => {
 							</div>
 
 							<div className="my-6">
-								<h2 className="text-2xl font-semibold">Bio</h2>
 								<p className="mt-1 text-lg">{companyBio}</p>
 							</div>
 

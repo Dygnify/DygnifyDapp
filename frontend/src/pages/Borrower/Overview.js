@@ -149,19 +149,21 @@ const Overview = () => {
 
 					// set next due date and amount
 					setNextDueAmount(
-						getDisplayAmount(opportunities.opportunities[0].repaymentAmount)
+						getDisplayAmount(opportunities.opportunities[0]?.repaymentAmount)
 					);
-					setNextDueDate(opportunities.opportunities[0].nextDueDate);
+					setNextDueDate(opportunities.opportunities[0]?.nextDueDate);
+
+					console.log(repaymentList, nextDueAmount);
+				} else {
+					console.log(opportunities.msg);
+					setErrormsg({
+						status: !opportunities.success,
+						msg: opportunities.msg,
+					});
 				}
-			} else {
-				console.log(opportunities.msg);
-				setErrormsg({
-					status: !opportunities.success,
-					msg: opportunities.msg,
-				});
 			}
+			fetchData();
 		};
-		fetchData();
 	}, [loadRepaymentList, updateRepayment]);
 
 	useEffect(() => {
@@ -408,7 +410,7 @@ const Overview = () => {
 								<DrawdownCard
 									key={item.id}
 									data={item}
-									setTx = {setTx}
+									setTx={setTx}
 									loadDrawdownList={setLoadDrawdownList}
 									setOpenProcessDrawdown={setOpenProcessDrawdown}
 									setProcessDrawdown={setProcessDrawdown}
