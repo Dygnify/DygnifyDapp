@@ -7,6 +7,7 @@ import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const DrawdownCard = ({
 	data,
+	setTx,
 	loadDrawdownList,
 	setOpenProcessDrawdown,
 	setProcessDrawdown,
@@ -20,11 +21,15 @@ const DrawdownCard = ({
 	const onDrawdown = async () => {
 		setOpenProcessDrawdown(true);
 		setProcessDrawdown(true);
-		await drawdown(data?.opportunityPoolAddress);
-		setSelected(null);
-		loadDrawdownList(true);
-		setProcessDrawdown(false);
-		setUpdateRepayment(Math.random());
+		const tx = await drawdown(data?.opportunityPoolAddress);
+		if(tx.success){
+			console.log(tx.hash)
+			setTx(tx.hash);
+			setSelected(null);
+			loadDrawdownList(true);
+			setProcessDrawdown(false);
+			setUpdateRepayment(Math.random());
+		}
 	};
 
 	return (

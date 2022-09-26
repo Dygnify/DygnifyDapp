@@ -41,24 +41,12 @@ const InvestorOverview = () => {
 
 		if (amount.success) {
 			setTotalInvestment(amount.totalInvestment);
-		} else {
-			console.log(amount.msg);
-			setErrormsg({
-				status: !amount.status,
-				msg: amount.msg,
-			});
 		}
 
 		let yieldEarned = await getTotalYieldOfInvestor();
 
 		if (yieldEarned.success) {
 			setTotalYield(yieldEarned.totalYield);
-		} else {
-			console.log(yieldEarned.msg);
-			setErrormsg({
-				status: !yieldEarned.status,
-				msg: yieldEarned.msg,
-			});
 		}
 	}
 
@@ -67,12 +55,6 @@ const InvestorOverview = () => {
 			.then((data) => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
-				} else {
-					console.log(data.msg);
-					setErrormsg({
-						status: !data.status,
-						msg: data.msg,
-					});
 				}
 			})
 			.catch((error) => console.log("Failed to get senior pool investment"))
@@ -104,8 +86,9 @@ const InvestorOverview = () => {
 										seniorPoolInvestment.stakingAmt +
 										seniorPoolInvestment.withdrawableAmt;
 
-									seniorInvestmentData.capitalInvested =
-										getDisplayAmount(totalInvestment);
+									seniorInvestmentData.capitalInvested = getDisplayAmount(
+										totalInvestment
+									);
 								} else {
 									setErrormsg({
 										status: !res.success,

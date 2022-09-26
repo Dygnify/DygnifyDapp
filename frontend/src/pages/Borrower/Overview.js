@@ -48,6 +48,7 @@ const Overview = () => {
 	const [walletAddress, setwalletAddress] = useState("");
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
+	const [tx, setTx] = useState("");
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
@@ -141,17 +142,17 @@ const Overview = () => {
 			);
 			let opportunities = await getOpportunitiesWithDues();
 			if (opportunities.success) {
-				//sort the list based on date
-				opportunities.opportunities.sort(sortByProperty("epochDueDate"));
-				setRepaymentList(opportunities.opportunities);
+				if (opportunities.opportunities.length > 0) {
+					//sort the list based on date
+					opportunities.opportunities.sort(sortByProperty("epochDueDate"));
+					setRepaymentList(opportunities.opportunities);
 
-				// set next due date and amount
-				setNextDueAmount(
-					getDisplayAmount(opportunities.opportunities[0].repaymentAmount)
-				);
-				setNextDueDate(opportunities.opportunities[0].nextDueDate);
-
-				console.log(repaymentList, nextDueAmount);
+					// set next due date and amount
+					setNextDueAmount(
+						getDisplayAmount(opportunities.opportunities[0].repaymentAmount)
+					);
+					setNextDueDate(opportunities.opportunities[0].nextDueDate);
+				}
 			} else {
 				console.log(opportunities.msg);
 				setErrormsg({
@@ -407,6 +408,7 @@ const Overview = () => {
 								<DrawdownCard
 									key={item.id}
 									data={item}
+									setTx = {setTx}
 									loadDrawdownList={setLoadDrawdownList}
 									setOpenProcessDrawdown={setOpenProcessDrawdown}
 									setProcessDrawdown={setProcessDrawdown}
@@ -420,6 +422,7 @@ const Overview = () => {
 						<ProcessingDrawdownModal
 							processDrawdown={processDrawdown}
 							handleDrawdown={cutProcessModal}
+							tx={tx}
 						/>
 					) : (
 						<></>

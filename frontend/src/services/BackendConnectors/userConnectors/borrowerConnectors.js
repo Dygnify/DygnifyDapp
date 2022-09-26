@@ -130,7 +130,7 @@ export const drawdown = async (poolAddress) => {
 
 			const transaction1 = await poolContract.drawdown();
 			await transaction1.wait();
-			return { success: true };
+			return {  success: true , hash: transaction1};
 		}
 		Sentry.captureMessage("Wallet not connected", "warning");
 		return {
