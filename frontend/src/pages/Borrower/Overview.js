@@ -142,9 +142,10 @@ const Overview = () => {
 			);
 			let opportunities = await getOpportunitiesWithDues();
 			if (opportunities.success) {
-				//sort the list based on date
-				opportunities.opportunities.sort(sortByProperty("epochDueDate"));
-				setRepaymentList(opportunities.opportunities);
+				if (opportunities.opportunities.length > 0) {
+					//sort the list based on date
+					opportunities.opportunities.sort(sortByProperty("epochDueDate"));
+					setRepaymentList(opportunities.opportunities);
 
 				// set next due date and amount
 				setNextDueAmount(

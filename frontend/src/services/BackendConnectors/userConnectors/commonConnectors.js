@@ -78,8 +78,8 @@ export const isConnected = async () => {
 			console.log("test1");
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const account = await provider.send("eth_requestAccounts", []);
+			return true
 		}
-		return true;
 	} else {
 		return false;
 	}
