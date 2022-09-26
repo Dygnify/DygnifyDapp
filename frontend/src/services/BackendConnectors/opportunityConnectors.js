@@ -584,15 +584,6 @@ export const getAllUnderwriterOpportunities = async () => {
 			const opportunityList = await contract.getUnderWritersOpportunities(
 				underWriter
 			);
-			if (!opportunityList) {
-				// opportunityList.toString() === ""
-				Sentry.captureMessage("opportunityList not available", "info");
-
-				return {
-					success: false,
-					msg: "opportunityList not available",
-				};
-			}
 
 			let opportunities = [];
 			for (let i = 0; i < opportunityList.length; i++) {
