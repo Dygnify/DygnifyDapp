@@ -36,13 +36,8 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 
 	};
 
-	async function hitRequestAccount() {
-		const result = await requestAccount(true);
-		if (result.success) {
-			fetchStatus();
-		} else {
-			setErrormsg({ status: !result.success, msg: result.msg });
-		}
+	 function hitRequestAccount() {
+		console.log("i am clicked")
 		fetchStatus();
 	}
 
