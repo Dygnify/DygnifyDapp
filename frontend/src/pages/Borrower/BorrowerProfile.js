@@ -312,7 +312,7 @@ const BorrowerProfile = () => {
 											state: borrowerJson ? borrowerJson : brJson,
 										})
 									}
-									className="border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
+									className="CreateProfileIcon border border-neutral-500 flex gap-1 items-center rounded-3xl py-2 px-3 sm:px-5"
 								>
 									<p>Edit Profile</p>
 									<Edits />

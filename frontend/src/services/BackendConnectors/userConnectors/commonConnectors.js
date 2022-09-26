@@ -66,7 +66,10 @@ export const requestAccount = async (metaMask) => {
 };
 
 export const isConnected = async () => {
+	Sentry.captureMessage("requestAccount", "info");
+	try {
 	if (window.ethereum) {
+		console.log("test3")
 		let chainId = window.ethereum.chainId;
 		if (chainId !== "0x13881") {
 			const temp = await window.provider.request({
@@ -78,11 +81,24 @@ export const isConnected = async () => {
 			console.log("test1");
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const account = await provider.send("eth_requestAccounts", []);
-			return true
+			console.log("test4")
+			return {
+				success: true,
+			};
 		}
 	} else {
-		return false;
+		return {
+			success: false,
+			msg: "Please Install Wallet",
+		};
 	}
+}catch (error) {
+	Sentry.captureException(error);
+	return {
+		success: false,
+		msg: "Please Open Metamask and Connect",
+	};
+}
 };
 
 export const convertDate = (epochTimestamp) => {

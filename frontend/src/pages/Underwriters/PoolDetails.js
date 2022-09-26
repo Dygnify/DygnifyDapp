@@ -414,7 +414,7 @@ const PoolDetails = () => {
 					<div className="md:flex md:justify-between md:items-center md:mt-2 md:mb-3 ">
 						<div className="text-lg font-medium mt-10 md:flex md:items-center gap-4 md:mt-0">
 							<img
-								src={logoImgSrc}
+								src={logoImgSrc ? logoImgSrc : default_profile}
 								className="w-16 h-16 rounded-full hidden md:block"
 							></img>
 
