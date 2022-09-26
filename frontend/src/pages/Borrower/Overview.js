@@ -49,7 +49,6 @@ const Overview = () => {
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
 	const [tx, setTx] = useState("");
-
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
@@ -136,10 +135,6 @@ const Overview = () => {
 	// get all upcoming reapayments
 	useEffect(() => {
 		const fetchData = async () => {
-			console.log(
-				"%cFetching Repayment Cards",
-				"font-size:3rem; color:lightblue"
-			);
 			let opportunities = await getOpportunitiesWithDues();
 			if (opportunities.success) {
 				if (opportunities.opportunities.length > 0) {

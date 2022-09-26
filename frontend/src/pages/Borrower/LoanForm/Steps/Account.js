@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import GradientButton from "../../../../uiTools/Button/GradientButton";
 import TextArea from "../../../../uiTools/Inputs/TextArea";
 import TextField from "../../../../uiTools/Inputs/TextField";
-import { loanDetailsValidationSchema } from "../../../LoanForm/validations/validation";
+import { loanDetailsValidationSchema } from "../validations/validation";
 import Selection from "../../../../uiTools/Inputs/Selection";
 import { useState } from "react";
 
