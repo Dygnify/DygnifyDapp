@@ -6,15 +6,10 @@ import {
 	investInJuniorPool,
 	investInSeniorPool,
 } from "../../../../services/BackendConnectors/userConnectors/investorConncector";
-
-//for send data import from paths--
-import { UserContext } from "../../../../Paths"; //
 import approve from "../../../../services/BackendConnectors/approve";
 import allowance from "../../../../services/BackendConnectors/allowance";
 import Loader from "../../../../uiTools/Loading/Loader";
 import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
-
-//
 
 const InvestModal = ({
 	isSenior,
@@ -47,11 +42,6 @@ const InvestModal = ({
 		status: false,
 		msg: "",
 	});
-
-	//for send data using useContext--
-	const { state, dispatch } = useContext(UserContext); //
-	dispatch({ type: "USER", payload: amount }); //
-	//
 
 	useEffect(() => {
 		getWalletBal().then((res) => {

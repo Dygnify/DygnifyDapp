@@ -24,58 +24,44 @@ import EditBorrowerProfile from "./pages/Borrower/EditBorrowerProfile";
 import UnderwriterQueries from "./pages/Borrower/UnderwriterQueries";
 import QueriesPoolDetails from "./pages/Borrower/QueriesPoolDetails";
 
-//reducer
-import { initialState, reducer } from "./reducer/UseReducer";
-import EditBorrowerProfileNew from "./pages/Borrower/EditBorrowerProfileNew";
-//
-
-export const UserContext = createContext(); //
-
 const Paths = () => {
-	const [state, dispatch] = useReducer(reducer, initialState); //
-
 	return (
 		<HashRouter>
-			<UserContext.Provider value={{ state, dispatch }}>
-				<Routes>
-					<Route path="/" element={<LandingPage />} />
-					<Route path="/token" element={<Token />} />
+			<Routes>
+				<Route path="/" element={<LandingPage />} />
+				<Route path="/token" element={<Token />} />
 
-					{/* // rename */}
-					<Route path="/investorDashboard" element={<InvestorDashboard />}>
-						<Route index element={<Navigate to="overview" />} />
-						<Route path="overview" element={<InvestorOverview />} />
-						<Route path="invest" element={<Invest />} />
-						<Route path="withdraw" element={<Withdraw />} />
-						<Route path="transaction" element={<Transactions />} />
-						<Route path="viewPool" element={<ViewPool />} />
-						<Route path="viewSeniorPool" element={<ViewSeniorPool />} />
-					</Route>
+				{/* // rename */}
+				<Route path="/investorDashboard" element={<InvestorDashboard />}>
+					<Route index element={<Navigate to="overview" />} />
+					<Route path="overview" element={<InvestorOverview />} />
+					<Route path="invest" element={<Invest />} />
+					<Route path="withdraw" element={<Withdraw />} />
+					<Route path="transaction" element={<Transactions />} />
+					<Route path="viewPool" element={<ViewPool />} />
+					<Route path="viewSeniorPool" element={<ViewSeniorPool />} />
+				</Route>
 
-					<Route
-						path="/underwriterDashboard"
-						element={<UnderwriterDashboard />}
-					>
-						<Route index element={<Navigate to="borrowRequest" />} />
-						<Route path="borrowRequest" element={<BorrowRequest />} />
-						<Route path="poolDetail" element={<PoolDetails />} />
-						<Route path="approvalHistory" element={<ApprovalHistory />} />
-					</Route>
+				<Route path="/underwriterDashboard" element={<UnderwriterDashboard />}>
+					<Route index element={<Navigate to="borrowRequest" />} />
+					<Route path="borrowRequest" element={<BorrowRequest />} />
+					<Route path="poolDetail" element={<PoolDetails />} />
+					<Route path="approvalHistory" element={<ApprovalHistory />} />
+				</Route>
 
-					<Route path="/borrowerDashboard" element={<BorrowerDashboard />}>
-						<Route index element={<Navigate to="overview" />} />
-						<Route path="overview" element={<Overview />} />
+				<Route path="/borrowerDashboard" element={<BorrowerDashboard />}>
+					<Route index element={<Navigate to="overview" />} />
+					<Route path="overview" element={<Overview />} />
 
-						<Route path="borrowList" element={<BorrowList />} />
-						<Route path="transaction" element={<Transaction />} />
-						<Route path="borrowerProfile" element={<BorrowerProfile />} />
-						<Route path="underwriterQueries" element={<UnderwriterQueries />} />
-						<Route path="queriesPoolDetail" element={<QueriesPoolDetails />} />
+					<Route path="borrowList" element={<BorrowList />} />
+					<Route path="transaction" element={<Transaction />} />
+					<Route path="borrowerProfile" element={<BorrowerProfile />} />
+					<Route path="underwriterQueries" element={<UnderwriterQueries />} />
+					<Route path="queriesPoolDetail" element={<QueriesPoolDetails />} />
 
-						<Route path="editProfile" element={<EditBorrowerProfileNew />} />
-					</Route>
-				</Routes>
-			</UserContext.Provider>
+					<Route path="editProfile" element={<EditBorrowerProfile />} />
+				</Route>
+			</Routes>
 		</HashRouter>
 	);
 };

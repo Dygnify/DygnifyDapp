@@ -12,7 +12,6 @@ const ProcessingFundsModal = ({
 }) => {
 	const path = useNavigate();
 
-	console.log(investProcessing, "in fund process modal");
 	const data = invest ? "investment" : "withdraw";
 	return (
 		<div className="">

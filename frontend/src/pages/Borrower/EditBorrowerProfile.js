@@ -1,35 +1,26 @@
-import React, { useState, useRef, useEffect, Profiler } from "react";
-import GradientButton from "../../uiTools/Button/GradientButton";
+import React, { useState, useEffect } from "react";
+import { Formik } from "formik";
+import TextField from "../../uiTools/Inputs/TextField";
 import InputGroup from "../../uiTools/Inputs/InputGroup";
 import TextArea from "../../uiTools/Inputs/TextArea";
-import TextField from "../../uiTools/Inputs/TextField";
 import FileUploader from "../Components/FileUploader";
 import {
-	storeFiles,
 	makeFileObjects,
+	storeFiles,
 } from "../../services/Helpers/web3storageIPFS";
-import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import GradientButton from "../../uiTools/Button/GradientButton";
+import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import * as Yup from "yup";
 import Loader from "../../uiTools/Loading/Loader";
 
-const EditBorrowerProfile = () => {
+const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
 
-	const companyName = useRef();
-	const companyRepName = useRef();
-	const companyBio = useRef();
-	const website = useRef();
-	const email = useRef();
-	const twitter = useRef();
-	const linkedin = useRef();
-	const kycFileName = useRef();
-	const bizIdFileName = useRef();
-	const bizAddFileName = useRef();
-	const bizIncoFileName = useRef();
-	const bizLicFileName = useRef();
-
-	const [kycFiles, setKYCFiles] = useState();
+	const [profileState, setProfileState] = useState(null);
+	const [hasKey, setHasKey] = useState();
+	const [loading, setLoading] = useState();
+	const [error, setError] = useState();
 
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
@@ -37,15 +28,8 @@ const EditBorrowerProfile = () => {
 	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
 		useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
-
-	const [profileState, setProfileState] = useState();
-
-	//const [allowSubmit, setAllowSubmit] = useState(false);
-	const [loading, setLoading] = useState(false);
 	const location = useLocation();
-	const [hasKey, setHasKey] = useState();
 	const oldBrJson = location.state;
-	const [error, setError] = useState();
 
 	let logoFileCID = "";
 	let businessIdFilesCID = "";
@@ -55,95 +39,62 @@ const EditBorrowerProfile = () => {
 
 	let allowSubmit = true;
 
-	const checkEdited = (brJson) => {
-		if (location.state) {
-			if (JSON.stringify(brJson) === JSON.stringify(oldBrJson)) {
-				return (allowSubmit = false);
-			} //return setAllowSubmit(false);
-		}
-	};
-
-	const validations = () => {
-		if (
-			!(
-				businessIdentityFiles &&
-				businessIncorporationFiles &&
-				businessAddressFiles &&
-				logoFile
-			) &&
-			!location.state
-		) {
-			return setError(true);
-		}
-	};
-
-	const onLogoFileUpload = (files) => {
-		setLogoFile(files);
-	};
-	const onKYCFilesUpload = (files) => {
-		setKYCFiles(files);
-	};
-	const onBusinessIdentityFilesUpload = (files) => {
-		setBusinessIdentityFiles(files);
-	};
-	const onBusinessAddressFilesUpload = (files) => {
-		setBusinessAddressFiles(files);
-	};
-	const onBusinessIncorporationFilesUpload = (files) => {
-		setBusinessIncorporationFiles(files);
-	};
-	const onBusinessLicenseFilesUpload = (files) => {
-		setBusinessLicenseFiles(files);
-	};
+	const validationSchema = Yup.object().shape({
+		companyName: Yup.string().label("Company Name").required(),
+		companyRepName: Yup.string()
+			.label("Company Representative Name")
+			.required(),
+		companyBio: Yup.string().label("Company Bio").required(),
+		bizIdFileName: Yup.string().label("File Name").required(),
+		bizAddFileName: Yup.string().label("File Name").required(),
+		bizLicFileName: Yup.string().label("File Name"),
+		bizIncoFileName: Yup.string().label("File Name").required(),
+		website: Yup.string().label("Website").required(),
+	});
 
 	useEffect(() => {
-		console.log("location*****", location.state);
 		if (location.state) {
 			setProfileState(location.state);
 			setHasKey(location.state ? "businessLicFile" in location.state : true);
 		}
 	}, []);
 
+	const initialValues = {
+		companyName: profileState ? profileState.companyName : "",
+		companyRepName: profileState ? profileState.companyRepName : "",
+		companyBio: profileState ? profileState.companyBio : "",
+		bizIdFileName: profileState
+			? profileState.businessIdFile.businessIdDocName
+			: "",
+		bizAddFileName: profileState
+			? profileState.businessAddFile.businessAddDocName
+			: "",
+		bizLicFileName:
+			profileState && hasKey
+				? profileState.businessLicFile.businessLicDocName
+				: "",
+		bizIncoFileName: profileState
+			? profileState.businessIncoFile.businessIncoDocName
+			: "",
+		website: profileState ? profileState.website : "",
+		email: profileState ? profileState.email : "",
+		twitter: profileState ? profileState.twitter : "",
+		linkedin: profileState ? profileState.linkedin : "",
+	};
+
 	useEffect(() => {
 		if (profileState) {
 			const {
-				companyName: name,
-				companyBio: bio,
-				companyRepName: repName,
 				businessIdFile: IdFile,
 				businessAddFile: AddFile,
 				businessIncoFile: IncoFile,
 				businessLicFile: LicFile,
 				companyLogoFile: LogoFile,
-				website: web,
-				twitter: twit,
-				email: mail,
-				linkedin: lin,
 			} = profileState;
 
-			companyName.current.value = name;
-			companyRepName.current.value = repName;
-			companyBio.current.value = bio;
-			website.current.value = web;
-			email.current.value = mail;
-			twitter.current.value = twit;
-			linkedin.current.value = lin;
-			bizAddFileName.current.value = AddFile.businessAddDocName;
-			bizIdFileName.current.value = IdFile.businessIdDocName;
-			bizIncoFileName.current.value = IncoFile.businessIncoDocName;
-
 			if (hasKey) {
-				bizLicFileName.current.value = LicFile.businessLicDocName;
-
 				businessLicFilesCID = LicFile.businessLicFileCID;
 			}
-
-			// setLogoFile(LogoFile);
-			// console.log(bizAddFileName.current.value);
-			// setBusinessAddressFiles(AddFile);
-			// setBusinessIdentityFiles(IdFile);
-			// setBusinessIncorporationFiles(IncoFile);
-			// setBusinessLicenseFiles(LicFile);
 
 			logoFileCID = LogoFile.businessLogoFileCID;
 			businessIdFilesCID = IdFile.businessIdFileCID;
@@ -164,15 +115,66 @@ const EditBorrowerProfile = () => {
 		return null;
 	};
 
-	const uploadBorrowerData = async () => {
+	const checkEdited = (brJson) => {
+		if (location.state) {
+			if (JSON.stringify(brJson) === JSON.stringify(oldBrJson)) {
+				return (allowSubmit = false);
+			} //return setAllowSubmit(false);
+		}
+	};
+
+	const validations = () => {
+		if (
+			!(
+				businessIdentityFiles &&
+				businessIncorporationFiles &&
+				businessAddressFiles &&
+				logoFile
+			) &&
+			!location.state
+		) {
+			setError(true);
+			setLoading(false);
+		}
+	};
+
+	const onLogoFileUpload = (files) => {
+		setLogoFile(files);
+	};
+
+	const onBusinessIdentityFilesUpload = (files) => {
+		setBusinessIdentityFiles(files);
+	};
+	const onBusinessAddressFilesUpload = (files) => {
+		setBusinessAddressFiles(files);
+	};
+	const onBusinessIncorporationFilesUpload = (files) => {
+		setBusinessIncorporationFiles(files);
+	};
+	const onBusinessLicenseFilesUpload = (files) => {
+		setBusinessLicenseFiles(files);
+	};
+
+	const uploadBorrowerData = async (formData) => {
 		setLoading(true);
 		try {
-			//Insert all the files in one array
-			validations();
+			const {
+				companyName,
+				companyRepName,
+				companyBio,
+				bizIdFileName,
+				bizAddFileName,
+				bizLicFileName,
+				bizIncoFileName,
+				website,
+				email,
+				twitter,
+				linkedin,
+			} = formData;
 
+			validations();
 			let key = false;
 			if (businessLicenseFiles) key = true;
-
 			{
 				if (
 					businessIdentityFiles ||
@@ -186,7 +188,6 @@ const EditBorrowerProfile = () => {
 							logoFile ? logoFile : profileState.companyLogoFile
 						);
 					}
-
 				if (
 					(businessIdentityFiles && businessIdentityFiles.length) ||
 					profileState
@@ -197,7 +198,6 @@ const EditBorrowerProfile = () => {
 							: profileState.businessIdFile
 					);
 				}
-
 				if (
 					(businessAddressFiles && businessAddressFiles.length) ||
 					profileState
@@ -208,7 +208,6 @@ const EditBorrowerProfile = () => {
 							: profileState.businessAddFile
 					);
 				}
-
 				if (
 					(businessIncorporationFiles && businessIncorporationFiles.length) ||
 					profileState
@@ -219,7 +218,6 @@ const EditBorrowerProfile = () => {
 							: profileState.businessIncoFile
 					);
 				}
-
 				if (
 					(businessLicenseFiles &&
 						businessLicenseFiles.length &&
@@ -235,9 +233,9 @@ const EditBorrowerProfile = () => {
 			}
 			// Prepare a json file with borrower data
 			let borrowerJsonData = {
-				companyName: companyName.current.value,
-				companyRepName: companyRepName.current.value,
-				companyBio: companyBio.current.value,
+				companyName: companyName,
+				companyRepName: companyRepName,
+				companyBio: companyBio,
 				companyLogoFile: {
 					businessLogoFileName: logoFile
 						? logoFile[0].name
@@ -246,10 +244,9 @@ const EditBorrowerProfile = () => {
 						? logoFileCID
 						: profileState.companyLogoFile.businessLogoFileCID,
 				},
-
 				businessIdFile: {
 					businessIdDocName: businessIdentityFiles
-						? bizIdFileName.current.value
+						? bizIdFileName
 						: profileState.businessIdFile.businessIdDocName,
 					businessIdFileCID: businessIdentityFiles
 						? businessIdFilesCID
@@ -260,7 +257,7 @@ const EditBorrowerProfile = () => {
 				},
 				businessAddFile: {
 					businessAddDocName: businessAddressFiles
-						? bizAddFileName.current.value
+						? bizAddFileName
 						: profileState.businessAddFile.businessAddDocName,
 					businessAddFileCID: businessAddressFiles
 						? businessAddFilesCID
@@ -271,7 +268,7 @@ const EditBorrowerProfile = () => {
 				},
 				businessIncoFile: {
 					businessIncoDocName: businessIncorporationFiles
-						? bizIncoFileName.current.value
+						? bizIncoFileName
 						: profileState.businessIncoFile.businessIncoDocName,
 					businessIncoFileCID: businessIncorporationFiles
 						? businessIncoFilesCID
@@ -280,18 +277,16 @@ const EditBorrowerProfile = () => {
 						? businessIncorporationFiles[0].name
 						: profileState.businessIncoFile.businessIncoFileName,
 				},
-
-				website: website.current.value,
-				email: email.current.value,
-				twitter: twitter.current.value,
-				linkedin: linkedin.current.value,
+				website: website,
+				email: email,
+				twitter: twitter,
+				linkedin: linkedin,
 			};
-
 			if ((businessLicenseFiles || profileState) && (hasKey || key)) {
 				const licenseFile = {
 					businessLicFile: {
 						businessLicDocName: businessLicenseFiles
-							? bizLicFileName.current.value
+							? bizLicFileName
 							: profileState
 							? profileState.businessLicFile.businessLicDocName
 							: null,
@@ -303,16 +298,12 @@ const EditBorrowerProfile = () => {
 							: profileState?.businessLicFile.businessLicFileName,
 					},
 				};
-
 				borrowerJsonData = { ...borrowerJsonData, ...licenseFile };
 			}
-
 			checkEdited(borrowerJsonData);
-			console.log(borrowerJsonData, hasKey, key);
-			console.log(allowSubmit, "error", error);
+
 			if (allowSubmit && !error) {
 				console.log("Inside allow");
-
 				let file = makeFileObjects(borrowerJsonData, "borrower.json");
 				let borrowerDataCID = await storeFiles(file);
 				// Save this CID in the blockchain
@@ -332,178 +323,219 @@ const EditBorrowerProfile = () => {
 	return (
 		<div className={`${loading ? "relative" : ""}`}>
 			{loading && <Loader />}
-			<div className={loading ? "blur-sm" : ""}>
-				<div className="mb-6">
-					{error ? (
-						<h6
-							className="text-[#EF4444]"
-							// style={{ color: "red" }}
-						>
-							Please upload all the required details.
-						</h6>
-					) : (
-						<></>
-					)}
 
-					<h2 className="text-xl font-medium">Company Details</h2>
-					<div
-						style={{
-							display: "flex",
-						}}
-						className="gap-3 w-full mx-0"
-					>
-						<FileUploader
-							label="Company Logo"
-							className="w-1/3"
-							handleFile={onLogoFileUpload}
-							fileName={
-								profileState
-									? profileState.companyLogoFile.businessLogoFileName
-									: null
-							}
-						/>
-						<TextField
-							label="Company Name"
-							placeholder="Enter Company Name"
-							className="w-1/3"
-							reference={companyName}
-						/>
-						<TextField
-							label="Company Representative Name"
-							placeholder="Enter Name"
-							className="w-1/3"
-							reference={companyRepName}
-						/>
-					</div>
-					<div>
-						<TextArea
-							label="Bio"
-							placeholder="Summary About the Organization/Company"
-							className="w-full"
-							reference={companyBio}
-						/>
-					</div>
-				</div>
-
-				<div className="mb-6">
-					<h2 className="text-xl font-medium mb-2">KYB Documents</h2>
-					<InputGroup
-						caption="Business Identify Proof"
-						onChange={onBusinessIdentityFilesUpload}
-						reference={bizIdFileName}
-						error={error && "File required"}
-						fileName={
-							profileState ? profileState.businessIdFile.businessIdFileName : ""
-						}
-					/>
-					<InputGroup
-						caption="Business Address Proof"
-						onChange={onBusinessAddressFilesUpload}
-						reference={bizAddFileName}
-						error={error && "File required"}
-						fileName={
-							profileState
-								? profileState.businessAddFile.businessAddFileName
-								: ""
-						}
-					/>
-					<InputGroup
-						caption="Business Incorporation Proof"
-						onChange={onBusinessIncorporationFilesUpload}
-						reference={bizIncoFileName}
-						error={error && "File required"}
-						fileName={
-							profileState
-								? profileState.businessIncoFile.businessIncoFileName
-								: ""
-						}
-					/>
-					<InputGroup
-						caption="Business License Proof"
-						onChange={onBusinessLicenseFilesUpload}
-						reference={bizLicFileName}
-						fileName={
-							profileState && hasKey
-								? profileState.businessLicFile.businessLicFileName
-								: ""
-						}
-					/>
-				</div>
-				<div className="mb-6">
-					<h2 className="text-xl font-medium mb-2">Socials</h2>
-					<div className="w-full" style={{ display: "flex" }}>
-						<TextField
-							label="Website"
-							placeholder="Enter Website URL"
-							className="w-1/2 mr-8"
-							reference={website}
-						/>
-						<TextField
-							label="Email Address"
-							placeholder="Enter Email Address"
-							className="w-1/2 ml-8"
-							reference={email}
-						/>
-					</div>
-					<div className="w-full" style={{ display: "flex" }}>
-						<TextField
-							label="Twitter"
-							placeholder="Enter Twitter URL"
-							className="w-1/2 mr-8"
-							reference={twitter}
-						/>
-						<TextField
-							label="LinkedIn"
-							placeholder="Enter LinkedIn URL"
-							className="w-1/2 ml-8"
-							reference={linkedin}
-						/>
-					</div>
-				</div>
-			</div>
-
-			<div
-				className={`my-10 justify-center flex-row-reverse ${
-					loading ? "blur-sm" : ""
-				}`}
-				style={{ display: "flex" }}
+			<Formik
+				initialValues={initialValues}
+				onSubmit={(values) => uploadBorrowerData(values)}
+				validationSchema={validationSchema}
+				enableReinitialize={true}
 			>
-				{/* {loading ? (
-            <Loading />
-          ) : (
-            <GradientButton
-              className="font-medium ml-4"
-              onClick={uploadBorrowerData}
-            >
-              Save and Exit
-            </GradientButton>
-          )} */}
+				{({
+					values,
+					errors,
+					touched,
+					handleChange,
+					handleBlur,
+					handleSubmit,
+					isSubmitting,
+				}) => (
+					<>
+						<div className={loading ? "blur-sm" : ""}>
+							<div className="font-semibold">
+								<div className="">
+									<h2 className="text-[1.4375rem] ">Company Details</h2>
 
-				<GradientButton
-					className="font-medium ml-4"
-					onClick={uploadBorrowerData}
-				>
-					Save and Exit
-				</GradientButton>
+									<div className="mt-2 flex flex-col gap-2">
+										<div className=" flex flex-col gap-2 md:flex-row md:flex-wrap xl:justify-between">
+											<FileUploader
+												label="Company Logo"
+												className="md:w-[45%] xl:w-[30%]"
+												handleFile={onLogoFileUpload}
+												fileName={
+													profileState
+														? profileState.companyLogoFile.businessLogoFileName
+														: null
+												}
+											/>
+											<TextField
+												name="companyName"
+												label="Company Name"
+												placeholder="Enter Company Name"
+												className="md:w-[45%] md:ml-auto xl:ml-0 xl:w-[30%]"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyName}
+												error={
+													touched.companyName && errors.companyName
+														? errors.companyName
+														: null
+												}
+											/>
+											<TextField
+												name="companyRepName"
+												label="Company Representative Name"
+												placeholder="Enter Name"
+												className="md:w-[45%] xl:w-[30%]"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyRepName}
+												error={
+													touched.companyRepName && errors.companyRepName
+														? errors.companyRepName
+														: null
+												}
+											/>
+										</div>
 
-				<button
-					style={{
-						borderRadius: "100px",
-						padding: "12px 24px",
-						textTransform: "capitalize",
-					}}
-					className="btn btn-wide btn-outline text-black dark:text-white mr-4 focus:outline-[#9281FF]"
-					onClick={() =>
-						navigate("/borrowerDashboard/borrowerProfile", {
-							state: oldBrJson,
-						})
-					}
-				>
-					Exit
-				</button>
-			</div>
+										<div className="">
+											<TextArea
+												name="companyBio"
+												label="Bio"
+												placeholder="Summary About the Organization/Company"
+												className="w-full"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyBio}
+												error={
+													touched.companyBio && errors.companyBio
+														? errors.companyBio
+														: null
+												}
+											/>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-8 flex flex-col gap-3">
+									<h2 className="text-[1.4375rem] font-semibold">
+										KYB Documents
+									</h2>
+
+									<InputGroup
+										caption="Business Identify Proof"
+										name="bizIdFileName"
+										value={values.bizIdFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessIdentityFilesUpload}
+										onBlur={handleBlur}
+										error={error ? "File required" : errors.bizIdFileName}
+										fileName={
+											profileState
+												? profileState.businessIdFile.businessIdFileName
+												: ""
+										}
+									/>
+									<InputGroup
+										caption="Business Address Proof"
+										name="bizAddFileName"
+										value={values.bizAddFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessAddressFilesUpload}
+										onBlur={handleBlur}
+										error={error ? "File required" : errors.bizAddFileName}
+										fileName={
+											profileState
+												? profileState.businessAddFile.businessAddFileName
+												: ""
+										}
+									/>
+									<InputGroup
+										caption="Business Incorporation Proof"
+										name="bizIncoFileName"
+										value={values.bizIncoFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessIncorporationFilesUpload}
+										onBlur={handleBlur}
+										error={error ? "File required" : errors.bizIncoFileName}
+										fileName={
+											profileState
+												? profileState.businessIncoFile.businessIncoFileName
+												: ""
+										}
+									/>
+									<InputGroup
+										caption="Business License Proof"
+										name="bizLicFileName"
+										value={values.bizLicFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessLicenseFilesUpload}
+										onBlur={handleBlur}
+										fileName={
+											profileState && hasKey
+												? profileState.businessLicFile.businessLicFileName
+												: ""
+										}
+									/>
+								</div>
+
+								<div className="mb-6">
+									<h2 className="text-[1.1875rem] ">Socials</h2>
+
+									<div className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-3">
+										<TextField
+											name="website"
+											label="Website"
+											placeholder="Enter Website URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.website}
+											onBlur={handleBlur}
+											error={errors.website}
+										/>
+										<TextField
+											name="email"
+											label="Email Address"
+											placeholder="Enter Email Address"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											onBlur={handleBlur}
+											value={values.email}
+										/>
+										<TextField
+											name="twitter"
+											label="Twitter"
+											placeholder="Enter Twitter URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.twitter}
+											onBlur={handleBlur}
+										/>
+										<TextField
+											name="linkedin"
+											label="LinkedIn"
+											placeholder="Enter LinkedIn URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.linkedin}
+											onBlur={handleBlur}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
+							<button
+								onClick={() =>
+									navigate("/borrowerDashboard/borrowerProfile", {
+										state: oldBrJson,
+									})
+								}
+								className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)]"
+							>
+								Exit
+							</button>
+							<GradientButton
+								className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
+								onClick={handleSubmit}
+							>
+								Save and Exit
+							</GradientButton>
+						</div>
+					</>
+				)}
+			</Formik>
 		</div>
 	);
 };
 
-export default EditBorrowerProfile;
+export default EditBorrowerProfileNew;
