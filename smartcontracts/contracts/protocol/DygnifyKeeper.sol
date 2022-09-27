@@ -16,15 +16,13 @@ contract DygnifyKeeper is
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
     IOpportunityOrigination private opportunityOrigination;
-
-    uint256 private threshold;
+    
     bytes32[] private drawdownOpportunites;
     bool private stopKeeper;
 
     // @notice initializes the contract
     // @param DygnifyConfig : dygnify config address
-    // @param _threshold : no. of allowable days for writeoff
-    function initialize(DygnifyConfig _dygnifyConfig, uint256 _threshold)
+    function initialize(DygnifyConfig _dygnifyConfig)
         public
         initializer
     {
@@ -42,7 +40,6 @@ contract DygnifyKeeper is
         );
 
         _BaseUpgradeablePausable_init(owner);
-        threshold = _threshold * 86400; //converting days in second
     }
 
     function checkUpkeep(
@@ -65,8 +62,11 @@ contract DygnifyKeeper is
             )
                 .nextRepaymentTime();
             if (dueTime < block.timestamp) {
+                uint opportunityThreshold = opportunityOrigination.writeOffDaysOf( 
+                        drawdownOpportunites[i]
+                ) * 86400;
                 uint256 timePassed = block.timestamp - dueTime;
-                if (timePassed > threshold) {
+                if (timePassed > opportunityThreshold) {
                     isUpkeepNeeded = true;
                     break;
                 }
@@ -87,8 +87,11 @@ contract DygnifyKeeper is
             )
                 .nextRepaymentTime();
             if (dueTime < block.timestamp) {
+                uint opportunityThreshold = opportunityOrigination.writeOffDaysOf( 
+                        drawdownOpportunites[i]
+                ) * 86400;
                 uint256 timePassed = block.timestamp - dueTime;
-                if (timePassed > threshold) {
+                if (timePassed > opportunityThreshold) {
                     opportunityOrigination.markWriteOff(
                         drawdownOpportunites[i],
                         opportunityOrigination.getOpportunityPoolAddress(
