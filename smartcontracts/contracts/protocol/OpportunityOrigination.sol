@@ -24,6 +24,7 @@ contract OpportunityOrigination is
     mapping(bytes32 => address[9]) underwritersOf;
 
     mapping(address => bytes32[]) public underwriterToOpportunity;
+    mapping(bytes32 => uint256) public override writeOffDaysOf;
 
     // storing all the opportunities in an array.
     bytes32[] public opportunityIds;
@@ -114,6 +115,7 @@ contract OpportunityOrigination is
         _opportunity.collateralDocument = _opportunityData.collateralDocument;
         _opportunity.capitalLoss = _opportunityData.capitalLoss;
         _opportunity.createdOn = block.timestamp;
+        writeOffDaysOf[id] = dygnifyConfig.getWriteOffDays();
 
         opportunityToId[id] = _opportunity;
         opportunityOf[_opportunityData.borrower].push(id);

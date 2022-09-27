@@ -137,10 +137,6 @@ const Overview = () => {
 	// get all upcoming reapayments
 	useEffect(() => {
 		const fetchData = async () => {
-			console.log(
-				"%cFetching Repayment Cards",
-				"font-size:3rem; color:lightblue"
-			);
 			let opportunities = await getOpportunitiesWithDues();
 			if (opportunities.success) {
 				if (opportunities.opportunities.length > 0) {

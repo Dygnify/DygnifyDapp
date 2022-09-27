@@ -13,7 +13,7 @@ const LandingPage = () => {
 	const [darkMode, setDarkMode] = useState(true);
 
 	return (
-		<div className={`${darkMode ? "dark" : ""}`}>
+		<div className={`${darkMode ? "dark" : ""} background`}>
 			<div className="dark:bg-[#000000] bg-white dark:text-white text-black pb-20 md:pb-32 xl:pb-20 w-full h-full">
 				<div className="landing-backgroundimage">
 					<Header darkMode={darkMode} setDarkMode={setDarkMode} />

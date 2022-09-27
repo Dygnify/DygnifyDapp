@@ -6,7 +6,7 @@ import InputGroup from "../../../../uiTools/Inputs/InputGroup";
 import TextArea from "../../../../uiTools/Inputs/TextArea";
 import TextField from "../../../../uiTools/Inputs/TextField";
 import FileUploader from "../../../Components/FileUploader";
-import { CollateralDetailsValidationSchema } from "../../../LoanForm/validations/validation";
+import { CollateralDetailsValidationSchema } from "../validations/validation";
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
 export default function Details({ handleNext, handlePrev, formData }) {

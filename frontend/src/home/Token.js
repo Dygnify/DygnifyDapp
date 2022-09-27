@@ -59,6 +59,8 @@ function Token() {
 	const [opportunityIdForInvest, setOpportunityIdForInvest] = useState("");
 	const [underReviewOp, setUnderReviewOp] = useState([]);
 	const [activeOpportunityList, setActiveOpportunityList] = useState([]);
+	const [user, setuser] = useState("");
+	const [balance, setBalance] = useState("");
 
 	useEffect(async () => {
 		let op = await getAllUnderReviewOpportunities();
@@ -131,6 +133,21 @@ function Token() {
 			);
 			const transaction = await contract2.approve(usdcReceiver, amount);
 			await transaction.wait();
+		}
+	}
+
+	async function balanceOf() {
+		if (typeof window.ethereum !== "undefined") {
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const contract2 = new ethers.Contract(
+				process.env.REACT_APP_TEST_USDCTOKEN,
+				dygToken.abi,
+				provider
+			);
+			let amount = await contract2.balanceOf(user);
+			amount = ethers.utils.formatUnits(amount, 6);
+			setBalance(amount);
+			return amount;
 		}
 	}
 
@@ -595,6 +612,20 @@ function Token() {
 				>
 					Approve
 				</button>
+
+				<br />
+				<input
+					type="text"
+					onChange={(event) => setuser(event.target.value)}
+					placeholder="Address"
+				/>
+				<button
+					className="bg-[red] m-[10px] text-white p-[4px]"
+					onClick={() => balanceOf()}
+				>
+					balanceOf
+				</button>
+				<h2>Balance : {balance} USDC </h2>
 			</header>
 		</div>
 	);

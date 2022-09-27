@@ -49,6 +49,8 @@ interface IOpportunityOrigination {
         uint256 capitalLoss;
     }
 
+    function writeOffDaysOf(bytes32 id)external view returns(uint256);
+
     function getTotalOpportunities() external view returns (uint256);
 
     function getOpportunityOf(address _borrower)
