@@ -8,7 +8,9 @@ const LinkedIn = ({ className = "default" }) => {
 			viewBox="0 0 16 16"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
-			className={`${className !== "default" ? className : ""}`}
+			className={`${
+				className !== "default" ? className : ""
+			} pointer-events-none`}
 		>
 			<path
 				fill-rule="evenodd"

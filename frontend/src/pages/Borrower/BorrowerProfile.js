@@ -227,9 +227,9 @@ const BorrowerProfile = () => {
 
 	const redirectToURl = (event) => {
 		let url;
-		console.log(event);
+		let platform = event.target.id;
 
-		switch (event.target.id) {
+		switch (platform) {
 			case "twitter":
 				url = twitter;
 				break;
@@ -248,6 +248,7 @@ const BorrowerProfile = () => {
 			if (position === -1) {
 				url = protocol + url;
 			}
+
 			window.open(url, "_blank");
 		}
 	};
@@ -343,26 +344,30 @@ const BorrowerProfile = () => {
 								<h2 className="text-2xl font-semibold">Bio</h2>
 
 								<div className=" flex gap-1 md:gap-3 ">
-									{!twitter ? (
+									{twitter ? (
 										<button
 											id="twitter"
 											onClick={redirectToURl}
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Twitter />
-											<p className="text-xs md:text-base">twitter</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												twitter
+											</p>
 										</button>
 									) : (
 										<></>
 									)}
-									{!linkedin ? (
+									{linkedin ? (
 										<button
 											id="linkedin"
 											onClick={redirectToURl}
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<LinkedIn />
-											<p className="text-xs md:text-base">linkedIn</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												linkedIn
+											</p>
 										</button>
 									) : (
 										<></>
@@ -374,7 +379,9 @@ const BorrowerProfile = () => {
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Email />
-											<p className="text-xs md:text-base">email</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												email
+											</p>
 										</button>
 									) : (
 										<></>
@@ -386,7 +393,9 @@ const BorrowerProfile = () => {
 											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Website />
-											<p className="text-xs md:text-base">website</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												website
+											</p>
 										</button>
 									) : (
 										<></>

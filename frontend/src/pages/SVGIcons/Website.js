@@ -8,7 +8,9 @@ const Website = ({ className = "default" }) => {
 			viewBox="0 0 16 16"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
-			className={`${className !== "default" ? className : ""}`}
+			className={`${
+				className !== "default" ? className : ""
+			} pointer-events-none`}
 		>
 			<path
 				d="M9.02953 6.97113C8.48346 6.42529 7.74297 6.11865 6.97087 6.11865C6.19877 6.11865 5.45827 6.42529 4.9122 6.97113L2.85287 9.0298C2.30678 9.57588 2 10.3165 2 11.0888C2 11.8611 2.30678 12.6017 2.85287 13.1478C3.39895 13.6939 4.13959 14.0007 4.91187 14.0007C5.68414 14.0007 6.42479 13.6939 6.97087 13.1478L8.0002 12.1185"
