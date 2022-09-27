@@ -43,7 +43,7 @@ const RepaymentModal = ({
 			}
 		});
 		getAllowance();
-	}, []);
+	}, [loading]);
 
 	async function getAllowance() {
 		const newdata = await allowance(
@@ -150,7 +150,7 @@ const RepaymentModal = ({
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none `}
-							htmlFor={isApproved ? "RepaymentProcessModal" : ""}
+							// htmlFor={isApproved ? "RepaymentProcessModal" : ""}
 							onClick={() => {
 								if (isApproved) {
 									setLoading(true);
