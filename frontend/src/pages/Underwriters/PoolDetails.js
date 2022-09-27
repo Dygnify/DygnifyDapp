@@ -14,6 +14,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -160,7 +161,10 @@ const PoolDetails = () => {
 			updateStatus(voteID);
 		} else {
 			console.log(result.msg);
-			setErrormsg({ status: !result.success, msg: result.msg });
+			setErrormsg({
+				status: !result.success,
+				msg: getOnlyErrorText(result.msg),
+			});
 		}
 
 		setLoading(false);
@@ -172,6 +176,39 @@ const PoolDetails = () => {
 		if (fileName) url += `/${fileName}`;
 		console.log(fileName);
 		window.open(url, "_blank");
+	};
+
+	const redirectToURl = (event) => {
+		let url;
+		console.log(event);
+
+		switch (event.target.id) {
+			case "twitter":
+				url = companyDetails?.twitter;
+				break;
+			case "linkedin":
+				url = companyDetails?.linkedin;
+				break;
+			case "website":
+				url = companyDetails?.website;
+				break;
+		}
+
+		if (url) {
+			let protocol = "https://";
+			let position = url.search(protocol);
+			// if there is no "https://" in the url then it is not opened correctly
+			if (position === -1) {
+				url = protocol + url;
+			}
+			window.open(url, "_blank");
+		}
+	};
+
+	const redirectForEmail = () => {
+		if (companyDetails?.email) {
+			window.location.href = companyDetails?.email;
+		}
 	};
 
 	return (
@@ -325,9 +362,9 @@ const PoolDetails = () => {
 					<div className="w-full dark:bg-[#20232A] bg-[#D0D5DD] rounded-xl p-3">
 						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg flex flex-col md:flex-row">
 							<span>
-								Name of documents <span className="text-white pr-1">-</span>
+								Name of documents <span className="text-[#323A46] dark:text-[white] pr-1">-</span>
 							</span>
-							<span className="text-white">
+							<span className="text-[#323A46] dark:text-[white]">
 								{opDetails?.collateral_document_name}
 								<a
 									className="pl-1 text-sm text-[#5375FE] cursor-pointer"
@@ -363,8 +400,8 @@ const PoolDetails = () => {
 						{companyDetails?.twitter ? (
 							<button
 								id="twitter"
-								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  lowercase flex pb-5"
-								// onClick={redirectToURl}
+								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
+								onClick={redirectToURl}
 							>
 								<Twitter /> twitter
 							</button>
@@ -374,9 +411,8 @@ const PoolDetails = () => {
 						{companyDetails?.linkedin ? (
 							<button
 								id="linkedin"
-								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
-
-								//onClick={redirectToURl}
+								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+								onClick={redirectToURl}
 							>
 								<LinkedIn />
 								LinkedIn
@@ -387,8 +423,8 @@ const PoolDetails = () => {
 						{companyDetails?.email ? (
 							<button
 								id="email"
-								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
-								// onClick={redirectForEmail}
+								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+								onClick={redirectForEmail}
 							>
 								<Email />
 								Email
@@ -399,9 +435,8 @@ const PoolDetails = () => {
 						{companyDetails?.website ? (
 							<button
 								id="website"
-								className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
-
-								//onClick={redirectToURl}
+								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+								onClick={redirectToURl}
 							>
 								<Website />
 								Website
@@ -426,8 +461,8 @@ const PoolDetails = () => {
 							{companyDetails?.twitter ? (
 								<button
 									id="twitter"
-									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  lowercase flex pb-5"
-									// onClick={redirectToURl}
+									className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
+									onClick={redirectToURl}
 								>
 									<Twitter /> twitter
 								</button>
@@ -437,9 +472,8 @@ const PoolDetails = () => {
 							{companyDetails?.linkedin ? (
 								<button
 									id="linkedin"
-									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
-
-									// onClick={redirectToURl}
+									className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+									onClick={redirectToURl}
 								>
 									<LinkedIn />
 									LinkedIn
@@ -450,8 +484,8 @@ const PoolDetails = () => {
 							{companyDetails?.email ? (
 								<button
 									id="email"
-									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
-									//onClick={redirectForEmail}
+									className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+									onClick={redirectForEmail}
 								>
 									<Email />
 									Email
@@ -462,9 +496,8 @@ const PoolDetails = () => {
 							{companyDetails?.website ? (
 								<button
 									id="website"
-									className="btn btn-sm px-2 border-none btn-outline bg-[#292C33] text-white py-2 gap-1 rounded-full  capitalize flex pb-5"
-
-									//onClick={redirectToURl}
+									className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+									onClick={redirectToURl}
 								>
 									<Website />
 									Website

@@ -48,7 +48,8 @@ const Overview = () => {
 	const [walletAddress, setwalletAddress] = useState("");
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
-	const [tx, setTx] = useState("");
+	const [drawdownId, setDrawdownId] = useState("");
+	console.log(drawdownId.hash, "drowdownId");
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
@@ -410,11 +411,11 @@ const Overview = () => {
 								<DrawdownCard
 									key={item.id}
 									data={item}
-									setTx={setTx}
 									loadDrawdownList={setLoadDrawdownList}
 									setOpenProcessDrawdown={setOpenProcessDrawdown}
 									setProcessDrawdown={setProcessDrawdown}
 									setUpdateRepayment={setUpdateRepayment}
+									setDrawdownId={setDrawdownId}
 								/>
 							))}
 						</div>
@@ -424,7 +425,7 @@ const Overview = () => {
 						<ProcessingDrawdownModal
 							processDrawdown={processDrawdown}
 							handleDrawdown={cutProcessModal}
-							tx={tx}
+							drawdownId={drawdownId}
 						/>
 					) : (
 						<></>

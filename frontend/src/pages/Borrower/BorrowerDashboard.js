@@ -41,7 +41,7 @@ const BorrowerDashboard = () => {
 							<Outlet></Outlet>
 						</div>
 					</div>
-					<div className="drawer-side border-r border-darkmode-800">
+					<div className="drawer-side border-r border-neutral-300 dark:border-darkmode-800">
 						<label
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"

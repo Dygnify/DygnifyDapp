@@ -145,3 +145,7 @@ input[type="number"] {
 .dark .CreateProfileIcon>svg>path {
 	fill: #fff;
 }
+
+.CreateProfileIcon>svg>path {
+	fill: black;
+}

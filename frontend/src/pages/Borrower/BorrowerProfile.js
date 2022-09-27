@@ -371,7 +371,7 @@ const BorrowerProfile = () => {
 										<button
 											id="email"
 											onClick={redirectForEmail}
-											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
+											className="CreateProfileIcon border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Email />
 											<p className="text-xs md:text-base">email</p>
@@ -383,7 +383,7 @@ const BorrowerProfile = () => {
 										<button
 											id="website"
 											onClick={redirectToURl}
-											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
+											className="border CreateProfileIcon  border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Website />
 											<p className="text-xs md:text-base">website</p>

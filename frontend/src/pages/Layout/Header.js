@@ -25,24 +25,22 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	const navigate = useNavigate();
 
 	const fetchStatus = async () => {
-
 		const getStatus = await isConnected();
-
-		if (getStatus){
-		setStatus(true)
-		}else{
-		setStatus(false);
+ 
+		if (getStatus) {
+			setStatus(true);
+		} else {
+			setStatus(false);
 		}
-
 	};
 
-	 function hitRequestAccount() {
-		console.log("i am clicked")
+	function hitRequestAccount() {
+		console.log("i am clicked");
 		fetchStatus();
 	}
 
-	useEffect(async () => {
-		await fetchStatus();
+	useEffect(() => {
+		fetchStatus();
 		darkModeStatus();
 	}, [location]);
 
@@ -112,7 +110,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 							{!linkStatus ? (
 								<Hamburger />
 							) : (
-								<img className="w-6" src={Cross} />
+								<img className="w-6" alt="Hamburger" src={Cross} />
 							)}
 						</label>
 					) : (

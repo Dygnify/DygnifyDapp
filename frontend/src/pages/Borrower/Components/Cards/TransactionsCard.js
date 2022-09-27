@@ -60,7 +60,7 @@ const TransactionsCard = ({ data }) => {
 				href={link}
 				target="_blank"
 			>
-				Polygonscan
+				Transaction
 				<Website />
 			</a>
 		</div>

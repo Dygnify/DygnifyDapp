@@ -7,11 +7,11 @@ import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const DrawdownCard = ({
 	data,
-	setTx,
 	loadDrawdownList,
 	setOpenProcessDrawdown,
 	setProcessDrawdown,
 	setUpdateRepayment,
+	setDrawdownId,
 }) => {
 	const [selected, setSelected] = useState(null);
 
@@ -22,13 +22,14 @@ const DrawdownCard = ({
 		setOpenProcessDrawdown(true);
 		setProcessDrawdown(true);
 		const tx = await drawdown(data?.opportunityPoolAddress);
-		if(tx.success){
-			console.log(tx.hash)
-			setTx(tx.hash);
+		if (tx.success) {
+			setDrawdownId(tx.hash.hash);
 			setSelected(null);
 			loadDrawdownList(true);
 			setProcessDrawdown(false);
 			setUpdateRepayment(Math.random());
+		} else {
+			console.log("cancle");
 		}
 	};
 
