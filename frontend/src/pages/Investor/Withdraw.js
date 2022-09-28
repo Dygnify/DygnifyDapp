@@ -106,16 +106,16 @@ const Withdraw = () => {
 								);
 
 								if (price.success) {
-									const { sharePrice, displaySharePrice } = price;
+									const { sharePriceFromContract, displaySharePrice } = price;
 									seniorInvestmentData.estimatedAPY = displaySharePrice;
 
 									let realPossibleWithdrawAmt =
-										(balance * (100 - sharePrice)) / 100;
+										(balance * (100 - sharePriceFromContract)) / 100;
 
 									if (
 										balance >=
 										(seniorPoolInvestment.withdrawableAmt *
-											(100 + sharePrice)) /
+											(100 + parseFloat(sharePriceFromContract))) /
 											100
 									) {
 										seniorInvestmentData.withdrawableAmt = getDisplayAmount(
