@@ -37,19 +37,13 @@ const InvestorOverview = () => {
 	const path = useNavigate();
 
 	async function updateSummery() {
-		let amount = await getTotalInvestmentOfInvestor();
+		let data = await getTotalInvestmentOfInvestor();
 
-		if (amount.success) {
-			setTotalInvestment(amount.totalInvestment);
-		}
-
-		let yieldEarned = await getTotalYieldOfInvestor();
-
-		if (yieldEarned.success) {
-			setTotalYield(yieldEarned.totalYield);
+		if (data.success) {
+			setTotalInvestment(data.totalInvestment);
+			setTotalYield(data.totalYield);
 		}
 	}
-
 	useEffect(() => {
 		getUserSeniorPoolInvestment()
 			.then((data) => {
@@ -101,10 +95,10 @@ const InvestorOverview = () => {
 								);
 
 								if (price.success) {
-									const { sharePrice, displaySharePrice } = price;
+									const { displaySharePrice, sharePriceFromContract } = price;
 									seniorInvestmentData.estimatedAPY = displaySharePrice;
 									seniorInvestmentData.yieldGenerated = getDisplayAmount(
-										parseFloat((totalInvestment * sharePrice) / 100)
+										parseFloat((totalInvestment * sharePriceFromContract) / 100)
 									);
 
 									setSeniorPool(seniorInvestmentData);
@@ -128,14 +122,14 @@ const InvestorOverview = () => {
 
 	useEffect(async () => {
 		await updateSummery();
-		const junorPools = await getJuniorWithdrawableOp();
-		if (junorPools.success) {
-			setJuniorPool(junorPools.opportunityList);
+		const juniorPools = await getJuniorWithdrawableOp();
+		if (juniorPools.success) {
+			setJuniorPool(juniorPools.opportunityList);
 		} else {
-			console.log(junorPools.msg);
+			console.log(juniorPools.msg);
 			setErrormsg({
-				status: !junorPools.status,
-				msg: junorPools.msg,
+				status: !juniorPools.status,
+				msg: juniorPools.msg,
 			});
 		}
 
@@ -210,7 +204,7 @@ const InvestorOverview = () => {
 								) : (
 									<div className="ml-auto md:ml-0 font-semibold flex items-end gap-2 px-4">
 										<p className=" text-xl lg:text-[1.75rem] ">
-											{totalInvestment}
+											{getDisplayAmount(totalInvestment)}
 										</p>
 										<p className="text-base lg:text-xl">
 											{process.env.REACT_APP_TOKEN_NAME}

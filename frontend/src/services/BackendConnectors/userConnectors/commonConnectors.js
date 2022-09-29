@@ -77,7 +77,7 @@ export const isConnected = async () => {
 				params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
 			});
 		}
-		if (chainId == "0x13881") {
+		if (chainId === "0x13881") {
 			console.log("test1");
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const account = await provider.send("eth_requestAccounts", []);

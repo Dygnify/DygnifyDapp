@@ -75,7 +75,9 @@ const ProcessingDrawdownModal = ({
 								<div className="flex flex-col gap-1 md:mx-auto">
 									<p className="text-neutral-400">Transaction ID</p>
 									<p className="font-semibold">
-										{drawdownId ? drawdownId : "--"}
+										{drawdownId
+											? getTrimmedWalletAddress(drawdownId, 25)
+											: "--"}
 									</p>
 								</div>
 							</div>

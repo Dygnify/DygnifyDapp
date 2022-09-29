@@ -159,8 +159,8 @@ const Overview = () => {
 					});
 				}
 			}
-			fetchData();
 		};
+		fetchData();
 	}, [loadRepaymentList, updateRepayment]);
 
 	useEffect(() => {
