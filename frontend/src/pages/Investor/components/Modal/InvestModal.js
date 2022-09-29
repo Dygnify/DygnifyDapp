@@ -64,6 +64,7 @@ const InvestModal = ({
 		setProcessFundModal(true);
 		setInvestProcessing(true);
 		const data = await investInSeniorPool(amount);
+		setSelected(null);
 		if (data.success) {
 			settxhash(data.transaction.hash);
 			setSelected(null);
@@ -78,6 +79,9 @@ const InvestModal = ({
 			}, 20000);
 		} else {
 			console.log(data?.msg);
+			setSelected(null);
+			setInvestProcessing(true);
+			setProcessFundModal(false);
 			setErrormsg({
 				status: !data.status,
 				msg: data.msg,
@@ -119,6 +123,10 @@ const InvestModal = ({
 			}, 15000);
 		} else {
 			console.log(data.msg);
+			setSelected(null);
+			setInvestProcessing(true);
+			setProcessFundModal(false);
+
 			setErrormsg({
 				status: !data.status,
 				msg: data.msg,
@@ -318,7 +326,6 @@ const InvestModal = ({
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<label
-							htmlFor={`${error.approveErr ? "" : "InvestProcessModal"}`}
 							onClick={() => {
 								console.log(process.env.REACT_APP_SENIORPOOL);
 								if (!error.approveErr) {

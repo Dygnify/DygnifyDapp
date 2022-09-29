@@ -96,7 +96,7 @@ const Overview = () => {
 				});
 			}
 		});
-	}, [loadDrawdownList]);
+	}, [loadDrawdownList, updateRepayment]);
 
 	function sortByProperty(property) {
 		return function (a, b) {
