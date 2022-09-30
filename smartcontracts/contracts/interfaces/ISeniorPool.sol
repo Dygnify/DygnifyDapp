@@ -8,7 +8,7 @@ interface ISeniorPool {
         DygnifyConfig _dygnifyConfig
     ) external;
 
-    function withDrawFromOpportunity(bytes32 opportunityId) external;
+    function withDrawFromOpportunity(bool _isWriteOff, bytes32 opportunityId, uint256 _amount) external;
 }
 
 
