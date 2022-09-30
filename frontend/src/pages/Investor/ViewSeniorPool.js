@@ -151,6 +151,7 @@ const ViewSeniorPool = () => {
 						txhash={txhash}
 						contractAddress={contractAdrress}
 						amounts={amounts}
+						setSelected={setSelected}
 					/>
 				) : (
 					<></>
