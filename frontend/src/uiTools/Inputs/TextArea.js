@@ -13,8 +13,8 @@ const TextArea = ({
 }) => {
 	return (
 		<div className={`${className}`}>
-			<label class="label">
-				<span class="text-black dark:text-white">{label}</span>
+			<label className="label">
+				<span className="text-black dark:text-white">{label}</span>
 			</label>
 			<textarea
 				onChange={onChange}
@@ -22,7 +22,7 @@ const TextArea = ({
 				name={name}
 				value={value}
 				placeholder={placeholder}
-				class={`textarea textarea-bordered h-36 dark:bg-darkmode-800 bg-lightmode-200 dark:border-[#343C43] border-[#BBC0CC] ${className}`}
+				className={`textarea textarea-bordered h-36 dark:bg-darkmode-800 bg-lightmode-200 dark:border-[#343C43] border-[#BBC0CC] ${className}`}
 				style={{
 					borderWidth: "1px",
 					borderRadius: "8px",
