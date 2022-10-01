@@ -88,9 +88,9 @@ const UnderwriterCard = ({ data }) => {
 					<div className="flex justify-between space-y-1 font-medium">
 						<p>Pool Size</p>
 						<p className="flex gap-1 justify-center">
-							<p className="w-6 h-6">
+							<span className="w-6 h-6">
 								<img src={dollarIcon} alt="" />
-							</p>
+							</span>
 							{data.opportunityAmount}
 						</p>
 					</div>

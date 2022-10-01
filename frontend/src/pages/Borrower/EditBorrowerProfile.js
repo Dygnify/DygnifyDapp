@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik } from "formik";
 import TextField from "../../uiTools/Inputs/TextField";
 import InputGroup from "../../uiTools/Inputs/InputGroup";
@@ -31,11 +31,11 @@ const EditBorrowerProfileNew = () => {
 	const location = useLocation();
 	const oldBrJson = location.state;
 
-	let logoFileCID = "";
-	let businessIdFilesCID = "";
-	let businessLicFilesCID = "";
-	let businessAddFilesCID = "";
-	let businessIncoFilesCID = "";
+	let logoFileCID = useRef();
+	let businessIdFilesCID = useRef();
+	let businessLicFilesCID = useRef();
+	let businessAddFilesCID = useRef();
+	let businessIncoFilesCID = useRef();
 
 	let allowSubmit = true;
 
@@ -94,14 +94,14 @@ const EditBorrowerProfileNew = () => {
 			} = profileState;
 
 			if (hasKey) {
-				businessLicFilesCID = LicFile.businessLicFileCID;
+				businessLicFilesCID.current = LicFile.businessLicFileCID;
 			}
 
-			logoFileCID = LogoFile.businessLogoFileCID;
-			businessIdFilesCID = IdFile.businessIdFileCID;
+			logoFileCID.current = LogoFile.businessLogoFileCID;
+			businessIdFilesCID.current = IdFile.businessIdFileCID;
 
-			businessAddFilesCID = AddFile.businessAddFileCID;
-			businessIncoFilesCID = IncoFile.businessIncoFileCID;
+			businessAddFilesCID.current = AddFile.businessAddFileCID;
+			businessIncoFilesCID.current = IncoFile.businessIncoFileCID;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profileState]);
@@ -186,7 +186,7 @@ const EditBorrowerProfileNew = () => {
 					logoFile
 				)
 					if ((logoFile && logoFile.length) || profileState) {
-						logoFileCID = await uploadFilesToIPFS(
+						logoFileCID.current = await uploadFilesToIPFS(
 							logoFile ? logoFile : profileState.companyLogoFile
 						);
 					}
@@ -194,7 +194,7 @@ const EditBorrowerProfileNew = () => {
 					(businessIdentityFiles && businessIdentityFiles.length) ||
 					profileState
 				) {
-					businessIdFilesCID = await uploadFilesToIPFS(
+					businessIdFilesCID.current = await uploadFilesToIPFS(
 						businessIdentityFiles
 							? businessIdentityFiles
 							: profileState.businessIdFile
@@ -204,7 +204,7 @@ const EditBorrowerProfileNew = () => {
 					(businessAddressFiles && businessAddressFiles.length) ||
 					profileState
 				) {
-					businessAddFilesCID = await uploadFilesToIPFS(
+					businessAddFilesCID.current = await uploadFilesToIPFS(
 						businessAddressFiles
 							? businessAddressFiles
 							: profileState.businessAddFile
@@ -214,7 +214,7 @@ const EditBorrowerProfileNew = () => {
 					(businessIncorporationFiles && businessIncorporationFiles.length) ||
 					profileState
 				) {
-					businessIncoFilesCID = await uploadFilesToIPFS(
+					businessIncoFilesCID.current = await uploadFilesToIPFS(
 						businessIncorporationFiles
 							? businessIncorporationFiles
 							: profileState.businessIncoFile
@@ -226,7 +226,7 @@ const EditBorrowerProfileNew = () => {
 						(hasKey || key)) ||
 					(profileState && (hasKey || key))
 				) {
-					businessLicFilesCID = await uploadFilesToIPFS(
+					businessLicFilesCID.current = await uploadFilesToIPFS(
 						businessLicenseFiles
 							? businessLicenseFiles
 							: profileState.businessLicFile
@@ -243,7 +243,7 @@ const EditBorrowerProfileNew = () => {
 						? logoFile[0].name
 						: profileState.companyLogoFile.businessLogoFileName,
 					businessLogoFileCID: logoFile
-						? logoFileCID
+						? logoFileCID.current
 						: profileState.companyLogoFile.businessLogoFileCID,
 				},
 				businessIdFile: {
@@ -251,7 +251,7 @@ const EditBorrowerProfileNew = () => {
 						? bizIdFileName
 						: profileState.businessIdFile.businessIdDocName,
 					businessIdFileCID: businessIdentityFiles
-						? businessIdFilesCID
+						? businessIdFilesCID.current
 						: profileState.businessIdFile.businessIdFileCID,
 					businessIdFileName: businessIdentityFiles
 						? businessIdentityFiles[0].name
@@ -262,7 +262,7 @@ const EditBorrowerProfileNew = () => {
 						? bizAddFileName
 						: profileState.businessAddFile.businessAddDocName,
 					businessAddFileCID: businessAddressFiles
-						? businessAddFilesCID
+						? businessAddFilesCID.current
 						: profileState.businessAddFile.businessAddFileCID,
 					businessAddFileName: businessAddressFiles
 						? businessAddressFiles[0].name
@@ -273,7 +273,7 @@ const EditBorrowerProfileNew = () => {
 						? bizIncoFileName
 						: profileState.businessIncoFile.businessIncoDocName,
 					businessIncoFileCID: businessIncorporationFiles
-						? businessIncoFilesCID
+						? businessIncoFilesCID.current
 						: profileState.businessIncoFile.businessIncoFileCID,
 					businessIncoFileName: businessIncorporationFiles
 						? businessIncorporationFiles[0].name
@@ -293,7 +293,7 @@ const EditBorrowerProfileNew = () => {
 							? profileState.businessLicFile.businessLicDocName
 							: null,
 						businessLicFileCID: businessLicenseFiles
-							? businessLicFilesCID
+							? businessLicFilesCID.current
 							: profileState?.businessLicFile.businessLicFileCID,
 						businessLicFileName: businessLicenseFiles
 							? businessLicenseFiles[0].name

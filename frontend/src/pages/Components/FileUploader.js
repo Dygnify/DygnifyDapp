@@ -25,8 +25,8 @@ const FileUploader = ({
 	return (
 		<>
 			<div className={`${className}`}>
-				<label class="label text-lg" style={{ marginBottom: 1 }}>
-					<span class="text-black dark:text-white text-lg">{label}</span>
+				<label className="label text-lg" style={{ marginBottom: 1 }}>
+					<span className="text-black dark:text-white text-lg">{label}</span>
 				</label>
 				<div
 					style={{

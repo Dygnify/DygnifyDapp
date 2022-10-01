@@ -41,10 +41,10 @@ const TransactionCard = ({ data, address }) => {
 			<p className=" w-1/3 md:w-1/4 flex justify-end pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
 				{amount ? (
 					<>
-						<div className="flex gap-1">
+						<span className="flex gap-1">
 							<img src={DollarImage} className="w-4" alt="" />
 							{isWithdraw ? "-" : "+"} {amount}
-						</div>
+						</span>
 					</>
 				) : (
 					""

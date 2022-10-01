@@ -84,7 +84,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 
 				<div>
 					<button
-						disable={false}
+						disable="false"
 						onClick={() => {
 							setSelected({ ...data, isSeniorPool });
 							setShowModal(true);

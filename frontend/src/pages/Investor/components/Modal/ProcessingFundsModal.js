@@ -1,6 +1,7 @@
 import React from "react";
 import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "@sentry/react";
 
 const ProcessingFundsModal = ({
 	investProcessing,
@@ -8,6 +9,7 @@ const ProcessingFundsModal = ({
 	txhash,
 	amounts,
 	contractAddress,
+	setSelected,
 }) => {
 	const path = useNavigate();
 
@@ -26,7 +28,7 @@ const ProcessingFundsModal = ({
 
 						<label
 							htmlFor={invest ? "InvestProcessModal" : "WithdrawProcessModal"}
-							// onClick={() => handleDrawdown()}
+							onClick={() => setSelected(false)}
 							className="ml-auto cursor-pointer"
 						>
 							✕
@@ -45,7 +47,7 @@ const ProcessingFundsModal = ({
 										: `${data} was successful`}
 								</p>
 								{investProcessing ? (
-									<div class="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></div>
+									<div className="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></div>
 								) : (
 									<></>
 								)}

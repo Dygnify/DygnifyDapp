@@ -91,7 +91,7 @@ const RepaymentModal = ({
 						<h3 className="font-semibold text-xl">Repayment</h3>
 
 						<label
-							for="repayment-modal"
+							htmlFor="repayment-modal"
 							className="hover:text-primary-600 text-xl"
 							onClick={() => handleRepayment()}
 						>

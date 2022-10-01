@@ -43,8 +43,8 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 	useEffect(() => {
 		async function fetchData() {
 			console.log("test1");
-			darkModeStatus();
 			await fetchStatus();
+			darkModeStatus();
 		}
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps

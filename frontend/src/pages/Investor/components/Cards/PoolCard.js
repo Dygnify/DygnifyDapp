@@ -75,7 +75,7 @@ const PoolCard = ({ data }) => {
 						<p>Yield Generated</p>
 
 						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
-						<p>{yieldGenerated}</p>
+						<p>{yieldGenerated ? yieldGenerated : "--"}</p>
 					</div>
 				</div>
 			</div>

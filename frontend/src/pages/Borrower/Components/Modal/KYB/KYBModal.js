@@ -145,18 +145,18 @@ const KYBModal = ({ handleForm }) => {
 
 	return (
 		<div>
-			<input type="checkbox" id="kybModal" class="modal-toggle" />
+			<input type="checkbox" id="kybModal" className="modal-toggle" />
 			<div
-				class="modal"
+				className="modal"
 				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
 			>
 				<div
 					style={{ backgroundColor: "#20232A", borderRadius: "16px" }}
-					class="modal-box w-1/2 max-w-5xl p-0"
+					className="modal-box w-1/2 max-w-5xl p-0"
 				>
 					<label
 						for="loanForm-modal"
-						class="btn btn-ghost absolute right-2 top-2 pb-2"
+						className="btn btn-ghost absolute right-2 top-2 pb-2"
 						onClick={() => handleForm()}
 					>
 						✕

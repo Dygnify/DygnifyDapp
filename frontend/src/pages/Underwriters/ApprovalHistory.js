@@ -61,7 +61,7 @@ const ApprovalHistory = () => {
 						<div className="space-y-3 md:pl-5 md:pr-5 px-2">
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard key={transactions.id} data={item} />
+										<TransactionsCard key={Math.random()} data={item} />
 								  ))
 								: null}
 						</div>

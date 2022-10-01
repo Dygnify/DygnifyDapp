@@ -344,7 +344,10 @@ const PoolDetails = () => {
 							{info ? (
 								info.map((e, i) => {
 									return (
-										<div className="flex justify-center flex-col items-center dark:bg-[#20232A] bg-[#D0D5DD] py-10">
+										<div
+											key={i}
+											className="flex justify-center flex-col items-center dark:bg-[#20232A] bg-[#D0D5DD] py-10"
+										>
 											<div className="font-medium text-base text-center dark:text-[#A0ABBB] text-[#64748B]">
 												{e.label}
 											</div>

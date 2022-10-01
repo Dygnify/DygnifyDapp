@@ -62,7 +62,7 @@ const Transaction = () => {
 
 						<div className="my-5 flex flex-col gap-3">
 							{transactions.map((item) => (
-								<TransactionsCard key={transactions.id} data={item} />
+								<TransactionsCard key={item.hash} data={item} />
 							))}
 						</div>
 					</>

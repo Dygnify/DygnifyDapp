@@ -192,7 +192,7 @@ const ProcessingRepaymentModal = ({
 												process.env.REACT_APP_TOKEN_NAME
 										  } of pool ${poolName}`}
 									<span
-										class={
+										className={
 											processRepayment
 												? "ml-1 animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full p-2"
 												: ""
@@ -240,7 +240,7 @@ const ProcessingRepaymentModal = ({
 										navigate("/borrowerDashboard/transaction");
 									}}
 								>
-									<p>View Transaction</p>
+									View Transaction
 								</span>
 							</p>
 						</div>
