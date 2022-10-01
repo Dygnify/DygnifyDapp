@@ -81,6 +81,7 @@ const PoolDetails = () => {
 
 			checkForKycAndProfile(opDetails.borrower);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [opDetails]);
 
 	function loadInfo() {
@@ -192,6 +193,8 @@ const PoolDetails = () => {
 			case "website":
 				url = companyDetails?.website;
 				break;
+			default:
+				break;
 		}
 
 		if (url) {
@@ -223,6 +226,7 @@ const PoolDetails = () => {
 					<div className="flex items-center gap-6 ">
 						<div>
 							<img
+								alt="logo"
 								src={logoImgSrc ? logoImgSrc : default_profile}
 								className="w-20 h-20 rounded-full lg:w-24 lg:h-24 xl:w-28  xl:h-28"
 							></img>
@@ -308,19 +312,19 @@ const PoolDetails = () => {
 						{loanPurpose.isSliced ? (
 							<div>
 								{loanPurpose.firstText}
-								<a
+								<span
 									className=" font-semibold cursor-pointer"
 									onClick={() => setExpand(true)}
 								>
 									{expand ? null : "... view more"}
-								</a>
+								</span>
 								{expand ? <div>{loanPurpose.secondText}</div> : null}
-								<a
+								<span
 									className=" font-semibold cursor-pointer"
 									onClick={() => setExpand(false)}
 								>
 									{expand ? "view less" : null}
-								</a>
+								</span>
 							</div>
 						) : (
 							<div className="font-light text-lg">{loanPurpose.firstText}</div>
@@ -362,11 +366,12 @@ const PoolDetails = () => {
 					<div className="w-full dark:bg-[#20232A] bg-[#D0D5DD] rounded-xl p-3">
 						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg flex flex-col md:flex-row">
 							<span>
-								Name of documents <span className="text-[#323A46] dark:text-[white] pr-1">-</span>
+								Name of documents{" "}
+								<span className="text-[#323A46] dark:text-[white] pr-1">-</span>
 							</span>
 							<span className="text-[#323A46] dark:text-[white]">
 								{opDetails?.collateral_document_name}
-								<a
+								<span
 									className="pl-1 text-sm text-[#5375FE] cursor-pointer"
 									onClick={() =>
 										viewDocument(
@@ -376,7 +381,7 @@ const PoolDetails = () => {
 									}
 								>
 									(view document)
-								</a>
+								</span>
 							</span>
 						</div>
 						<div className="text-lg font-medium mb-1">Document descripton</div>
@@ -390,6 +395,7 @@ const PoolDetails = () => {
 				<div className="flex flex-col w-full">
 					<div className="flex items-center gap-2 text-lg font-medium mt-10 ">
 						<img
+							alt="logoimage"
 							src={logoImgSrc ? logoImgSrc : default_profile}
 							className="w-16 h-16 rounded-full md:hidden"
 						></img>
@@ -449,6 +455,7 @@ const PoolDetails = () => {
 					<div className="md:flex md:justify-between md:items-center md:mt-2 md:mb-3 ">
 						<div className="text-lg font-medium mt-10 md:flex md:items-center gap-4 md:mt-0">
 							<img
+								alt="logoimage"
 								src={logoImgSrc ? logoImgSrc : default_profile}
 								className="w-16 h-16 rounded-full hidden md:block"
 							></img>

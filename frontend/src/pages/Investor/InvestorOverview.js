@@ -86,9 +86,8 @@ const InvestorOverview = () => {
 										seniorPoolInvestment.stakingAmt +
 										seniorPoolInvestment.withdrawableAmt;
 
-									seniorInvestmentData.capitalInvested = getDisplayAmount(
-										totalInvestment
-									);
+									seniorInvestmentData.capitalInvested =
+										getDisplayAmount(totalInvestment);
 								} else {
 									setErrormsg({
 										status: !res.success,
@@ -124,22 +123,26 @@ const InvestorOverview = () => {
 				}
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [seniorPoolInvestment]);
 
-	useEffect(async () => {
-		await updateSummery();
-		const junorPools = await getJuniorWithdrawableOp();
-		if (junorPools.success) {
-			setJuniorPool(junorPools.opportunityList);
-		} else {
-			console.log(junorPools.msg);
-			setErrormsg({
-				status: !junorPools.status,
-				msg: junorPools.msg,
-			});
-		}
+	useEffect(() => {
+		async function fetch() {
+			await updateSummery();
+			const junorPools = await getJuniorWithdrawableOp();
+			if (junorPools.success) {
+				setJuniorPool(junorPools.opportunityList);
+			} else {
+				console.log(junorPools.msg);
+				setErrormsg({
+					status: !junorPools.status,
+					msg: junorPools.msg,
+				});
+			}
 
-		setJuniorPoolLoading(false);
+			setJuniorPoolLoading(false);
+		}
+		fetch();
 	}, []);
 
 	useEffect(() => {

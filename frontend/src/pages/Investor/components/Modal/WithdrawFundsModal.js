@@ -132,7 +132,7 @@ const WithdrawFundsModal = ({
 
 						<div className="py-4 px-3 flex gap-1 bg-neutral-200 dark:bg-darkmode-500 rounded-md ">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
-							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 							<p className="font-semibold text-[1.125rem]">{userWalletBal}</p>
 						</div>
 					</div>
@@ -146,7 +146,7 @@ const WithdrawFundsModal = ({
 						<div className="flex gap-1 font-semibold">
 							<p>Amount Invested</p>
 
-							<img src={DollarImage} className="w-4 ml-auto" />
+							<img alt="" src={DollarImage} className="w-4 ml-auto" />
 							<p>{data?.capitalInvested}</p>
 						</div>
 
@@ -157,7 +157,7 @@ const WithdrawFundsModal = ({
 						<div className="flex gap-1 font-semibold">
 							<p>Available for withdrawal</p>
 
-							<img src={DollarImage} className="w-4 ml-auto" />
+							<img alt="" src={DollarImage} className="w-4 ml-auto" />
 							<p>{data?.withdrawableAmt}</p>
 						</div>
 					</div>

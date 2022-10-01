@@ -38,10 +38,15 @@ const ProcessingDrawdownModal = ({
 								{!processDrawdown ? `Yay! 🎉` : "In Progress ⏱"}
 							</p>
 
-							<p className="text-xl font-semibold mt-1">
+							<p className="text-xl font-semibold mt-1 flex justify-center items-center">
 								{processDrawdown
 									? "Drawdown is in progress"
 									: "Drawdown done successfully"}
+								{processDrawdown ? (
+									<div class="ml-2 animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></div>
+								) : (
+									<></>
+								)}
 							</p>
 						</div>
 

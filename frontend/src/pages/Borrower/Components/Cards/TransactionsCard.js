@@ -1,10 +1,7 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
-import {
-	getDisplayAmount,
-	getTrimmedWalletAddress,
-} from "../../../../services/Helpers/displayTextHelper";
+import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import Website from "../../../SVGIcons/Website";
 
@@ -20,6 +17,7 @@ const TransactionsCard = ({ data }) => {
 			setDate(convertDate(data.timeStamp));
 			setLink(`${process.env.REACT_APP_POLYGONSCAN_URL}/tx/${data.hash}`);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -30,7 +28,7 @@ const TransactionsCard = ({ data }) => {
 				{data?.isWithdraw ? "Repayment" : "Drawdown"}
 			</p>
 			<p className="flex gap-1 items-center w-1/3 md:w-1/6 my-auto justify-center">
-				<img src={DollarImage} className="w-4" />
+				<img src={DollarImage} className="w-4" alt="Dollarimage" />
 				{data?.isWithdraw ? "+" : "-"}
 				{amount}
 			</p>
@@ -59,6 +57,7 @@ const TransactionsCard = ({ data }) => {
 				className="hidden md:flex underline w-1/3 md:w-1/6 my-auto gap-1 items-center justify-center"
 				href={link}
 				target="_blank"
+				rel="noopener noreferrer"
 			>
 				Transaction
 				<Website />

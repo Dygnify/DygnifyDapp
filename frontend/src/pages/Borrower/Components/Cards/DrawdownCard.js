@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import DrawdownModal from "../Modal/DrawdownModal";
-import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+// import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
 import { drawdown } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
-import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
+// import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const DrawdownCard = ({
@@ -40,14 +40,14 @@ const DrawdownCard = ({
 			<div className="flex flex-col gap-2">
 				<div className=" flex gap-1">
 					<p>Capital Requested</p>
-					<img src={DollarImage} className="w-4 ml-auto" />
+					<img src={DollarImage} className="w-4 ml-auto" alt="dollerimage" />
 					<p>{data?.opportunityAmount} </p>
 				</div>
 
 				<div className=" flex gap-1">
 					<p>Available for drawdown</p>
 
-					<img src={DollarImage} className="w-4 ml-auto" />
+					<img src={DollarImage} className="w-4 ml-auto" alt="dollerimage" />
 					<p>{data?.opportunityAmount}</p>
 				</div>
 			</div>

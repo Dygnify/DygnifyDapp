@@ -28,6 +28,7 @@ const PoolCard = ({ data }) => {
 				};
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -37,6 +38,7 @@ const PoolCard = ({ data }) => {
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
 					className="w-[7rem] lg:w-[12rem]"
 					src={DygnifyImage}
+					alt=""
 				/>
 
 				<div className="lg:hidden">
@@ -55,13 +57,13 @@ const PoolCard = ({ data }) => {
 					<div className="flex gap-1 font-semibold">
 						<p>Pool Size</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
 						<p>{opportunityAmount}</p>
 					</div>
 					<div className="flex gap-1 font-semibold">
 						<p>Capital Invested</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
 						<p>{capitalInvested}</p>
 					</div>
 					<div className="flex gap-1 font-semibold">
@@ -72,7 +74,7 @@ const PoolCard = ({ data }) => {
 					<div className="flex gap-1 font-semibold">
 						<p>Yield Generated</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
 						<p>{yieldGenerated}</p>
 					</div>
 				</div>

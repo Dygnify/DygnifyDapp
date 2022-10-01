@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import InvestModal from "../Investor/components/Modal/InvestModal";
 import TransactionCard from "./components/Cards/TransactionCard";
@@ -21,7 +21,7 @@ import { tokenTransactions } from "../../services/ApiOptions/blockchainTransacti
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 import DygnifyImage from "../../assets/Dygnify_Image.png";
-import UpArrow from "../SVGIcons/UpArrow";
+// import UpArrow from "../SVGIcons/UpArrow";
 import DollarImage from "../../assets/Dollar-icon.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
@@ -32,7 +32,6 @@ const ViewPool = () => {
 	const [expand, setExpand] = useState(false);
 	const [companyDetails, setCompanyDetails] = useState();
 	const [kycStatus, setKycStatus] = useState();
-	const [error, setError] = useState();
 	const [poolBal, setPoolBal] = useState();
 	const [info, setInfo] = useState([]);
 	const [info2, setInfo2] = useState([]);
@@ -99,6 +98,7 @@ const ViewPool = () => {
 			);
 			setIsFullStatus(location.state.isFull ? location.state.isFull : false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -151,6 +151,7 @@ const ViewPool = () => {
 				}
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [poolData, invest]);
 
 	useEffect(() => {
@@ -215,6 +216,8 @@ const ViewPool = () => {
 				break;
 			case "website":
 				url = poolData.website;
+				break;
+			default:
 				break;
 		}
 
@@ -289,6 +292,7 @@ const ViewPool = () => {
 				<div className=" flex items-center">
 					<div className="flex items-center gap-3 md:gap-5">
 						<img
+							alt="dygnigyImage"
 							src={DygnifyImage}
 							style={{ aspectRatio: "1/1" }}
 							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
@@ -360,19 +364,19 @@ const ViewPool = () => {
 						{loanPurpose.isSliced ? (
 							<div className="text-neutral-700 dark:text-neutral-200">
 								{loanPurpose.firstText}
-								<a
+								<span
 									onClick={() => setExpand(true)}
 									className="cursor-pointer font-semibold"
 								>
 									{expand ? null : " ...view more"}
-								</a>
+								</span>
 								{expand ? <span>{loanPurpose.secondText}</span> : null}
-								<a
+								<span
 									onClick={() => setExpand(false)}
 									className="cursor-pointer font-semibold"
 								>
 									{expand ? " view less" : null}
-								</a>
+								</span>
 							</div>
 						) : (
 							<div className="text-neutral-700 dark:text-neutral-200">
@@ -399,11 +403,11 @@ const ViewPool = () => {
 								</p>
 
 								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
-									<img src={DollarImage} className="w-4" />
+									<img src={DollarImage} className="w-4" alt="Dollar" />
 									{poolData ? poolData.opportunityAmount : "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
-									<img src={DollarImage} className="w-4" />
+									<img src={DollarImage} className="w-4" alt="DollarImage" />
 									{poolBal ? poolBal : "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1">
@@ -551,6 +555,7 @@ const ViewPool = () => {
 						<div className=" flex items-center">
 							<div className="flex items-center gap-3 md:gap-5">
 								<img
+									alt="logo"
 									src={logoImgSrc}
 									style={{ aspectRatio: "1/1" }}
 									className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"

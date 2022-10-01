@@ -13,7 +13,7 @@ const Transaction = () => {
 		msg: "",
 	});
 
-	useEffect(async () => {
+	useEffect(() => {
 		console.log("reached");
 
 		getUserWalletAddress().then((res) => {

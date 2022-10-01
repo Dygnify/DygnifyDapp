@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
+import React from "react";
+// import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+// import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const DueDateCard = ({ data }) => {
@@ -10,11 +10,11 @@ const DueDateCard = ({ data }) => {
 				{data?.opportunityName}
 			</p>
 			<div className="hidden md:flex md:w-1/4  text-right pr-5 gap-1  justify-center">
-				<img src={DollarImage} className="w-4" />
+				<img src={DollarImage} className="w-4" alt="logo" />
 				{data?.opportunityAmount}
 			</div>
 			<div className="w-1/3 md:w-1/4 my-auto  text-right pr-5 flex gap-1  justify-center">
-				<img src={DollarImage} className="w-4" />
+				<img src={DollarImage} className="w-4" alt="logo" />
 				{data?.repaymentDisplayAmount}
 			</div>
 			<p className="w-1/3 md:w-1/4 text-center ">{data?.nextDueDate}</p>

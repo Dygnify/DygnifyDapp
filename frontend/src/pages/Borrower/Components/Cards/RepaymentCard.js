@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
+import React, { useState } from "react";
+// import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 import RepaymentModal from "../Modal/RepaymentModal";
-import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
+// import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+// import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const RepaymentCard = ({
@@ -23,7 +23,6 @@ const RepaymentCard = ({
 		setProcessRepayment(true);
 		loadRepaymentList(true);
 	};
-	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
 	return (
 		<div className="my-gradient px-4 py-8 flex flex-col gap-5 rounded-xl md:w-[48%] xl:w-[32%] 2xl:w-[min(32%,30rem)]">
@@ -35,7 +34,7 @@ const RepaymentCard = ({
 				<div className=" flex gap-1">
 					<p>Capital Borrowed</p>
 
-					<img src={DollarImage} className="w-4 ml-auto" />
+					<img src={DollarImage} className="w-4 ml-auto" alt="dollerimage" />
 					<p>{data?.opportunityAmount}</p>
 				</div>
 				<div className=" flex gap-1">
@@ -45,7 +44,7 @@ const RepaymentCard = ({
 						<p>Due Amount</p>
 					)}
 
-					<img src={DollarImage} className="w-4 ml-auto" />
+					<img src={DollarImage} className="w-4 ml-auto" alt="dollerimage" />
 					<p className={`${data?.isOverDue ? "text-error-500" : ""}`}>
 						{data?.repaymentDisplayAmount}
 					</p>

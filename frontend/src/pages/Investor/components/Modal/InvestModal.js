@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useContext } from "react";
+import { React, useState, useEffect } from "react";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
@@ -56,6 +56,7 @@ const InvestModal = ({
 			}
 		});
 		userAddress();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading]);
 
 	async function investSenior() {
@@ -251,7 +252,7 @@ const InvestModal = ({
 						<div className="py-4 px-3 flex gap-1 bg-neutral-200 dark:bg-darkmode-500 rounded-md">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
 
-							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 							<p className="font-semibold text-[1.125rem]">
 								{walletBal ? walletBal : 0}
 							</p>
@@ -268,7 +269,7 @@ const InvestModal = ({
 							<div className="flex gap-1 font-semibold">
 								<p className="">Pool Limit</p>
 
-								<img src={DollarImage} className="ml-auto w-[1rem]" />
+								<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 								<p className="">{poolLimit}</p>
 							</div>
 						) : (
@@ -287,7 +288,7 @@ const InvestModal = ({
 							<div className="flex gap-1 font-semibold">
 								<p className="">Investable Amount</p>
 
-								<img src={DollarImage} className="ml-auto w-[1rem]" />
+								<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 								<p className="">{investableDisplayAmount}</p>
 							</div>
 						) : (

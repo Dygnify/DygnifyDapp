@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 

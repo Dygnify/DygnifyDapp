@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createOpportunity } from "../../../../services/BackendConnectors/opportunityConnectors";
 import { getBorrowerDetails } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import Stepper from "../../LoanForm/Stepper";
@@ -36,7 +36,7 @@ const LoanFormModal = ({
 		msg: "",
 	});
 
-	useEffect(async () => {
+	useEffect(() => {
 		getBorrowerDetails()
 			.then((res) => {
 				retrieveFiles(res.borrowerCid, true)

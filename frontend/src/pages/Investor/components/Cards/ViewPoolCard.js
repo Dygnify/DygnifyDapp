@@ -32,6 +32,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				};
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const StatusButton = ({ className, isFullStatus }) => {
@@ -75,6 +76,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 		>
 			<div className="flex items-center gap-6">
 				<img
+					alt=""
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
 					className="w-[7rem] lg:w-[6rem] xl:w-[10rem] 2xl:w-[8rem]"
 					src={logoImgSrc ? logoImgSrc : DygnifyImage}
@@ -95,7 +97,7 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				<div className="flex flex-col gap-1 font-semibold">
 					<div className="flex gap-1">
 						<p className="">Pool Size</p>
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
 						<p className="">{opportunityAmount}</p>
 					</div>
 

@@ -81,7 +81,6 @@ const Overview = () => {
 					msg: opportunities.msg,
 				});
 			}
-
 			setLoading(false);
 		};
 		fetchData();
@@ -161,6 +160,7 @@ const Overview = () => {
 			}
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loadRepaymentList, updateRepayment]);
 
 	useEffect(() => {

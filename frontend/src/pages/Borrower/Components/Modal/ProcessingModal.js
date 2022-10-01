@@ -8,9 +8,6 @@ const ProcessingRequestModal = ({
 	handleDrawdown,
 	processModal,
 }) => {
-	const data = {
-		success: false,
-	};
 	console.log(borrowReqProcess, "inrequest modal");
 	const navigate = useNavigate();
 	return (

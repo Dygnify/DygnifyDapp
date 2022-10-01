@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 
 var signatures = {
@@ -46,12 +46,12 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 				</p>
 				{docName ? <p className="italic"> {docName}</p> : null}
 			</div>
-			<a
+			<span
 				className="text-[#5375FE] cursor-pointer text-[1.1875rem]"
 				onClick={viewDoc}
 			>
 				{disable ? null : "view document"}
-			</a>
+			</span>
 		</div>
 	);
 };
