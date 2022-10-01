@@ -304,7 +304,7 @@ const InvestModal = ({
 					</div>
 
 					<div className="relative px-4 md:px-8 mt-8 flex flex-col gap-1">
-						<label for="investModalAmount" className="font-semibold">
+						<label htmlFor="investModalAmount" className="font-semibold">
 							Enter Amount
 						</label>
 						<input

@@ -48,7 +48,7 @@ const ProcessingFundsModal = ({
 										: `${data} was successful`}
 								</p>
 								{investProcessing ? (
-									<div class="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></div>
+									<div className="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></div>
 								) : (
 									<></>
 								)}

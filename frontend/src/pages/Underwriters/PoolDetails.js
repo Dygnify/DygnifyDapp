@@ -340,7 +340,10 @@ const PoolDetails = () => {
 							{info ? (
 								info.map((e, i) => {
 									return (
-										<div className="flex justify-center flex-col items-center dark:bg-[#20232A] bg-[#D0D5DD] py-10">
+										<div
+											key={i}
+											className="flex justify-center flex-col items-center dark:bg-[#20232A] bg-[#D0D5DD] py-10"
+										>
 											<div className="font-medium text-base text-center dark:text-[#A0ABBB] text-[#64748B]">
 												{e.label}
 											</div>
@@ -362,7 +365,8 @@ const PoolDetails = () => {
 					<div className="w-full dark:bg-[#20232A] bg-[#D0D5DD] rounded-xl p-3">
 						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg flex flex-col md:flex-row">
 							<span>
-								Name of documents <span className="text-[#323A46] dark:text-[white] pr-1">-</span>
+								Name of documents{" "}
+								<span className="text-[#323A46] dark:text-[white] pr-1">-</span>
 							</span>
 							<span className="text-[#323A46] dark:text-[white]">
 								{opDetails?.collateral_document_name}
