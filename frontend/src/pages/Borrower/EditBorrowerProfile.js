@@ -57,6 +57,7 @@ const EditBorrowerProfileNew = () => {
 			setProfileState(location.state);
 			setHasKey(location.state ? "businessLicFile" in location.state : true);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const initialValues = {
@@ -102,6 +103,7 @@ const EditBorrowerProfileNew = () => {
 			businessAddFilesCID = AddFile.businessAddFileCID;
 			businessIncoFilesCID = IncoFile.businessIncoFileCID;
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profileState]);
 
 	const uploadFilesToIPFS = async (files) => {
