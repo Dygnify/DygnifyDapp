@@ -133,7 +133,7 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
 
     function withDrawFromOpportunity(bool _isWriteOff, bytes32 opportunityId, uint256 _amount) public override{
         require(
-            opportunityOrigination.isRepaid(opportunityId) == true,
+            opportunityOrigination.isRepaid(opportunityId) == true || _isWriteOff == true,
             "Opportunity is not repaid by borrower."
         );
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
