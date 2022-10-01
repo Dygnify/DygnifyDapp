@@ -110,6 +110,8 @@ const BorrowerProfile = () => {
 							loadBorrowerData(data);
 							setborrowerJson(data);
 							setHaskey(data ? "businessLicFile" in data : false);
+						} else {
+							setProfileStatus(false);
 						}
 						setLoading(false);
 					});
