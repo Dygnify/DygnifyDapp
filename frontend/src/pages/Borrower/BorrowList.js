@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import {
 	getDrawdownOpportunities,
 	getOpportunitysOf,
@@ -14,6 +13,7 @@ import { getUserWalletAddress } from "../../services/BackendConnectors/userConne
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData } from "../../services/Helpers/skynetIPFS";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -108,8 +108,8 @@ const BorrowList = () => {
 				setKycStatus(false);
 			}
 
-			getBorrowerDetails().then((res) => {
-				if (res.borrowerCid) setProfileStatus(true);
+			getJSONData(refId).then((res) => {
+				if (res) setProfileStatus(true);
 				else setProfileStatus(false);
 			});
 		} catch (error) {

@@ -1,23 +1,16 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getBinaryFileData } from "../../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../../services/Helpers/web3storageIPFS";
+import { getJSONData } from "../../../services/Helpers/skynetIPFS";
 
 const TransactionsCard = ({ data }) => {
 	const [companyName, setCompanyName] = useState();
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		retrieveFiles(data?.opportunityInfo, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
-					if (opJson) {
-						setCompanyName(opJson.companyDetails?.companyName);
-					}
-				};
+		getJSONData(data?.opportunityInfo).then((opJson) => {
+			if (opJson) {
+				setCompanyName(opJson.companyDetails?.companyName);
 			}
 		});
 	}, []);
@@ -25,7 +18,7 @@ const TransactionsCard = ({ data }) => {
 	return (
 		<div className="flex collapse-title pr-0 justify-between w-full flex-wrap overflow-hidden dark:bg-[#20232A] bg-[#E7EAEE] rounded-xl mb-2 items-center">
 			<p className="w-1/3 md:w-1/6 font-light text-lg text-start">
-			{data?.opportunityName}
+				{data?.opportunityName}
 			</p>
 			<p className="w-1/3 md:w-1/6 font-light text-lg text-start">
 				{companyName}

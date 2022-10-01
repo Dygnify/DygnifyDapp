@@ -1,13 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import DocumentCard from "../../uiTools/Card/DocumentCard";
 import { useNavigate, useLocation } from "react-router-dom";
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
-import {
-	getBinaryFileData,
-	getDataURLFromFile,
-} from "../../services/Helpers/fileHelper";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
-import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 import Twitter from "../SVGIcons/Twitter";
@@ -20,6 +14,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData, getFileUrl } from "../../services/Helpers/skynetIPFS";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -108,42 +103,20 @@ const BorrowerProfile = () => {
 		});
 
 		const fetchData = async () => {
-			console.log("#######");
-			getBorrowerDetails()
-				.then((res) => {
-					if (res.success) {
-						if (!res.borrowerCid) {
-							setLoading(false);
-							return setProfileStatus(false);
+			getUserWalletAddress().then((res) => {
+				if (res.success) {
+					getJSONData(res.address).then((data) => {
+						if (data) {
+							loadBorrowerData(data);
+							setborrowerJson(data);
+							setHaskey(data ? "businessLicFile" in data : false);
 						}
-						retrieveFiles(res.borrowerCid, true)
-							.then((data) => {
-								if (data) {
-									let read = getBinaryFileData(data);
-									read.onloadend = function () {
-										let brJson = JSON.parse(read.result);
-										loadBorrowerData(brJson);
-										setborrowerJson(brJson);
-										setHaskey(brJson ? "businessLicFile" in brJson : false);
-										console.log(brJson);
-									};
-								} else {
-									setLoading(false);
-								}
-							})
-							.catch((e) => {
-								console.log(e);
-								setLoading(false);
-							});
-					} else {
-						console.log(res.msg);
-						setErrormsg({ status: res.success, msg: res.msg });
-					}
-				})
-				.catch((e) => {
-					console.log(e);
+						setLoading(false);
+					});
+				} else {
 					setLoading(false);
-				});
+				}
+			});
 		};
 
 		if (!location.state) fetchData();
@@ -152,12 +125,9 @@ const BorrowerProfile = () => {
 	const fetchBorrowerLogo = (imgcid) => {
 		if (imgcid) {
 			try {
-				retrieveFiles(imgcid, true).then((imgFile) => {
+				getFileUrl(imgcid).then((imgFile) => {
 					if (imgFile) {
-						let read = getDataURLFromFile(imgFile);
-						read.onloadend = function () {
-							setLogoImgSrc(read.result);
-						};
+						setLogoImgSrc(imgFile);
 					} else {
 						// set the empty logo image
 					}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
+import { openFileInNewTab } from "../../services/Helpers/skynetIPFS";
 
 var signatures = {
 	JVBERi0: "application/pdf",
@@ -31,10 +31,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 			);
 		} else {
 			if (!docCid) return null;
-			let url = getIPFSFileURL(docCid);
-			if (fileName) url += `/${fileName}`;
-			console.log(fileName);
-			window.open(url, "_blank");
+			openFileInNewTab(docCid);
 		}
 	};
 

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../uiTools/Button/PrimaryButton";
-import {
-	getBinaryFileData,
-	getDataURLFromFile,
-} from "../../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../../services/Helpers/web3storageIPFS";
 import dollarIcon from "../../../assets/Dollar-icon.svg";
 import default_profile from "../../../assets/default_profile.svg";
+import { getJSONData, getFileUrl } from "../../../services/Helpers/skynetIPFS";
 
 const UnderwriterCard = ({ data }) => {
 	const path = useNavigate();
@@ -16,21 +12,13 @@ const UnderwriterCard = ({ data }) => {
 	const [logoImgSrc, setLogoImgSrc] = useState();
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		retrieveFiles(data?.opportunityInfo, true).then((res) => {
-			let opJson;
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					opJson = JSON.parse(read.result);
-
-					if (opJson) {
-						setPoolDetails({ ...data, ...opJson });
-						setCompanyName(opJson.companyDetails?.companyName);
-						getCompanyLogo(
-							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-						);
-					}
-				};
+		getJSONData(data?.opportunityInfo).then((opJson) => {
+			if (opJson) {
+				setPoolDetails({ ...data, ...opJson });
+				setCompanyName(opJson.companyDetails?.companyName);
+				getCompanyLogo(
+					opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+				);
 			}
 		});
 	}, []);
@@ -40,13 +28,9 @@ const UnderwriterCard = ({ data }) => {
 			return;
 		}
 		try {
-			retrieveFiles(cid, true).then((res) => {
+			getFileUrl(cid).then((res) => {
 				if (res) {
-					let read = getDataURLFromFile(res);
-					read.onloadend = function () {
-						setLogoImgSrc(read.result);
-						// console.log(read.result);
-					};
+					setLogoImgSrc(res);
 				}
 			});
 		} catch (error) {

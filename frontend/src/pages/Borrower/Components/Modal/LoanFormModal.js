@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createOpportunity } from "../../../../services/BackendConnectors/opportunityConnectors";
-import { getBorrowerDetails } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import Stepper from "../../LoanForm/Stepper";
 import Account from "../../LoanForm/Steps/Account";
 import Details from "../../LoanForm/Steps/Details";
 import Final from "../../LoanForm/Steps/Final";
-import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
-import {
-	storeFiles,
-	makeFileObjects,
-	retrieveFiles,
-} from "../../../../services/Helpers/web3storageIPFS";
 import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
+import {
+	uploadFile,
+	storeJSONData,
+	getJSONData,
+} from "../../../../services/Helpers/skynetIPFS";
+import { getUserWalletAddress } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 
 const LoanFormModal = ({
 	handleForm,
@@ -37,20 +36,15 @@ const LoanFormModal = ({
 	});
 
 	useEffect(async () => {
-		getBorrowerDetails()
-			.then((res) => {
-				retrieveFiles(res.borrowerCid, true)
-					.then((data) => {
-						let read = getBinaryFileData(data);
-						read.onloadend = function () {
-							let brJson = JSON.parse(read.result);
-							setBrJson(brJson);
-							console.log(brJson);
-						};
-					})
-					.catch((e) => console.log(e));
-			})
-			.catch((e) => console.log(e));
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				getJSONData(res.address).then((data) => {
+					if (data) {
+						setBrJson(data);
+					}
+				});
+			}
+		});
 	}, []);
 
 	const steps = ["Add Loan Details", "Add Collateral", "Submit for Review"];
@@ -88,11 +82,10 @@ const LoanFormModal = ({
 	};
 	async function onFileUpload(selectedFile, loan_info) {
 		try {
-			let collateralHash = await storeFiles(selectedFile);
-			let loanInfoFile = makeFileObjects(loan_info, `${collateralHash}.json`);
-			let loanInfoHash = await storeFiles(loanInfoFile);
+			let collateralHash = await uploadFile(selectedFile);
+			await storeJSONData(collateralHash, loan_info);
 
-			return [collateralHash, loanInfoHash];
+			return collateralHash;
 		} catch (error) {
 			console.log(error);
 		}
@@ -135,11 +128,16 @@ const LoanFormModal = ({
 		loan_info.collateral_filename = collateral_document[0].name;
 		loan_info.companyDetails = brJson;
 
-		const [collateralHash, loanInfoHash] = await onFileUpload(
-			collateral_document,
+		const collateralHash = await onFileUpload(
+			collateral_document[0],
 			loan_info
 		);
-		loanDetails = { ...loanDetails, collateralHash, loanInfoHash, loan_name };
+		loanDetails = {
+			...loanDetails,
+			collateralHash,
+			loanInfoHash: collateralHash,
+			loan_name,
+		};
 		// sending data in backend to create opportunity with hash code
 
 		const res = await createOpportunity(loanDetails);

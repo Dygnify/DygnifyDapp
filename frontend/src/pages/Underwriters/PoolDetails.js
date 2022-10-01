@@ -11,10 +11,10 @@ import Loader from "../../uiTools/Loading/Loader";
 import { voteOpportunity } from "../../services/BackendConnectors/opportunityConnectors";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
-import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
+import { openFileInNewTab } from "../../services/Helpers/skynetIPFS";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -170,12 +170,9 @@ const PoolDetails = () => {
 		setLoading(false);
 	}
 
-	const viewDocument = (docCid, fileName) => {
+	const viewDocument = (docCid) => {
 		if (!docCid) return null;
-		let url = getIPFSFileURL(docCid);
-		if (fileName) url += `/${fileName}`;
-		console.log(fileName);
-		window.open(url, "_blank");
+		openFileInNewTab(docCid);
 	};
 
 	const redirectToURl = (event) => {
@@ -362,7 +359,8 @@ const PoolDetails = () => {
 					<div className="w-full dark:bg-[#20232A] bg-[#D0D5DD] rounded-xl p-3">
 						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg flex flex-col md:flex-row">
 							<span>
-								Name of documents <span className="text-[#323A46] dark:text-[white] pr-1">-</span>
+								Name of documents{" "}
+								<span className="text-[#323A46] dark:text-[white] pr-1">-</span>
 							</span>
 							<span className="text-[#323A46] dark:text-[white]">
 								{opDetails?.collateral_document_name}

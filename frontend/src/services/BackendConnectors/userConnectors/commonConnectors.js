@@ -68,37 +68,34 @@ export const requestAccount = async (metaMask) => {
 export const isConnected = async () => {
 	Sentry.captureMessage("requestAccount", "info");
 	try {
-	if (window.ethereum) {
-		console.log("test3")
-		let chainId = window.ethereum.chainId;
-		if (chainId !== "0x13881") {
-			const temp = await window.provider.request({
-				method: "wallet_switchEthereumChain",
-				params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
-			});
-		}
-		if (chainId === "0x13881") {
-			console.log("test1");
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			const account = await provider.send("eth_requestAccounts", []);
-			console.log("test4")
+		if (window.ethereum) {
+			let chainId = window.ethereum.chainId;
+			if (chainId !== "0x13881") {
+				const temp = await window.provider.request({
+					method: "wallet_switchEthereumChain",
+					params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
+				});
+			}
+			if (chainId === "0x13881") {
+				const provider = new ethers.providers.Web3Provider(window.ethereum);
+				const account = await provider.send("eth_requestAccounts", []);
+				return {
+					success: true,
+				};
+			}
+		} else {
 			return {
-				success: true,
+				success: false,
+				msg: "Please Install Wallet",
 			};
 		}
-	} else {
+	} catch (error) {
+		Sentry.captureException(error);
 		return {
 			success: false,
-			msg: "Please Install Wallet",
+			msg: "Please Open Metamask and Connect",
 		};
 	}
-}catch (error) {
-	Sentry.captureException(error);
-	return {
-		success: false,
-		msg: "Please Open Metamask and Connect",
-	};
-}
 };
 
 export const convertDate = (epochTimestamp) => {

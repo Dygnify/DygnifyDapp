@@ -10,11 +10,6 @@ import axiosHttpService from "../../services/axioscall";
 import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import LinkedIn from "../SVGIcons/LinkedIn";
-import {
-	getBinaryFileData,
-	getDataURLFromFile,
-} from "../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
 import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
@@ -24,6 +19,7 @@ import DygnifyImage from "../../assets/Dygnify_Image.png";
 import UpArrow from "../SVGIcons/UpArrow";
 import DollarImage from "../../assets/Dollar-icon.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData, getFileUrl } from "../../services/Helpers/skynetIPFS";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -103,7 +99,6 @@ const ViewPool = () => {
 
 	useEffect(() => {
 		if (poolData) {
-			console.log("************", poolData);
 			loadInfo();
 			console.log(poolData);
 			// get pool balance
@@ -120,34 +115,30 @@ const ViewPool = () => {
 			});
 
 			// fetch the opportunity details from IPFS
-			retrieveFiles(poolData.opportunityInfo, true).then((res) => {
-				if (res) {
-					let read = getBinaryFileData(res);
-					read.onloadend = function () {
-						let opJson = JSON.parse(read.result);
-						if (opJson) {
-							setCompanyDetails(opJson.companyDetails);
-							getCompanyLogo(
-								opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-							);
-							// get the loan purpose
-							const { isSliced, firstText, secondText } =
-								getExtendableTextBreakup(opJson.loan_purpose, 200);
+			getJSONData(poolData.opportunityInfo).then((opJson) => {
+				if (opJson) {
+					setCompanyDetails(opJson.companyDetails);
+					getCompanyLogo(
+						opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+					);
+					// get the loan purpose
+					const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+						opJson.loan_purpose,
+						200
+					);
 
-							if (isSliced) {
-								setLoanPurpose({
-									firstText: firstText,
-									secondText: secondText,
-									isSliced: isSliced,
-								});
-							} else {
-								setLoanPurpose({
-									firstText: firstText,
-									isSliced: isSliced,
-								});
-							}
-						}
-					};
+					if (isSliced) {
+						setLoanPurpose({
+							firstText: firstText,
+							secondText: secondText,
+							isSliced: isSliced,
+						});
+					} else {
+						setLoanPurpose({
+							firstText: firstText,
+							isSliced: isSliced,
+						});
+					}
 				}
 			});
 		}
@@ -234,13 +225,9 @@ const ViewPool = () => {
 			return;
 		}
 		try {
-			retrieveFiles(cid, true).then((res) => {
+			getFileUrl(cid).then((res) => {
 				if (res) {
-					let read = getDataURLFromFile(res);
-					read.onloadend = function () {
-						setLogoImgSrc(read.result);
-						console.log(read.result);
-					};
+					setLogoImgSrc(res);
 				}
 			});
 		} catch (error) {

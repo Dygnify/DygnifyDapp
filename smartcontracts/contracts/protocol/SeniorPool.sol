@@ -30,23 +30,6 @@ contract SeniorPool is BaseUpgradeablePausable {
         uint256 amount;
     }
 
-
-    // userAddress => InvestmentTimestamp
-    mapping(address => InvestmentTimestamp[]) private stackingAmount;
-    // userAddress => amount available for Withdrawal
-    mapping(address => uint256) private availableForWithdrawal;
-    // userAddress => isStaking boolean
-    mapping(address => bool) public isStaking;
-    // userAddress => yieldBalance
-    mapping(address => uint256) private usdcYield;
-
-    string public contractName = "Senior Pool";
-    IERC20 private usdcToken;
-    ILPToken private lpToken;
-    uint256 public investmentLockinInMonths;
-    uint256 public seniorPoolBal;
-    uint256 public sharePrice;
-
     struct KYC {
         bool isDoucument;
         bool isLiveliness;
@@ -56,7 +39,22 @@ contract SeniorPool is BaseUpgradeablePausable {
         bool result;
     }
 
+    // userAddress => InvestmentTimestamp
+    mapping(address => InvestmentTimestamp[]) private stackingAmount;
+    // userAddress => amount available for Withdrawal
+    mapping(address => uint256) private availableForWithdrawal;
+    // userAddress => isStaking boolean
+    mapping(address => bool) public isStaking;
+    // userAddress => yieldBalance
+    mapping(address => uint256) private usdcYield;
     mapping(address => KYC) public kycOf;
+
+    string public contractName = "Senior Pool";
+    IERC20 private usdcToken;
+    ILPToken private lpToken;
+    uint256 public investmentLockinInMonths;
+    uint256 public seniorPoolBal;
+    uint256 public sharePrice;
 
     event Stake(address indexed from, uint256 amount);
     event Unstake(address indexed from, uint256 amount);

@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
-import {
-	getBinaryFileData,
-	getDataURLFromFile,
-} from "../../../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
-
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
+import {
+	getJSONData,
+	getFileUrl,
+} from "../../../../services/Helpers/skynetIPFS";
 
 const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
@@ -18,18 +16,12 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		retrieveFiles(opportunityInfo, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
-					if (opJson) {
-						setCompanyName(opJson.company_name);
-						getCompanyLogo(
-							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-						);
-					}
-				};
+		getJSONData(opportunityInfo).then((opJson) => {
+			if (opJson) {
+				setCompanyName(opJson.company_name);
+				getCompanyLogo(
+					opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+				);
 			}
 		});
 	}, []);
@@ -56,13 +48,9 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 			return;
 		}
 		try {
-			retrieveFiles(cid, true).then((res) => {
+			getFileUrl(cid).then((res) => {
 				if (res) {
-					let read = getDataURLFromFile(res);
-					read.onloadend = function () {
-						setLogoImgSrc(read.result);
-						console.log(read.result);
-					};
+					setLogoImgSrc(res);
 				}
 			});
 		} catch (error) {

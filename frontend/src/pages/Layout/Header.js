@@ -27,24 +27,20 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 	const fetchStatus = async () => {
 		const getStatus = await isConnected();
 
-		if (getStatus.success){
-		setStatus(true)
-		console.log("test5")
-		}else{
-		console.log(getStatus.msg);
-		setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
-		setStatus(false);
+		if (getStatus.success) {
+			setStatus(true);
+		} else {
+			console.log(getStatus.msg);
+			setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
+			setStatus(false);
 		}
 	};
 
-	 function hitRequestAccount() {
-		
+	function hitRequestAccount() {
 		fetchStatus();
-
 	}
 
 	useEffect(async () => {
-		console.log("test1")
 		await fetchStatus();
 		darkModeStatus();
 	}, [location]);

@@ -4,7 +4,7 @@ pragma solidity 0.8.4;
 
 library Constants{
 
-    uint256 public constant _oneYearInDays = 365;
+    uint256 public constant _oneYearInDays = 360;
     uint256 public constant _sixDecimal = 10**6;
     uint256 public constant _oneDay = 60 * 60 * 24;
     uint256 public constant _oneMonth = 30 * _oneDay;

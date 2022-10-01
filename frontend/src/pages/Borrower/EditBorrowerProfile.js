@@ -4,15 +4,12 @@ import TextField from "../../uiTools/Inputs/TextField";
 import InputGroup from "../../uiTools/Inputs/InputGroup";
 import TextArea from "../../uiTools/Inputs/TextArea";
 import FileUploader from "../Components/FileUploader";
-import {
-	makeFileObjects,
-	storeFiles,
-} from "../../services/Helpers/web3storageIPFS";
 import { useLocation, useNavigate } from "react-router-dom";
 import GradientButton from "../../uiTools/Button/GradientButton";
-import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import * as Yup from "yup";
 import Loader from "../../uiTools/Loading/Loader";
+import { uploadFile, storeJSONData } from "../../services/Helpers/skynetIPFS";
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
@@ -21,12 +18,14 @@ const EditBorrowerProfileNew = () => {
 	const [hasKey, setHasKey] = useState();
 	const [loading, setLoading] = useState();
 	const [error, setError] = useState();
-
+	const [borrowerAddress, setBorrowerAddress] = useState();
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
 	const [businessAddressFiles, setBusinessAddressFiles] = useState();
-	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
-		useState();
+	const [
+		businessIncorporationFiles,
+		setBusinessIncorporationFiles,
+	] = useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 	const location = useLocation();
 	const oldBrJson = location.state;
@@ -57,6 +56,11 @@ const EditBorrowerProfileNew = () => {
 			setProfileState(location.state);
 			setHasKey(location.state ? "businessLicFile" in location.state : true);
 		}
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				setBorrowerAddress(res.address);
+			}
+		});
 	}, []);
 
 	const initialValues = {
@@ -107,7 +111,7 @@ const EditBorrowerProfileNew = () => {
 	const uploadFilesToIPFS = async (files) => {
 		try {
 			if (files.length) {
-				return await storeFiles(files);
+				return await uploadFile(files[0]);
 			}
 		} catch (error) {
 			console.log(error);
@@ -304,13 +308,7 @@ const EditBorrowerProfileNew = () => {
 
 			if (allowSubmit && !error) {
 				console.log("Inside allow");
-				let file = makeFileObjects(borrowerJsonData, "borrower.json");
-				let borrowerDataCID = await storeFiles(file);
-				// Save this CID in the blockchain
-				console.log("DURING save", borrowerDataCID);
-				console.log(borrowerJsonData);
-				await updateBorrowerDetails(borrowerDataCID);
-				console.log("upload successful");
+				await storeJSONData(borrowerAddress, borrowerJsonData);
 			}
 			navigate("/borrowerDashboard/borrowerProfile", {
 				state: borrowerJsonData,
