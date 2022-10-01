@@ -110,22 +110,26 @@ const InvestorOverview = () => {
 				}
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [seniorPoolInvestment]);
 
-	useEffect(async () => {
-		await updateSummery();
-		const juniorPools = await getJuniorWithdrawableOp();
-		if (juniorPools.success) {
-			setJuniorPool(juniorPools.opportunityList);
-		} else {
-			console.log(juniorPools.msg);
-			setErrormsg({
-				status: !juniorPools.status,
-				msg: juniorPools.msg,
-			});
-		}
+	useEffect(() => {
+		async function fetch() {
+			await updateSummery();
+			const juniorPools = await getJuniorWithdrawableOp();
+			if (juniorPools.success) {
+				setJuniorPool(juniorPools.opportunityList);
+			} else {
+				console.log(juniorPools.msg);
+				setErrormsg({
+					status: !juniorPools.status,
+					msg: juniorPools.msg,
+				});
+			}
 
-		setJuniorPoolLoading(false);
+			setJuniorPoolLoading(false);
+		}
+		fetch();
 	}, []);
 
 	useEffect(() => {

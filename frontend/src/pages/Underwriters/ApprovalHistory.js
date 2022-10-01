@@ -12,9 +12,12 @@ const ApprovalHistory = () => {
 		msg: "",
 	});
 
-	useEffect(async () => {
-		await getHistory();
-		setLoading(false);
+	useEffect(() => {
+		async function fetchData() {
+			await getHistory();
+			setLoading(false);
+		}
+		fetchData();
 	}, []);
 
 	async function getHistory() {
@@ -36,7 +39,7 @@ const ApprovalHistory = () => {
 				<h2 className="text-2xl mb-2 md:mb-12 ml-5  md:ml-7">
 					Approval history
 				</h2>
-				{transactions.length == 0 ? (
+				{transactions.length === 0 ? (
 					<div className="felx justify-center">
 						<div className="text-[#64748B] text-xl text-center mt-3">
 							No Borrow requests are present at the moment.
@@ -58,7 +61,7 @@ const ApprovalHistory = () => {
 						<div className="space-y-3 md:pl-5 md:pr-5 px-2">
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard key={transactions.id} data={item} />
+										<TransactionsCard key={Math.random()} data={item} />
 								  ))
 								: null}
 						</div>

@@ -6,21 +6,19 @@ import LogoImage from "../../assets/logo.png";
 import Wallet from "../../uiTools/Icons/Wallet";
 import Hamburger from "../../uiTools/Icons/Hamburger";
 import Cross from "../../assets/cross.svg";
-import {
-	requestAccount,
-	isConnected,
-} from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { isConnected } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 import Dark from "../../uiTools/Icons/Dark";
 import Light from "../../uiTools/Icons/Light";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
-const Header = ({ linkStatus, darkMode, setDarkMode }) => {
+const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 	const [status, setStatus] = useState(false);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
 		msg: "",
 	});
+
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -34,15 +32,20 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 			setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
 			setStatus(false);
 		}
+		setMetaStatus(getStatus.success);
 	};
 
 	function hitRequestAccount() {
 		fetchStatus();
 	}
 
-	useEffect(async () => {
-		await fetchStatus();
-		darkModeStatus();
+	useEffect(() => {
+		async function fetchData() {
+			darkModeStatus();
+			await fetchStatus();
+		}
+		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 
 	function darkModeStatus() {

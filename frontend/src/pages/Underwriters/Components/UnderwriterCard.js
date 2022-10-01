@@ -21,6 +21,7 @@ const UnderwriterCard = ({ data }) => {
 				);
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	async function getCompanyLogo(cid) {
@@ -43,6 +44,7 @@ const UnderwriterCard = ({ data }) => {
 			{/* section-1 */}
 			<div className="flex-row flex space-x-5 px-4 col-span-4 lg:pl-5 lg:pr-1">
 				<img
+					alt=""
 					src={logoImgSrc ? logoImgSrc : default_profile}
 					className="w-28 h-28 lg:my-auto rounded-full xl:w-36  xl:h-36 2xl:w-[7.5rem] 2xl:h-[7.5rem]"
 				/>
@@ -70,9 +72,9 @@ const UnderwriterCard = ({ data }) => {
 					<div className="flex justify-between space-y-1 font-medium">
 						<p>Pool Size</p>
 						<p className="flex gap-1 justify-center">
-							<p className="w-6 h-6">
+							<span className="w-6 h-6">
 								<img src={dollarIcon} alt="" />
-							</p>
+							</span>
 							{data.opportunityAmount}
 						</p>
 					</div>

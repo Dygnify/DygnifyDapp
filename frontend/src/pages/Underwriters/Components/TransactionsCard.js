@@ -13,6 +13,7 @@ const TransactionsCard = ({ data }) => {
 				setCompanyName(opJson.companyDetails?.companyName);
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -27,26 +28,26 @@ const TransactionsCard = ({ data }) => {
 				{data?.createdOn}
 			</p>
 
-			{(data?.status == "2" || data?.status >= "4") && (
-				<p className="w-1/3 md:w-1/6 text-center">
-					<div className="btn btn-xs btn-success approved-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
+			{(data?.status === "2" || data?.status >= "4") && (
+				<div className="w-1/3 md:w-1/6 text-center">
+					<p className="btn btn-xs btn-success approved-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
 						Approved
-					</div>
-				</p>
+					</p>
+				</div>
 			)}
-			{data?.status == "1" && (
-				<p className="w-1/3 md:w-1/6 text-center ">
-					<div className="btn btn-xs btn-success rejected-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
+			{data?.status === "1" && (
+				<div className="w-1/3 md:w-1/6 text-center ">
+					<p className="btn btn-xs btn-success rejected-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
 						Rejected
-					</div>
-				</p>
+					</p>
+				</div>
 			)}
-			{data?.status == "3" && (
-				<p className="w-1/3 md:w-1/6 text-center ">
-					<div className="btn btn-xs btn-success unsured-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
+			{data?.status === "3" && (
+				<div className="w-1/3 md:w-1/6 text-center ">
+					<p className="btn btn-xs btn-success unsured-btn border-none px-2 text-base font-medium pb-6 pt-0 rounded-full capitalize">
 						Unsure
-					</div>
-				</p>
+					</p>
+				</div>
 			)}
 		</div>
 	);

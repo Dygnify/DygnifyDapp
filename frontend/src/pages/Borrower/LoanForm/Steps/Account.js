@@ -74,8 +74,8 @@ export default function Account({ formData, handleNext, handleForm }) {
 					</div>
 					<div className="md:flex md:gap-3">
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
-							<label class="label">
-								<span class="text-white">Loan&nbsp;Tenure</span>
+							<label className="label">
+								<span className="text-white">Loan&nbsp;Tenure</span>
 							</label>
 							<div
 								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
@@ -104,8 +104,8 @@ export default function Account({ formData, handleNext, handleForm }) {
 						</div>
 
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
-							<label class="label">
-								<span class="text-white">Repayment&nbsp;Frequency</span>
+							<label className="label">
+								<span className="text-white">Repayment&nbsp;Frequency</span>
 							</label>
 							<div
 								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${
@@ -150,8 +150,8 @@ export default function Account({ formData, handleNext, handleForm }) {
 							value={formik.values.loan_interest}
 						></TextField>
 						<div className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0">
-							<label class="label">
-								<span class="text-white mb-1">Loan Type</span>
+							<label className="label">
+								<span className="text-white mb-1">Loan Type</span>
 							</label>
 							<div
 								className={`input input-bordered items-center flex justify-between dark:bg-[#24272F] bg-[#E7EAEE] ${

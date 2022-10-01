@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-
+import { NavLink, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
 import BorrowIcon from "../../uiTools/Icons/BorrowIcon";
 import ApprovalIcon from "../../uiTools/Icons/ApprovalIcon";
 
 const UnderwriterDashboard = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
-
 	const [darkMode, setDarkMode] = useState(true);
 
 	const handleChange = (e) => {

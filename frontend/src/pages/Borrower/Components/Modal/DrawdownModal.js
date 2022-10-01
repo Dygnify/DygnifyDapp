@@ -55,7 +55,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 						<div className="py-4 px-3 flex gap-1 bg-[#D0D5DD] dark:bg-darkmode-500 rounded-md ">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
 
-							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
 							<p className="font-semibold text-[1.125rem]">{walletBal}</p>
 						</div>
 					</div>
@@ -72,7 +72,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 						<div className="flex gap-1 font-semibold">
 							<p>Available for drawdown</p>
 
-							<img src={DollarImage} className="w-4 ml-auto" />
+							<img src={DollarImage} className="w-4 ml-auto" alt="" />
 							<p>{data?.opportunityAmount}</p>
 						</div>
 					</div>

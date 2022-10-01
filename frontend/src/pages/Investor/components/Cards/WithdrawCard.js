@@ -22,12 +22,14 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 				setCompanyName(opJson.company_name);
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
 		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient">
 			<div className="flex items-center gap-6">
 				<img
+					alt=""
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
 					className="w-[7rem] lg:w-[12rem]"
 					src={DygnifyImage}
@@ -49,14 +51,14 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 					<div className="flex gap-1 items-center">
 						<p className="">Pool Size</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 						<p className="">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex gap-1 items-center">
 						<p className="">Capital Invested</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 						<p className="">{capitalInvested}</p>
 					</div>
 
@@ -68,14 +70,14 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 					<div className="flex gap-1 items-center">
 						<p className="">Available for Withdrawal</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 						<p className="">{withdrawableAmt ? withdrawableAmt : "- -"}</p>
 					</div>
 				</div>
 
 				<div>
 					<button
-						disable={false}
+						disable="false"
 						onClick={() => {
 							setSelected({ ...data, isSeniorPool });
 							setShowModal(true);

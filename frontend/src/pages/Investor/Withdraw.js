@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import GradientButton from "../../uiTools/Button/GradientButton";
+// import GradientButton from "../../uiTools/Button/GradientButton";
 import WithdrawCard from "./components/Cards/WithdrawCard";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import {

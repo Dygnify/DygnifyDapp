@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useContext } from "react";
+import { React, useState, useEffect } from "react";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
@@ -56,6 +56,7 @@ const InvestModal = ({
 			}
 		});
 		userAddress();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading]);
 
 	async function investSenior() {
@@ -64,6 +65,7 @@ const InvestModal = ({
 		setProcessFundModal(true);
 		setInvestProcessing(true);
 		const data = await investInSeniorPool(amount);
+		setSelected(null);
 		if (data.success) {
 			settxhash(data.transaction.hash);
 			setSelected(null);
@@ -78,6 +80,9 @@ const InvestModal = ({
 			}, 20000);
 		} else {
 			console.log(data?.msg);
+			setSelected(null);
+			setInvestProcessing(true);
+			setProcessFundModal(false);
 			setErrormsg({
 				status: !data.status,
 				msg: data.msg,
@@ -119,6 +124,10 @@ const InvestModal = ({
 			}, 15000);
 		} else {
 			console.log(data.msg);
+			setSelected(null);
+			setInvestProcessing(true);
+			setProcessFundModal(false);
+
 			setErrormsg({
 				status: !data.status,
 				msg: data.msg,
@@ -251,7 +260,7 @@ const InvestModal = ({
 						<div className="py-4 px-3 flex gap-1 bg-neutral-200 dark:bg-darkmode-500 rounded-md">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
 
-							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 							<p className="font-semibold text-[1.125rem]">
 								{walletBal ? walletBal : 0}
 							</p>
@@ -268,7 +277,7 @@ const InvestModal = ({
 							<div className="flex gap-1 font-semibold">
 								<p className="">Pool Limit</p>
 
-								<img src={DollarImage} className="ml-auto w-[1rem]" />
+								<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 								<p className="">{poolLimit}</p>
 							</div>
 						) : (
@@ -287,7 +296,7 @@ const InvestModal = ({
 							<div className="flex gap-1 font-semibold">
 								<p className="">Investable Amount</p>
 
-								<img src={DollarImage} className="ml-auto w-[1rem]" />
+								<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 								<p className="">{investableDisplayAmount}</p>
 							</div>
 						) : (
@@ -296,7 +305,7 @@ const InvestModal = ({
 					</div>
 
 					<div className="relative px-4 md:px-8 mt-8 flex flex-col gap-1">
-						<label for="investModalAmount" className="font-semibold">
+						<label htmlFor="investModalAmount" className="font-semibold">
 							Enter Amount
 						</label>
 						<input
@@ -318,7 +327,6 @@ const InvestModal = ({
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<label
-							htmlFor={`${error.approveErr ? "" : "InvestProcessModal"}`}
 							onClick={() => {
 								console.log(process.env.REACT_APP_SENIORPOOL);
 								if (!error.approveErr) {

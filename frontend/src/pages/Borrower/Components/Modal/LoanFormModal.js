@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createOpportunity } from "../../../../services/BackendConnectors/opportunityConnectors";
 import Stepper from "../../LoanForm/Stepper";
 import Account from "../../LoanForm/Steps/Account";

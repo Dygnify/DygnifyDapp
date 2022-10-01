@@ -15,9 +15,12 @@ const BorrowRequest = () => {
 
 	const [loading, setLoading] = useState(true);
 
-	useEffect(async () => {
-		await getUnderReviewOpportunity();
-		setLoading(false);
+	useEffect(() => {
+		async function fetchData() {
+			await getUnderReviewOpportunity();
+			setLoading(false);
+		}
+		fetchData();
 	}, []);
 
 	async function getUnderReviewOpportunity() {
