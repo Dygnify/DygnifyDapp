@@ -512,17 +512,6 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
         if (repaymentCounter == totalRepayments) {
             opportunityOrigination.markRepaid(opportunityID);
-            // uint256 seniorPoolAmount = seniorSubpoolDetails.overdueGenerated +
-            //     seniorSubpoolDetails.yieldGenerated +
-            //     seniorSubpoolDetails.depositedAmount;
-            // poolBalance -= seniorPoolAmount;
-            // seniorSubpoolDetails.overdueGenerated = 0;
-            // seniorSubpoolDetails.depositedAmount = 0;
-            // seniorSubpoolDetails.yieldGenerated = 0;
-            // usdcToken.transfer(
-            //     dygnifyConfig.seniorPoolAddress(),
-            //     seniorPoolAmount
-            // );
             ISeniorPool(dygnifyConfig.seniorPoolAddress()).withDrawFromOpportunity(false, opportunityID, 0);
         }
         repaymentCounter = repaymentCounter.add(1);
