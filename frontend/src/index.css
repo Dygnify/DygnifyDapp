@@ -8,6 +8,10 @@
 	display: none;
 }
 
+.css-fix {
+	white-space: pre-wrap;
+}
+
 .button-gradient {
 	background-image: linear-gradient(81.75deg, #4b74ff 0%, #9281ff 100%);
 }
@@ -24,15 +28,15 @@
 	color: #fff;
 }
 
-.dark .active>span>svg>path {
+.dark .active > span > svg > path {
 	fill: #9281ff;
 }
 
-.active>span>svg>path {
+.active > span > svg > path {
 	fill: #fff;
 }
 
-.transaction-button>button {
+.transaction-button > button {
 	padding-block: 0.2em;
 	padding-inline: 0.5em;
 	border-radius: 1.8em;
@@ -59,17 +63,21 @@
 }
 
 .my-gradient {
-	background-image: linear-gradient(302.47deg,
-			rgba(255, 255, 255, 0.8) 2.27%,
-			rgba(168, 154, 255, 0.260833) 98.52%);
+	background-image: linear-gradient(
+		302.47deg,
+		rgba(255, 255, 255, 0.8) 2.27%,
+		rgba(168, 154, 255, 0.260833) 98.52%
+	);
 	box-shadow: inset -1px -1px 1px rgba(185, 185, 185, 0.1);
 }
 
 .dark .my-gradient {
-	background-image: linear-gradient(302.85deg,
-			rgba(168, 154, 255, 0) -1.23%,
-			rgba(168, 154, 255, 0.260833) 99.99%,
-			rgba(168, 154, 255, 0.8) 100%);
+	background-image: linear-gradient(
+		302.85deg,
+		rgba(168, 154, 255, 0) -1.23%,
+		rgba(168, 154, 255, 0.260833) 99.99%,
+		rgba(168, 154, 255, 0.8) 100%
+	);
 	box-shadow: 1px 1px 1px rgba(185, 185, 185, 0.1);
 }
 
@@ -84,11 +92,13 @@ input[type="number"] {
 }
 
 .approved-btn {
-	background-image: linear-gradient(97.78deg,
-			#51b960 7.43%,
-			#51b960 7.43%,
-			#51b960 7.43%,
-			#83dc90 90.63%);
+	background-image: linear-gradient(
+		97.78deg,
+		#51b960 7.43%,
+		#51b960 7.43%,
+		#51b960 7.43%,
+		#83dc90 90.63%
+	);
 }
 
 .rejected-btn {
@@ -96,10 +106,12 @@ input[type="number"] {
 }
 
 .unsured-btn {
-	background-image: linear-gradient(276.08deg,
-			rgba(255, 255, 255, 0.04) 2.02%,
-			rgba(255, 255, 255, 0.4) 2.03%,
-			#ffffff 99.33%);
+	background-image: linear-gradient(
+		276.08deg,
+		rgba(255, 255, 255, 0.04) 2.02%,
+		rgba(255, 255, 255, 0.4) 2.03%,
+		#ffffff 99.33%
+	);
 }
 
 .css-1hb7zxy-IndicatorsContainer {
@@ -126,7 +138,7 @@ input[type="number"] {
 	}
 }
 
-.themetoggle>svg>path {
+.themetoggle > svg > path {
 	fill: black;
 }
 
@@ -138,10 +150,10 @@ input[type="number"] {
 	box-shadow: 0px 0.5px 10px rgba(255, 255, 255, 0.7);
 }
 
-.dark .themetoggle>svg>path {
+.dark .themetoggle > svg > path {
 	fill: white;
 }
 
-.dark .CreateProfileIcon>svg>path {
+.dark .CreateProfileIcon > svg > path {
 	fill: #fff;
 }
