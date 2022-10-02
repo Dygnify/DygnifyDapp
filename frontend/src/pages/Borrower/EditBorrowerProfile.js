@@ -21,6 +21,7 @@ const EditBorrowerProfileNew = () => {
 	const [hasKey, setHasKey] = useState();
 	const [loading, setLoading] = useState();
 	const [error, setError] = useState();
+	const [logoError, setLogoError] = useState(false);
 
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
@@ -36,8 +37,10 @@ const EditBorrowerProfileNew = () => {
 	let businessLicFilesCID = "";
 	let businessAddFilesCID = "";
 	let businessIncoFilesCID = "";
-
 	let allowSubmit = true;
+
+	const regex =
+		/^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?\/?$/;
 
 	const validationSchema = Yup.object().shape({
 		companyName: Yup.string().label("Company Name").required(),
@@ -49,7 +52,11 @@ const EditBorrowerProfileNew = () => {
 		bizAddFileName: Yup.string().label("File Name").required(),
 		bizLicFileName: Yup.string().label("File Name"),
 		bizIncoFileName: Yup.string().label("File Name").required(),
-		website: Yup.string().label("Website").required(),
+		website: Yup.string()
+			.matches(regex, "Enter a valid Url")
+			.label("Website")
+			.required(),
+		email: Yup.string().email().label("Email").required(),
 	});
 
 	useEffect(() => {
@@ -124,12 +131,12 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const validations = () => {
+		if (!logoFile && !location.state) setLogoError(true);
 		if (
 			!(
 				businessIdentityFiles &&
 				businessIncorporationFiles &&
-				businessAddressFiles &&
-				logoFile
+				businessAddressFiles
 			) &&
 			!location.state
 		) {
@@ -157,6 +164,7 @@ const EditBorrowerProfileNew = () => {
 
 	const uploadBorrowerData = async (formData) => {
 		setLoading(true);
+		console.log(formData);
 		try {
 			const {
 				companyName,
@@ -171,7 +179,6 @@ const EditBorrowerProfileNew = () => {
 				twitter,
 				linkedin,
 			} = formData;
-
 			validations();
 			let key = false;
 			if (businessLicenseFiles) key = true;
@@ -301,14 +308,9 @@ const EditBorrowerProfileNew = () => {
 				borrowerJsonData = { ...borrowerJsonData, ...licenseFile };
 			}
 			checkEdited(borrowerJsonData);
-
-			if (allowSubmit && !error) {
-				console.log("Inside allow");
+			if (allowSubmit && !error && !logoError) {
 				let file = makeFileObjects(borrowerJsonData, "borrower.json");
 				let borrowerDataCID = await storeFiles(file);
-				// Save this CID in the blockchain
-				console.log("DURING save", borrowerDataCID);
-				console.log(borrowerJsonData);
 				await updateBorrowerDetails(borrowerDataCID);
 				console.log("upload successful");
 			}
@@ -356,6 +358,7 @@ const EditBorrowerProfileNew = () => {
 														? profileState.companyLogoFile.businessLogoFileName
 														: null
 												}
+												error={logoError ? "Please upload a logo." : null}
 											/>
 											<TextField
 												name="companyName"
@@ -418,7 +421,13 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIdentityFilesUpload}
 										onBlur={handleBlur}
-										error={error ? "File required" : errors.bizIdFileName}
+										error={
+											error
+												? "File required"
+												: touched.bizIdFileName && errors.bizIdFileName
+												? errors.bizIdFileName
+												: null
+										}
 										fileName={
 											profileState
 												? profileState.businessIdFile.businessIdFileName
@@ -432,7 +441,13 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessAddressFilesUpload}
 										onBlur={handleBlur}
-										error={error ? "File required" : errors.bizAddFileName}
+										error={
+											error
+												? "File required"
+												: touched.bizAddFileName && errors.bizAddFileName
+												? errors.bizAddFileName
+												: null
+										}
 										fileName={
 											profileState
 												? profileState.businessAddFile.businessAddFileName
@@ -446,7 +461,13 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIncorporationFilesUpload}
 										onBlur={handleBlur}
-										error={error ? "File required" : errors.bizIncoFileName}
+										error={
+											error
+												? "File required"
+												: touched.bizIncoFileName && errors.bizIncoFileName
+												? errors.bizIncoFileName
+												: null
+										}
 										fileName={
 											profileState
 												? profileState.businessIncoFile.businessIncoFileName
@@ -490,6 +511,7 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											onBlur={handleBlur}
 											value={values.email}
+											error={errors.email}
 										/>
 										<TextField
 											name="twitter"
@@ -527,6 +549,7 @@ const EditBorrowerProfileNew = () => {
 							<GradientButton
 								className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
 								onClick={handleSubmit}
+								type="submit"
 							>
 								Save and Exit
 							</GradientButton>
