@@ -320,7 +320,7 @@ const BorrowerProfile = () => {
 										<button
 											id="twitter"
 											onClick={redirectToURl}
-											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
+											className="border border-neutral-500 flex gap-1 items-center  px-2 rounded-2xl"
 										>
 											<Twitter />
 											<p className="text-xs md:text-base pointer-events-none">
@@ -334,7 +334,7 @@ const BorrowerProfile = () => {
 										<button
 											id="linkedin"
 											onClick={redirectToURl}
-											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
+											className="border border-neutral-500 flex gap-1 items-center px-2 rounded-2xl"
 										>
 											<LinkedIn />
 											<p className="text-xs md:text-base pointer-events-none">
@@ -376,7 +376,7 @@ const BorrowerProfile = () => {
 							</div>
 
 							<div className="my-6">
-								<p className="mt-1 text-lg">{companyBio}</p>
+								<p className="mt-1 text-lg css-fix">{companyBio}</p>
 							</div>
 
 							<div className="mb-8 font-semibold">

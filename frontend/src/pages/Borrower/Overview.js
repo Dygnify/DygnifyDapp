@@ -290,7 +290,7 @@ const Overview = () => {
 							<div className="px-4 sm:px-6 flex flex-col gap-2 md:px-0 md:py-2">
 								<div className="flex flex-col gap-3 md:gap-2">
 									<div className="flex md:flex-col gap-1 items-end md:items-start">
-										<p className="text-neutral-400 flex gap-1 items-center">
+										<p className="text-neutral-500 flex gap-1 items-center">
 											<span className="inline-block w-3 h-2 bg-gradient-to-r from-[#4B74FF] to-primary-500 rounded-3xl"></span>
 											Total Outstanding
 										</p>
@@ -301,7 +301,7 @@ const Overview = () => {
 									</div>
 
 									<div className="flex md:flex-col gap-1 items-end md:items-start">
-										<p className="text-neutral-400 flex gap-1 items-center">
+										<p className="text-neutral-500 flex gap-1 items-center">
 											<span className="inline-block w-3 h-2 bg-white rounded-3xl"></span>
 											Total Repaid
 										</p>
