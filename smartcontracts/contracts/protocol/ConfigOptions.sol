@@ -24,6 +24,7 @@ library ConfigOptions {
         DygnifyFee,
         OverDueFee,
         JuniorSubpoolFee,
-        SeniorPoolFundLockinMonths
+        SeniorPoolFundLockinMonths,
+        WriteOffDays
     }
 }

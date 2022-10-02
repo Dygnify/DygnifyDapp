@@ -12,11 +12,11 @@ import { getWalletBal } from "../../services/BackendConnectors/userConnectors/co
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
 import LineChart from "./components/LineChart";
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
 import { getBinaryFileData } from "../../services/Helpers/fileHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData } from "../../services/Helpers/skynetIPFS";
 
 const InvestorOverview = () => {
 	const [totalInvestment, setTotalInvestment] = useState(0);
@@ -37,19 +37,13 @@ const InvestorOverview = () => {
 	const path = useNavigate();
 
 	async function updateSummery() {
-		let amount = await getTotalInvestmentOfInvestor();
+		let data = await getTotalInvestmentOfInvestor();
 
-		if (amount.success) {
-			setTotalInvestment(amount.totalInvestment);
-		}
-
-		let yieldEarned = await getTotalYieldOfInvestor();
-
-		if (yieldEarned.success) {
-			setTotalYield(yieldEarned.totalYield);
+		if (data.success) {
+			setTotalInvestment(data.totalInvestment);
+			setTotalYield(data.totalYield);
 		}
 	}
-
 	useEffect(() => {
 		getUserSeniorPoolInvestment()
 			.then((data) => {
@@ -64,82 +58,78 @@ const InvestorOverview = () => {
 	useEffect(() => {
 		if (seniorPoolInvestment) {
 			// fetch data from IPFS
-			retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
-				if (res) {
-					let read = getBinaryFileData(res);
-					read.onloadend = async function () {
-						try {
-							let spJson = JSON.parse(read.result);
-							if (spJson) {
-								let seniorInvestmentData = {};
-								seniorInvestmentData.opportunityName = spJson.poolName;
-								const res = await getWalletBal(
-									process.env.REACT_APP_SENIORPOOL
-								);
+			getJSONData(process.env.REACT_APP_SENIORPOOL_CID).then(async (spJson) => {
+				try {
+					if (spJson) {
+						let seniorInvestmentData = {};
+						seniorInvestmentData.opportunityName = spJson.poolName;
+						const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
 
-								if (res.success) {
-									seniorInvestmentData.opportunityAmount = getDisplayAmount(
-										res.balance
-									);
+						if (res.success) {
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								res.balance
+							);
 
-									let totalInvestment =
-										seniorPoolInvestment.stakingAmt +
-										seniorPoolInvestment.withdrawableAmt;
+							let totalInvestment =
+								seniorPoolInvestment.stakingAmt +
+								seniorPoolInvestment.withdrawableAmt;
 
-									seniorInvestmentData.capitalInvested = getDisplayAmount(
-										totalInvestment
-									);
-								} else {
-									setErrormsg({
-										status: !res.success,
-										msg: res.msg,
-									});
-								}
-
-								const price = await getSeniorPoolDisplaySharePrice(
-									spJson.estimatedAPY
-								);
-
-								if (price.success) {
-									const { sharePrice, displaySharePrice } = price;
-									seniorInvestmentData.estimatedAPY = displaySharePrice;
-									seniorInvestmentData.yieldGenerated = getDisplayAmount(
-										parseFloat((totalInvestment * sharePrice) / 100)
-									);
-
-									setSeniorPool(seniorInvestmentData);
-								} else {
-									setSeniorPool(null);
-									console.log(price.msg);
-									setErrormsg({
-										status: !price.status,
-										msg: price.msg,
-									});
-								}
-							}
-						} catch (error) {
-							console.log(error);
+							seniorInvestmentData.capitalInvested = getDisplayAmount(
+								totalInvestment
+							);
+						} else {
+							setErrormsg({
+								status: !res.success,
+								msg: res.msg,
+							});
 						}
-					};
+
+						const price = await getSeniorPoolDisplaySharePrice(
+							spJson.estimatedAPY
+						);
+
+						if (price.success) {
+							const { displaySharePrice, sharePriceFromContract } = price;
+							seniorInvestmentData.estimatedAPY = displaySharePrice;
+							seniorInvestmentData.yieldGenerated = getDisplayAmount(
+								parseFloat((totalInvestment * sharePriceFromContract) / 100)
+							);
+
+							setSeniorPool(seniorInvestmentData);
+						} else {
+							setSeniorPool(null);
+							console.log(price.msg);
+							setErrormsg({
+								status: !price.status,
+								msg: price.msg,
+							});
+						}
+					}
+				} catch (error) {
+					console.log(error);
 				}
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [seniorPoolInvestment]);
 
-	useEffect(async () => {
-		await updateSummery();
-		const junorPools = await getJuniorWithdrawableOp();
-		if (junorPools.success) {
-			setJuniorPool(junorPools.opportunityList);
-		} else {
-			console.log(junorPools.msg);
-			setErrormsg({
-				status: !junorPools.status,
-				msg: junorPools.msg,
-			});
-		}
+	useEffect(() => {
+		async function fetch() {
+			await updateSummery();
+			const juniorPools = await getJuniorWithdrawableOp();
+			if (juniorPools.success) {
+				setJuniorPool(juniorPools.opportunityList);
+			} else {
+				console.log(juniorPools.msg);
+				setErrormsg({
+					status: !juniorPools.status,
+					msg: juniorPools.msg,
+				});
+			}
 
-		setJuniorPoolLoading(false);
+			setJuniorPoolLoading(false);
+		}
+		fetch();
 	}, []);
 
 	useEffect(() => {
@@ -210,7 +200,7 @@ const InvestorOverview = () => {
 								) : (
 									<div className="ml-auto md:ml-0 font-semibold flex items-end gap-2 px-4">
 										<p className=" text-xl lg:text-[1.75rem] ">
-											{totalInvestment}
+											{getDisplayAmount(totalInvestment)}
 										</p>
 										<p className="text-base lg:text-xl">
 											{process.env.REACT_APP_TOKEN_NAME}

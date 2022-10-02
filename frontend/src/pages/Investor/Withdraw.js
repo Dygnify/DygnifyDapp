@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import GradientButton from "../../uiTools/Button/GradientButton";
+// import GradientButton from "../../uiTools/Button/GradientButton";
 import WithdrawCard from "./components/Cards/WithdrawCard";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
@@ -7,7 +7,6 @@ import {
 	getSeniorPoolDisplaySharePrice,
 	getJuniorWithdrawableOp,
 } from "../../services/BackendConnectors/userConnectors/investorConncector";
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
 import { getBinaryFileData } from "../../services/Helpers/fileHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 
@@ -15,6 +14,7 @@ import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData } from "../../services/Helpers/skynetIPFS";
 
 const Withdraw = () => {
 	const [seniorPool, setSeniorPool] = useState();
@@ -67,79 +67,71 @@ const Withdraw = () => {
 		if (seniorPoolInvestment) {
 			// fetch data from IPFS
 
-			retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
-				if (res) {
-					let read = getBinaryFileData(res);
-					read.onloadend = async function () {
-						try {
-							let spJson = JSON.parse(read.result);
-							if (spJson) {
-								let seniorInvestmentData = {};
-								seniorInvestmentData.opportunityName = spJson.poolName;
-								const res = await getWalletBal(
-									process.env.REACT_APP_SENIORPOOL
-								);
+			getJSONData(process.env.REACT_APP_SENIORPOOL_CID).then(async (spJson) => {
+				try {
+					if (spJson) {
+						let seniorInvestmentData = {};
+						seniorInvestmentData.opportunityName = spJson.poolName;
+						const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
 
-								let balance;
+						let balance;
 
-								if (res.success) {
-									balance = res.balance;
-									seniorInvestmentData.opportunityAmount = getDisplayAmount(
-										balance
-									);
-								} else {
-									setErrormsg({
-										status: !res.success,
-										msg: res.msg,
-									});
-								}
-
-								let totalInvestment =
-									seniorPoolInvestment.stakingAmt +
-									seniorPoolInvestment.withdrawableAmt;
-								seniorInvestmentData.capitalInvested = getDisplayAmount(
-									totalInvestment
-								);
-
-								const price = await getSeniorPoolDisplaySharePrice(
-									spJson.estimatedAPY
-								);
-
-								if (price.success) {
-									const { sharePrice, displaySharePrice } = price;
-									seniorInvestmentData.estimatedAPY = displaySharePrice;
-
-									let realPossibleWithdrawAmt =
-										(balance * (100 - sharePrice)) / 100;
-
-									if (
-										balance >=
-										(seniorPoolInvestment.withdrawableAmt *
-											(100 + sharePrice)) /
-											100
-									) {
-										seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-											seniorPoolInvestment.withdrawableAmt
-										);
-									} else {
-										seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-											realPossibleWithdrawAmt
-										);
-									}
-									setSeniorPool(seniorInvestmentData);
-								} else {
-									setSeniorPool(null);
-									console.log(price.msg);
-									setErrormsg({
-										status: !price.status,
-										msg: price.msg,
-									});
-								}
-							}
-						} catch (error) {
-							console.log(error);
+						if (res.success) {
+							balance = res.balance;
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								balance
+							);
+						} else {
+							setErrormsg({
+								status: !res.success,
+								msg: res.msg,
+							});
 						}
-					};
+
+						let totalInvestment =
+							seniorPoolInvestment.stakingAmt +
+							seniorPoolInvestment.withdrawableAmt;
+						seniorInvestmentData.capitalInvested = getDisplayAmount(
+							totalInvestment
+						);
+
+						const price = await getSeniorPoolDisplaySharePrice(
+							spJson.estimatedAPY
+						);
+
+						if (price.success) {
+							const { sharePriceFromContract, displaySharePrice } = price;
+							seniorInvestmentData.estimatedAPY = displaySharePrice;
+
+							let realPossibleWithdrawAmt =
+								(balance * (100 - sharePriceFromContract)) / 100;
+
+							if (
+								balance >=
+								(seniorPoolInvestment.withdrawableAmt *
+									(100 + parseFloat(sharePriceFromContract))) /
+									100
+							) {
+								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+									seniorPoolInvestment.withdrawableAmt
+								);
+							} else {
+								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
+									realPossibleWithdrawAmt
+								);
+							}
+							setSeniorPool(seniorInvestmentData);
+						} else {
+							setSeniorPool(null);
+							console.log(price.msg);
+							setErrormsg({
+								status: !price.status,
+								msg: price.msg,
+							});
+						}
+					}
+				} catch (error) {
+					console.log(error);
 				}
 			});
 		}

@@ -13,13 +13,14 @@ import "../interfaces/IOpportunityOrigination.sol";
 import "../interfaces/IOpportunityPool.sol";
 import "./ConfigOptions.sol";
 import "./Constants.sol";
+import "../interfaces/ISeniorPool.sol";
 
 /// @title SeniorPool
 /// @author DNyanesh Warade
 /// @notice This contract creates a dygnify staking dApp that rewards users for
 ///         locking up their USDC stablecoin with Dygnify
 
-contract SeniorPool is BaseUpgradeablePausable {
+contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
     using SafeMathUpgradeable for uint256;
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
@@ -30,23 +31,6 @@ contract SeniorPool is BaseUpgradeablePausable {
         uint256 amount;
     }
 
-
-    // userAddress => InvestmentTimestamp
-    mapping(address => InvestmentTimestamp[]) private stackingAmount;
-    // userAddress => amount available for Withdrawal
-    mapping(address => uint256) private availableForWithdrawal;
-    // userAddress => isStaking boolean
-    mapping(address => bool) public isStaking;
-    // userAddress => yieldBalance
-    mapping(address => uint256) private usdcYield;
-
-    string public contractName = "Senior Pool";
-    IERC20 private usdcToken;
-    ILPToken private lpToken;
-    uint256 public investmentLockinInMonths;
-    uint256 public seniorPoolBal;
-    uint256 public sharePrice;
-
     struct KYC {
         bool isDoucument;
         bool isLiveliness;
@@ -56,7 +40,22 @@ contract SeniorPool is BaseUpgradeablePausable {
         bool result;
     }
 
+    // userAddress => InvestmentTimestamp
+    mapping(address => InvestmentTimestamp[]) private stackingAmount;
+    // userAddress => amount available for Withdrawal
+    mapping(address => uint256) private availableForWithdrawal;
+    // userAddress => isStaking boolean
+    mapping(address => bool) public isStaking;
+    // userAddress => yieldBalance
+    mapping(address => uint256) private usdcYield;
     mapping(address => KYC) public kycOf;
+
+    string public contractName = "Senior Pool";
+    IERC20 private usdcToken;
+    ILPToken private lpToken;
+    uint256 public investmentLockinInMonths;
+    uint256 public seniorPoolBal;
+    uint256 public sharePrice;
 
     event Stake(address indexed from, uint256 amount);
     event Unstake(address indexed from, uint256 amount);
@@ -130,25 +129,34 @@ contract SeniorPool is BaseUpgradeablePausable {
         opportunityPool.deposit(1, amount); //hardcoded val of 1 need to be converted into variable
     }
 
-    function withDrawFromOpportunity(bytes32 opportunityId) public onlyAdmin {
+    function withDrawFromOpportunity(bool _isWriteOff, bytes32 opportunityId, uint256 _amount) public override{
         require(
-            opportunityOrigination.isRepaid(opportunityId) == true,
+            opportunityOrigination.isRepaid(opportunityId) == true || _isWriteOff == true,
             "Opportunity is not repaid by borrower."
         );
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
             opportunityId
         );
         IOpportunityPool opportunityPool = IOpportunityPool(poolAddress);
+        require(
+            msg.sender == poolAddress, "only Opportunity Pool can withdraw." 
+        );
 
         //calculate the shareprice
-        uint256 totalProfit = opportunityPool.getSeniorProfit();
+        uint256 totalProfit;
+        if(_isWriteOff == true)totalProfit = _amount;
+        else totalProfit = opportunityPool.getSeniorProfit();
         uint256 _totalShares = lpToken.totalShares();
         uint256 delta = totalProfit.mul(lpMantissa()).div(_totalShares);
         sharePrice = sharePrice.add(delta);
 
-        uint256 withdrawlAmount = opportunityPool.withdrawAll(1); //hardcoded val of 1 need to be converted into variable
-
-        seniorPoolBal = seniorPoolBal + withdrawlAmount;
+        if(_isWriteOff == false){
+            uint256 withdrawlAmount = opportunityPool.withdrawAll(1); //hardcoded val of 1 need to be converted into variable
+            seniorPoolBal = seniorPoolBal + withdrawlAmount;
+        }
+        else{
+            seniorPoolBal = seniorPoolBal + _amount;
+        }
     }
 
     function approveUSDC(address user) public onlyAdmin {

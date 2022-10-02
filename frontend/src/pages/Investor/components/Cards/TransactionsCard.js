@@ -16,6 +16,7 @@ const TransactionsCard = ({ data }) => {
 			setDate(convertDate(data.timeStamp));
 			setLink(`${process.env.REACT_APP_POLYGONSCAN_URL}/tx/${data.hash}`);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
 		<div className="px-2 bg-neutral-100 dark:bg-darkmode-800 flex justify-around rounded-xl py-3 gap-4 md:gap-6 text-center text-neutral-900 dark:text-neutral-50">
@@ -26,7 +27,7 @@ const TransactionsCard = ({ data }) => {
 			</p>
 
 			<p className="flex gap-1 items-center w-1/3 md:w-1/6 my-auto justify-center">
-				<img src={DollarImage} className="w-4" />
+				<img src={DollarImage} className="w-4" alt="" />
 				{data?.isWithdraw ? "+" : "-"}
 				{amount}
 			</p>
@@ -75,6 +76,7 @@ const TransactionsCard = ({ data }) => {
 				className="hidden md:flex underline w-1/3 md:w-1/6 my-auto gap-1 items-center justify-center"
 				href={link}
 				target="_blank"
+				rel="noopener noreferrer"
 			>
 				Transaction
 			</a>

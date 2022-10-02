@@ -6,13 +6,13 @@ import {
 	getUserWalletAddress,
 	getWalletBal,
 } from "../../services/BackendConnectors/userConnectors/commonConnectors";
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
 import { getBinaryFileData } from "../../services/Helpers/fileHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData } from "../../services/Helpers/skynetIPFS";
 
 const Invest = () => {
 	const path = useNavigate();
@@ -46,6 +46,7 @@ const Invest = () => {
 				});
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const checkForKyc = async (refId) => {
@@ -72,7 +73,6 @@ const Invest = () => {
 	useEffect(() => {
 		try {
 			getAllActiveOpportunities().then((res) => {
-				console.log("*****", res);
 				if (res.opportunities && res.opportunities.length) {
 					setJuniorPools(res.opportunities);
 					setJuniorPoolLoading(false);
@@ -88,35 +88,29 @@ const Invest = () => {
 
 	useEffect(() => {
 		// fetch data from IPFS
-		retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = async function () {
-					let spJson = JSON.parse(read.result);
-					if (spJson) {
-						let seniorInvestmentData = {};
-						seniorInvestmentData.opportunityName = spJson.poolName;
-						const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
+		getJSONData(process.env.REACT_APP_SENIORPOOL_CID).then(async (spJson) => {
+			if (spJson) {
+				let seniorInvestmentData = {};
+				seniorInvestmentData.opportunityName = spJson.poolName;
+				const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
 
-						if (res.success) {
-							seniorInvestmentData.opportunityAmount = getDisplayAmount(
-								res.balance
-							);
-							seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
-							seniorInvestmentData.poolDescription = spJson.poolDescription;
-							seniorInvestmentData.isFull = false;
-							setSeniorPool(seniorInvestmentData);
-						} else {
-							console.log(res.msg);
-							setErrormsg({
-								status: !res.success,
-								msg: res.msg,
-							});
-						}
+				if (res.success) {
+					seniorInvestmentData.opportunityAmount = getDisplayAmount(
+						res.balance
+					);
+					seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
+					seniorInvestmentData.poolDescription = spJson.poolDescription;
+					seniorInvestmentData.isFull = false;
+					setSeniorPool(seniorInvestmentData);
+				} else {
+					console.log(res.msg);
+					setErrormsg({
+						status: !res.success,
+						msg: res.msg,
+					});
+				}
 
-						setSeniorPoolLoading(false);
-					}
-				};
+				setSeniorPoolLoading(false);
 			}
 		});
 	}, []);

@@ -1,8 +1,7 @@
 function getTrimmedWalletAddress(walletAddress, trimLength) {
 	if (walletAddress) {
 		return (
-			walletAddress.toString().slice(0, trimLength ? trimLength : 10) +
-			"..."
+			walletAddress.toString().slice(0, trimLength ? trimLength : 10) + "..."
 		);
 	}
 	return null;
@@ -25,6 +24,10 @@ function getExtendableTextBreakup(text, sliceAt) {
 	}
 }
 
+function getOnlyErrorText(str) {
+	return str.substring(str.indexOf(":") + 1);
+}
+
 function getDisplayAmount(amount) {
 	let displayAmt;
 	if (amount) {
@@ -43,4 +46,5 @@ module.exports = {
 	getTrimmedWalletAddress,
 	getExtendableTextBreakup,
 	getDisplayAmount,
+	getOnlyErrorText,
 };

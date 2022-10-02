@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
+import React from "react";
+// import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
+// import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DoughnutChart from "../../../Components/DoughnutChart";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
@@ -32,6 +32,8 @@ const OpportunityCardCollapsible = ({ data }) => {
 			case "7":
 				status = "Repaid";
 				break;
+			default:
+				break;
 		}
 
 		return status;
@@ -44,7 +46,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 			<div className="collapse-title flex gap-4 md:gap-8 text-center">
 				<p className="w-1/3 md:w-1/4  my-auto">{data?.opportunityName}</p>
 				<p className="md:flex gap-1 hidden items-center w-1/4  justify-center">
-					<img src={DollarImage} className="w-4" />
+					<img src={DollarImage} className="w-4" alt="dollerImage" />
 					{data?.opportunityAmount}
 				</p>
 				<p className="w-1/3 md:w-1/4  my-auto">{data?.createdOn}</p>
@@ -131,7 +133,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 									<p className="text-neutral-300">Capital requested</p>
 
 									<p className="text-lg flex gap-1">
-										<img src={DollarImage} className="w-4" />
+										<img src={DollarImage} className="w-4" alt="dollerImage" />
 										{data ? data.opportunityAmount : "--"}
 									</p>
 								</div>
@@ -151,7 +153,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 								<div className="">
 									<p className="text-neutral-300">Total raised till now</p>
 									<p className="text-lg flex gap-1">
-										<img src={DollarImage} className="w-4" />
+										<img src={DollarImage} className="w-4" alt="dollerImage" />
 										{data && data.poolDisplayBalance
 											? data.poolDisplayBalance
 											: "-- "}

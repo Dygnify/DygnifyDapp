@@ -34,7 +34,6 @@ export const getTokenTransactions = async (address, tokenAddress) => {
 	} catch (error) {
 		console.log(error);
 	}
-	console.log("*********", trxArray.length, trxArray);
 	return trxArray;
 };
 

@@ -13,6 +13,7 @@ import "../interfaces/IInvestor.sol";
 import "../interfaces/IOpportunityPool.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "./Constants.sol";
+import "../interfaces/ISeniorPool.sol";
 
 contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     DygnifyConfig public dygnifyConfig;
@@ -511,17 +512,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
         if (repaymentCounter == totalRepayments) {
             opportunityOrigination.markRepaid(opportunityID);
-            uint256 seniorPoolAmount = seniorSubpoolDetails.overdueGenerated +
-                seniorSubpoolDetails.yieldGenerated +
-                seniorSubpoolDetails.depositedAmount;
-            poolBalance -= seniorPoolAmount;
-            seniorSubpoolDetails.overdueGenerated = 0;
-            seniorSubpoolDetails.depositedAmount = 0;
-            seniorSubpoolDetails.yieldGenerated = 0;
-            usdcToken.transfer(
-                dygnifyConfig.seniorPoolAddress(),
-                seniorPoolAmount
-            );
+            ISeniorPool(dygnifyConfig.seniorPoolAddress()).withDrawFromOpportunity(false, opportunityID, 0);
         }
         repaymentCounter = repaymentCounter.add(1);
     }
@@ -614,7 +605,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         }
 
         poolBalance = poolBalance.sub(amount);
-        usdcToken.safeTransferFrom(address(this), msg.sender, amount);
+        usdcToken.transfer(msg.sender, amount);
         return amount;
     }
 
@@ -903,12 +894,21 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
         if (poolBalance > estimatedSeniorPoolAmount) {
             // uint256 remainingAmount = poolBalance - estimatedSeniorPoolAmount;
-            usdcToken.transfer(
-                dygnifyConfig.seniorPoolAddress(),
-                estimatedSeniorPoolAmount
-            );
+            ISeniorPool(dygnifyConfig.seniorPoolAddress()).withDrawFromOpportunity(true, opportunityID, estimatedSeniorPoolAmount);
+            
+            seniorSubpoolDetails.overdueGenerated = 0;
+            seniorSubpoolDetails.depositedAmount = 0;
+            seniorSubpoolDetails.yieldGenerated = 0;
+            //state updation of juniorsubpool
         } else {
-            usdcToken.transfer(dygnifyConfig.seniorPoolAddress(), poolBalance);
+            ISeniorPool(dygnifyConfig.seniorPoolAddress()).withDrawFromOpportunity(true, opportunityID, poolBalance);
+            poolBalance = 0 ;
+            seniorSubpoolDetails.overdueGenerated = 0;
+            seniorSubpoolDetails.depositedAmount = 0;
+            seniorSubpoolDetails.yieldGenerated = 0;
+            juniorSubpoolDetails.overdueGenerated = 0;
+            juniorSubpoolDetails.depositedAmount = 0;
+            juniorSubpoolDetails.yieldGenerated = 0;
         }
     }
 }

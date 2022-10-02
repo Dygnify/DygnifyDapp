@@ -10,9 +10,9 @@ function UpArrow() {
 			<path
 				d="M13.998 1L1.99805 13M13.998 1L5.45431 1.05883M13.998 1C13.998 1 13.9396 5.63887 13.9396 9.54412"
 				stroke="white"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
 			/>
 		</svg>
 	);

@@ -6,49 +6,46 @@ import LogoImage from "../../assets/logo.png";
 import Wallet from "../../uiTools/Icons/Wallet";
 import Hamburger from "../../uiTools/Icons/Hamburger";
 import Cross from "../../assets/cross.svg";
-import {
-	requestAccount,
-	isConnected,
-} from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { isConnected } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 import Dark from "../../uiTools/Icons/Dark";
 import Light from "../../uiTools/Icons/Light";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
-const Header = ({ linkStatus, darkMode, setDarkMode }) => {
+const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 	const [status, setStatus] = useState(false);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
 		msg: "",
 	});
+
 	const location = useLocation();
 	const navigate = useNavigate();
 
 	const fetchStatus = async () => {
-		console.log("test2")
 		const getStatus = await isConnected();
 
-		if (getStatus.success){
-		setStatus(true)
-		console.log("test5")
-		}else{
-		console.log(getStatus.msg);
-		setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
-		setStatus(false);
+		if (getStatus.success) {
+			setStatus(true);
+		} else {
+			console.log(getStatus.msg);
+			setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
+			setStatus(false);
 		}
-
+		setMetaStatus(getStatus.success);
 	};
 
-	 function hitRequestAccount() {
-		
+	function hitRequestAccount() {
 		fetchStatus();
-
 	}
 
-	useEffect(async () => {
-		console.log("test1")
-		await fetchStatus();
-		darkModeStatus();
+	useEffect(() => {
+		async function fetchData() {
+			darkModeStatus();
+			await fetchStatus();
+		}
+		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 
 	function darkModeStatus() {
@@ -117,7 +114,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode }) => {
 							{!linkStatus ? (
 								<Hamburger />
 							) : (
-								<img className="w-6" src={Cross} />
+								<img className="w-6" alt="Hamburger" src={Cross} />
 							)}
 						</label>
 					) : (

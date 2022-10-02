@@ -6,6 +6,7 @@ const opportunityOrigination = require("../../../artifacts/contracts/protocol/Op
 const { requestAccount, getEthAddress } = require("./commonConnectors");
 const { getOpportunity } = require("../opportunityConnectors");
 const Sentry = require("@sentry/react");
+const { getDisplayAmount } = require("../../Helpers/displayTextHelper");
 
 const sixDecimals = 6;
 
@@ -99,9 +100,30 @@ export const getTotalInvestmentOfInvestor = async () => {
 				investorAddress
 			);
 			let totalInvestment = 0;
-			let obj = await getUserSeniorPoolInvestment();
-			let seniorInvestment = obj.data.stakingAmt;
+			let totalYield = 0;
+			// get senior pool investment with yield
+			let spInvestments = await getUserSeniorPoolInvestment();
+			let seniorInvestment =
+				spInvestments.data.stakingAmt + spInvestments.data.withdrawableAmt;
 			totalInvestment += seniorInvestment;
+
+			const signer = provider.getSigner();
+			const seniorPoolContract = new ethers.Contract(
+				process.env.REACT_APP_SENIORPOOL,
+				seniorPool.abi,
+				signer
+			);
+			let sharePrice = await seniorPoolContract.sharePrice();
+			let seniorPoolSharePrice = ethers.utils.formatUnits(
+				sharePrice.toString(),
+				sixDecimals
+			);
+
+			let seniorPoolYieldEarned =
+				seniorInvestment * parseFloat(seniorPoolSharePrice);
+			totalYield += seniorPoolYieldEarned;
+
+			// get junior pool investment with yield
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
 				let { obj } = await getOpportunity(tx);
@@ -117,62 +139,8 @@ export const getTotalInvestmentOfInvestor = async () => {
 					sixDecimals
 				);
 				totalInvestment += parseFloat(stakingBal);
-			}
-			return { totalInvestment, success: true };
-		} else {
-			Sentry.captureMessage("Wallet connect error", "warning");
-			return {
-				success: false,
-				msg: "Please connect your wallet!",
-			};
-		}
-	} catch (error) {
-		Sentry.captureException(error);
-		return {
-			success: false,
-			msg: error.message,
-		};
-	}
-};
 
-export const getTotalYieldOfInvestor = async () => {
-	Sentry.captureMessage("getTotalYieldOfInvestor", "info");
-	let { result } = await getEthAddress();
-	let investorAddress = result;
-	try {
-		if (typeof window.ethereum !== "undefined") {
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			const contract = new ethers.Contract(
-				process.env.REACT_APP_INVESTOR,
-				investor.abi,
-				provider
-			);
-			const originationContract = new ethers.Contract(
-				process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
-				opportunityOrigination.abi,
-				provider
-			);
-
-			let opportunities = await contract.getOpportunityOfInvestor(
-				investorAddress
-			);
-			let totalYield = 0;
-
-			for (let i = 0; i < opportunities.length; i++) {
-				let tx = await originationContract.opportunityToId(opportunities[i]);
-				if (tx.opportunityStatus.toString() === "7") {
-					let { obj } = await getOpportunity(tx);
-
-					const poolContract = new ethers.Contract(
-						obj.opportunityPoolAddress,
-						opportunityPool.abi,
-						provider
-					);
-					let stakingBal = await poolContract.stakingBalance(investorAddress);
-					stakingBal = ethers.utils.formatUnits(
-						stakingBal.toString(),
-						sixDecimals
-					);
+				if (tx.opportunityStatus.toString() === "8") {
 					let yieldPercentage = await poolContract.juniorYieldPerecentage();
 					yieldPercentage = ethers.utils.formatUnits(
 						yieldPercentage.toString(),
@@ -180,11 +148,10 @@ export const getTotalYieldOfInvestor = async () => {
 					);
 					let opportunityYieldEarned =
 						parseFloat(stakingBal) * parseFloat(yieldPercentage);
-
 					totalYield += opportunityYieldEarned;
 				}
 			}
-			return { totalYield, success: true };
+			return { totalInvestment, totalYield, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
@@ -233,19 +200,19 @@ export const getSeniorPoolSharePrice = async () => {
 
 export const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
 	Sentry.captureMessage("getSeniorPoolDisplaySharePrice", "info");
-	let sharePrice;
-	// 10 will be the default in case we didn't get default share price
-	defaultSharePrice = defaultSharePrice ? defaultSharePrice : 10;
-
+	let sharePriceFromContract;
 	let backendSharePrice = await getSeniorPoolSharePrice();
 
 	if (backendSharePrice.success) {
-		sharePrice = parseFloat(backendSharePrice.sharePrice).toFixed(2);
-		sharePrice =
-			sharePrice > defaultSharePrice ? sharePrice : defaultSharePrice;
+		sharePriceFromContract = parseFloat(backendSharePrice.sharePrice).toFixed(
+			2
+		);
+		let sharePrice =
+			sharePriceFromContract > 0 ? sharePriceFromContract : defaultSharePrice;
 		return {
 			sharePrice: sharePrice,
 			displaySharePrice: sharePrice + "%",
+			sharePriceFromContract: sharePriceFromContract,
 			success: true,
 		};
 	} else {
@@ -295,13 +262,16 @@ export const getJuniorWithdrawableOp = async () => {
 				poolBal = ethers.utils.formatUnits(poolBal, sixDecimals);
 
 				let estimatedAPY = await poolContract.getYieldPercentage();
+				let apy = ethers.utils.formatUnits(
+					estimatedAPY[1].toString(),
+					sixDecimals
+				);
 
-				obj.estimatedAPY =
-					ethers.utils.formatUnits(estimatedAPY[1].toString(), sixDecimals) *
-						100 +
-					"%";
-				let investorWithdrawable =
-					await poolContract.getUserWithdrawableAmount();
+				obj.estimatedAPY = apy * 100 + "%";
+				if (tx.opportunityStatus.toString() === "8") {
+					obj.yieldGenerated = getDisplayAmount(apy * stakingBal);
+				}
+				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals
@@ -372,8 +342,6 @@ export const getUserSeniorPoolInvestment = async () => {
 			msg: error.message,
 		};
 	}
-
-	return undefined;
 };
 
 export const investInSeniorPool = async (amount) => {

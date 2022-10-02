@@ -125,6 +125,8 @@ async function main() {
 	await dygnifyConfig.setNumber(3, 200000);
 	// second value should be the number of months for senior pool funds lockin for investor
 	await dygnifyConfig.setNumber(4, 0);
+	// WriteOffDays
+	await dygnifyConfig.setNumber(5, 90);
 	console.log("Initial numbers configured successfully");
 
 	// Initialize contracts
@@ -146,7 +148,7 @@ async function main() {
 	// Initialize the dygnifyTreasury contract
 	await dygnifyTreasury.initialize(dygnifyConfig.address); 
 	// Initialize the dygnifyKeeper contract
-	await dygnifyKeeper.initialize(dygnifyConfig.address, 90); // 90 is threshold for loan writeoff
+	await dygnifyKeeper.initialize(dygnifyConfig.address);
 	console.log("All contracts initilaized successfully");
 }
 

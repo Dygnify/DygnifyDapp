@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import {
 	getDrawdownOpportunities,
 	getOpportunitysOf,
@@ -14,6 +13,8 @@ import { getUserWalletAddress } from "../../services/BackendConnectors/userConne
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData } from "../../services/Helpers/skynetIPFS";
+import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -22,6 +23,11 @@ const BorrowList = () => {
 	const [kycSelected, setKycSelected] = useState();
 	const [borrowReqProcess, setBorrowReqProcess] = useState(false);
 	const [processModal, setProcessModal] = useState(false);
+
+	const [drawdownId, setDrawdownId] = useState("");
+	const [processDrawdown, setProcessDrawdown] = useState();
+	const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
+	const [loadDrawdownList, setLoadDrawdownList] = useState();
 
 	const [loading, setLoading] = useState();
 	const [kycStatus, setKycStatus] = useState();
@@ -70,7 +76,7 @@ const BorrowList = () => {
 				});
 			}
 		});
-	}, []);
+	}, [loadDrawdownList]);
 
 	useEffect(() => {
 		getOpportunitysOf()
@@ -108,8 +114,8 @@ const BorrowList = () => {
 				setKycStatus(false);
 			}
 
-			getBorrowerDetails().then((res) => {
-				if (res.borrowerCid) setProfileStatus(true);
+			getJSONData(refId).then((res) => {
+				if (res) setProfileStatus(true);
 				else setProfileStatus(false);
 			});
 		} catch (error) {
@@ -166,10 +172,24 @@ const BorrowList = () => {
 							<DrawdownCard
 								key={item?.id}
 								data={item}
+								loadDrawdownList={setLoadDrawdownList}
+								setOpenProcessDrawdown={setOpenProcessDrawdown}
+								setProcessDrawdown={setProcessDrawdown}
 								setUpdateRepayment={setUpdateRepayment}
+								setDrawdownId={setDrawdownId}
 							/>
 						))}
 					</div>
+				)}
+
+				{openProcessDrawdown ? (
+					<ProcessingDrawdownModal
+						processDrawdown={processDrawdown}
+						handleDrawdown={cutProcessModal}
+						drawdownId={drawdownId}
+					/>
+				) : (
+					<></>
 				)}
 			</div>
 

@@ -18,7 +18,7 @@ import ErrorModal from "../../uiTools/Modal/ErrorModal";
 const ViewSeniorPool = () => {
 	const location = useLocation();
 	const defaultPoolName = "Senior Pool";
-	const defaultAPY = "10";
+	const defaultAPY = "7";
 	const defaultPoolAmount = 0;
 	const [transactionData, setTransactionData] = useState([]);
 	const [poolName, setPoolName] = useState(defaultPoolName);
@@ -60,6 +60,7 @@ const ViewSeniorPool = () => {
 			);
 			setKycStatus(location.state.kycStatus ? location.state.kycStatus : false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -78,6 +79,7 @@ const ViewSeniorPool = () => {
 				})
 				.finally(() => setLoading(false));
 		} else setLoading(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const loadBlockpassWidget = (address) => {
@@ -151,6 +153,7 @@ const ViewSeniorPool = () => {
 						txhash={txhash}
 						contractAddress={contractAdrress}
 						amounts={amounts}
+						setSelected={setSelected}
 					/>
 				) : (
 					<></>
@@ -158,6 +161,7 @@ const ViewSeniorPool = () => {
 				<div className=" flex items-center">
 					<div className="flex items-center gap-3 md:gap-5">
 						<img
+							alt="dygnifyimage"
 							src={DygnifyImage}
 							style={{ aspectRatio: "1/1" }}
 							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
@@ -194,7 +198,7 @@ const ViewSeniorPool = () => {
 									{estimatedAPY}%
 								</p>
 								<div className="flex gap-1 text-right">
-									<img src={DollarImage} className="w-4" />
+									<img src={DollarImage} className="w-4" alt="dygnifyimage" />
 									<p className="font-semibold text-xl">{poolAmount}</p>
 								</div>
 							</div>

@@ -103,7 +103,7 @@ const Selection = ({ onChange, value, placeholder, options, focus }) => {
 	const [darkMode, setDarkMode] = useState(true);
 
 	const defaultValue = (options, value) => {
-		return options ? options.find((options) => options.value == value) : "";
+		return options ? options.find((options) => options.value === value) : "";
 	};
 
 	useEffect(() => {

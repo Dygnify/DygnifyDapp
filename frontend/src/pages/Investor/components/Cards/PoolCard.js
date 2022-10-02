@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
+import { getJSONData } from "../../../../services/Helpers/skynetIPFS";
 
 const PoolCard = ({ data }) => {
 	const {
@@ -17,17 +17,12 @@ const PoolCard = ({ data }) => {
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		retrieveFiles(opportunityInfo, true).then((res) => {
-			if (res) {
-				let read = getBinaryFileData(res);
-				read.onloadend = function () {
-					let opJson = JSON.parse(read.result);
-					if (opJson) {
-						setCompanyName(opJson.company_name);
-					}
-				};
+		getJSONData(opportunityInfo).then((opJson) => {
+			if (opJson) {
+				setCompanyName(opJson.company_name);
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -37,6 +32,7 @@ const PoolCard = ({ data }) => {
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
 					className="w-[7rem] lg:w-[12rem]"
 					src={DygnifyImage}
+					alt=""
 				/>
 
 				<div className="lg:hidden">
@@ -55,13 +51,13 @@ const PoolCard = ({ data }) => {
 					<div className="flex gap-1 font-semibold">
 						<p>Pool Size</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
 						<p>{opportunityAmount}</p>
 					</div>
 					<div className="flex gap-1 font-semibold">
 						<p>Capital Invested</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
 						<p>{capitalInvested}</p>
 					</div>
 					<div className="flex gap-1 font-semibold">
@@ -72,8 +68,8 @@ const PoolCard = ({ data }) => {
 					<div className="flex gap-1 font-semibold">
 						<p>Yield Generated</p>
 
-						<img src={DollarImage} className="ml-auto w-[1rem]" />
-						<p>{yieldGenerated}</p>
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
+						<p>{yieldGenerated ? yieldGenerated : "--"}</p>
 					</div>
 				</div>
 			</div>

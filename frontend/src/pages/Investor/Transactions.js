@@ -13,7 +13,7 @@ const Transactions = () => {
 		msg: "",
 	});
 
-	useEffect(async () => {
+	useEffect(() => {
 		getUserWalletAddress().then((res) => {
 			if (res.success) {
 				getTokenTransactions(
@@ -61,7 +61,7 @@ const Transactions = () => {
 						<div className="my-5 flex flex-col gap-3">
 							{transactions
 								? transactions.map((item) => (
-										<TransactionsCard key={transactions.hash} data={item} />
+										<TransactionsCard key={item.hash} data={item} />
 								  ))
 								: null}
 						</div>

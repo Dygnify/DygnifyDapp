@@ -1,8 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {getTrimmedWalletAddress} from "../../../../services/Helpers/displayTextHelper";
+import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 
-const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown , tx}) => {
+const ProcessingDrawdownModal = ({
+	processDrawdown,
+	handleDrawdown,
+	drawdownId,
+}) => {
 	console.log(processDrawdown, "in fund process modal");
 
 	const navigate = useNavigate();
@@ -34,10 +38,15 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown , tx}) => {
 								{!processDrawdown ? `Yay! 🎉` : "In Progress ⏱"}
 							</p>
 
-							<p className="text-xl font-semibold mt-1">
+							<p className="text-xl font-semibold mt-1 flex justify-center items-center">
 								{processDrawdown
 									? "Drawdown is in progress"
 									: "Drawdown done successfully"}
+								{processDrawdown ? (
+									<div class="ml-2 animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></div>
+								) : (
+									<></>
+								)}
 							</p>
 						</div>
 
@@ -70,13 +79,24 @@ const ProcessingDrawdownModal = ({ processDrawdown, handleDrawdown , tx}) => {
 
 								<div className="flex flex-col gap-1 md:mx-auto">
 									<p className="text-neutral-400">Transaction ID</p>
-									<p className="font-semibold">{tx ? tx : "--"}</p>
+									<p className="font-semibold">
+										{drawdownId
+											? getTrimmedWalletAddress(drawdownId, 25)
+											: "--"}
+									</p>
 								</div>
 							</div>
 
 							<div className="flex flex-col gap-1">
 								<p className="text-neutral-400">Receipient's wallet address</p>
-								<p className="font-semibold">{window.ethereum.selectedAddress ? getTrimmedWalletAddress(window.ethereum.selectedAddress, 25) : "--"}</p>
+								<p className="font-semibold">
+									{window.ethereum.selectedAddress
+										? getTrimmedWalletAddress(
+												window.ethereum.selectedAddress,
+												25
+										  )
+										: "--"}
+								</p>
 							</div>
 						</div>
 

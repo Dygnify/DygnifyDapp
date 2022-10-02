@@ -4,7 +4,6 @@ import DueDateCard from "./Components/Cards/DueDateCard";
 import RepaymentCard from "./Components/Cards/RepaymentCard";
 import LoanFormModal from "./Components/Modal/LoanFormModal";
 import DashboardHeader from "./DashboardHeader";
-import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
 	getOpportunitiesWithDues,
@@ -21,6 +20,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 import ProcessingRepaymentModal from "./Components/Modal/ProcessingRepaymentModal";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData } from "../../services/Helpers/skynetIPFS";
 
 const Overview = () => {
 	const [drawdownList, setDrawdownList] = useState([]);
@@ -48,7 +48,9 @@ const Overview = () => {
 	const [walletAddress, setwalletAddress] = useState("");
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
-	const [tx, setTx] = useState("");
+	const [drawdownId, setDrawdownId] = useState("");
+	console.log(drawdownId.hash, "drowdownId");
+
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
@@ -79,7 +81,6 @@ const Overview = () => {
 					msg: opportunities.msg,
 				});
 			}
-
 			setLoading(false);
 		};
 		fetchData();
@@ -94,7 +95,7 @@ const Overview = () => {
 				});
 			}
 		});
-	}, [loadDrawdownList]);
+	}, [loadDrawdownList, updateRepayment]);
 
 	function sortByProperty(property) {
 		return function (a, b) {
@@ -118,9 +119,8 @@ const Overview = () => {
 				setKycStatus(false);
 			}
 
-			getBorrowerDetails().then((res) => {
-				console.log(res.borrowerCid);
-				if (res.borrowerCid) setProfileStatus(true);
+			getJSONData(refId).then((res) => {
+				if (res) setProfileStatus(true);
 				else {
 					setProfileStatus(false);
 				}
@@ -157,8 +157,9 @@ const Overview = () => {
 					});
 				}
 			}
-			fetchData();
 		};
+		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loadRepaymentList, updateRepayment]);
 
 	useEffect(() => {
@@ -405,11 +406,11 @@ const Overview = () => {
 								<DrawdownCard
 									key={item.id}
 									data={item}
-									setTx={setTx}
 									loadDrawdownList={setLoadDrawdownList}
 									setOpenProcessDrawdown={setOpenProcessDrawdown}
 									setProcessDrawdown={setProcessDrawdown}
 									setUpdateRepayment={setUpdateRepayment}
+									setDrawdownId={setDrawdownId}
 								/>
 							))}
 						</div>
@@ -419,7 +420,7 @@ const Overview = () => {
 						<ProcessingDrawdownModal
 							processDrawdown={processDrawdown}
 							handleDrawdown={cutProcessModal}
-							tx={tx}
+							drawdownId={drawdownId}
 						/>
 					) : (
 						<></>

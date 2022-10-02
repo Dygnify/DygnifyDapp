@@ -75,6 +75,7 @@ export default function Final({
 			LoanPurpose();
 			DocumentDescription();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (!checked && checkBox) {
@@ -124,7 +125,7 @@ export default function Final({
 								<span className=" text-[#A0ABBB]"> Loan amount</span>
 								<span className="text-black dark:text-[#fff] text-right flex gap-1">
 									{formData.loan_amount ? (
-										<img src={Doller} className="w-5" />
+										<img src={Doller} className="w-5" alt="dollerimage" />
 									) : (
 										""
 									)}
@@ -157,19 +158,19 @@ export default function Final({
 							{loanPurpose.isSliced ? (
 								<div>
 									{loanPurpose.firstText}
-									<a
+									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
 										onClick={() => setExpand(true)}
 									>
 										{expand ? null : "... view more"}
-									</a>
+									</span>
 									{expand ? <div>{loanPurpose.secondText}</div> : null}
-									<a
+									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
 										onClick={() => setExpand(false)}
 									>
 										{expand ? "view less" : null}
-									</a>
+									</span>
 								</div>
 							) : (
 								<div>{loanPurpose.firstText}</div>
@@ -207,19 +208,19 @@ export default function Final({
 							{documentDescription.isSliced ? (
 								<div>
 									{documentDescription.firstText}
-									<a
+									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
 										onClick={() => setExpand2(true)}
 									>
 										{expand2 ? null : "... view more"}
-									</a>
+									</span>
 									{expand2 ? <div>{documentDescription.secondText}</div> : null}
-									<a
+									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
 										onClick={() => setExpand2(false)}
 									>
 										{expand2 ? "view less" : null}
-									</a>
+									</span>
 								</div>
 							) : (
 								<div>{documentDescription.firstText}</div>
@@ -240,14 +241,14 @@ export default function Final({
 				/>
 				&nbsp;
 				<label htmlFor="terms"> I agree to all </label>
-				<a
+				<span
 					onClick={() => {
 						window.open("https://www.dygnify.com/privacy-policy", "_blank");
 					}}
 					className=" underline decoration-1 underline-offset-1 cursor-pointer text-[#6047FF]"
 				>
 					terms and condition
-				</a>
+				</span>
 			</div>
 
 			<div className="flex flex-col-reverse gap-10  md:gap-0 justify-center md:justify-around md:flex-row md:items-center  w-full items-center content-center">

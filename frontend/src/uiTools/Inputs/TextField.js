@@ -15,8 +15,8 @@ const TextField = ({
 
 	return text ? (
 		<div className={`${className}`}>
-			<label class="label text-lg">
-				<span class="text-black dark:text-white text-lg">{label}</span>
+			<label className="label text-lg">
+				<span className="text-black dark:text-white text-lg">{label}</span>
 			</label>
 			<div
 				className={`input input-bordered items-center flex justify-between bg-lightmode-200 dark:bg-[#24272F] 
@@ -53,8 +53,8 @@ const TextField = ({
 		</div>
 	) : (
 		<div className={`${className}`}>
-			<label class="label text-lg">
-				<span class="text-black dark:text-white">{label}</span>
+			<label className="label text-lg">
+				<span className="text-black dark:text-white">{label}</span>
 			</label>
 			<input
 				onChange={onChange}

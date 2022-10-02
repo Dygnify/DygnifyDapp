@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
 import OverviewIcon from "../../uiTools/Icons/OverviewIcon";
 import BorIcon from "../../uiTools/Icons/BorIcon";
-import TransactionIcon from "../../uiTools/Icons/TransactionIcon";
+// import TransactionIcon from "../../uiTools/Icons/TransactionIcon";
 import UnderIcon from "../../uiTools/Icons/UnderIcon";
 import ProfileIcon from "../../uiTools/Icons/ProfileIcon";
 
@@ -41,7 +41,7 @@ const BorrowerDashboard = () => {
 							<Outlet></Outlet>
 						</div>
 					</div>
-					<div className="drawer-side border-r border-darkmode-800">
+					<div className="drawer-side border-r border-neutral-300 dark:border-darkmode-800">
 						<label
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"

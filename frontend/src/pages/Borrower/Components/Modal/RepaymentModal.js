@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { repayment } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
-import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
+// import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import approve from "../../../../services/BackendConnectors/approve";
@@ -43,7 +43,8 @@ const RepaymentModal = ({
 			}
 		});
 		getAllowance();
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading]);
 
 	async function getAllowance() {
 		const newdata = await allowance(
@@ -60,7 +61,7 @@ const RepaymentModal = ({
 			setIsInvest(false);
 		}
 
-		setApprovedvalue(newdata);
+		setApprovedvalue(data.repaymentAmount);
 	}
 	async function onRepayment() {
 		setOpenProcessRepayment(true);
@@ -90,7 +91,7 @@ const RepaymentModal = ({
 						<h3 className="font-semibold text-xl">Repayment</h3>
 
 						<label
-							for="repayment-modal"
+							htmlFor="repayment-modal"
 							className="hover:text-primary-600 text-xl"
 							onClick={() => handleRepayment()}
 						>
@@ -109,7 +110,11 @@ const RepaymentModal = ({
 						<div className="py-4 px-3 flex gap-1 bg-[#D0D5DD] dark:bg-darkmode-500 rounded-md ">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
 
-							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<img
+								src={DollarImage}
+								className="ml-auto w-[1rem]"
+								alt="walletBal"
+							/>
 							<p className="font-semibold text-[1.125rem]">{walletBal}</p>
 						</div>
 					</div>
@@ -129,7 +134,11 @@ const RepaymentModal = ({
 								<p className="flex justify-start">Due Amount</p>
 							)}
 
-							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<img
+								src={DollarImage}
+								className="ml-auto w-[1rem]"
+								alt="DollarImage"
+							/>
 							<p className="font-semibold text-[1.125rem]">
 								{data?.repaymentDisplayAmount}
 							</p>
@@ -150,7 +159,7 @@ const RepaymentModal = ({
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none `}
-							htmlFor={isApproved ? "RepaymentProcessModal" : ""}
+							// htmlFor={isApproved ? "RepaymentProcessModal" : ""}
 							onClick={() => {
 								if (isApproved) {
 									setLoading(true);

@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
@@ -192,9 +192,9 @@ const ProcessingRepaymentModal = ({
 												process.env.REACT_APP_TOKEN_NAME
 										  } of pool ${poolName}`}
 									<span
-										class={
+										className={
 											processRepayment
-												? "animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full p-2"
+												? "ml-1 animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full p-2"
 												: ""
 										}
 									></span>
@@ -240,7 +240,7 @@ const ProcessingRepaymentModal = ({
 										navigate("/borrowerDashboard/transaction");
 									}}
 								>
-									<p>View Transaction</p>
+									View Transaction
 								</span>
 							</p>
 						</div>

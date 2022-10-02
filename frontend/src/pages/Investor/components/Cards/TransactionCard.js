@@ -30,6 +30,7 @@ const TransactionCard = ({ data, address }) => {
 			setAmount(getDisplayAmount(amt));
 			setDate(convertDate(data.timeStamp));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
 		<div className="bg-neutral-300 dark:bg-darkmode-800 flex p-3 gap-4 rounded-lg justify-start">
@@ -40,10 +41,10 @@ const TransactionCard = ({ data, address }) => {
 			<p className=" w-1/3 md:w-1/4 flex justify-end pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
 				{amount ? (
 					<>
-						<div className="flex gap-1">
-							<img src={DollarImage} className="w-4" />
+						<span className="flex gap-1">
+							<img src={DollarImage} className="w-4" alt="" />
 							{isWithdraw ? "-" : "+"} {amount}
-						</div>
+						</span>
 					</>
 				) : (
 					""

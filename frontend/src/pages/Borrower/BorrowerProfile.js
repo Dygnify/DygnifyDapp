@@ -1,13 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import DocumentCard from "../../uiTools/Card/DocumentCard";
 import { useNavigate, useLocation } from "react-router-dom";
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
-import {
-	getBinaryFileData,
-	getDataURLFromFile,
-} from "../../services/Helpers/fileHelper";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
-import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 import Twitter from "../SVGIcons/Twitter";
@@ -20,6 +14,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData, getFileUrl } from "../../services/Helpers/skynetIPFS";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -108,42 +103,22 @@ const BorrowerProfile = () => {
 		});
 
 		const fetchData = async () => {
-			console.log("#######");
-			getBorrowerDetails()
-				.then((res) => {
-					if (res.success) {
-						if (!res.borrowerCid) {
-							setLoading(false);
-							return setProfileStatus(false);
+			getUserWalletAddress().then((res) => {
+				if (res.success) {
+					getJSONData(res.address).then((data) => {
+						if (data) {
+							loadBorrowerData(data);
+							setborrowerJson(data);
+							setHaskey(data ? "businessLicFile" in data : false);
+						} else {
+							setProfileStatus(false);
 						}
-						retrieveFiles(res.borrowerCid, true)
-							.then((data) => {
-								if (data) {
-									let read = getBinaryFileData(data);
-									read.onloadend = function () {
-										let brJson = JSON.parse(read.result);
-										loadBorrowerData(brJson);
-										setborrowerJson(brJson);
-										setHaskey(brJson ? "businessLicFile" in brJson : false);
-										console.log(brJson);
-									};
-								} else {
-									setLoading(false);
-								}
-							})
-							.catch((e) => {
-								console.log(e);
-								setLoading(false);
-							});
-					} else {
-						console.log(res.msg);
-						setErrormsg({ status: res.success, msg: res.msg });
-					}
-				})
-				.catch((e) => {
-					console.log(e);
+						setLoading(false);
+					});
+				} else {
 					setLoading(false);
-				});
+				}
+			});
 		};
 
 		if (!location.state) fetchData();
@@ -152,12 +127,9 @@ const BorrowerProfile = () => {
 	const fetchBorrowerLogo = (imgcid) => {
 		if (imgcid) {
 			try {
-				retrieveFiles(imgcid, true).then((imgFile) => {
+				getFileUrl(imgcid).then((imgFile) => {
 					if (imgFile) {
-						let read = getDataURLFromFile(imgFile);
-						read.onloadend = function () {
-							setLogoImgSrc(read.result);
-						};
+						setLogoImgSrc(imgFile);
 					} else {
 						// set the empty logo image
 					}
@@ -227,9 +199,9 @@ const BorrowerProfile = () => {
 
 	const redirectToURl = (event) => {
 		let url;
-		console.log(event);
+		let platform = event.target.id;
 
-		switch (event.target.id) {
+		switch (platform) {
 			case "twitter":
 				url = twitter;
 				break;
@@ -248,6 +220,7 @@ const BorrowerProfile = () => {
 			if (position === -1) {
 				url = protocol + url;
 			}
+
 			window.open(url, "_blank");
 		}
 	};
@@ -343,26 +316,30 @@ const BorrowerProfile = () => {
 								<h2 className="text-2xl font-semibold">Bio</h2>
 
 								<div className=" flex gap-1 md:gap-3 ">
-									{!twitter ? (
+									{twitter ? (
 										<button
 											id="twitter"
 											onClick={redirectToURl}
 											className="border border-neutral-500 flex gap-1 items-center  px-2 rounded-2xl"
 										>
 											<Twitter />
-											<p className="text-xs  md:text-base">twitter</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												twitter
+											</p>
 										</button>
 									) : (
 										<></>
 									)}
-									{!linkedin ? (
+									{linkedin ? (
 										<button
 											id="linkedin"
 											onClick={redirectToURl}
 											className="border border-neutral-500 flex gap-1 items-center px-2 rounded-2xl"
 										>
 											<LinkedIn />
-											<p className="text-xs md:text-base">linkedIn</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												linkedIn
+											</p>
 										</button>
 									) : (
 										<></>
@@ -371,10 +348,12 @@ const BorrowerProfile = () => {
 										<button
 											id="email"
 											onClick={redirectForEmail}
-											className="border border-neutral-500 flex gap-1 items-center  px-2 rounded-2xl"
+											className="CreateProfileIcon border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Email />
-											<p className="text-xs md:text-base">email</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												email
+											</p>
 										</button>
 									) : (
 										<></>
@@ -383,10 +362,12 @@ const BorrowerProfile = () => {
 										<button
 											id="website"
 											onClick={redirectToURl}
-											className="border border-neutral-500 flex gap-1 items-center px-2 rounded-2xl"
+											className="border CreateProfileIcon  border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Website />
-											<p className="text-xs md:text-base">website</p>
+											<p className="text-xs md:text-base pointer-events-none">
+												website
+											</p>
 										</button>
 									) : (
 										<></>

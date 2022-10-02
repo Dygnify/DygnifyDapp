@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import InvestModal from "../Investor/components/Modal/InvestModal";
 import TransactionCard from "./components/Cards/TransactionCard";
@@ -10,20 +10,16 @@ import axiosHttpService from "../../services/axioscall";
 import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import LinkedIn from "../SVGIcons/LinkedIn";
-import {
-	getBinaryFileData,
-	getDataURLFromFile,
-} from "../../services/Helpers/fileHelper";
-import { retrieveFiles } from "../../services/Helpers/web3storageIPFS";
 import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
 import Loader from "../../uiTools/Loading/Loader";
 import ProcessingFundsModal from "./components/Modal/ProcessingFundsModal";
 import DygnifyImage from "../../assets/Dygnify_Image.png";
-import UpArrow from "../SVGIcons/UpArrow";
+// import UpArrow from "../SVGIcons/UpArrow";
 import DollarImage from "../../assets/Dollar-icon.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
+import { getJSONData, getFileUrl } from "../../services/Helpers/skynetIPFS";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -32,7 +28,6 @@ const ViewPool = () => {
 	const [expand, setExpand] = useState(false);
 	const [companyDetails, setCompanyDetails] = useState();
 	const [kycStatus, setKycStatus] = useState();
-	const [error, setError] = useState();
 	const [poolBal, setPoolBal] = useState();
 	const [info, setInfo] = useState([]);
 	const [info2, setInfo2] = useState([]);
@@ -99,11 +94,11 @@ const ViewPool = () => {
 			);
 			setIsFullStatus(location.state.isFull ? location.state.isFull : false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		if (poolData) {
-			console.log("************", poolData);
 			loadInfo();
 			console.log(poolData);
 			// get pool balance
@@ -120,37 +115,34 @@ const ViewPool = () => {
 			});
 
 			// fetch the opportunity details from IPFS
-			retrieveFiles(poolData.opportunityInfo, true).then((res) => {
-				if (res) {
-					let read = getBinaryFileData(res);
-					read.onloadend = function () {
-						let opJson = JSON.parse(read.result);
-						if (opJson) {
-							setCompanyDetails(opJson.companyDetails);
-							getCompanyLogo(
-								opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-							);
-							// get the loan purpose
-							const { isSliced, firstText, secondText } =
-								getExtendableTextBreakup(opJson.loan_purpose, 200);
+			getJSONData(poolData.opportunityInfo).then((opJson) => {
+				if (opJson) {
+					setCompanyDetails(opJson.companyDetails);
+					getCompanyLogo(
+						opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+					);
+					// get the loan purpose
+					const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+						opJson.loan_purpose,
+						200
+					);
 
-							if (isSliced) {
-								setLoanPurpose({
-									firstText: firstText,
-									secondText: secondText,
-									isSliced: isSliced,
-								});
-							} else {
-								setLoanPurpose({
-									firstText: firstText,
-									isSliced: isSliced,
-								});
-							}
-						}
-					};
+					if (isSliced) {
+						setLoanPurpose({
+							firstText: firstText,
+							secondText: secondText,
+							isSliced: isSliced,
+						});
+					} else {
+						setLoanPurpose({
+							firstText: firstText,
+							isSliced: isSliced,
+						});
+					}
 				}
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [poolData, invest]);
 
 	useEffect(() => {
@@ -216,6 +208,8 @@ const ViewPool = () => {
 			case "website":
 				url = poolData.website;
 				break;
+			default:
+				break;
 		}
 
 		if (url) {
@@ -234,13 +228,9 @@ const ViewPool = () => {
 			return;
 		}
 		try {
-			retrieveFiles(cid, true).then((res) => {
+			getFileUrl(cid).then((res) => {
 				if (res) {
-					let read = getDataURLFromFile(res);
-					read.onloadend = function () {
-						setLogoImgSrc(read.result);
-						console.log(read.result);
-					};
+					setLogoImgSrc(res);
 				}
 			});
 		} catch (error) {
@@ -289,6 +279,7 @@ const ViewPool = () => {
 				<div className=" flex items-center">
 					<div className="flex items-center gap-3 md:gap-5">
 						<img
+							alt="dygnigyImage"
 							src={DygnifyImage}
 							style={{ aspectRatio: "1/1" }}
 							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
@@ -360,19 +351,19 @@ const ViewPool = () => {
 						{loanPurpose.isSliced ? (
 							<div className="text-neutral-700 dark:text-neutral-200">
 								{loanPurpose.firstText}
-								<a
+								<span
 									onClick={() => setExpand(true)}
 									className="cursor-pointer font-semibold"
 								>
 									{expand ? null : " ...view more"}
-								</a>
+								</span>
 								{expand ? <span>{loanPurpose.secondText}</span> : null}
-								<a
+								<span
 									onClick={() => setExpand(false)}
 									className="cursor-pointer font-semibold"
 								>
 									{expand ? " view less" : null}
-								</a>
+								</span>
 							</div>
 						) : (
 							<div className="text-neutral-700 dark:text-neutral-200">
@@ -399,11 +390,11 @@ const ViewPool = () => {
 								</p>
 
 								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
-									<img src={DollarImage} className="w-4" />
+									<img src={DollarImage} className="w-4" alt="Dollar" />
 									{poolData ? poolData.opportunityAmount : "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
-									<img src={DollarImage} className="w-4" />
+									<img src={DollarImage} className="w-4" alt="DollarImage" />
 									{poolBal ? poolBal : "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1">
@@ -551,6 +542,7 @@ const ViewPool = () => {
 						<div className=" flex items-center">
 							<div className="flex items-center gap-3 md:gap-5">
 								<img
+									alt="logo"
 									src={logoImgSrc}
 									style={{ aspectRatio: "1/1" }}
 									className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"

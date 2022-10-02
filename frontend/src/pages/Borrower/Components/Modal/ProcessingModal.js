@@ -8,9 +8,6 @@ const ProcessingRequestModal = ({
 	handleDrawdown,
 	processModal,
 }) => {
-	const data = {
-		success: false,
-	};
 	console.log(borrowReqProcess, "inrequest modal");
 	const navigate = useNavigate();
 	return (
@@ -20,6 +17,7 @@ const ProcessingRequestModal = ({
 				id="ProcessModal"
 				className="modal-toggle"
 				checked={processModal}
+				readOnly
 			/>
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg px-4">
 				<div className="bg-white rounded-2xl dark:bg-darkmode-800 modal-box w-[100%] sm:w-[75%] md:w-[55%] lg:w-[45%]  xl:w-[35%] 2xl:w-[25%]  p-5">
@@ -70,7 +68,7 @@ const ProcessingRequestModal = ({
 										<p className="text-warning-400 font-semibold justify-center flex">
 											Processing
 										</p>
-										<span class="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></span>
+										<span className="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></span>
 									</div>
 								) : (
 									<p className="text-success-500 font-semibold justify-center flex">
@@ -85,7 +83,7 @@ const ProcessingRequestModal = ({
 									<p className="text-warning-400 font-semibold justify-center flex">
 										Processing
 									</p>
-									<span class="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></span>
+									<span className="animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full"></span>
 								</div>
 							) : (
 								<p className="text-success-500 font-semibold justify-center flex">

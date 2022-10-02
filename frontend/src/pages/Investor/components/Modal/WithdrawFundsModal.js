@@ -107,6 +107,7 @@ const WithdrawFundsModal = ({
 				id="WithdrawModal"
 				className="modal-toggle"
 				checked={showModal}
+				readOnly
 			/>
 			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
 				<div className="bg-neutral-50 dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
@@ -114,7 +115,6 @@ const WithdrawFundsModal = ({
 						<h3 className="font-semibold text-xl">Withdraw Funds</h3>
 
 						<button
-							for="WithdrawModal"
 							className="hover:text-primary-600 text-xl"
 							onClick={() => setShowModal(false)}
 						>
@@ -132,7 +132,7 @@ const WithdrawFundsModal = ({
 
 						<div className="py-4 px-3 flex gap-1 bg-neutral-200 dark:bg-darkmode-500 rounded-md ">
 							<p className="font-semibold text-[1.125rem]">Total Balance</p>
-							<img src={DollarImage} className="ml-auto w-[1rem]" />
+							<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
 							<p className="font-semibold text-[1.125rem]">{userWalletBal}</p>
 						</div>
 					</div>
@@ -146,7 +146,7 @@ const WithdrawFundsModal = ({
 						<div className="flex gap-1 font-semibold">
 							<p>Amount Invested</p>
 
-							<img src={DollarImage} className="w-4 ml-auto" />
+							<img alt="" src={DollarImage} className="w-4 ml-auto" />
 							<p>{data?.capitalInvested}</p>
 						</div>
 
@@ -157,7 +157,7 @@ const WithdrawFundsModal = ({
 						<div className="flex gap-1 font-semibold">
 							<p>Available for withdrawal</p>
 
-							<img src={DollarImage} className="w-4 ml-auto" />
+							<img alt="" src={DollarImage} className="w-4 ml-auto" />
 							<p>{data?.withdrawableAmt}</p>
 						</div>
 					</div>
@@ -194,7 +194,7 @@ const WithdrawFundsModal = ({
 						<GradientBtnForModal
 							htmlFor="WithdrawProcessModal"
 							className="w-full"
-							disable={true}
+							disable="true"
 							onClick={() => {
 								data?.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
 							}}

@@ -14,6 +14,11 @@ import {
 	getAllUnderReviewOpportunities,
 	getAllActiveOpportunities,
 } from "../services/BackendConnectors/opportunityConnectors";
+import {
+	uploadFile,
+	openFileInNewTab,
+	storeJSONData,
+} from "../services/Helpers/skynetIPFS";
 const tokenAddress = "0x7d7FE8dbb260a213322b0dEE20cB1ca2d313EBfE";
 const NFT_minter = "0xbEfC9040e1cA8B224318e4f9BcE9E3e928471D37";
 
@@ -59,6 +64,8 @@ function Token() {
 	const [opportunityIdForInvest, setOpportunityIdForInvest] = useState("");
 	const [underReviewOp, setUnderReviewOp] = useState([]);
 	const [activeOpportunityList, setActiveOpportunityList] = useState([]);
+	const [user, setuser] = useState("");
+	const [balance, setBalance] = useState("");
 
 	useEffect(async () => {
 		let op = await getAllUnderReviewOpportunities();
@@ -131,6 +138,21 @@ function Token() {
 			);
 			const transaction = await contract2.approve(usdcReceiver, amount);
 			await transaction.wait();
+		}
+	}
+
+	async function balanceOf() {
+		if (typeof window.ethereum !== "undefined") {
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const contract2 = new ethers.Contract(
+				process.env.REACT_APP_TEST_USDCTOKEN,
+				dygToken.abi,
+				provider
+			);
+			let amount = await contract2.balanceOf(user);
+			amount = ethers.utils.formatUnits(amount, 6);
+			setBalance(amount);
+			return amount;
 		}
 	}
 
@@ -279,22 +301,33 @@ function Token() {
 		return new Web3Storage({ token: process.env.REACT_APP_WEB3STORAGE_APIKEY });
 	}
 
-	async function storeFiles(files) {
+	// On file upload (click the upload button)
+	async function onFileUpload() {
 		try {
-			const client = makeStorageClient();
-			const cid = await client.put(files);
-			console.log("stored files with cid:", cid);
-			return cid;
+			console.log("Upload called");
+			await uploadFile(selectedFile);
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
-	// On file upload (click the upload button)
-	async function onFileUpload() {
+	async function onFileOpen() {
 		try {
-			console.log("Upload called");
-			await storeFiles(selectedFile);
+			console.log("Open file called");
+			await openFileInNewTab();
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	async function onSaveSeniorPoolData() {
+		try {
+			await storeJSONData("Senior_Pool_Data", {
+				poolName: "Senior Pool",
+				poolDescription:
+					"A brilliant option to earn automatically diversified yields wherein the capital is distributed among the open pools backed by real world assets.The pool comprises of various borrowers who have been verified and vetted by the protocol. Each fund is unique in its own way and the details of the same are provided below.\n\nHighlights :\n1. Risk is automatically distributed  by deploying  your capital in various open borrower pools letting you earn passive yield.\n2. The borrowings are covered by a minimum of 110% of security in the form of physical real world assets.\n3. Stable monthly returns on the investment uncorelated to the digital asset market.",
+				estimatedAPY: "7",
+			});
 		} catch (error) {
 			console.log(error);
 		}
@@ -594,6 +627,38 @@ function Token() {
 					onClick={() => approveUSDCToken(usdcReceiver)}
 				>
 					Approve
+				</button>
+
+				<br />
+				<input
+					type="text"
+					onChange={(event) => setuser(event.target.value)}
+					placeholder="Address"
+				/>
+				<button
+					className="bg-[red] m-[10px] text-white p-[4px]"
+					onClick={() => balanceOf()}
+				>
+					balanceOf
+				</button>
+				<h2>Balance : {balance} USDC </h2>
+				<br />
+				<input
+					hidden
+					type="file"
+					onChange={(event) => {
+						setSelectedFile(event.target.files[0]);
+						console.log(event);
+					}}
+				/>
+				<button hidden onClick={onFileUpload}>
+					Upload
+				</button>
+				<button hidden onClick={onFileOpen}>
+					Open File
+				</button>
+				<button hidden onClick={onSaveSeniorPoolData}>
+					Save Senior pool
 				</button>
 			</header>
 		</div>

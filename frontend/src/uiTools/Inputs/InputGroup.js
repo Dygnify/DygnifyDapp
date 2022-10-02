@@ -1,6 +1,5 @@
 import React from "react";
 import FileUploader from "../../pages/Components/FileUploader";
-import FileFields from "./FileFields";
 import TextField from "./TextField";
 
 const InputGroup = ({
