@@ -81,7 +81,6 @@ const Overview = () => {
 					msg: opportunities.msg,
 				});
 			}
-			setLoading(false);
 		};
 		fetchData();
 		getUserWalletAddress().then((res) => {
@@ -120,8 +119,9 @@ const Overview = () => {
 			}
 
 			getJSONData(refId).then((res) => {
-				if (res) setProfileStatus(true);
-				else {
+				if (res) {
+					setProfileStatus(true);
+				} else {
 					setProfileStatus(false);
 				}
 
