@@ -19,6 +19,9 @@ const EditBorrowerProfileNew = () => {
 	const [loading, setLoading] = useState();
 	const [error, setError] = useState();
 	const [logoError, setLogoError] = useState(false);
+	const [addFileError, setAddFileError] = useState();
+	const [idFileError, setIdFileError] = useState();
+	const [incoFileError, setIncoFileError] = useState();
 
 	const [borrowerAddress, setBorrowerAddress] = useState();
 	const [logoFile, setLogoFile] = useState();
@@ -138,11 +141,16 @@ const EditBorrowerProfileNew = () => {
 
 	const validations = () => {
 		if (!logoFile && !location.state) setLogoError(true);
+
+		if (!addFileError && !location.state) setAddFileError(true);
+		if (!incoFileError && !location.state) setIncoFileError(true);
+		if (!idFileError && !location.state) setIdFileError(true);
 		if (
 			!(
 				businessIdentityFiles &&
 				businessIncorporationFiles &&
-				businessAddressFiles
+				businessAddressFiles &&
+				logoError
 			) &&
 			!location.state
 		) {
@@ -315,7 +323,7 @@ const EditBorrowerProfileNew = () => {
 			}
 			checkEdited(borrowerJsonData);
 
-			if (allowSubmit && !error && !logoError) {
+			if (allowSubmit && !error) {
 				console.log("Inside allow");
 				await storeJSONData(borrowerAddress, borrowerJsonData);
 			}
@@ -427,7 +435,7 @@ const EditBorrowerProfileNew = () => {
 										onChange={onBusinessIdentityFilesUpload}
 										onBlur={handleBlur}
 										error={
-											error
+											idFileError
 												? "File required"
 												: touched.bizIdFileName && errors.bizIdFileName
 												? errors.bizIdFileName
@@ -447,7 +455,7 @@ const EditBorrowerProfileNew = () => {
 										onChange={onBusinessAddressFilesUpload}
 										onBlur={handleBlur}
 										error={
-											error
+											addFileError
 												? "File required"
 												: touched.bizAddFileName && errors.bizAddFileName
 												? errors.bizAddFileName
@@ -467,7 +475,7 @@ const EditBorrowerProfileNew = () => {
 										onChange={onBusinessIncorporationFilesUpload}
 										onBlur={handleBlur}
 										error={
-											error
+											incoFileError
 												? "File required"
 												: touched.bizIncoFileName && errors.bizIncoFileName
 												? errors.bizIncoFileName
@@ -506,7 +514,11 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											value={values.website}
 											onBlur={handleBlur}
-											error={errors.website}
+											error={
+												touched.website && errors.website
+													? errors.website
+													: null
+											}
 										/>
 										<TextField
 											name="email"
@@ -516,7 +528,9 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											onBlur={handleBlur}
 											value={values.email}
-											error={errors.email}
+											error={
+												touched.email && errors.email ? errors.email : null
+											}
 										/>
 										<TextField
 											name="twitter"

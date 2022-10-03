@@ -49,7 +49,6 @@ const Overview = () => {
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
 	const [drawdownId, setDrawdownId] = useState("");
-	console.log(drawdownId.hash, "drowdownId");
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
@@ -63,7 +62,6 @@ const Overview = () => {
 	};
 
 	const cutProcessModal = () => {
-		console.log("kadl");
 		setSelected(null);
 		setProcessModal(null);
 		setOpenProcessDrawdown(null);
@@ -75,7 +73,6 @@ const Overview = () => {
 			if (opportunities.success) {
 				setDrawdownList(opportunities.opportunities);
 			} else {
-				console.log(opportunities.msg);
 				setErrormsg({
 					status: !opportunities.success,
 					msg: opportunities.msg,
@@ -147,8 +144,6 @@ const Overview = () => {
 						getDisplayAmount(opportunities.opportunities[0]?.repaymentAmount)
 					);
 					setNextDueDate(opportunities.opportunities[0]?.nextDueDate);
-
-					console.log(repaymentList, nextDueAmount);
 				} else {
 					console.log(opportunities.msg);
 					setErrormsg({
