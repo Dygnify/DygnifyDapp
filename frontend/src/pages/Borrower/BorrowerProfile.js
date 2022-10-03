@@ -40,7 +40,7 @@ const BorrowerProfile = () => {
 		status: false,
 		msg: "",
 	});
-	const [profileErrorMsg, setProfileErrorMsg] = useState();
+
 	const brJson = location.state;
 
 	useEffect(() => {
@@ -312,7 +312,6 @@ const BorrowerProfile = () => {
 							)}
 
 							<div className=" font-semibold flex flex-col md:flex-row md:justify-between gap-2 mt-10">
-								{/* <h2 className="text-[1.1875rem] md:text-2xl">Socials</h2> */}
 								<h2 className="text-2xl font-semibold">Bio</h2>
 
 								<div className=" flex gap-1 md:gap-3 ">
