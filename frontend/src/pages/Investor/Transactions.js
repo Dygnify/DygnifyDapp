@@ -12,7 +12,7 @@ const Transactions = () => {
 		status: false,
 		msg: "",
 	});
-
+	console.log("5566565");
 	useEffect(() => {
 		getUserWalletAddress().then((res) => {
 			if (res.success) {

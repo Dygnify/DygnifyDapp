@@ -24,8 +24,6 @@ const InvestorOverview = () => {
 	const [seniorPool, setSeniorPool] = useState();
 	const [juniorPool, setJuniorPool] = useState([]);
 	const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
-
-	// loading
 	const [loading, setLoading] = useState(true);
 	const [seniorPoolLoading, setSeniorPoolLoading] = useState(true);
 	const [juniorPoolLoading, setJuniorPoolLoading] = useState(true);
@@ -74,9 +72,8 @@ const InvestorOverview = () => {
 								seniorPoolInvestment.stakingAmt +
 								seniorPoolInvestment.withdrawableAmt;
 
-							seniorInvestmentData.capitalInvested = getDisplayAmount(
-								totalInvestment
-							);
+							seniorInvestmentData.capitalInvested =
+								getDisplayAmount(totalInvestment);
 						} else {
 							setErrormsg({
 								status: !res.success,

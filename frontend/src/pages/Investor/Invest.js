@@ -6,7 +6,6 @@ import {
 	getUserWalletAddress,
 	getWalletBal,
 } from "../../services/BackendConnectors/userConnectors/commonConnectors";
-import { getBinaryFileData } from "../../services/Helpers/fileHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
