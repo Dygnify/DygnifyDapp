@@ -13,10 +13,12 @@ import {
 import { getUserWalletAddress } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 
 const LoanFormModal = ({
+	setSelected,
 	handleForm,
 	setBorrowReqProcess,
 	setProcessModal,
 	setUpdateRepayment,
+	setErrormsg,
 }) => {
 	const [formData, setFormData] = useState({
 		loan_name: "",
@@ -30,10 +32,6 @@ const LoanFormModal = ({
 	const [currentStep, setCurrentStep] = useState(1);
 	const [brJson, setBrJson] = useState();
 	const [checkBox, setCheckBox] = useState(false);
-	const [errormsg, setErrormsg] = useState({
-		status: false,
-		msg: "",
-	});
 
 	useEffect(async () => {
 		getUserWalletAddress().then((res) => {
@@ -93,6 +91,7 @@ const LoanFormModal = ({
 
 	const finalSubmit = async (data) => {
 		setProcessModal(true);
+		setSelected(false);
 		setBorrowReqProcess(true);
 		let {
 			loan_name,
@@ -143,13 +142,13 @@ const LoanFormModal = ({
 		const res = await createOpportunity(loanDetails);
 		if (res.success) {
 			console.log(res.success);
+			setBorrowReqProcess(false);
 		} else {
 			console.log(res.msg);
+			setProcessModal(false);
 			setErrormsg({ status: !res.success, msg: res.msg });
 		}
-
 		setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
-		setBorrowReqProcess(false);
 		setUpdateRepayment(Math.random());
 	};
 
@@ -178,8 +177,9 @@ const LoanFormModal = ({
 		<div>
 			<input type="checkbox" id="loanForm-modal" class="modal-toggle" />
 			<div
-				class="modal block backdrop-blur-xl backdrop-opacity-100 md:flex"
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
+				// class="modal block backdrop-blur-xl backdrop-opacity-100 md:flex"
+				// style={{ backdropFilter: "brightness(40%) blur(8px)" }}
+				className="modal block backdrop-filter backdrop-brightness-[100%] backdrop-opacity-100 dark:backdrop-brightness-[40%] backdrop-blur-xl md:flex"
 			>
 				<div className="w-screen h-full modal-box max-w-full max-h-full rounded-none md:h-auto md:w-1/2 md:max-w-4xl bg-white dark:bg-[#14171F]   md:rounded-[16px]">
 					<div className="py-5 md:-mt-2 mb-5 md:py-0 flex justify-between items-center text-center md:border-b-2 md:border-b-[#292C33] -mx-5">
@@ -199,6 +199,7 @@ const LoanFormModal = ({
 								xmlns="http://www.w3.org/2000/svg"
 							>
 								<path
+									className="dark:fill-white fill-black"
 									d="M18.4596 3.44507C18.8501 3.05454 18.8501 2.42138 18.4596 2.03085L17.1358 0.707107C16.7453 0.316583 16.1121 0.316583 15.7216 0.707107L9.58333 6.84538L3.44507 0.707107C3.05454 0.316583 2.42138 0.316583 2.03085 0.707107L0.707107 2.03085C0.316583 2.42138 0.316582 3.05454 0.707107 3.44507L6.84538 9.58333L0.707107 15.7216C0.316583 16.1121 0.316583 16.7453 0.707107 17.1358L2.03085 18.4596C2.42138 18.8501 3.05454 18.8501 3.44507 18.4596L9.58333 12.3213L15.7216 18.4596C16.1121 18.8501 16.7453 18.8501 17.1358 18.4596L18.4596 17.1358C18.8501 16.7453 18.8501 16.1121 18.4596 15.7216L12.3213 9.58333L18.4596 3.44507Z"
 									fill="white"
 								/>
@@ -208,7 +209,6 @@ const LoanFormModal = ({
 
 					<div className="md:-mx-5 -mx-2 pb-2 md:mt-4">
 						<Stepper steps={steps} currentStep={currentStep} />
-						<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 						<div>{displayStep(currentStep)}</div>
 					</div>
 				</div>

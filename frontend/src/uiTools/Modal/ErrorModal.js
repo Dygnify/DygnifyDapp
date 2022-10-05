@@ -1,6 +1,12 @@
 import React from "react";
+import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
 
 const ErrorModal = ({ errormsg, setErrormsg }) => {
+	const result = errormsg?.msg?.includes("missing revert");
+	if (result) {
+		setErrormsg({ status: true, msg: "Please reload this page" });
+	}
+
 	return (
 		<>
 			<input
@@ -10,7 +16,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 				readOnly
 			/>
 			<div
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
+				style={{ backdropFilter: "brightness(100%) blur(8px)" }}
 				className="modal"
 			>
 				<div className="relative p-4 w-full max-w-md h-full md:h-auto z-50">
@@ -55,7 +61,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 								></path>
 							</svg>
 							<h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-								{errormsg.msg ? errormsg.msg : "No Error"}
+								{errormsg.msg ? getOnlyErrorText(errormsg.msg) : "No Error"}
 							</h3>
 							<button
 								onClick={() => {
@@ -65,7 +71,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 								type="button"
 								className={`py-2 px-6 bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize font-medium border-none text-white rounded-3xl focus:outline-[#9281FF]`}
 							>
-								Go to back
+								Go back
 							</button>
 						</div>
 					</div>

@@ -29,6 +29,7 @@ const Withdraw = () => {
 	const [txhash, settxhash] = useState("");
 	const [contractAdrress, setcontractAdrress] = useState("");
 	const [amounts, setAmounts] = useState("");
+	const [withdralAmt, setwithdralAmt] = useState(null);
 
 	const [updateSenior, setUpdateSenior] = useState(12);
 	const [errormsg, setErrormsg] = useState({
@@ -78,9 +79,8 @@ const Withdraw = () => {
 
 						if (res.success) {
 							balance = res.balance;
-							seniorInvestmentData.opportunityAmount = getDisplayAmount(
-								balance
-							);
+							seniorInvestmentData.opportunityAmount =
+								getDisplayAmount(balance);
 						} else {
 							setErrormsg({
 								status: !res.success,
@@ -91,9 +91,9 @@ const Withdraw = () => {
 						let totalInvestment =
 							seniorPoolInvestment.stakingAmt +
 							seniorPoolInvestment.withdrawableAmt;
-						seniorInvestmentData.capitalInvested = getDisplayAmount(
-							totalInvestment
-						);
+						seniorInvestmentData.capitalInvested =
+							getDisplayAmount(totalInvestment);
+						setwithdralAmt(seniorPoolInvestment.withdrawableAmt);
 
 						const price = await getSeniorPoolDisplaySharePrice(
 							spJson.estimatedAPY
@@ -169,6 +169,7 @@ const Withdraw = () => {
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
 						setUpdateSenior={setUpdateSenior}
+						withdralAmt={withdralAmt}
 					/>
 				)}
 				{processFundModal ? (

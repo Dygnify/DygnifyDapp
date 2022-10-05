@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import DocumentCard from "../../uiTools/Card/DocumentCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
@@ -40,13 +40,14 @@ const BorrowerProfile = () => {
 		status: false,
 		msg: "",
 	});
-	const [profileErrorMsg, setProfileErrorMsg] = useState();
+	// const [profileErrorMsg, setProfileErrorMsg] = useState();
 	const brJson = location.state;
 
 	useEffect(() => {
 		loadBorrowerProfileData();
 		if (brJson) fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
 		setHaskey(brJson ? "businessLicFile" in brJson : false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleForm = () => {
@@ -83,7 +84,7 @@ const BorrowerProfile = () => {
 		});
 	};
 
-	useEffect(async () => {
+	useEffect(() => {
 		// make the call to get borrower specific cid to fetch the data
 		// currently we'll mock the cid
 		console.log("reached use Effect Borrower");
@@ -120,6 +121,7 @@ const BorrowerProfile = () => {
 		};
 
 		if (!location.state) fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const fetchBorrowerLogo = (imgcid) => {
@@ -209,6 +211,8 @@ const BorrowerProfile = () => {
 			case "website":
 				url = website;
 				break;
+			default:
+				break;
 		}
 
 		if (url) {
@@ -263,6 +267,7 @@ const BorrowerProfile = () => {
 									<div className="avatar">
 										<div className="rounded-full w-20">
 											<img
+												alt=""
 												src={
 													logoImgSrc
 														? logoImgSrc
@@ -318,7 +323,7 @@ const BorrowerProfile = () => {
 										<button
 											id="twitter"
 											onClick={redirectToURl}
-											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
+											className="CreateProfileIcon border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Twitter />
 											<p className="text-xs md:text-base pointer-events-none">
@@ -332,7 +337,7 @@ const BorrowerProfile = () => {
 										<button
 											id="linkedin"
 											onClick={redirectToURl}
-											className="border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
+											className="CreateProfileIcon border border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<LinkedIn />
 											<p className="text-xs md:text-base pointer-events-none">
@@ -360,7 +365,7 @@ const BorrowerProfile = () => {
 										<button
 											id="website"
 											onClick={redirectToURl}
-											className="border CreateProfileIcon  border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
+											className="border  border-neutral-500 flex gap-1 items-center py-1 px-2 rounded-2xl"
 										>
 											<Website />
 											<p className="text-xs md:text-base pointer-events-none">

@@ -74,9 +74,8 @@ const InvestorOverview = () => {
 								seniorPoolInvestment.stakingAmt +
 								seniorPoolInvestment.withdrawableAmt;
 
-							seniorInvestmentData.capitalInvested = getDisplayAmount(
-								totalInvestment
-							);
+							seniorInvestmentData.capitalInvested =
+								getDisplayAmount(totalInvestment);
 						} else {
 							setErrormsg({
 								status: !res.success,

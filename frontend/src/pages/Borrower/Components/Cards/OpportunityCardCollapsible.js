@@ -3,7 +3,6 @@ import React from "react";
 // import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DoughnutChart from "../../../Components/DoughnutChart";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
-
 const OpportunityCardCollapsible = ({ data }) => {
 	function getStatus(index) {
 		let status = "";
@@ -30,8 +29,10 @@ const OpportunityCardCollapsible = ({ data }) => {
 				status = "Drawndown";
 				break;
 			case "7":
-				status = "Repaid";
+				status = "WriteOff";
 				break;
+			case "8":
+				status = "Repaid";
 			default:
 				break;
 		}
@@ -58,7 +59,10 @@ const OpportunityCardCollapsible = ({ data }) => {
 					<div className="hidden md:flex justify-evenly">
 						<div className="">
 							<DoughnutChart
-								data={[data.actualLoanAmount, data.poolBalance]}
+								data={[
+									data.actualLoanAmount - data.poolBalance,
+									data.poolBalance,
+								]}
 								color={["#5375FE", "#ffffff"]}
 								width={200}
 								labels={["Capital Requested", "Total Raised"]}
