@@ -10,6 +10,7 @@ import { getUserWalletAddress } from "../../services/BackendConnectors/userConne
 import * as Yup from "yup";
 import Loader from "../../uiTools/Loading/Loader";
 import { uploadFile, storeJSONData } from "../../services/Helpers/skynetIPFS";
+import ProcessingModal from "./Components/Modal/FileUpload/ProcessingModal";
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
@@ -22,11 +23,12 @@ const EditBorrowerProfileNew = () => {
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
 	const [businessAddressFiles, setBusinessAddressFiles] = useState();
-	const [
-		businessIncorporationFiles,
-		setBusinessIncorporationFiles,
-	] = useState();
+	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
+		useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
+
+	const [updating, setUpdating] = useState(true);
+
 	const location = useLocation();
 	const oldBrJson = location.state;
 
@@ -140,7 +142,7 @@ const EditBorrowerProfileNew = () => {
 			!location.state
 		) {
 			setError(true);
-			setLoading(false);
+			setUpdating(false);
 		}
 	};
 
@@ -162,7 +164,7 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const uploadBorrowerData = async (formData) => {
-		setLoading(true);
+		setUpdating(true);
 		try {
 			const {
 				companyName,
@@ -322,6 +324,8 @@ const EditBorrowerProfileNew = () => {
 
 	return (
 		<div className={`${loading ? "relative" : ""}`}>
+			{<ProcessingModal setUpdating={setUpdating} updating={updating} />}
+
 			{loading && <Loader />}
 
 			<Formik
