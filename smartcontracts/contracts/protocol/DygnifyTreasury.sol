@@ -46,7 +46,7 @@ contract DygnifyTreasury is BaseUpgradeablePausable {
 
 
     function reqTx(address to,uint256 value)public{
-        MultiSigWallet obj = MultiSigWallet(payable(wallet));
+        MultiSigWallet obj = MultiSigWallet(wallet);
         obj.submitTransaction(to,value);
     }
 

@@ -73,9 +73,9 @@ contract MultiSigWallet {
         numConfirmationsRequired = _numConfirmationsRequired;
     }
 
-    receive() external payable {
-        emit Deposit(msg.sender, msg.value, address(this).balance);
-    }
+    // receive() external payable {
+    //     emit Deposit(msg.sender, msg.value, address(this).balance);
+    // }
 
     function submitTransaction(
         address _to,
@@ -97,7 +97,6 @@ contract MultiSigWallet {
 
     function confirmTransaction(uint _txIndex)
         public
-        payable
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
@@ -113,7 +112,6 @@ contract MultiSigWallet {
 
     function executeTransaction(uint _txIndex)
         public
-        payable
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
@@ -128,7 +126,7 @@ contract MultiSigWallet {
         transaction.executed = true;
 
         // transaction.to.call{value: transaction.value};
-        DygnifyTreasury(payable(tresuryWallet)).withdraw(payable(transaction.to),transaction.value);
+        DygnifyTreasury(tresuryWallet).withdraw(transaction.to,transaction.value);
 
         emit ExecuteTransaction(msg.sender, _txIndex);
     }
