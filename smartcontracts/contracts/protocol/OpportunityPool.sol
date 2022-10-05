@@ -91,13 +91,13 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
         lpToken = ILPToken(dygnifyConfig.lpTokenAddress());
-        _setRoleAdmin(Constants.getSeniorPoolRole(),Constants.getAdminRole());
+        _setRoleAdmin(Constants.getSeniorPoolRole(), Constants.getAdminRole());
         _setupRole(
             Constants.getSeniorPoolRole(),
             dygnifyConfig.seniorPoolAddress()
         );
-        _setRoleAdmin(Constants.getBorrowerRole(),Constants.getAdminRole());
-        _setRoleAdmin(Constants.getPoolLockerRole(),Constants.getAdminRole());
+        _setRoleAdmin(Constants.getBorrowerRole(), Constants.getAdminRole());
+        _setRoleAdmin(Constants.getPoolLockerRole(), Constants.getAdminRole());
         _setupRole(Constants.getPoolLockerRole(), owner);
         address borrower = opportunityOrigination.getBorrower(_opportunityID);
         _setupRole(Constants.getBorrowerRole(), borrower);
@@ -324,7 +324,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         usdcToken.safeTransferFrom(address(this), msg.sender, amount);
     }
 
-    function repayment() public override nonReentrant onlyBorrower {
+    function repayment() public override onlyBorrower {
         require(
             repaymentCounter <= totalRepayments,
             "Repayment Process is done"
@@ -512,18 +512,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
         if (repaymentCounter == totalRepayments) {
             opportunityOrigination.markRepaid(opportunityID);
-            // uint256 seniorPoolAmount = seniorSubpoolDetails.overdueGenerated +
-            //     seniorSubpoolDetails.yieldGenerated +
-            //     seniorSubpoolDetails.depositedAmount;
-            // poolBalance -= seniorPoolAmount;
-            // seniorSubpoolDetails.overdueGenerated = 0;
-            // seniorSubpoolDetails.depositedAmount = 0;
-            // seniorSubpoolDetails.yieldGenerated = 0;
-            // usdcToken.transfer(
-            //     dygnifyConfig.seniorPoolAddress(),
-            //     seniorPoolAmount
-            // );
-            ISeniorPool(dygnifyConfig.seniorPoolAddress()).withDrawFromOpportunity(false, opportunityID, 0);
+            ISeniorPool(dygnifyConfig.seniorPoolAddress())
+                .withDrawFromOpportunity(false, opportunityID, 0);
         }
         repaymentCounter = repaymentCounter.add(1);
     }
@@ -905,15 +895,21 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
 
         if (poolBalance > estimatedSeniorPoolAmount) {
             // uint256 remainingAmount = poolBalance - estimatedSeniorPoolAmount;
-            ISeniorPool(dygnifyConfig.seniorPoolAddress()).withDrawFromOpportunity(true, opportunityID, estimatedSeniorPoolAmount);
-            
+            ISeniorPool(dygnifyConfig.seniorPoolAddress())
+                .withDrawFromOpportunity(
+                true,
+                opportunityID,
+                estimatedSeniorPoolAmount
+            );
+
             seniorSubpoolDetails.overdueGenerated = 0;
             seniorSubpoolDetails.depositedAmount = 0;
             seniorSubpoolDetails.yieldGenerated = 0;
             //state updation of juniorsubpool
         } else {
-            ISeniorPool(dygnifyConfig.seniorPoolAddress()).withDrawFromOpportunity(true, opportunityID, poolBalance);
-            poolBalance = 0 ;
+            ISeniorPool(dygnifyConfig.seniorPoolAddress())
+                .withDrawFromOpportunity(true, opportunityID, poolBalance);
+            poolBalance = 0;
             seniorSubpoolDetails.overdueGenerated = 0;
             seniorSubpoolDetails.depositedAmount = 0;
             seniorSubpoolDetails.yieldGenerated = 0;

@@ -14,8 +14,6 @@ const Transaction = () => {
 	});
 
 	useEffect(() => {
-		console.log("reached");
-
 		getUserWalletAddress().then((res) => {
 			if (res.success) {
 				getTokenTransactions(

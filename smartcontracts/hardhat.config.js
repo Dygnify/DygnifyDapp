@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-ethers");
 require("hardhat-gas-reporter");
 require("dotenv").config();
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -33,7 +34,7 @@ module.exports = {
 	networks: {
 		polygon_mumbai: {
 			url: process.env.POLYGON_TESTNET_URL,
-			accounts: [`${process.env.PRIVATE_KEY}`],
+			accounts: [process.env.PRIVATE_KEY],
 		},
 	},
 };
