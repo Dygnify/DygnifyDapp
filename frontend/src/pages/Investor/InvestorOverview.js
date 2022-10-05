@@ -5,14 +5,11 @@ import {
 	getUserSeniorPoolInvestment,
 	getJuniorWithdrawableOp,
 	getSeniorPoolDisplaySharePrice,
-	getTotalYieldOfInvestor,
 	getTotalInvestmentOfInvestor,
 } from "../../services/BackendConnectors/userConnectors/investorConncector";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "../Components/DoughnutChart";
-import LineChart from "./components/LineChart";
-import { getBinaryFileData } from "../../services/Helpers/fileHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
@@ -24,8 +21,6 @@ const InvestorOverview = () => {
 	const [seniorPool, setSeniorPool] = useState();
 	const [juniorPool, setJuniorPool] = useState([]);
 	const [seniorPoolInvestment, setSeniorPoolInvestment] = useState();
-
-	// loading
 	const [loading, setLoading] = useState(true);
 	const [seniorPoolLoading, setSeniorPoolLoading] = useState(true);
 	const [juniorPoolLoading, setJuniorPoolLoading] = useState(true);

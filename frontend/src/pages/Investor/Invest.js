@@ -6,7 +6,6 @@ import {
 	getUserWalletAddress,
 	getWalletBal,
 } from "../../services/BackendConnectors/userConnectors/commonConnectors";
-import { getBinaryFileData } from "../../services/Helpers/fileHelper";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
@@ -51,9 +50,7 @@ const Invest = () => {
 
 	const checkForKyc = async (refId) => {
 		try {
-			console.log("reached");
 			const result = await axiosHttpService(kycOptions(refId));
-			console.log(result, result.res.status);
 			if (
 				result.res.status === "success" &&
 				result.res.data.status === "approved"
@@ -63,8 +60,6 @@ const Invest = () => {
 			if (result.res.status === "error") {
 				setKycStatus(false);
 			}
-
-			console.log(kycStatus);
 		} catch (error) {
 			console.log(error);
 		}

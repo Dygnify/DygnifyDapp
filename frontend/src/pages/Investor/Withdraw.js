@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import GradientButton from "../../uiTools/Button/GradientButton";
+
 import WithdrawCard from "./components/Cards/WithdrawCard";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
@@ -7,7 +7,7 @@ import {
 	getSeniorPoolDisplaySharePrice,
 	getJuniorWithdrawableOp,
 } from "../../services/BackendConnectors/userConnectors/investorConncector";
-import { getBinaryFileData } from "../../services/Helpers/fileHelper";
+
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 
 import WithdrawFundsModal from "./components/Modal/WithdrawFundsModal";

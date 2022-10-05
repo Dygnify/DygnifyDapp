@@ -49,7 +49,6 @@ const Overview = () => {
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
 	const [drawdownId, setDrawdownId] = useState("");
-	console.log(drawdownId.hash, "drowdownId");
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
@@ -63,7 +62,6 @@ const Overview = () => {
 	};
 
 	const cutProcessModal = () => {
-		console.log("kadl");
 		setSelected(null);
 		setProcessModal(null);
 		setOpenProcessDrawdown(null);
@@ -75,13 +73,11 @@ const Overview = () => {
 			if (opportunities.success) {
 				setDrawdownList(opportunities.opportunities);
 			} else {
-				console.log(opportunities.msg);
 				setErrormsg({
 					status: !opportunities.success,
 					msg: opportunities.msg,
 				});
 			}
-			setLoading(false);
 		};
 		fetchData();
 		getUserWalletAddress().then((res) => {
@@ -120,8 +116,9 @@ const Overview = () => {
 			}
 
 			getJSONData(refId).then((res) => {
-				if (res) setProfileStatus(true);
-				else {
+				if (res) {
+					setProfileStatus(true);
+				} else {
 					setProfileStatus(false);
 				}
 
@@ -147,8 +144,6 @@ const Overview = () => {
 						getDisplayAmount(opportunities.opportunities[0]?.repaymentAmount)
 					);
 					setNextDueDate(opportunities.opportunities[0]?.nextDueDate);
-
-					console.log(repaymentList, nextDueAmount);
 				} else {
 					console.log(opportunities.msg);
 					setErrormsg({
@@ -291,7 +286,7 @@ const Overview = () => {
 							<div className="px-4 sm:px-6 flex flex-col gap-2 md:px-0 md:py-2">
 								<div className="flex flex-col gap-3 md:gap-2">
 									<div className="flex md:flex-col gap-1 items-end md:items-start">
-										<p className="text-neutral-400 flex gap-1 items-center">
+										<p className="text-neutral-500 flex gap-1 items-center">
 											<span className="inline-block w-3 h-2 bg-gradient-to-r from-[#4B74FF] to-primary-500 rounded-3xl"></span>
 											Total Outstanding
 										</p>
@@ -302,7 +297,7 @@ const Overview = () => {
 									</div>
 
 									<div className="flex md:flex-col gap-1 items-end md:items-start">
-										<p className="text-neutral-400 flex gap-1 items-center">
+										<p className="text-neutral-500 flex gap-1 items-center">
 											<span className="inline-block w-3 h-2 bg-white rounded-3xl"></span>
 											Total Repaid
 										</p>
