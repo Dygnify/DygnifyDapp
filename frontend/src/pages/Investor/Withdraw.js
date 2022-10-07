@@ -192,7 +192,7 @@ const Withdraw = () => {
 					{seniorPool ? (
 						<div className="mb-16 flex flex-col gap-5">
 							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-								Senior pool
+								Liquidity Provider
 							</h2>
 
 							<WithdrawCard
@@ -207,13 +207,15 @@ const Withdraw = () => {
 					)}
 
 					{juniorPools.length === 0 ? (
-						<div className="text-neutral-500 text-lg text-center">
-							<p>No stats are available. Explore opportunities here.</p>
+						<div className="relative h-screen flex justify-center">
+							<div className="text-[#64748B] text-xl text-center mt-3 absolute top-40">
+								<p>No stats are available.</p>
+							</div>
 						</div>
 					) : (
 						<div className="mb-16 flex flex-col gap-5">
 							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-								Junior pools
+								Underwriter
 							</h2>
 							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
 								{juniorPools.map((item) => (

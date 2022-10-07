@@ -84,6 +84,7 @@ export const isConnected = async () => {
 				};
 			}
 		} else {
+			localStorage.setItem("Wallet-Check", false);
 			return {
 				success: false,
 				msg: "Please Install Wallet",

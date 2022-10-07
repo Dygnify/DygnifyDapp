@@ -33,6 +33,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 				break;
 			case "8":
 				status = "Repaid";
+				break;
 			default:
 				break;
 		}
@@ -60,8 +61,10 @@ const OpportunityCardCollapsible = ({ data }) => {
 						<div className="">
 							<DoughnutChart
 								data={[
-									data.actualLoanAmount - data.poolBalance,
-									data.poolBalance,
+									+data?.status >= 6
+										? data.actualLoanAmount - data.opportunityAmount
+										: data.actualLoanAmount - data.poolBalance,
+									+data?.status >= 6 ? data.actualLoanAmount : data.poolBalance,
 								]}
 								color={["#5375FE", "#ffffff"]}
 								width={200}
@@ -86,7 +89,9 @@ const OpportunityCardCollapsible = ({ data }) => {
 									<p className="text-neutral-300">Total raised till now</p>
 									<p className="text-lg flex gap-1">
 										{data && data.poolDisplayBalance
-											? data.poolDisplayBalance
+											? +data?.status >= 6
+												? data.opportunityAmount
+												: data.poolDisplayBalance
 											: "-- "}
 
 										<span>{process.env.REACT_APP_TOKEN_NAME}</span>

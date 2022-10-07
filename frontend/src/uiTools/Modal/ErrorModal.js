@@ -4,7 +4,15 @@ import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
 const ErrorModal = ({ errormsg, setErrormsg }) => {
 	const result = errormsg?.msg?.includes("missing revert");
 	if (result) {
-		setErrormsg({ status: true, msg: "Please reload this page" });
+		setErrormsg((prev) => ({ ...prev, msg: "Please reload this page" }));
+	}
+	const metamaskerr1 = errormsg?.msg?.includes("invalid address");
+	const metamaskerr2 = errormsg?.msg?.includes("unknown account");
+	if (metamaskerr1 || metamaskerr2) {
+		setErrormsg((prev) => ({
+			...prev,
+			msg: "Please open the metamask and login",
+		}));
 	}
 
 	return (

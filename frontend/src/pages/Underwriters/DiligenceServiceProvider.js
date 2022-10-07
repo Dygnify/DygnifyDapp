@@ -4,7 +4,7 @@ import Header from "../Layout/Header";
 import BorrowIcon from "../../uiTools/Icons/BorrowIcon";
 import ApprovalIcon from "../../uiTools/Icons/ApprovalIcon";
 
-const UnderwriterDashboard = () => {
+const DiligenceServiceProvider = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
 
@@ -47,7 +47,7 @@ const UnderwriterDashboard = () => {
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex pl-4 py-4 gap-2"
-									to="/underwriterDashboard/borrowRequest"
+									to="/diligenceServiceProvider/borrowRequest"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
@@ -61,7 +61,7 @@ const UnderwriterDashboard = () => {
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex pl-4 py-4 gap-2"
-									to="/underwriterDashboard/approvalHistory"
+									to="/diligenceServiceProvider/approvalHistory"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
@@ -80,4 +80,4 @@ const UnderwriterDashboard = () => {
 	);
 };
 
-export default UnderwriterDashboard;
+export default DiligenceServiceProvider;
