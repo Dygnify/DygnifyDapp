@@ -41,6 +41,8 @@ const OpportunityCardCollapsible = ({ data }) => {
 		return status;
 	}
 
+	console.log(data);
+
 	return (
 		<div className="collapse collapse-arrow dark:bg-darkmode-500 bg-lightmode-200 rounded-xl">
 			<input type="checkbox" className="peer" />
@@ -62,7 +64,7 @@ const OpportunityCardCollapsible = ({ data }) => {
 							<DoughnutChart
 								data={[
 									+data?.status >= 6
-										? data.actualLoanAmount - data.opportunityAmount
+										? 0
 										: data.actualLoanAmount - data.poolBalance,
 									+data?.status >= 6 ? data.actualLoanAmount : data.poolBalance,
 								]}
@@ -146,7 +148,6 @@ const OpportunityCardCollapsible = ({ data }) => {
 										{data ? data.opportunityAmount : "--"}
 									</p>
 								</div>
-
 								<div>
 									<p className="text-neutral-300">Interest Rate</p>
 									<p className="text-lg">{data?.loanInterest}</p>
