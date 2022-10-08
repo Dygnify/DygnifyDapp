@@ -64,12 +64,16 @@ const RepaymentModal = ({
 		setApprovedvalue(data.repaymentAmount);
 	}
 	async function onRepayment() {
+		settransactionId(null);
 		setOpenProcessRepayment(true);
 		setProcessRepayment(true);
 		setpoolName(data?.opportunityName);
 		setamounts(approvedvalue);
 		setwalletAddress(data.opportunityPoolAddress);
 		const res = await repayment(data.opportunityPoolAddress);
+		if (!res.success) {
+			setOpenProcessRepayment(false);
+		}
 		console.log(res.tx);
 		settransactionId(res.tx.hash);
 		handleRepayment();

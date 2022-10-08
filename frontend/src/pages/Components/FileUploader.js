@@ -28,22 +28,15 @@ const FileUploader = ({
 				<label className="label text-lg" style={{ marginBottom: 1 }}>
 					<span className="text-black dark:text-white text-lg">{label}</span>
 				</label>
-				<div
-					
-					className="flex border-dashed border-[1px] pl-1 dark:border-[#3A3C43] border-[#A0ABBB]  py-2 rounded-lg flex-row bg-lightmode-200 dark:bg-[#24272F] items-center overflow-hidden"
-				>
+				<div className="flex border-dashed border-[1px] pl-1 dark:border-[#3A3C43] border-[#A0ABBB]  py-2 rounded-lg flex-row bg-lightmode-200 dark:bg-[#24272F] items-center overflow-hidden">
 					<input
 						type="button"
 						className="bg-gray-400 dark:bg-[#30333A]  rounded-full text-white px-2 text-sm py-1"
 						onClick={handleClick}
-						
 						value="Choose file"
 					/>
 
-					<div
-					
-						className="dark:text-[#c7cad1] pl-1 text-gray-700 overflow-hidden h-5 italic text-sm"
-					>
+					<div className="dark:text-[#c7cad1] pl-1 text-gray-700 overflow-hidden h-5 italic text-sm">
 						{fileUploadedName ? fileUploadedName : fileName}
 					</div>
 				</div>
@@ -51,6 +44,7 @@ const FileUploader = ({
 					type="file"
 					name={name}
 					onBlur={onBlur}
+					accept="application/pdf, application/vnd.ms-excel"
 					ref={hiddenFileInput}
 					onChange={handleChange}
 					style={{ display: "none" }}
