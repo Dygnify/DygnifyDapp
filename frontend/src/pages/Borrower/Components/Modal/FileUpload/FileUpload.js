@@ -46,7 +46,7 @@ function FileUpload({ fileName, progress, status }) {
 
 			<div className="relative">
 				<span
-					className="absolute text-sm left-1/2 translate-x-1/2"
+					className="absolute text-sm left-1/2 translate-x-[-50%]"
 					ref={progressRef}
 				>
 					{progress}%

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import WithdrawCard from "./components/Cards/WithdrawCard";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
@@ -79,9 +79,8 @@ const Withdraw = () => {
 
 						if (res.success) {
 							balance = res.balance;
-							seniorInvestmentData.opportunityAmount = getDisplayAmount(
-								balance
-							);
+							seniorInvestmentData.opportunityAmount =
+								getDisplayAmount(balance);
 						} else {
 							setErrormsg({
 								status: !res.success,
@@ -92,9 +91,8 @@ const Withdraw = () => {
 						let totalInvestment =
 							seniorPoolInvestment.stakingAmt +
 							seniorPoolInvestment.withdrawableAmt;
-						seniorInvestmentData.capitalInvested = getDisplayAmount(
-							totalInvestment
-						);
+						seniorInvestmentData.capitalInvested =
+							getDisplayAmount(totalInvestment);
 						setwithdralAmt(seniorPoolInvestment.withdrawableAmt);
 
 						const price = await getSeniorPoolDisplaySharePrice(
