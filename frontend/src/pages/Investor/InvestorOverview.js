@@ -46,7 +46,7 @@ const InvestorOverview = () => {
 					setSeniorPoolInvestment(data.data);
 				}
 			})
-			.catch((error) => console.log("Failed to get senior pool investment"))
+			.catch((error) => console.log("Failed to get liquidity pool investment"))
 			.finally(() => setSeniorPoolLoading(false));
 	}, []);
 
@@ -69,8 +69,9 @@ const InvestorOverview = () => {
 								seniorPoolInvestment.stakingAmt +
 								seniorPoolInvestment.withdrawableAmt;
 
-							seniorInvestmentData.capitalInvested =
-								getDisplayAmount(totalInvestment);
+							seniorInvestmentData.capitalInvested = getDisplayAmount(
+								totalInvestment
+							);
 						} else {
 							setErrormsg({
 								status: !res.success,

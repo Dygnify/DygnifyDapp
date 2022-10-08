@@ -47,9 +47,9 @@ const Withdraw = () => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
 				}
+				setLoading(false);
 			})
-			.catch((error) => console.log("Failed to get senior pool investment"))
-			.finally(() => setLoading(false));
+			.catch((error) => console.log("Failed to get liquidity pool investment"));
 
 		getWalletBal().then((res) => {
 			if (res.success) {
@@ -79,8 +79,9 @@ const Withdraw = () => {
 
 						if (res.success) {
 							balance = res.balance;
-							seniorInvestmentData.opportunityAmount =
-								getDisplayAmount(balance);
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								balance
+							);
 						} else {
 							setErrormsg({
 								status: !res.success,
@@ -91,8 +92,9 @@ const Withdraw = () => {
 						let totalInvestment =
 							seniorPoolInvestment.stakingAmt +
 							seniorPoolInvestment.withdrawableAmt;
-						seniorInvestmentData.capitalInvested =
-							getDisplayAmount(totalInvestment);
+						seniorInvestmentData.capitalInvested = getDisplayAmount(
+							totalInvestment
+						);
 						setwithdralAmt(seniorPoolInvestment.withdrawableAmt);
 
 						const price = await getSeniorPoolDisplaySharePrice(
@@ -138,17 +140,16 @@ const Withdraw = () => {
 	}, [seniorPoolInvestment]);
 
 	useEffect(() => {
-		try {
-			const fetchData = async () => {
-				const opportunities = await getJuniorWithdrawableOp();
+		getJuniorWithdrawableOp()
+			.then((opportunities) => {
 				if (opportunities.success) {
 					setJuniorPools(opportunities.opportunityList);
+					setLoading(false);
+				} else {
+					setLoading(false);
 				}
-			};
-			fetchData();
-		} catch (error) {
-			console.log(error);
-		}
+			})
+			.catch((error) => console.log(error));
 	}, []);
 
 	return (

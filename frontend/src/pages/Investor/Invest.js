@@ -156,7 +156,7 @@ const Invest = () => {
 								<p className="text-neutral-500 text-lg">
 									{seniorPoolLoading
 										? ""
-										: "No senior pool investments are available."}
+										: "No liquidity pool investments are available."}
 								</p>
 							</div>
 						)}

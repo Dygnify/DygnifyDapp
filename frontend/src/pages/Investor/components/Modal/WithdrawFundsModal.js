@@ -205,11 +205,10 @@ const WithdrawFundsModal = ({
 						<label
 							htmlFor="WithdrawProcessModal"
 							className={`block font-semibold text-white ${
-								error.err
+								error.err && data?.isSeniorPool
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none `}
-							disable="true"
 							onClick={() => {
 								data?.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
 							}}
