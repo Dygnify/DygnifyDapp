@@ -41,7 +41,10 @@ const Paths = () => {
 					<Route path="viewSeniorPool" element={<ViewSeniorPool />} />
 				</Route>
 
-				<Route path="/diligenceServiceProvider" element={<DiligenceServiceProvider />}>
+				<Route
+					path="/diligenceServiceProvider"
+					element={<DiligenceServiceProvider />}
+				>
 					<Route index element={<Navigate to="borrowRequest" />} />
 					<Route path="borrowRequest" element={<BorrowRequest />} />
 					<Route path="poolDetail" element={<PoolDetails />} />

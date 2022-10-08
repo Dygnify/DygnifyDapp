@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import { getJSONData } from "../../../../services/Helpers/skynetIPFS";

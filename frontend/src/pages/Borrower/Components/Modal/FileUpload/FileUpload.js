@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useEffect, useState } from "react";
 
 function FileUpload({ fileName, progress, status }) {

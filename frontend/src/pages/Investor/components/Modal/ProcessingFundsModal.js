@@ -1,7 +1,6 @@
 import React from "react";
 import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 import { useNavigate } from "react-router-dom";
-import { setUser } from "@sentry/react";
 
 const ProcessingFundsModal = ({
 	investProcessing,
