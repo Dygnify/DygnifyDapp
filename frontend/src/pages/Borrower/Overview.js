@@ -56,6 +56,8 @@ const Overview = () => {
 		msg: "",
 	});
 
+	const [fileUpload, setFileUpload] = useState({});
+
 	const handleForm = () => {
 		setSelected(null);
 		setKycSelected(null);
@@ -208,6 +210,7 @@ const Overview = () => {
 						setBorrowReqProcess={setBorrowReqProcess}
 						setSelected={setSelected}
 						setProcessModal={setProcessModal}
+						setFileUpload={setFileUpload}
 					/>
 				)}
 
@@ -218,6 +221,7 @@ const Overview = () => {
 						handleDrawdown={cutProcessModal}
 						setProcessModal={setProcessModal}
 						processModal={processModal}
+						fileUpload={fileUpload}
 					/>
 				)}
 

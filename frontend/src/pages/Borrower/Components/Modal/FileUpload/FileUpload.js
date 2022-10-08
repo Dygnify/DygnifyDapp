@@ -1,43 +1,62 @@
-import { useRef } from "react";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 
 function FileUpload({ fileName, progress, status }) {
 	const [color, setColor] = useState("text-warning-500");
+	const progressRef = useRef();
+	const statusRef = useRef();
+	const progressValueRef = useRef();
 
-	useEffect(() => {
+	document.addEventListener("progressDetail", (e) => {
+		const { file, progress } = e.detail;
+		console.log("event listened");
 		let warningColor = "text-warning-500";
 		let success = "text-success-500";
 
-		if (status === "uploading" || status === "pending") {
-			setColor(warningColor);
-		} else {
-			setColor(success);
+		let status =
+			progress === 100 ? "Completed" : progress > 0 ? "Uploading" : "Pending";
+
+		if (file === fileName) {
+			progressValueRef.current.value = progress;
+			progressRef.current.innerHTML = `${progress}%`;
+			statusRef.current.innerHTML = status;
+
+			if (status === "Uploading" || status === "Pending") {
+				setColor(warningColor);
+			} else {
+				setColor(success);
+			}
 		}
-	}, [status]);
+	});
 
 	return (
-		<div className=" rounded-md bg-darkmode-50">
-			<div className="flex justify-between p-3">
+		<div className=" rounded-md bg-darkmode-50 p-2 pb-0">
+			<div className="flex justify-between mb-2">
 				<p>
-					File Name: <span className="underline">{fileName}</span>
+					File Name:{" "}
+					<span className="underline cursor-default">{fileName}</span>
 				</p>
 
 				<p>
-					Status: <span className={color}>{status}</span>
+					Status:{" "}
+					<span className={color} ref={statusRef}>
+						{status}
+					</span>
 				</p>
 			</div>
 
-			<div className="w-full bg-gray-200 rounded-full dark:bg-gray-700 ">
-				<div
-					className={`bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none max-w-[100%]`}
-					style={{
-						width: `${progress}%`,
-						transition: "width 0.3s ease-out",
-						borderRadius: `0 0 ${progress < 100 ? "0" : "0.5em"} 0.5em`,
-					}}
+			<div className="relative">
+				<span
+					className="absolute text-sm left-1/2 translate-x-1/2"
+					ref={progressRef}
 				>
 					{progress}%
-				</div>
+				</span>
+				<progress
+					className={`w-full bg-gray-500 m-0 rounded-md`}
+					value="0"
+					max="100"
+					ref={progressValueRef}
+				></progress>
 			</div>
 		</div>
 	);

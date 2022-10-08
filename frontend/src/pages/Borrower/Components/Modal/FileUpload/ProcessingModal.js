@@ -1,11 +1,9 @@
 import { useState } from "react";
 import FileUpload from "./FileUpload";
 
-function ProcessingModal({ setUpdating, updating }) {
-	const [progress, setProgress] = useState(0);
-
+function ProcessingModal({ setUploading, uploading, fileUploadStatus }) {
 	const handleClose = () => {
-		setUpdating(false);
+		setUploading(false);
 	};
 
 	return (
@@ -13,7 +11,7 @@ function ProcessingModal({ setUpdating, updating }) {
 			<input
 				type="checkbox"
 				className="modal-toggle"
-				checked={updating}
+				checked={uploading}
 				readOnly
 			/>
 			<div className="modal backdrop-filter backdrop-brightness-[100%] dark:backdrop-brightness-[40%] backdrop-blur-lg">
@@ -32,23 +30,22 @@ function ProcessingModal({ setUpdating, updating }) {
 							<span className="ml-1 animate-spin border-solid border-[3px] border-t-[#14171F] border-r-[#14171F] border-[#fff] w-[1.5rem] h-[1.5rem] rounded-full p-2"></span>
 						</div>
 
-						<div className="mt-6 border border-neutral-700 dark:border-neutral-500 px-4 py-4 rounded-lg flex flex-col gap-4">
-							<FileUpload
-								fileName="rohan.txt"
-								progress={progress}
-								status="Completed"
-							/>
-						</div>
-
-						<input
-							type="number"
-							onChange={(event) => {
-								setProgress(event.target.value);
-							}}
-							className="text-red-700 bg-slate-400"
-							max="100"
-							min="0"
-						/>
+						{fileUploadStatus.length ? (
+							<div className="mt-6 border border-neutral-700 dark:border-neutral-500 px-4 py-4 rounded-lg flex flex-col gap-6">
+								{fileUploadStatus.map((fileStatus) => {
+									return (
+										<FileUpload
+											key={Math.random() * 100}
+											fileName={fileStatus.fileName}
+											progress={fileStatus.progress}
+											status={fileStatus.status}
+										/>
+									);
+								})}
+							</div>
+						) : (
+							<></>
+						)}
 					</div>
 				</div>
 			</div>
