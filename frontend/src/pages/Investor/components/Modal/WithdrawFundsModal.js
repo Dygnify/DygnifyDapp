@@ -80,8 +80,13 @@ const WithdrawFundsModal = ({
 		setUpdateSenior(Math.random());
 	}
 
+	const handleMax = () => {
+		setAmount(+withdralAmt);
+		handleAmount(+withdralAmt);
+	};
+
 	const handleAmount = (e) => {
-		const value = e.target.value;
+		const value = e.target ? e.target.value : e;
 
 		const defaultErr = {
 			err: false,
@@ -201,21 +206,31 @@ const WithdrawFundsModal = ({
 						)}
 					</div>
 
-					<div className="px-4 md:px-8 mt-auto md:mt-8">
+					<div className="px-4 md:px-8 mt-auto md:mt-8 flex flex-col gap-4">
 						<label
 							htmlFor="WithdrawProcessModal"
 							className={`block font-semibold text-white ${
-								error.err
+								error.err && data?.isSeniorPool
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none `}
-							disable="true"
 							onClick={() => {
 								data?.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
 							}}
 						>
 							Withdraw Funds
 						</label>
+
+						{data?.isSeniorPool ? (
+							<button
+								className={`block font-semibold text-white bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer text-center py-2 rounded-[1.8em] select-none `}
+								onClick={handleMax}
+							>
+								Max
+							</button>
+						) : (
+							<></>
+						)}
 					</div>
 				</div>
 			</div>

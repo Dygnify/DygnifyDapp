@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import FileUpload from "./FileUpload/FileUpload";
 
 const ProcessingRequestModal = ({
 	borrowReqProcess,
@@ -7,6 +8,7 @@ const ProcessingRequestModal = ({
 	setSelected,
 	handleDrawdown,
 	processModal,
+	fileUpload,
 }) => {
 	console.log(borrowReqProcess, "inrequest modal");
 	const navigate = useNavigate();
@@ -92,6 +94,14 @@ const ProcessingRequestModal = ({
 								</p>
 							)}
 						</p>
+					</div>
+
+					<div className="my-4">
+						<FileUpload
+							fileName={fileUpload.fileName}
+							progress={fileUpload.progress}
+							status={fileUpload.status}
+						/>
 					</div>
 
 					<div className="border-2 border-neutral-300 dark:border-neutral-500 rounded-[1.8em] mt-8 md:mb-3">

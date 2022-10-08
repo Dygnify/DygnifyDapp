@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import WithdrawCard from "./components/Cards/WithdrawCard";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
@@ -46,9 +46,9 @@ const Withdraw = () => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
 				}
+				setLoading(false);
 			})
-			.catch((error) => console.log("Failed to get senior pool investment"))
-			.finally(() => setLoading(false));
+			.catch((error) => console.log("Failed to get liquidity pool investment"));
 
 		getWalletBal().then((res) => {
 			if (res.success) {
@@ -133,17 +133,16 @@ const Withdraw = () => {
 	}, [seniorPoolInvestment]);
 
 	useEffect(() => {
-		try {
-			const fetchData = async () => {
-				const opportunities = await getJuniorWithdrawableOp();
+		getJuniorWithdrawableOp()
+			.then((opportunities) => {
 				if (opportunities.success) {
 					setJuniorPools(opportunities.opportunityList);
+					setLoading(false);
+				} else {
+					setLoading(false);
 				}
-			};
-			fetchData();
-		} catch (error) {
-			console.log(error);
-		}
+			})
+			.catch((error) => console.log(error));
 	}, []);
 
 	return (

@@ -17,6 +17,7 @@ const LoanFormModal = ({
 	setBorrowReqProcess,
 	setProcessModal,
 	setUpdateRepayment,
+	setFileUpload,
 	setErrormsg,
 }) => {
 	const [formData, setFormData] = useState({
@@ -105,6 +106,12 @@ const LoanFormModal = ({
 		} = data;
 		loan_tenure = loan_tenure * 30;
 		const collateral_document = rest.collateral_document;
+
+		setFileUpload({
+			fileName: collateral_document[0].name,
+			progress: "0",
+			status: "Pending",
+		});
 
 		console.log(rest);
 		let loanDetails = {

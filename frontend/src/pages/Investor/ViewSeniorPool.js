@@ -17,7 +17,7 @@ import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const ViewSeniorPool = () => {
 	const location = useLocation();
-	const defaultPoolName = "Senior Pool";
+	const defaultPoolName = "Liquidity Pool";
 	const defaultAPY = "7";
 	const defaultPoolAmount = 0;
 	const [transactionData, setTransactionData] = useState([]);

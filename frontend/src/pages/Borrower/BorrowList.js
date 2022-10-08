@@ -39,6 +39,8 @@ const BorrowList = () => {
 		msg: "",
 	});
 
+	const [fileUpload, setFileUpload] = useState({});
+
 	const handleForm = () => {
 		setSelected(null);
 		setKycSelected(null);
@@ -142,6 +144,7 @@ const BorrowList = () => {
 					setSelected={setSelected}
 					setProcessModal={setProcessModal}
 					setUpdateRepayment={setUpdateRepayment}
+					setFileUpload={setFileUpload}
 				/>
 			)}
 
@@ -152,6 +155,7 @@ const BorrowList = () => {
 					handleDrawdown={cutProcessModal}
 					setProcessModal={setProcessModal}
 					processModal={processModal}
+					fileUpload={fileUpload}
 				/>
 			)}
 

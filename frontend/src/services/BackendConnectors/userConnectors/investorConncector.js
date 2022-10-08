@@ -101,7 +101,7 @@ export const getTotalInvestmentOfInvestor = async () => {
 			);
 			let totalInvestment = 0;
 			let totalYield = 0;
-			// get senior pool investment with yield
+			// get liquidity pool investment with yield
 			let spInvestments = await getUserSeniorPoolInvestment();
 			let seniorInvestment =
 				spInvestments.data.stakingAmt + spInvestments.data.withdrawableAmt;

@@ -27,7 +27,8 @@ const EditBorrowerProfileNew = () => {
 		useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
-	const [updating, setUpdating] = useState(true);
+	const [uploading, setUploading] = useState(false);
+	const [fileUploadStatus, setFileUploadStatus] = useState([]);
 
 	const location = useLocation();
 	const oldBrJson = location.state;
@@ -142,7 +143,7 @@ const EditBorrowerProfileNew = () => {
 			!location.state
 		) {
 			setError(true);
-			setUpdating(false);
+			setUploading(false);
 		}
 	};
 
@@ -164,7 +165,7 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const uploadBorrowerData = async (formData) => {
-		setUpdating(true);
+		setUploading(true);
 		try {
 			const {
 				companyName,
@@ -182,7 +183,62 @@ const EditBorrowerProfileNew = () => {
 
 			validations();
 			let key = false;
+			let tempFileStatus = [];
 			if (businessLicenseFiles) key = true;
+
+			if (logoFile && logoFile.length) {
+				let logoFileObj = {
+					fileName: logoFile[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(logoFileObj);
+			}
+
+			if (businessIdentityFiles && businessIdentityFiles.length) {
+				let businessIdentityFilesObj = {
+					fileName: businessIdentityFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessIdentityFilesObj);
+			}
+
+			if (businessAddressFiles && businessAddressFiles.length) {
+				let businessAddressFilesObj = {
+					fileName: businessAddressFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessAddressFilesObj);
+			}
+
+			if (businessIncorporationFiles && businessIncorporationFiles.length) {
+				let businessIncorporationFilesObj = {
+					fileName: businessIncorporationFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessIncorporationFilesObj);
+			}
+
+			if (businessLicenseFiles && businessLicenseFiles.length) {
+				let businessLicenseFilesObj = {
+					fileName: businessLicenseFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessLicenseFilesObj);
+			}
+
+			console.log(tempFileStatus);
+			setFileUploadStatus(tempFileStatus);
+
 			{
 				if (
 					businessIdentityFiles ||
@@ -290,6 +346,7 @@ const EditBorrowerProfileNew = () => {
 				twitter: twitter,
 				linkedin: linkedin,
 			};
+
 			if ((businessLicenseFiles || profileState) && (hasKey || key)) {
 				const licenseFile = {
 					businessLicFile: {
@@ -324,7 +381,13 @@ const EditBorrowerProfileNew = () => {
 
 	return (
 		<div className={`${loading ? "relative" : ""}`}>
-			{<ProcessingModal setUpdating={setUpdating} updating={updating} />}
+			{
+				<ProcessingModal
+					setUploading={setUploading}
+					uploading={uploading}
+					fileUploadStatus={fileUploadStatus}
+				/>
+			}
 
 			{loading && <Loader />}
 
