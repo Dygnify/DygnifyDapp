@@ -46,7 +46,7 @@ const InvestorOverview = () => {
 					setSeniorPoolInvestment(data.data);
 				}
 			})
-			.catch((error) => console.log("Failed to get senior pool investment"))
+			.catch((error) => console.log("Failed to get liquidity pool investment"))
 			.finally(() => setSeniorPoolLoading(false));
 	}, []);
 
@@ -69,8 +69,9 @@ const InvestorOverview = () => {
 								seniorPoolInvestment.stakingAmt +
 								seniorPoolInvestment.withdrawableAmt;
 
-							seniorInvestmentData.capitalInvested =
-								getDisplayAmount(totalInvestment);
+							seniorInvestmentData.capitalInvested = getDisplayAmount(
+								totalInvestment
+							);
 						} else {
 							setErrormsg({
 								status: !res.success,
@@ -215,7 +216,9 @@ const InvestorOverview = () => {
 									</p>
 								) : (
 									<div className="ml-auto md:ml-0 font-semibold flex items-end gap-2 px-5">
-										<p className=" text-xl lg:text-[1.75rem] ">{totalYield}</p>
+										<p className=" text-xl lg:text-[1.75rem] ">
+											{getDisplayAmount(totalYield)}
+										</p>
 										<p className="text-base lg:text-xl">
 											{process.env.REACT_APP_TOKEN_NAME}
 										</p>
@@ -240,27 +243,23 @@ const InvestorOverview = () => {
 					</h1>
 
 					<div className="mb-4">
-						<h2 className="md:text-[1.75rem] text-2xl mb-4">Senior Pool</h2>
+						<h2 className="md:text-[1.75rem] text-2xl mb-4">
+							Liquidity Provider
+						</h2>
 						{seniorPool ? (
 							<PoolCard data={seniorPool} />
 						) : (
 							<div className="text-center">
-								<p className="text-neutral-500 text-lg">
-									No senior pool investments stats available. Explore
-									opportunities here.
-								</p>
+								<p className="text-neutral-500 text-lg">No stats available.</p>
 							</div>
 						)}
 					</div>
 
 					<div>
-						<h2 className="md:text-[1.75rem] text-2xl mb-4">Junior Pool</h2>
+						<h2 className="md:text-[1.75rem] text-2xl mb-4">Underwriter</h2>
 						{juniorPool.length === 0 ? (
 							<div className="text-center">
-								<p className="text-neutral-500 text-lg">
-									No junior pool investments stats available. Explore
-									opportunities here.
-								</p>
+								<p className="text-neutral-500 text-lg">No stats available.</p>
 							</div>
 						) : (
 							<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">

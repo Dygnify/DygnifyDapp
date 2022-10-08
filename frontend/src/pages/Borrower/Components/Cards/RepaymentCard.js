@@ -60,7 +60,7 @@ const RepaymentCard = ({
 				<label
 					htmlFor="repayment-modal"
 					onClick={() => setSelected(data)}
-					className="bg-secondary-500 w-[100%] inline-block cursor-pointer py-2 rounded-3xl"
+					className="bg-secondary-500 w-[100%] inline-block text-white  cursor-pointer py-2 rounded-3xl"
 				>
 					Make Repayment now
 				</label>

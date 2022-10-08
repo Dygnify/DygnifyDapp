@@ -15,6 +15,7 @@ import KycCheckModal from "./Components/Modal/KycCheckModal";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getJSONData } from "../../services/Helpers/skynetIPFS";
 import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
+import Loader from "../../uiTools/Loading/Loader";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -29,7 +30,7 @@ const BorrowList = () => {
 	const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 	const [loadDrawdownList, setLoadDrawdownList] = useState();
 
-	const [loading, setLoading] = useState();
+	const [loading, setLoading] = useState(true);
 	const [kycStatus, setKycStatus] = useState();
 	const [profileStatus, setProfileStatus] = useState();
 	const [updateRepayment, setUpdateRepayment] = useState(12);
@@ -115,10 +116,10 @@ const BorrowList = () => {
 			if (result.res.status === "error") {
 				setKycStatus(false);
 			}
-
 			getJSONData(refId).then((res) => {
 				if (res) setProfileStatus(true);
 				else setProfileStatus(false);
+				setLoading(false);
 			});
 		} catch (error) {
 			console.log(error);
@@ -128,6 +129,7 @@ const BorrowList = () => {
 	return (
 		<div className="">
 			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
+			{loading && <Loader />}
 			<DashboardHeader
 				setSelected={setSelected}
 				kycStatus={kycStatus}

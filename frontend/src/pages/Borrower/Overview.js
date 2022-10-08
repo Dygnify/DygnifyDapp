@@ -211,6 +211,7 @@ const Overview = () => {
 						setSelected={setSelected}
 						setProcessModal={setProcessModal}
 						setFileUpload={setFileUpload}
+						setErrormsg={setErrormsg}
 					/>
 				)}
 
@@ -265,7 +266,7 @@ const Overview = () => {
 								{totalLoanAmtWithInterest || totalRepaidAmt.amount ? (
 									<DoughnutChart
 										data={[
-											totalLoanAmtWithInterest,
+											totalLoanAmtWithInterest - totalRepaidAmt.amount,
 											totalRepaidAmt.amount ? totalRepaidAmt.amount : 0,
 										]}
 										color={["#5375FE", "#ffffff"]}

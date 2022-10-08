@@ -20,7 +20,7 @@ export const getTokenTransactions = async (address, tokenAddress) => {
 					poolAddress.toUpperCase() ===
 					process.env.REACT_APP_SENIORPOOL.toUpperCase()
 				) {
-					opportunityName = "Senior Pool";
+					opportunityName = "Liquidity Pool";
 				} else {
 					const { opName } = await getOpportunityName(poolAddress);
 					opportunityName = opName;

@@ -40,9 +40,9 @@ const ApprovalHistory = () => {
 					Approval history
 				</h2>
 				{transactions.length === 0 ? (
-					<div className="felx justify-center">
-						<div className="text-[#64748B] text-xl text-center mt-3">
-							No Borrow requests are present at the moment.
+					<div className="relative h-screen flex justify-center">
+						<div className="text-[#64748B] text-xl text-center mt-3 absolute top-40">
+							<p>No Borrow requests are present at the moment.</p>
 						</div>
 					</div>
 				) : (

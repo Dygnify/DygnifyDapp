@@ -28,38 +28,15 @@ const FileUploader = ({
 				<label className="label text-lg" style={{ marginBottom: 1 }}>
 					<span className="text-black dark:text-white text-lg">{label}</span>
 				</label>
-				<div
-					style={{
-						// outline: "2px solid lightcoral",
-						display: "flex",
-						padding: "7px 12px",
-						borderWidth: 2,
-						border: "1px dashed #3A3C43",
-						borderRadius: "8px",
-					}}
-					className=" flex-row bg-lightmode-200 dark:bg-[#24272F] items-center overflow-hidden"
-				>
+				<div className="flex border-dashed border-[1px] pl-1 dark:border-[#3A3C43] border-[#A0ABBB]  py-2 rounded-lg flex-row bg-lightmode-200 dark:bg-[#24272F] items-center overflow-hidden">
 					<input
 						type="button"
-						className="bg-gray-400 dark:bg-[#30333A] text-black"
+						className="bg-gray-400 dark:bg-[#30333A]  rounded-full text-white px-2 text-sm py-1"
 						onClick={handleClick}
-						style={{
-							borderRadius: "37px",
-							color: "white",
-							padding: "4px 20px",
-							cursor: "pointer",
-							fontSize: 14,
-						}}
 						value="Choose file"
 					/>
 
-					<div
-						style={{
-							marginInline: "0.5em",
-							fontStyle: "italic",
-						}}
-						className="dark:text-[#c7cad1] text-gray-700"
-					>
+					<div className="dark:text-[#c7cad1] pl-1 text-gray-700 overflow-hidden h-5 italic text-sm">
 						{fileUploadedName ? fileUploadedName : fileName}
 					</div>
 				</div>
@@ -67,6 +44,7 @@ const FileUploader = ({
 					type="file"
 					name={name}
 					onBlur={onBlur}
+					accept="application/pdf, application/vnd.ms-excel"
 					ref={hiddenFileInput}
 					onChange={handleChange}
 					style={{ display: "none" }}

@@ -1,6 +1,20 @@
 import React from "react";
+import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
 
 const ErrorModal = ({ errormsg, setErrormsg }) => {
+	const result = errormsg?.msg?.includes("missing revert");
+	if (result) {
+		setErrormsg((prev) => ({ ...prev, msg: "Please reload this page" }));
+	}
+	const metamaskerr1 = errormsg?.msg?.includes("invalid address");
+	const metamaskerr2 = errormsg?.msg?.includes("unknown account");
+	if (metamaskerr1 || metamaskerr2) {
+		setErrormsg((prev) => ({
+			...prev,
+			msg: "Please open the metamask and login",
+		}));
+	}
+
 	return (
 		<>
 			<input
@@ -10,7 +24,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 				readOnly
 			/>
 			<div
-				style={{ backdropFilter: "brightness(40%) blur(8px)" }}
+				style={{ backdropFilter: "brightness(100%) blur(8px)" }}
 				className="modal"
 			>
 				<div className="relative p-4 w-full max-w-md h-full md:h-auto z-50">
@@ -55,7 +69,7 @@ const ErrorModal = ({ errormsg, setErrormsg }) => {
 								></path>
 							</svg>
 							<h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-								{errormsg.msg ? errormsg.msg : "No Error"}
+								{errormsg.msg ? getOnlyErrorText(errormsg.msg) : "No Error"}
 							</h3>
 							<button
 								onClick={() => {

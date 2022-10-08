@@ -27,12 +27,18 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 
 		if (getStatus.success) {
 			setStatus(true);
+			localStorage.setItem("Wallet-Check", true);
+			setMetaStatus(true);
 		} else {
-			console.log(getStatus.msg);
-			setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
-			setStatus(false);
+			if (localStorage.getItem("Wallet-Check") === "true") {
+				setStatus(true);
+				setMetaStatus(true);
+			} else {
+				setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
+				setStatus(false);
+				setMetaStatus(false);
+			}
 		}
-		setMetaStatus(getStatus.success);
 	};
 
 	function hitRequestAccount() {

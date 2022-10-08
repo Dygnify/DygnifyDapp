@@ -165,7 +165,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 										formik.setFieldValue("loan_type", value.value)
 									}
 									value={formik.values.loan_type}
-									placeholder="Enter Repayment"
+									placeholder="Enter&nbsp;Repayment"
 									options={loantypes}
 									focus={setoutlineType}
 								></Selection>

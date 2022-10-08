@@ -3,7 +3,6 @@ import React from "react";
 // import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DoughnutChart from "../../../Components/DoughnutChart";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
-
 const OpportunityCardCollapsible = ({ data }) => {
 	function getStatus(index) {
 		let status = "";
@@ -30,6 +29,9 @@ const OpportunityCardCollapsible = ({ data }) => {
 				status = "Drawndown";
 				break;
 			case "7":
+				status = "WriteOff";
+				break;
+			case "8":
 				status = "Repaid";
 				break;
 			default:
@@ -38,6 +40,8 @@ const OpportunityCardCollapsible = ({ data }) => {
 
 		return status;
 	}
+
+	console.log(data);
 
 	return (
 		<div className="collapse collapse-arrow dark:bg-darkmode-500 bg-lightmode-200 rounded-xl">
@@ -58,7 +62,12 @@ const OpportunityCardCollapsible = ({ data }) => {
 					<div className="hidden md:flex justify-evenly">
 						<div className="">
 							<DoughnutChart
-								data={[data.actualLoanAmount, data.poolBalance]}
+								data={[
+									+data?.status >= 6
+										? 0
+										: data.actualLoanAmount - data.poolBalance,
+									+data?.status >= 6 ? data.actualLoanAmount : data.poolBalance,
+								]}
 								color={["#5375FE", "#ffffff"]}
 								width={200}
 								labels={["Capital Requested", "Total Raised"]}
@@ -82,7 +91,9 @@ const OpportunityCardCollapsible = ({ data }) => {
 									<p className="text-neutral-300">Total raised till now</p>
 									<p className="text-lg flex gap-1">
 										{data && data.poolDisplayBalance
-											? data.poolDisplayBalance
+											? +data?.status >= 6
+												? data.opportunityAmount
+												: data.poolDisplayBalance
 											: "-- "}
 
 										<span>{process.env.REACT_APP_TOKEN_NAME}</span>
@@ -137,7 +148,6 @@ const OpportunityCardCollapsible = ({ data }) => {
 										{data ? data.opportunityAmount : "--"}
 									</p>
 								</div>
-
 								<div>
 									<p className="text-neutral-300">Interest Rate</p>
 									<p className="text-lg">{data?.loanInterest}</p>

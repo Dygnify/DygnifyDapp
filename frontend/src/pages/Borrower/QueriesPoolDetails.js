@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import GradientButton from "../../uiTools/Button/GradientButton";
 
-const QueriesPoolDetails = () => {	
+const QueriesPoolDetails = () => {
 	const [expand, setExpand] = useState(false);
 
 	const info = [
