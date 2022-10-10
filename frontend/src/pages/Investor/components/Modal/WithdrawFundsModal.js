@@ -5,9 +5,9 @@ import {
 	withdrawSeniorPoolInvestment,
 } from "../../../../services/BackendConnectors/userConnectors/investorConncector";
 
-import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
+import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
 const WithdrawFundsModal = ({
 	userWalletBal,
@@ -102,7 +102,7 @@ const WithdrawFundsModal = ({
 		};
 
 		if (data?.withdrawableAmt) {
-			if (+value > withdralAmt) {
+			if (+value > data?.withdrawableAmt) {
 				setError(errObj);
 			} else {
 				setError(defaultErr);
@@ -174,7 +174,7 @@ const WithdrawFundsModal = ({
 							<p>Available for withdrawal</p>
 
 							<img alt="" src={DollarImage} className="w-4 ml-auto" />
-							<p>{data?.withdrawableAmt}</p>
+							<p>{getDisplayAmount(data?.withdrawableAmt)}</p>
 						</div>
 					</div>
 

@@ -131,7 +131,6 @@ export const getUserWalletAddress = async () => {
 			msg: error.message,
 		};
 	}
-	return undefined;
 };
 
 export const getWalletBal = async (address) => {
@@ -168,6 +167,4 @@ export const getWalletBal = async (address) => {
 			msg: error.message,
 		};
 	}
-
-	return 0;
 };

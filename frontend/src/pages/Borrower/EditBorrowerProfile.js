@@ -29,7 +29,7 @@ const EditBorrowerProfileNew = () => {
 
 	const [uploading, setUploading] = useState(false);
 	const [fileUploadStatus, setFileUploadStatus] = useState([]);
-
+	const [logoError, setLogoError] = useState();
 	const location = useLocation();
 	const oldBrJson = location.state;
 
@@ -133,6 +133,10 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const validations = () => {
+		setLogoError(false);
+
+		if (!logoFile) setLogoError(true);
+
 		if (
 			!(
 				businessIdentityFiles &&
@@ -423,6 +427,7 @@ const EditBorrowerProfileNew = () => {
 														? profileState.companyLogoFile.businessLogoFileName
 														: null
 												}
+												error={logoError ? "Please upload logo!" : null}
 											/>
 											<TextField
 												name="companyName"

@@ -78,8 +78,6 @@ export const updateBorrowerDetails = async (cid) => {
 			msg: error.message,
 		};
 	}
-
-	return undefined;
 };
 
 export const repayment = async (poolAddress) => {
@@ -130,7 +128,7 @@ export const drawdown = async (poolAddress) => {
 
 			const transaction1 = await poolContract.drawdown();
 			await transaction1.wait();
-			return {  success: true , hash: transaction1};
+			return { success: true, hash: transaction1 };
 		}
 		Sentry.captureMessage("Wallet not connected", "warning");
 		return {

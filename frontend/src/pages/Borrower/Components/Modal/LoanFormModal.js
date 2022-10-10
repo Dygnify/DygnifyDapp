@@ -4,7 +4,6 @@ import Stepper from "../../LoanForm/Stepper";
 import Account from "../../LoanForm/Steps/Account";
 import Details from "../../LoanForm/Steps/Details";
 import Final from "../../LoanForm/Steps/Final";
-import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
 import {
 	uploadFile,
 	storeJSONData,
@@ -34,7 +33,7 @@ const LoanFormModal = ({
 	const [brJson, setBrJson] = useState();
 	const [checkBox, setCheckBox] = useState(false);
 
-	useEffect(async () => {
+	useEffect(() => {
 		getUserWalletAddress().then((res) => {
 			if (res.success) {
 				getJSONData(res.address).then((data) => {

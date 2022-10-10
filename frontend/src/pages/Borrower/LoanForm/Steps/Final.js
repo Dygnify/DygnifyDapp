@@ -1,5 +1,5 @@
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Doller from "../../../../assets/Dollar-icon.svg";
 import { getExtendableTextBreakup } from "../../../../services/Helpers/displayTextHelper";
 

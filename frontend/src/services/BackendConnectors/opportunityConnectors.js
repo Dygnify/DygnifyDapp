@@ -251,7 +251,6 @@ export const getOpportunityAt = async (id) => {
 			msg: error.message,
 		};
 	}
-	return null;
 };
 
 export const getAllUnderReviewOpportunities = async () => {
@@ -293,8 +292,6 @@ export const getAllUnderReviewOpportunities = async () => {
 			msg: error.message,
 		};
 	}
-
-	return 0;
 };
 
 export const getDrawdownOpportunities = async () => {
@@ -361,8 +358,6 @@ export const getDrawdownOpportunities = async () => {
 			msg: error.message,
 		};
 	}
-
-	return undefined;
 };
 
 export const getOpportunitiesWithDues = async () => {
@@ -446,8 +441,6 @@ export const getOpportunitiesWithDues = async () => {
 			msg: error.message,
 		};
 	}
-
-	return undefined;
 };
 
 export const getAllActiveOpportunities = async () => {
