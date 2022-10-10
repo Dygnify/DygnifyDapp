@@ -62,6 +62,7 @@ const WithdrawFundsModal = ({
 		setInvestProcessing(true);
 		setAmounts(amount);
 		setcontractAdrress(process.env.REACT_APP_SENIORPOOL);
+		console.info(amount);
 		const data = await withdrawSeniorPoolInvestment(amount);
 		if (data.success) {
 			settxhash(data.transaction.hash);
@@ -81,8 +82,7 @@ const WithdrawFundsModal = ({
 	}
 
 	const handleMax = () => {
-		setAmount(+data?.withdrawableAmt);
-		handleAmount(+data?.withdrawableAmt);
+		handleAmount(data?.withdrawableAmt);
 	};
 
 	const handleAmount = (e) => {
@@ -112,7 +112,7 @@ const WithdrawFundsModal = ({
 			setError(invalidErr);
 		}
 
-		setAmount(value);
+		setAmount(value.toString());
 	};
 
 	return (
@@ -214,14 +214,16 @@ const WithdrawFundsModal = ({
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8 flex flex-col gap-4">
 						<label
-							htmlFor="WithdrawProcessModal"
+							htmlFor={`${error.err ? "" : "WithdrawProcessModal"}`}
 							className={`block font-semibold text-white ${
 								error.err && data?.isSeniorPool
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
 							}  text-center py-2 rounded-[1.8em] select-none `}
 							onClick={() => {
-								data?.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
+								!error.err && data?.isSeniorPool
+									? withdrawSeniorPool()
+									: withdrawJunior();
 							}}
 						>
 							Withdraw Funds
