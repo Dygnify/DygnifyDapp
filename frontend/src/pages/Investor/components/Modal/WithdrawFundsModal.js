@@ -196,6 +196,12 @@ const WithdrawFundsModal = ({
 								<span className="absolute right-7 md:right-11 text-neutral-500 top-10 font-semibold">
 									{process.env.REACT_APP_TOKEN_NAME}
 								</span>
+								<p
+									onClick={handleMax}
+									className="text-right pr-2 text-primary-400 cursor-pointer underline"
+								>
+									Max
+								</p>
 
 								{error.err && (
 									<p className="text-[0.875rem] text-error-500">{error.msg}</p>
@@ -220,17 +226,6 @@ const WithdrawFundsModal = ({
 						>
 							Withdraw Funds
 						</label>
-
-						{data?.isSeniorPool ? (
-							<button
-								className={`block font-semibold text-white bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer text-center py-2 rounded-[1.8em] select-none `}
-								onClick={handleMax}
-							>
-								Max
-							</button>
-						) : (
-							<></>
-						)}
 					</div>
 				</div>
 			</div>
