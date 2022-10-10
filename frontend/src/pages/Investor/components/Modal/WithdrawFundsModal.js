@@ -81,8 +81,8 @@ const WithdrawFundsModal = ({
 	}
 
 	const handleMax = () => {
-		setAmount(+withdralAmt);
-		handleAmount(+withdralAmt);
+		setAmount(+data?.withdrawableAmt);
+		handleAmount(+data?.withdrawableAmt);
 	};
 
 	const handleAmount = (e) => {
