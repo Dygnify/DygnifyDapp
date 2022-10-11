@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import WithdrawCard from "./components/Cards/WithdrawCard";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
@@ -29,7 +29,7 @@ const Withdraw = () => {
 	const [txhash, settxhash] = useState("");
 	const [contractAdrress, setcontractAdrress] = useState("");
 	const [amounts, setAmounts] = useState("");
-
+	const [seniorPoolSharePrice, setSeniorPoolSharePrice] = useState();
 	const [updateSenior, setUpdateSenior] = useState(12);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
@@ -78,8 +78,9 @@ const Withdraw = () => {
 
 						if (res.success) {
 							balance = res.balance;
-							seniorInvestmentData.opportunityAmount =
-								getDisplayAmount(balance);
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								balance
+							);
 						} else {
 							setErrormsg({
 								status: !res.success,
@@ -90,8 +91,9 @@ const Withdraw = () => {
 						let totalInvestment =
 							seniorPoolInvestment.stakingAmt +
 							seniorPoolInvestment.withdrawableAmt;
-						seniorInvestmentData.capitalInvested =
-							getDisplayAmount(totalInvestment);
+						seniorInvestmentData.capitalInvested = getDisplayAmount(
+							totalInvestment
+						);
 
 						const price = await getSeniorPoolDisplaySharePrice(
 							spJson.estimatedAPY
@@ -100,20 +102,20 @@ const Withdraw = () => {
 						if (price.success) {
 							const { sharePriceFromContract, displaySharePrice } = price;
 							seniorInvestmentData.estimatedAPY = displaySharePrice;
+							setSeniorPoolSharePrice(sharePriceFromContract);
 
-							let realPossibleWithdrawAmt =
-								(balance * (100 - sharePriceFromContract)) / 100;
-
-							if (
-								balance >=
+							let withdrawAmtWithSharePrice = parseFloat(
 								(seniorPoolInvestment.withdrawableAmt *
 									(100 + parseFloat(sharePriceFromContract))) /
 									100
-							) {
-								seniorInvestmentData.withdrawableAmt =
-									seniorPoolInvestment.withdrawableAmt;
+							).toFixed(6);
+
+							if (+balance >= withdrawAmtWithSharePrice) {
+								seniorInvestmentData.withdrawableAmt = withdrawAmtWithSharePrice;
 							} else {
-								seniorInvestmentData.withdrawableAmt = realPossibleWithdrawAmt;
+								let humanReadableBal = parseFloat(balance).toFixed(2);
+								seniorInvestmentData.withdrawableAmt =
+									humanReadableBal === "0.00" ? humanReadableBal : balance;
 							}
 							setSeniorPool(seniorInvestmentData);
 						} else {
@@ -163,6 +165,7 @@ const Withdraw = () => {
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
 						setUpdateSenior={setUpdateSenior}
+						seniorPoolSharePrice={seniorPoolSharePrice}
 					/>
 				)}
 				{processFundModal ? (
