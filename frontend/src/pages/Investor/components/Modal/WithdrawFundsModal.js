@@ -21,7 +21,7 @@ const WithdrawFundsModal = ({
 	setcontractAdrress,
 	setAmounts,
 	setUpdateSenior,
-	withdralAmt,
+	seniorPoolSharePrice,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [error, setError] = useState({
@@ -62,7 +62,10 @@ const WithdrawFundsModal = ({
 		setAmounts(amount);
 		setcontractAdrress(process.env.REACT_APP_SENIORPOOL);
 		console.info(amount);
-		const data = await withdrawSeniorPoolInvestment(amount);
+		let withdrawAmt = parseFloat(
+			(amount * 100) / (100 + +seniorPoolSharePrice)
+		).toFixed(6);
+		const data = await withdrawSeniorPoolInvestment(withdrawAmt);
 		if (data.success) {
 			settxhash(data.transaction.hash);
 			setShowModal(false);

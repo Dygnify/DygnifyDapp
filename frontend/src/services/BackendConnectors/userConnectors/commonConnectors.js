@@ -168,3 +168,23 @@ export const getWalletBal = async (address) => {
 		};
 	}
 };
+
+export const getGasPrice = async () => {
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			let gasPrice = await provider.getGasPrice();
+			return {
+				balance: ethers.utils.formatUnits(gasPrice, sixDecimals),
+				success: true,
+			};
+		}
+	} catch (error) {
+		Sentry.captureException(error);
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
+};
