@@ -229,7 +229,7 @@ const InvestModal = ({
 	return (
 		<>
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
-			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
+			<div className="modal backdrop-filter backdrop-brightness-[100%] dark:backdrop-brightness-[40%] backdrop-blur-lg">
 				{loading && <Loader />}
 				<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 				<div

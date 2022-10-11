@@ -10,6 +10,7 @@ import { getUserWalletAddress } from "../../services/BackendConnectors/userConne
 import * as Yup from "yup";
 import Loader from "../../uiTools/Loading/Loader";
 import { uploadFile, storeJSONData } from "../../services/Helpers/skynetIPFS";
+import ProcessingModal from "./Components/Modal/FileUpload/ProcessingModal";
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
@@ -18,11 +19,6 @@ const EditBorrowerProfileNew = () => {
 	const [hasKey, setHasKey] = useState();
 	const [loading, setLoading] = useState();
 	const [error, setError] = useState();
-	const [logoError, setLogoError] = useState(false);
-	const [addFileError, setAddFileError] = useState();
-	const [idFileError, setIdFileError] = useState();
-	const [incoFileError, setIncoFileError] = useState();
-
 	const [borrowerAddress, setBorrowerAddress] = useState();
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
@@ -30,6 +26,10 @@ const EditBorrowerProfileNew = () => {
 	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
 		useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
+
+	const [uploading, setUploading] = useState(false);
+	const [fileUploadStatus, setFileUploadStatus] = useState([]);
+	const [logoError, setLogoError] = useState();
 	const location = useLocation();
 	const oldBrJson = location.state;
 
@@ -41,9 +41,6 @@ const EditBorrowerProfileNew = () => {
 
 	let allowSubmit = true;
 
-	const regex =
-		/^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?\/?$/;
-
 	const validationSchema = Yup.object().shape({
 		companyName: Yup.string().label("Company Name").required(),
 		companyRepName: Yup.string()
@@ -54,11 +51,7 @@ const EditBorrowerProfileNew = () => {
 		bizAddFileName: Yup.string().label("File Name").required(),
 		bizLicFileName: Yup.string().label("File Name"),
 		bizIncoFileName: Yup.string().label("File Name").required(),
-		website: Yup.string()
-			.matches(regex, "Enter a valid Url")
-			.label("Website")
-			.required(),
-		email: Yup.string().email().label("Email").required(),
+		website: Yup.string().label("Website").required(),
 	});
 
 	useEffect(() => {
@@ -140,22 +133,21 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const validations = () => {
-		if (!logoFile && !location.state) setLogoError(true);
+		setLogoError(false);
 
-		if (!addFileError && !location.state) setAddFileError(true);
-		if (!incoFileError && !location.state) setIncoFileError(true);
-		if (!idFileError && !location.state) setIdFileError(true);
+		if (!logoFile) setLogoError(true);
+
 		if (
 			!(
 				businessIdentityFiles &&
 				businessIncorporationFiles &&
 				businessAddressFiles &&
-				logoError
+				logoFile
 			) &&
 			!location.state
 		) {
 			setError(true);
-			setLoading(false);
+			setUploading(false);
 		}
 	};
 
@@ -177,8 +169,7 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const uploadBorrowerData = async (formData) => {
-		setLoading(true);
-		console.log(formData);
+		setUploading(true);
 		try {
 			const {
 				companyName,
@@ -193,9 +184,65 @@ const EditBorrowerProfileNew = () => {
 				twitter,
 				linkedin,
 			} = formData;
+
 			validations();
 			let key = false;
+			let tempFileStatus = [];
 			if (businessLicenseFiles) key = true;
+
+			if (logoFile && logoFile.length) {
+				let logoFileObj = {
+					fileName: logoFile[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(logoFileObj);
+			}
+
+			if (businessIdentityFiles && businessIdentityFiles.length) {
+				let businessIdentityFilesObj = {
+					fileName: businessIdentityFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessIdentityFilesObj);
+			}
+
+			if (businessAddressFiles && businessAddressFiles.length) {
+				let businessAddressFilesObj = {
+					fileName: businessAddressFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessAddressFilesObj);
+			}
+
+			if (businessIncorporationFiles && businessIncorporationFiles.length) {
+				let businessIncorporationFilesObj = {
+					fileName: businessIncorporationFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessIncorporationFilesObj);
+			}
+
+			if (businessLicenseFiles && businessLicenseFiles.length) {
+				let businessLicenseFilesObj = {
+					fileName: businessLicenseFiles[0].name,
+					progress: 0,
+					status: "Pending",
+				};
+
+				tempFileStatus.push(businessLicenseFilesObj);
+			}
+
+			console.log(tempFileStatus);
+			setFileUploadStatus(tempFileStatus);
+
 			{
 				if (
 					businessIdentityFiles ||
@@ -303,6 +350,7 @@ const EditBorrowerProfileNew = () => {
 				twitter: twitter,
 				linkedin: linkedin,
 			};
+
 			if ((businessLicenseFiles || profileState) && (hasKey || key)) {
 				const licenseFile = {
 					businessLicFile: {
@@ -337,6 +385,14 @@ const EditBorrowerProfileNew = () => {
 
 	return (
 		<div className={`${loading ? "relative" : ""}`}>
+			{
+				<ProcessingModal
+					setUploading={setUploading}
+					uploading={uploading}
+					fileUploadStatus={fileUploadStatus}
+				/>
+			}
+
 			{loading && <Loader />}
 
 			<Formik
@@ -371,7 +427,7 @@ const EditBorrowerProfileNew = () => {
 														? profileState.companyLogoFile.businessLogoFileName
 														: null
 												}
-												error={logoError ? "Please upload a logo." : null}
+												error={logoError ? "Please upload logo!" : null}
 											/>
 											<TextField
 												name="companyName"
@@ -434,13 +490,7 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIdentityFilesUpload}
 										onBlur={handleBlur}
-										error={
-											idFileError
-												? "File required"
-												: touched.bizIdFileName && errors.bizIdFileName
-												? errors.bizIdFileName
-												: null
-										}
+										error={error ? "File required" : errors.bizIdFileName}
 										fileName={
 											profileState
 												? profileState.businessIdFile.businessIdFileName
@@ -454,13 +504,7 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessAddressFilesUpload}
 										onBlur={handleBlur}
-										error={
-											addFileError
-												? "File required"
-												: touched.bizAddFileName && errors.bizAddFileName
-												? errors.bizAddFileName
-												: null
-										}
+										error={error ? "File required" : errors.bizAddFileName}
 										fileName={
 											profileState
 												? profileState.businessAddFile.businessAddFileName
@@ -474,13 +518,7 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIncorporationFilesUpload}
 										onBlur={handleBlur}
-										error={
-											incoFileError
-												? "File required"
-												: touched.bizIncoFileName && errors.bizIncoFileName
-												? errors.bizIncoFileName
-												: null
-										}
+										error={error ? "File required" : errors.bizIncoFileName}
 										fileName={
 											profileState
 												? profileState.businessIncoFile.businessIncoFileName
@@ -514,11 +552,7 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											value={values.website}
 											onBlur={handleBlur}
-											error={
-												touched.website && errors.website
-													? errors.website
-													: null
-											}
+											error={errors.website}
 										/>
 										<TextField
 											name="email"
@@ -528,9 +562,6 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											onBlur={handleBlur}
 											value={values.email}
-											error={
-												touched.email && errors.email ? errors.email : null
-											}
 										/>
 										<TextField
 											name="twitter"
@@ -568,7 +599,6 @@ const EditBorrowerProfileNew = () => {
 							<GradientButton
 								className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
 								onClick={handleSubmit}
-								type="submit"
 							>
 								Save and Exit
 							</GradientButton>

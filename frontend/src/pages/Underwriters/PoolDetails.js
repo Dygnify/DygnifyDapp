@@ -13,7 +13,6 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
 import { openFileInNewTab } from "../../services/Helpers/skynetIPFS";
 
 const PoolDetails = () => {
@@ -164,7 +163,7 @@ const PoolDetails = () => {
 			console.log(result.msg);
 			setErrormsg({
 				status: !result.success,
-				msg: getOnlyErrorText(result.msg),
+				msg: result.msg,
 			});
 		}
 
@@ -441,7 +440,7 @@ const PoolDetails = () => {
 						{companyDetails?.website ? (
 							<button
 								id="website"
-								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+								className="btn btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
 								onClick={redirectToURl}
 							>
 								<Website />
@@ -503,7 +502,7 @@ const PoolDetails = () => {
 							{companyDetails?.website ? (
 								<button
 									id="website"
-									className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+									className="btn  btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
 									onClick={redirectToURl}
 								>
 									<Website />

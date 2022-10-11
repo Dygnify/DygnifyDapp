@@ -272,7 +272,7 @@ export default function Final({
 						color: "white",
 					}}
 					className={`mt-10 md:mt-2 btn btn-wide  capitalize font-medium border-none 
-					bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF]
+					bg-gradient-to-r from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] focus:outline-[#9281FF]
 					disabled:opacity-40 
 							
 					`}

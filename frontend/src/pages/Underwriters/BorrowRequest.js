@@ -41,15 +41,15 @@ const BorrowRequest = () => {
 				<div className="md:pl-1 lg:pl-2 xl:pl-2 dark:text-white text-black">
 					<div className="mb-2">
 						<h2 className="text-left text-2xl lg:mb-8 xl:mb-10 xl:mt-1 ">
-							Underwriter's Dashboard
+							Request Dashboard
 						</h2>
 					</div>
 				</div>
 
 				{opportunities.length === 0 ? (
-					<div className="justify-center  flex ">
-						<div className=" text-[#64748B] text-xl text-center mt-3">
-							No Borrow requests are present at the moment.
+					<div className="relative h-screen flex justify-center">
+						<div className="text-[#64748B] text-xl text-center mt-3 absolute top-40">
+							<p>No requests are present at the moment.</p>
 						</div>
 					</div>
 				) : (

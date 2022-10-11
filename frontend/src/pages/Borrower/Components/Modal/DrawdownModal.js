@@ -30,7 +30,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 		<>
 			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<input type="checkbox" id="drawdown-modal" className="modal-toggle" />
-			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
+			<div className="modal backdrop-filter backdrop-brightness-[100%] backdrop-blur-lg">
 				<div className="bg-white dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
 					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
 						<h3 className="font-semibold text-xl">Drawdown</h3>

@@ -83,12 +83,11 @@ const Stepper = ({ steps, currentStep }) => {
 								? "bg-[#6047FF] text-white font-bold border border-[#6047FF]"
 								: "bg-gray-500 text-white font-bold border border-[#6047FF]"
 						}`}
-						// style={{ display: "flex" }}
 					>
 						{index + 1}
 					</div>
 					<div
-						className={`absolute top-0 w-20 md:w-32 text-center mt-16 text-[0.65rem] xl:text-xs font-medium uppercase ${
+						className={`absolute top-0 w-20 md:w-20 lg:w-32 text-center mt-16 text-[0.65rem] xl:text-xs font-medium uppercase ${
 							step.highlighted ? "text-black dark:text-white" : "text-gray-400"
 						}`}
 					>

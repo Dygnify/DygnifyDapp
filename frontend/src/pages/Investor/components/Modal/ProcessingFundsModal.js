@@ -1,7 +1,6 @@
 import React from "react";
 import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 import { useNavigate } from "react-router-dom";
-import { setUser } from "@sentry/react";
 
 const ProcessingFundsModal = ({
 	investProcessing,
@@ -21,7 +20,7 @@ const ProcessingFundsModal = ({
 				id={invest ? "InvestProcessModal" : "WithdrawProcessModal"}
 				className="modal-toggle"
 			/>
-			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg px-4">
+			<div className="modal backdrop-filter backdrop-brightness-[100%] backdrop-blur-lg px-4">
 				<div className="bg-neutral-50 dark:bg-darkmode-800 w-[100%] sm:w-[85%] md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[45rem] pb-6 rounded-xl md:pb-8">
 					<div className="md:px-8 flex px-4 py-3 text-2xl font-semibold border-b border-neutral-300 dark:border-neutral-500">
 						<h3>Invest</h3>

@@ -5,9 +5,9 @@ import {
 	withdrawSeniorPoolInvestment,
 } from "../../../../services/BackendConnectors/userConnectors/investorConncector";
 
-import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
+import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
 const WithdrawFundsModal = ({
 	userWalletBal,
@@ -21,10 +21,11 @@ const WithdrawFundsModal = ({
 	setcontractAdrress,
 	setAmounts,
 	setUpdateSenior,
+	seniorPoolSharePrice,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [error, setError] = useState({
-		err: false,
+		err: true,
 		msg: "",
 	});
 
@@ -54,17 +55,24 @@ const WithdrawFundsModal = ({
 	}
 
 	async function withdrawSeniorPool() {
+		setShowModal(false);
+		settxhash(false);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
 		setAmounts(amount);
 		setcontractAdrress(process.env.REACT_APP_SENIORPOOL);
-		const data = await withdrawSeniorPoolInvestment(amount);
+		console.info(amount);
+		let withdrawAmt = parseFloat(
+			(amount * 100) / (100 + +seniorPoolSharePrice)
+		).toFixed(6);
+		const data = await withdrawSeniorPoolInvestment(withdrawAmt);
 		if (data.success) {
 			settxhash(data.transaction.hash);
 			setShowModal(false);
 			handleForm();
 			setInvestProcessing(false);
 		} else {
+			setProcessFundModal(false);
 			console.log(data?.msg);
 			setErrormsg({
 				status: !data.status,
@@ -75,28 +83,38 @@ const WithdrawFundsModal = ({
 		setUpdateSenior(Math.random());
 	}
 
+	const handleMax = () => {
+		handleAmount(data?.withdrawableAmt);
+	};
+
 	const handleAmount = (e) => {
-		const value = e.target.value;
+		const value = e.target ? e.target.value : e;
 
 		const defaultErr = {
 			err: false,
 			msg: "",
 		};
-
+		const invalidErr = {
+			err: true,
+			msg: "Invalid Amount",
+		};
 		const errObj = {
 			err: true,
 			msg: "Withdraw amount can't be greater than withdrawable amount.",
 		};
 
 		if (data?.withdrawableAmt) {
-			if (+value > +data?.withdrawableAmt) {
+			if (+value > data?.withdrawableAmt) {
 				setError(errObj);
 			} else {
 				setError(defaultErr);
 			}
 		}
+		if (+value <= 0 || !value) {
+			setError(invalidErr);
+		}
 
-		setAmount(value);
+		setAmount(value.toString());
 	};
 
 	return (
@@ -109,7 +127,7 @@ const WithdrawFundsModal = ({
 				checked={showModal}
 				readOnly
 			/>
-			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
+			<div className="modal backdrop-filter backdrop-brightness-[100%] backdrop-blur-lg">
 				<div className="bg-neutral-50 dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8">
 					<div className=" flex justify-between px-4 md:px-8 md:border-b mt-[4em] md:mt-0 py-4">
 						<h3 className="font-semibold text-xl">Withdraw Funds</h3>
@@ -158,7 +176,7 @@ const WithdrawFundsModal = ({
 							<p>Available for withdrawal</p>
 
 							<img alt="" src={DollarImage} className="w-4 ml-auto" />
-							<p>{data?.withdrawableAmt}</p>
+							<p>{getDisplayAmount(data?.withdrawableAmt)}</p>
 						</div>
 					</div>
 
@@ -180,6 +198,12 @@ const WithdrawFundsModal = ({
 								<span className="absolute right-7 md:right-11 text-neutral-500 top-10 font-semibold">
 									{process.env.REACT_APP_TOKEN_NAME}
 								</span>
+								<p
+									onClick={handleMax}
+									className="text-right pr-2 text-primary-400 cursor-pointer underline"
+								>
+									Max
+								</p>
 
 								{error.err && (
 									<p className="text-[0.875rem] text-error-500">{error.msg}</p>
@@ -190,17 +214,24 @@ const WithdrawFundsModal = ({
 						)}
 					</div>
 
-					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<GradientBtnForModal
-							htmlFor="WithdrawProcessModal"
-							className="w-full"
-							disable="true"
+					<div className="px-4 md:px-8 mt-auto md:mt-8 flex flex-col gap-4">
+						<label
+							htmlFor={`${
+								error.err ? "WithdrawProcessModal" : "WithdrawProcessModal"
+							}`}
+							className={`block font-semibold text-white ${
+								error.err && data?.isSeniorPool
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+							}  text-center py-2 rounded-[1.8em] select-none `}
 							onClick={() => {
-								data?.isSeniorPool ? withdrawSeniorPool() : withdrawJunior();
+								!error.err && data?.isSeniorPool
+									? withdrawSeniorPool()
+									: withdrawJunior();
 							}}
 						>
 							Withdraw Funds
-						</GradientBtnForModal>
+						</label>
 					</div>
 				</div>
 			</div>

@@ -29,7 +29,7 @@ const Withdraw = () => {
 	const [txhash, settxhash] = useState("");
 	const [contractAdrress, setcontractAdrress] = useState("");
 	const [amounts, setAmounts] = useState("");
-
+	const [seniorPoolSharePrice, setSeniorPoolSharePrice] = useState();
 	const [updateSenior, setUpdateSenior] = useState(12);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
@@ -46,9 +46,9 @@ const Withdraw = () => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
 				}
+				setLoading(false);
 			})
-			.catch((error) => console.log("Failed to get senior pool investment"))
-			.finally(() => setLoading(false));
+			.catch((error) => console.log("Failed to get liquidity pool investment"));
 
 		getWalletBal().then((res) => {
 			if (res.success) {
@@ -78,8 +78,9 @@ const Withdraw = () => {
 
 						if (res.success) {
 							balance = res.balance;
-							seniorInvestmentData.opportunityAmount =
-								getDisplayAmount(balance);
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								balance
+							);
 						} else {
 							setErrormsg({
 								status: !res.success,
@@ -90,8 +91,9 @@ const Withdraw = () => {
 						let totalInvestment =
 							seniorPoolInvestment.stakingAmt +
 							seniorPoolInvestment.withdrawableAmt;
-						seniorInvestmentData.capitalInvested =
-							getDisplayAmount(totalInvestment);
+						seniorInvestmentData.capitalInvested = getDisplayAmount(
+							totalInvestment
+						);
 
 						const price = await getSeniorPoolDisplaySharePrice(
 							spJson.estimatedAPY
@@ -100,23 +102,20 @@ const Withdraw = () => {
 						if (price.success) {
 							const { sharePriceFromContract, displaySharePrice } = price;
 							seniorInvestmentData.estimatedAPY = displaySharePrice;
+							setSeniorPoolSharePrice(sharePriceFromContract);
 
-							let realPossibleWithdrawAmt =
-								(balance * (100 - sharePriceFromContract)) / 100;
-
-							if (
-								balance >=
+							let withdrawAmtWithSharePrice = parseFloat(
 								(seniorPoolInvestment.withdrawableAmt *
 									(100 + parseFloat(sharePriceFromContract))) /
 									100
-							) {
-								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-									seniorPoolInvestment.withdrawableAmt
-								);
+							).toFixed(6);
+
+							if (+balance >= withdrawAmtWithSharePrice) {
+								seniorInvestmentData.withdrawableAmt = withdrawAmtWithSharePrice;
 							} else {
-								seniorInvestmentData.withdrawableAmt = getDisplayAmount(
-									realPossibleWithdrawAmt
-								);
+								let humanReadableBal = parseFloat(balance).toFixed(2);
+								seniorInvestmentData.withdrawableAmt =
+									humanReadableBal === "0.00" ? humanReadableBal : balance;
 							}
 							setSeniorPool(seniorInvestmentData);
 						} else {
@@ -136,17 +135,16 @@ const Withdraw = () => {
 	}, [seniorPoolInvestment]);
 
 	useEffect(() => {
-		try {
-			const fetchData = async () => {
-				const opportunities = await getJuniorWithdrawableOp();
+		getJuniorWithdrawableOp()
+			.then((opportunities) => {
 				if (opportunities.success) {
 					setJuniorPools(opportunities.opportunityList);
+					setLoading(false);
+				} else {
+					setLoading(false);
 				}
-			};
-			fetchData();
-		} catch (error) {
-			console.log(error);
-		}
+			})
+			.catch((error) => console.log(error));
 	}, []);
 
 	return (
@@ -167,6 +165,7 @@ const Withdraw = () => {
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
 						setUpdateSenior={setUpdateSenior}
+						seniorPoolSharePrice={seniorPoolSharePrice}
 					/>
 				)}
 				{processFundModal ? (
@@ -189,7 +188,7 @@ const Withdraw = () => {
 					{seniorPool ? (
 						<div className="mb-16 flex flex-col gap-5">
 							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-								Senior pool
+								Liquidity Provider
 							</h2>
 
 							<WithdrawCard
@@ -204,13 +203,15 @@ const Withdraw = () => {
 					)}
 
 					{juniorPools.length === 0 ? (
-						<div className="text-neutral-500 text-lg text-center">
-							<p>No stats are available. Explore opportunities here.</p>
+						<div className="relative h-screen flex justify-center">
+							<div className="text-[#64748B] text-xl text-center mt-3 absolute top-40">
+								<p>No stats are available.</p>
+							</div>
 						</div>
 					) : (
 						<div className="mb-16 flex flex-col gap-5">
 							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-								Junior pools
+								Underwriter
 							</h2>
 							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
 								{juniorPools.map((item) => (

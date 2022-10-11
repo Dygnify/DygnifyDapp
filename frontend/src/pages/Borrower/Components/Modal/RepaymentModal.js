@@ -19,6 +19,7 @@ const RepaymentModal = ({
 	setpoolName,
 	setamounts,
 	setUpdateRepayment,
+	setCheck,
 }) => {
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
@@ -64,15 +65,20 @@ const RepaymentModal = ({
 		setApprovedvalue(data.repaymentAmount);
 	}
 	async function onRepayment() {
+		settransactionId(null);
 		setOpenProcessRepayment(true);
 		setProcessRepayment(true);
 		setpoolName(data?.opportunityName);
 		setamounts(approvedvalue);
 		setwalletAddress(data.opportunityPoolAddress);
+		handleRepayment();
+		setCheck(true);
 		const res = await repayment(data.opportunityPoolAddress);
+		if (!res.success) {
+			setOpenProcessRepayment(false);
+		}
 		console.log(res.tx);
 		settransactionId(res.tx.hash);
-		handleRepayment();
 		setProcessRepayment(false);
 		setUpdateRepayment(Math.random());
 	}
@@ -80,7 +86,7 @@ const RepaymentModal = ({
 		<div>
 			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<input type="checkbox" id="repayment-modal" className="modal-toggle" />
-			<div className="modal backdrop-filter backdrop-brightness-[40%] backdrop-blur-lg">
+			<div className="modal backdrop-filter backdrop-brightness-[100%] backdrop-blur-lg">
 				{loading && <Loader />}
 				<div
 					className={`bg-white dark:bg-darkmode-800  w-[100vw] h-[100vh] flex flex-col md:block md:h-auto md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] pb-[6em] md:rounded-xl md:pb-8 ${

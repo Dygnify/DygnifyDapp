@@ -38,7 +38,7 @@ export const withdrawAllJunior = async (poolAddress) => {
 export const withdrawSeniorPoolInvestment = async (amount) => {
 	Sentry.captureMessage("withdrawSeniorPoolInvestment", "info");
 	try {
-		if (!amount || amount <= 0) {
+		if (!amount || +amount <= 0) {
 			Sentry.captureMessage("Invalid amount", "warning");
 			return {
 				success: false,
@@ -101,7 +101,7 @@ export const getTotalInvestmentOfInvestor = async () => {
 			);
 			let totalInvestment = 0;
 			let totalYield = 0;
-			// get senior pool investment with yield
+			// get liquidity pool investment with yield
 			let spInvestments = await getUserSeniorPoolInvestment();
 			let seniorInvestment =
 				spInvestments.data.stakingAmt + spInvestments.data.withdrawableAmt;

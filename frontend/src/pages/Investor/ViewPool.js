@@ -198,15 +198,17 @@ const ViewPool = () => {
 
 	const redirectToURl = (event) => {
 		let url;
+		console.log(event);
+
 		switch (event.target.id) {
 			case "twitter":
-				url = poolData.twitter;
+				url = companyDetails?.twitter;
 				break;
 			case "linkedin":
-				url = poolData.linkedin;
+				url = companyDetails?.linkedin;
 				break;
 			case "website":
-				url = poolData.website;
+				url = companyDetails?.website;
 				break;
 			default:
 				break;
@@ -280,7 +282,7 @@ const ViewPool = () => {
 					<div className="flex items-center gap-3 md:gap-5">
 						<img
 							alt="dygnigyImage"
-							src={DygnifyImage}
+							src={logoImgSrc}
 							style={{ aspectRatio: "1/1" }}
 							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
 						/>
@@ -297,39 +299,38 @@ const ViewPool = () => {
 
 					{/* social links */}
 					<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4 text-white">
-						{companyDetails && companyDetails.linkedin ? (
+						{companyDetails?.linkedin ? (
 							<button
 								id="linkedin"
+								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
 								onClick={redirectToURl}
-								className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer"
 							>
-								<LinkedIn className="w-6" />
-								<p className="hidden md:block font-medium ">LinkedIn</p>
+								<LinkedIn />
+								LinkedIn
+							</button>
+						) : (
+							<></>
+						)}
+						{companyDetails?.website ? (
+							<button
+								id="website"
+								className="btn btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+								onClick={redirectToURl}
+							>
+								<Website />
+								Website
 							</button>
 						) : (
 							<></>
 						)}
 
-						{companyDetails && companyDetails.website ? (
-							<button
-								id="website"
-								onClick={redirectToURl}
-								className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer"
-							>
-								<Website className="w-6" />
-								<p className="hidden md:block font-medium">Website</p>
-							</button>
-						) : (
-							<></>
-						)}
-						{companyDetails && companyDetails.twitter ? (
+						{companyDetails?.twitter ? (
 							<button
 								id="twitter"
+								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
 								onClick={redirectToURl}
-								className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer"
 							>
-								<Twitter className="w-6" />
-								<p className="hidden md:block font-medium">Twitter</p>
+								<Twitter /> twitter
 							</button>
 						) : (
 							<></>
@@ -507,16 +508,22 @@ const ViewPool = () => {
 
 				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
 					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
-					<div className=" mt-8 py-6  justify-start gap-4    flex font-bold border-y border-neutral-300 dark:border-darkmode-500">
-						<p className="w-1/3 md:w-1/4 pl-4">Address</p>
-						<p className="w-1/3 md:w-1/4 pl-4 sm:pl-10 md:pl-3 xl:pl-5">Type</p>
-						<p className="w-1/3 md:w-1/4  text-end pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
-							Amount
-						</p>
-						<p className="hidden md:block w-1/3 md:w-1/4 text-end pr-4 ">
-							Date
-						</p>
-					</div>
+					{transactionData?.length ? (
+						<div className=" mt-8 py-6  justify-start gap-4    flex font-bold border-y border-neutral-300 dark:border-darkmode-500">
+							<p className="w-1/3 md:w-1/4 pl-4">Address</p>
+							<p className="w-1/3 md:w-1/4 pl-4 sm:pl-10 md:pl-3 xl:pl-5">
+								Type
+							</p>
+							<p className="w-1/3 md:w-1/4  text-end pr-4 sm:pr-10 md:pr-2 xl:pr-5 2xl:pr-8">
+								Amount
+							</p>
+							<p className="hidden md:block w-1/3 md:w-1/4 text-end pr-4 ">
+								Date
+							</p>
+						</div>
+					) : (
+						<></>
+					)}
 
 					{transactionData?.length ? (
 						<div className="mt-6 flex flex-col gap-3">
@@ -556,29 +563,39 @@ const ViewPool = () => {
 							</div>
 
 							<div className="ml-auto flex items-center gap-3 sm:gap-6 md:gap-4 text-white">
-								{companyDetails && companyDetails.linkedin ? (
-									<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
-										<LinkedIn className="w-6" />
-										<p className="hidden md:block font-medium">LinkedIn</p>
-									</div>
+								{companyDetails?.linkedin ? (
+									<button
+										id="linkedin"
+										className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+										onClick={redirectToURl}
+									>
+										<LinkedIn />
+										LinkedIn
+									</button>
+								) : (
+									<></>
+								)}
+								{companyDetails?.website ? (
+									<button
+										id="website"
+										className="btn  btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  capitalize flex pb-5"
+										onClick={redirectToURl}
+									>
+										<Website />
+										Website
+									</button>
 								) : (
 									<></>
 								)}
 
-								{companyDetails && companyDetails.website ? (
-									<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
-										<Website className="w-6 " />
-										<p className="hidden md:block font-medium">Website</p>
-									</div>
-								) : (
-									<></>
-								)}
-
-								{companyDetails && companyDetails.twitter ? (
-									<div className="flex items-center gap-2 md:py-[0.5em] md:px-4 md:rounded-[1.8em] md:bg-darkmode-500 cursor-pointer">
-										<Twitter className="w-6" />
-										<p className="hidden md:block font-medium">Twitter</p>
-									</div>
+								{companyDetails?.twitter ? (
+									<button
+										id="twitter"
+										className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
+										onClick={redirectToURl}
+									>
+										<Twitter /> twitter
+									</button>
 								) : (
 									<></>
 								)}

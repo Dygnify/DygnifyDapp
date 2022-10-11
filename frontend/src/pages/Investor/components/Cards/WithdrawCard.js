@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import { getJSONData } from "../../../../services/Helpers/skynetIPFS";
+import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
 const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	const {
@@ -71,7 +72,9 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 						<p className="">Available for Withdrawal</p>
 
 						<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
-						<p className="">{withdrawableAmt ? withdrawableAmt : "- -"}</p>
+						<p className="">
+							{withdrawableAmt ? getDisplayAmount(withdrawableAmt) : "- -"}
+						</p>
 					</div>
 				</div>
 

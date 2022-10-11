@@ -49,12 +49,15 @@ const Overview = () => {
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
 	const [drawdownId, setDrawdownId] = useState("");
+	const [check, setCheck] = useState();
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
 		msg: "",
 	});
+
+	const [fileUpload, setFileUpload] = useState({});
 
 	const handleForm = () => {
 		setSelected(null);
@@ -208,6 +211,8 @@ const Overview = () => {
 						setBorrowReqProcess={setBorrowReqProcess}
 						setSelected={setSelected}
 						setProcessModal={setProcessModal}
+						setFileUpload={setFileUpload}
+						setErrormsg={setErrormsg}
 					/>
 				)}
 
@@ -218,6 +223,7 @@ const Overview = () => {
 						handleDrawdown={cutProcessModal}
 						setProcessModal={setProcessModal}
 						processModal={processModal}
+						fileUpload={fileUpload}
 					/>
 				)}
 
@@ -261,7 +267,7 @@ const Overview = () => {
 								{totalLoanAmtWithInterest || totalRepaidAmt.amount ? (
 									<DoughnutChart
 										data={[
-											totalLoanAmtWithInterest,
+											totalLoanAmtWithInterest - totalRepaidAmt.amount,
 											totalRepaidAmt.amount ? totalRepaidAmt.amount : 0,
 										]}
 										color={["#5375FE", "#ffffff"]}
@@ -371,6 +377,7 @@ const Overview = () => {
 									setUpdateRepayment={setUpdateRepayment}
 									setpoolName={setpoolName}
 									setamounts={setamounts}
+									setCheck={setCheck}
 								/>
 							))}
 						</div>
@@ -378,6 +385,8 @@ const Overview = () => {
 
 					{openProcessRepayment && (
 						<ProcessingRepaymentModal
+							check={check}
+							setCheck={setCheck}
 							processRepayment={processRepayment}
 							transactionId={transactionId}
 							walletAddress={walletAddress}

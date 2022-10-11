@@ -67,8 +67,10 @@ const Transactions = () => {
 						</div>
 					</>
 				) : (
-					<div className="flex justify-center">
-						<div className="text-neutral-500">No transactions available.</div>
+					<div className="relative h-screen flex justify-center">
+						<div className="text-[#64748B] text-xl text-center mt-3 absolute top-40">
+							<p>No transactions available.</p>
+						</div>
 					</div>
 				)}
 			</div>

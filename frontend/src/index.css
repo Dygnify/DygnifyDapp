@@ -169,3 +169,15 @@ input[type="number"] {
 .CreateProfileIcon > svg > path {
 	fill: black;
 }
+
+ /* For Firefox */
+ progress::-moz-progress-bar {
+	background: rgb(37 99 235);
+	border-radius: 0.25em;
+}
+
+/* For Chrome or Safari */
+progress::-webkit-progress-value {
+	background: rgb(37 99 235);
+	border-radius: 0.25em;
+}

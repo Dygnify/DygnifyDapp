@@ -64,7 +64,7 @@ export default function Details({ handleNext, handlePrev, formData }) {
 								? formik.errors.collateral_document_name
 								: null
 						}
-						label="Collateral Document Name"
+						label="Collateral Document&nbsp;Name"
 						placeholder="Enter Collateral Document Name"
 						className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
 					></TextField>

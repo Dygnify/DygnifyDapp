@@ -55,7 +55,7 @@ const DrawdownCard = ({
 				<label
 					htmlFor="drawdown-modal"
 					onClick={() => setSelected(data)}
-					className="bg-secondary-500 w-[100%] inline-block cursor-pointer py-2 rounded-3xl"
+					className="bg-secondary-500 w-[100%] inline-block cursor-pointer py-2 rounded-3xl text-white"
 				>
 					Drawdown Funds
 				</label>

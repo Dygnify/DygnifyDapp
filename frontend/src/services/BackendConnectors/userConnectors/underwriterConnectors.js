@@ -46,6 +46,4 @@ export const getApprovalHistory = async () => {
 			msg: error.message,
 		};
 	}
-
-	return 0;
 };

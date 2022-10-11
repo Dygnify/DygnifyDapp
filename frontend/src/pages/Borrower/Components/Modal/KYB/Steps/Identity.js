@@ -1,6 +1,5 @@
 import { useFormik } from "formik";
 import GradientButton from "../../../../../../uiTools/Button/GradientButton";
-import TextArea from "../../../../../../uiTools/Inputs/TextArea";
 import TextField from "../../../../../../uiTools/Inputs/TextField";
 import { BusinessProofValidationSchema } from "../validation";
 import FileUploader from "../../../../../Components/FileUploader";

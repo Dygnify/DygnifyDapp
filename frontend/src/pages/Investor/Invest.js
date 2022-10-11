@@ -129,7 +129,7 @@ const Invest = () => {
 			<div className="py-4">
 				<div className="flex flex-col gap-5 mb-[3rem] md:mb-[4rem]">
 					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-						Senior pool
+						Senior Pool
 					</h2>
 
 					<div className="">
@@ -156,7 +156,7 @@ const Invest = () => {
 								<p className="text-neutral-500 text-lg">
 									{seniorPoolLoading
 										? ""
-										: "No senior pool investments are available."}
+										: "No liquidity pool investments are available."}
 								</p>
 							</div>
 						)}
@@ -165,7 +165,7 @@ const Invest = () => {
 
 				<div className="flex flex-col gap-5">
 					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-						Junior pools
+						Opportunity Pools
 					</h2>
 
 					<div className={`relative ${juniorPoolLoading ? "h-[18rem]" : ""}`}>
