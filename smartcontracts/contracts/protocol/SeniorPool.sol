@@ -151,7 +151,7 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
         sharePrice = sharePrice.add(delta);
 
         if(_isWriteOff == false){
-            uint256 withdrawlAmount = opportunityPool.withdrawAll(1); //hardcoded val of 1 need to be converted into variable
+            uint256 withdrawlAmount = opportunityPool.getSeniorPoolWithdrawableAmount(); //hardcoded val of 1 need to be converted into variable
             seniorPoolBal = seniorPoolBal + withdrawlAmount;
         }
         else{
