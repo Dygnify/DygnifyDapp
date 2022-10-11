@@ -49,6 +49,7 @@ const Overview = () => {
 	const [poolName, setpoolName] = useState("");
 	const [amounts, setamounts] = useState("");
 	const [drawdownId, setDrawdownId] = useState("");
+	const [check, setCheck] = useState();
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
@@ -376,6 +377,7 @@ const Overview = () => {
 									setUpdateRepayment={setUpdateRepayment}
 									setpoolName={setpoolName}
 									setamounts={setamounts}
+									setCheck={setCheck}
 								/>
 							))}
 						</div>
@@ -383,6 +385,8 @@ const Overview = () => {
 
 					{openProcessRepayment && (
 						<ProcessingRepaymentModal
+							check={check}
+							setCheck={setCheck}
 							processRepayment={processRepayment}
 							transactionId={transactionId}
 							walletAddress={walletAddress}

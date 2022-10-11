@@ -37,9 +37,8 @@ const WithdrawFundsModal = ({
 	async function withdrawJunior() {
 		setProcessFundModal(true);
 		setInvestProcessing(true);
-		settxhash("9878978");
 		setAmounts(amount);
-		setcontractAdrress("iiii");
+		setcontractAdrress(data.opportunityPoolAddress);
 		const withdrawalData = await withdrawAllJunior(data.opportunityPoolAddress);
 		if (withdrawalData.success) {
 			settxhash(withdrawalData.transaction.hash);
@@ -214,7 +213,9 @@ const WithdrawFundsModal = ({
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8 flex flex-col gap-4">
 						<label
-							htmlFor={`${error.err ? "" : "WithdrawProcessModal"}`}
+							htmlFor={`${
+								error.err ? "WithdrawProcessModal" : "WithdrawProcessModal"
+							}`}
 							className={`block font-semibold text-white ${
 								error.err && data?.isSeniorPool
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
