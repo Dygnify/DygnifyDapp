@@ -4,7 +4,7 @@ import Header from "../Layout/Header";
 import BorrowIcon from "../../uiTools/Icons/BorrowIcon";
 import ApprovalIcon from "../../uiTools/Icons/ApprovalIcon";
 
-const DiligenceServiceProvider = () => {
+const DiligenceExpert = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
 
@@ -43,11 +43,11 @@ const DiligenceServiceProvider = () => {
 							htmlFor="dashboard-sidebar"
 							className="drawer-overlay"
 						></label>
-						<ul className=" h-full  overflow-y-auto w-60 text-[#64748B] dark:bg-darkmode-900 bg-[#F7F8F9]  flex flex-col gap-2 lg:dark:bg-transparent lg:bg-transparent">
+						<ul className="h-full  overflow-y-auto w-60 text-[#64748B] dark:bg-darkmode-900 bg-[#F7F8F9]  flex flex-col gap-2 lg:dark:bg-transparent lg:bg-transparent">
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex pl-4 py-4 gap-2"
-									to="/diligenceServiceProvider/borrowRequest"
+									to="/diligenceExpert/borrowRequest"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
@@ -61,7 +61,7 @@ const DiligenceServiceProvider = () => {
 							<li className="font-medium text-center">
 								<NavLink
 									className="flex pl-4 py-4 gap-2"
-									to="/diligenceServiceProvider/approvalHistory"
+									to="/diligenceExpert/approvalHistory"
 									onClick={() => {
 										setLinkStatus(false);
 									}}
@@ -80,4 +80,4 @@ const DiligenceServiceProvider = () => {
 	);
 };
 
-export default DiligenceServiceProvider;
+export default DiligenceExpert;

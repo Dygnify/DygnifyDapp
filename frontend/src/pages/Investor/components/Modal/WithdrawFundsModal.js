@@ -35,6 +35,7 @@ const WithdrawFundsModal = ({
 	});
 
 	async function withdrawJunior() {
+		setShowModal(false);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
 		setAmounts(amount);

@@ -12,6 +12,7 @@ const DrawdownCard = ({
 	setProcessDrawdown,
 	setUpdateRepayment,
 	setDrawdownId,
+	setCheckForDrawdown,
 }) => {
 	const [selected, setSelected] = useState(null);
 
@@ -21,6 +22,8 @@ const DrawdownCard = ({
 	const onDrawdown = async () => {
 		setOpenProcessDrawdown(true);
 		setProcessDrawdown(true);
+		setCheckForDrawdown(true);
+		handleDrawdown();
 		const tx = await drawdown(data?.opportunityPoolAddress);
 		if (tx.success) {
 			setDrawdownId(tx.hash.hash);
@@ -29,6 +32,7 @@ const DrawdownCard = ({
 			setProcessDrawdown(false);
 			setUpdateRepayment(Math.random());
 		} else {
+			setOpenProcessDrawdown(false);
 			console.log("cancle");
 		}
 	};

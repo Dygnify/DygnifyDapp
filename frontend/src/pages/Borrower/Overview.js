@@ -50,6 +50,7 @@ const Overview = () => {
 	const [amounts, setamounts] = useState("");
 	const [drawdownId, setDrawdownId] = useState("");
 	const [check, setCheck] = useState();
+	const [checkForDrawdown, setCheckForDrawdown] = useState();
 
 	const [updateRepayment, setUpdateRepayment] = useState(12);
 	const [errormsg, setErrormsg] = useState({
@@ -415,6 +416,7 @@ const Overview = () => {
 									setProcessDrawdown={setProcessDrawdown}
 									setUpdateRepayment={setUpdateRepayment}
 									setDrawdownId={setDrawdownId}
+									setCheckForDrawdown={setCheckForDrawdown}
 								/>
 							))}
 						</div>
@@ -425,6 +427,8 @@ const Overview = () => {
 							processDrawdown={processDrawdown}
 							handleDrawdown={cutProcessModal}
 							drawdownId={drawdownId}
+							checkForDrawdown={checkForDrawdown}
+							setCheckForDrawdown={setCheckForDrawdown}
 						/>
 					) : (
 						<></>

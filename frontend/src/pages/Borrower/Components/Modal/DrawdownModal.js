@@ -80,7 +80,7 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<GradientBtnForModal
 							className={"w-full"}
-							htmlFor={"DrawdownProcessModal"}
+							// htmlFor={"DrawdownProcessModal"}
 							onClick={onDrawdown}
 						>
 							Drawdown Funds
