@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
-import BorrowIcon from "../../uiTools/Icons/BorrowIcon";
-import ApprovalIcon from "../../uiTools/Icons/ApprovalIcon";
+import BorrowIcon from "../../pages/SVGIcons/BorrowIcon";
+import ApprovalIcon from "../../pages/SVGIcons/ApprovalIcon";
 
 const DiligenceExpert = () => {
 	const [linkStatus, setLinkStatus] = useState(false);

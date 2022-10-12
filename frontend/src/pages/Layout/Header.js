@@ -3,13 +3,13 @@ import GradientButton from "../../uiTools/Button/GradientButtonHeader";
 import WalletWhiteSmall from "../SVGIcons/WalletWhiteSmall";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoImage from "../../assets/logo.png";
-import Wallet from "../../uiTools/Icons/Wallet";
-import Hamburger from "../../uiTools/Icons/Hamburger";
+import Wallet from "../../pages/SVGIcons/Wallet";
+import Hamburger from "../../pages/SVGIcons/Hamburger";
 import Cross from "../../assets/cross.svg";
 import { isConnected } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
-import Dark from "../../uiTools/Icons/Dark";
-import Light from "../../uiTools/Icons/Light";
+import Dark from "../../pages/SVGIcons/Dark";
+import Light from "../../pages/SVGIcons/Light";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 
 const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {

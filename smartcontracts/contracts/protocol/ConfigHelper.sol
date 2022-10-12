@@ -168,4 +168,14 @@ library ConfigHelper {
                 uint256(ConfigOptions.Numbers.WriteOffDays)
             );
     }
+    function getUnderwriterFee(DygnifyConfig config)
+        internal
+        view
+        returns (uint256)
+    {
+        return
+            config.getNumber(
+                uint256(ConfigOptions.Numbers.UnderwriterFee)
+            );
+    }
 }
