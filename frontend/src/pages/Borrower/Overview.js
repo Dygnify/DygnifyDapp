@@ -149,12 +149,14 @@ const Overview = () => {
 					);
 					setNextDueDate(opportunities.opportunities[0]?.nextDueDate);
 				} else {
-					console.log(opportunities.msg);
-					setErrormsg({
-						status: !opportunities.success,
-						msg: opportunities.msg,
-					});
+					setRepaymentList([]);
 				}
+			} else {
+				console.log(opportunities.msg);
+				setErrormsg({
+					status: !opportunities.success,
+					msg: opportunities.msg,
+				});
 			}
 		};
 		fetchData();

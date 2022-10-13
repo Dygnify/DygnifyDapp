@@ -177,7 +177,6 @@ const PoolDetails = () => {
 
 	const redirectToURl = (event) => {
 		let url;
-		console.log(event);
 
 		switch (event.target.id) {
 			case "twitter":
