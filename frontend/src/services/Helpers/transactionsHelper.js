@@ -1,8 +1,9 @@
 import { getOpportunityName } from "../../services/BackendConnectors/opportunityConnectors";
 import axiosHttpService from "../../services/axioscall";
 import { tokenTransactions } from "../../services/ApiOptions/blockchainTransactionDataOptions";
-
+const Sentry = require("@sentry/react");
 export const getTokenTransactions = async (address, tokenAddress) => {
+	Sentry.captureMessage("getTokenTransactions", "info");
 	let trxArray = [];
 	try {
 		let trxData = await axiosHttpService(
@@ -30,8 +31,11 @@ export const getTokenTransactions = async (address, tokenAddress) => {
 					trxArray.push({ ...trx, isWithdraw, opportunityName });
 				}
 			}
+		}else{
+			Sentry.captureMessage("trxData && trxData.res.result return false", "warning");
 		}
 	} catch (error) {
+		Sentry.captureException(error);
 		console.log(error);
 	}
 	return trxArray;
