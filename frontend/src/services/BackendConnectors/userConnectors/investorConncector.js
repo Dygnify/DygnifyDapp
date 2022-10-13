@@ -151,7 +151,15 @@ export const getTotalInvestmentOfInvestor = async () => {
 					totalYield += opportunityYieldEarned;
 				}
 			}
-			return { totalInvestment, totalYield, success: true };
+			return {
+				totalInvestment,
+				totalYield,
+				data: {
+					stakingAmt: spInvestments.data.stakingAmt,
+					withdrawableAmt: spInvestments.data.withdrawableAmt,
+				},
+				success: true,
+			};
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
@@ -271,7 +279,8 @@ export const getJuniorWithdrawableOp = async () => {
 				if (tx.opportunityStatus.toString() === "8") {
 					obj.yieldGenerated = getDisplayAmount(apy * stakingBal);
 				}
-				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable =
+					await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals

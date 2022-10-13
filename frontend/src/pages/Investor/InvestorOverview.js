@@ -37,18 +37,21 @@ const InvestorOverview = () => {
 		if (data.success) {
 			setTotalInvestment(data.totalInvestment);
 			setTotalYield(data.totalYield);
+			setSeniorPoolInvestment(data.data);
 		}
+
+		setSeniorPoolLoading(false);
 	}
-	useEffect(() => {
-		getUserSeniorPoolInvestment()
-			.then((data) => {
-				if (data.success) {
-					setSeniorPoolInvestment(data.data);
-				}
-			})
-			.catch((error) => console.log("Failed to get liquidity pool investment"))
-			.finally(() => setSeniorPoolLoading(false));
-	}, []);
+	// useEffect(() => {
+	// 	getUserSeniorPoolInvestment()
+	// 		.then((data) => {
+	// 			if (data.success) {
+	// 				setSeniorPoolInvestment(data.data);
+	// 			}
+	// 		})
+	// 		.catch((error) => console.log("Failed to get liquidity pool investment"))
+	// 		.finally(() => setSeniorPoolLoading(false));
+	// }, []);
 
 	useEffect(() => {
 		if (seniorPoolInvestment) {
@@ -69,9 +72,8 @@ const InvestorOverview = () => {
 								seniorPoolInvestment.stakingAmt +
 								seniorPoolInvestment.withdrawableAmt;
 
-							seniorInvestmentData.capitalInvested = getDisplayAmount(
-								totalInvestment
-							);
+							seniorInvestmentData.capitalInvested =
+								getDisplayAmount(totalInvestment);
 						} else {
 							setErrormsg({
 								status: !res.success,
