@@ -29,11 +29,19 @@ const Withdraw = () => {
 	const [txhash, settxhash] = useState("");
 	const [contractAdrress, setcontractAdrress] = useState("");
 	const [amounts, setAmounts] = useState("");
-
+	const [seniorPoolSharePrice, setSeniorPoolSharePrice] = useState();
 	const [updateSenior, setUpdateSenior] = useState(12);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
 		msg: "",
+	});
+	const [seniorPoolLoading, setSeniorPoolLoading] = useState(true);
+	const [juniorPoolLoading, setJuniorPoolLoading] = useState(true);
+	const cardData = useRef({
+		opportunityInfo: "",
+		opportunityAmount: "",
+		loanInterest: "",
+		isFull: "",
 	});
 
 	const handleForm = () => {
@@ -100,20 +108,21 @@ const Withdraw = () => {
 						if (price.success) {
 							const { sharePriceFromContract, displaySharePrice } = price;
 							seniorInvestmentData.estimatedAPY = displaySharePrice;
+							setSeniorPoolSharePrice(sharePriceFromContract);
 
-							let realPossibleWithdrawAmt =
-								(balance * (100 - sharePriceFromContract)) / 100;
-
-							if (
-								balance >=
+							let withdrawAmtWithSharePrice = parseFloat(
 								(seniorPoolInvestment.withdrawableAmt *
 									(100 + parseFloat(sharePriceFromContract))) /
 									100
-							) {
+							).toFixed(6);
+
+							if (+balance >= withdrawAmtWithSharePrice) {
 								seniorInvestmentData.withdrawableAmt =
-									seniorPoolInvestment.withdrawableAmt;
+									withdrawAmtWithSharePrice;
 							} else {
-								seniorInvestmentData.withdrawableAmt = realPossibleWithdrawAmt;
+								let humanReadableBal = parseFloat(balance).toFixed(2);
+								seniorInvestmentData.withdrawableAmt =
+									humanReadableBal === "0.00" ? humanReadableBal : balance;
 							}
 							setSeniorPool(seniorInvestmentData);
 						} else {
@@ -124,6 +133,7 @@ const Withdraw = () => {
 								msg: price.msg,
 							});
 						}
+						setSeniorPoolLoading(false);
 					}
 				} catch (error) {
 					console.log(error);
@@ -137,19 +147,25 @@ const Withdraw = () => {
 			.then((opportunities) => {
 				if (opportunities.success) {
 					setJuniorPools(opportunities.opportunityList);
-					setLoading(false);
+					setJuniorPoolLoading(false);
 				} else {
-					setLoading(false);
+					setJuniorPoolLoading(false);
 				}
 			})
 			.catch((error) => console.log(error));
 	}, []);
 
+	const loadingCard = (
+		<WithdrawCard
+			onClick={() => console.log("card for loading")}
+			data={cardData.current}
+		/>
+	);
+
 	return (
-		<div className={`relative ${loading ? "h-[100vh]" : ""}`}>
-			{loading && <Loader />}
+		<div>
 			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
-			<div className={`${loading ? "blur-sm" : ""}`}>
+			<div>
 				{selected && (
 					<WithdrawFundsModal
 						showModal={showModal}
@@ -163,6 +179,7 @@ const Withdraw = () => {
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
 						setUpdateSenior={setUpdateSenior}
+						seniorPoolSharePrice={seniorPoolSharePrice}
 					/>
 				)}
 				{processFundModal ? (
@@ -182,47 +199,59 @@ const Withdraw = () => {
 				</div>
 
 				<div className="mt-8">
-					{seniorPool ? (
-						<div className="mb-16 flex flex-col gap-5">
-							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-								Liquidity Provider
-							</h2>
+					<div className="mb-16 flex flex-col gap-5">
+						<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
+							Liquidity Provider
+						</h2>
+						<div>
+							{seniorPoolLoading && (
+								<div className="relative">
+									<Loader />
+									<div className="blur-sm">{loadingCard}</div>
+								</div>
+							)}
 
-							<WithdrawCard
-								data={seniorPool}
-								isSeniorPool={true}
-								setSelected={setSelected}
-								setShowModal={setShowModal}
-							/>
+							{seniorPool ? (
+								<WithdrawCard
+									data={seniorPool}
+									isSeniorPool={true}
+									setSelected={setSelected}
+									setShowModal={setShowModal}
+								/>
+							) : (
+								""
+							)}
 						</div>
-					) : (
-						""
-					)}
+					</div>
 
-					{juniorPools.length === 0 ? (
-						<div className="relative h-screen flex justify-center">
-							<div className="text-[#64748B] text-xl text-center mt-3 absolute top-40">
-								<p>No stats are available.</p>
-							</div>
+					<div className="mb-16 flex flex-col gap-5">
+						<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
+							Underwriter
+						</h2>
+
+						<div className={`relative ${juniorPoolLoading ? "h-[18rem]" : ""}`}>
+							{juniorPoolLoading && <Loader />}
+							{juniorPools.length === 0 ? (
+								<div className="text-center">
+									<p className="text-neutral-500 text-lg">
+										{juniorPoolLoading ? "" : "No stats are available."}
+									</p>
+								</div>
+							) : (
+								<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
+									{juniorPools.map((item) => (
+										<WithdrawCard
+											key={Math.random()}
+											data={item}
+											isSeniorPool={false}
+											setSelected={setSelected}
+											setShowModal={setShowModal}
+										/>
+									))}
+								</div>
+							)}
 						</div>
-					) : (
-						<div className="mb-16 flex flex-col gap-5">
-							<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-								Underwriter
-							</h2>
-							<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
-								{juniorPools.map((item) => (
-									<WithdrawCard
-										key={Math.random()}
-										data={item}
-										isSeniorPool={false}
-										setSelected={setSelected}
-										setShowModal={setShowModal}
-									/>
-								))}
-							</div>
-						</div>
-					)}
+					</div>
 				</div>
 			</div>
 		</div>

@@ -129,7 +129,7 @@ const Invest = () => {
 			<div className="py-4">
 				<div className="flex flex-col gap-5 mb-[3rem] md:mb-[4rem]">
 					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-						Liquidity Provider
+						Senior Pool
 					</h2>
 
 					<div className="">
@@ -165,7 +165,7 @@ const Invest = () => {
 
 				<div className="flex flex-col gap-5">
 					<h2 className="font-semibold text-[1.4375rem] md:text-[1.75rem]">
-						Underwriter
+						Opportunity Pools
 					</h2>
 
 					<div className={`relative ${juniorPoolLoading ? "h-[18rem]" : ""}`}>

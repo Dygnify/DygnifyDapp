@@ -6,9 +6,9 @@ const ProcessingDrawdownModal = ({
 	processDrawdown,
 	handleDrawdown,
 	drawdownId,
+	checkForDrawdown,
+	setCheckForDrawdown,
 }) => {
-	console.log(processDrawdown, "in fund process modal");
-
 	const navigate = useNavigate();
 
 	return (
@@ -17,6 +17,7 @@ const ProcessingDrawdownModal = ({
 				type="checkbox"
 				id="DrawdownProcessModal"
 				className="modal-toggle"
+				checked={checkForDrawdown}
 			/>
 			<div className="modal backdrop-filter backdrop-brightness-[100%] dark:backdrop-brightness-[40%] backdrop-blur-sm px-4">
 				<div className="bg-white dark:bg-darkmode-800  w-[100%] sm:w-[85%] md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[45rem] pb-6 rounded-xl md:pb-8">
@@ -26,7 +27,7 @@ const ProcessingDrawdownModal = ({
 						<label
 							for="DrawdownProcessModal"
 							className="ml-auto cursor-pointer"
-							onClick={() => handleDrawdown()}
+							onClick={() => setCheckForDrawdown(false)}
 						>
 							✕
 						</label>

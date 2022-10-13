@@ -323,7 +323,7 @@ function Token() {
 	async function onSaveSeniorPoolData() {
 		try {
 			await storeJSONData("Senior_Pool_Data", {
-				poolName: "Liquidity Pool",
+				poolName: "Dygnify's Senior Pool",
 				poolDescription:
 					"A brilliant option to earn automatically diversified yields wherein the capital is distributed among the open pools backed by real world assets.The pool comprises of various borrowers who have been verified and vetted by the protocol. Each fund is unique in its own way and the details of the same are provided below.\n\nHighlights :\n1. Risk is automatically distributed  by deploying  your capital in various open borrower pools letting you earn passive yield.\n2. The borrowings are covered by a minimum of 110% of security in the form of physical real world assets.\n3. Stable monthly returns on the investment uncorelated to the digital asset market.",
 				estimatedAPY: "7",
@@ -657,9 +657,7 @@ function Token() {
 				<button hidden onClick={onFileOpen}>
 					Open File
 				</button>
-				<button hidden onClick={onSaveSeniorPoolData}>
-					Save Senior pool
-				</button>
+				<button hidden onClick={onSaveSeniorPoolData}>Save Senior pool</button>
 			</header>
 		</div>
 	);

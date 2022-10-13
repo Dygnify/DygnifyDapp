@@ -34,6 +34,8 @@ const BorrowList = () => {
 	const [kycStatus, setKycStatus] = useState();
 	const [profileStatus, setProfileStatus] = useState();
 	const [updateRepayment, setUpdateRepayment] = useState(12);
+	const [checkForDrawdown, setCheckForDrawdown] = useState();
+
 	const [errormsg, setErrormsg] = useState({
 		status: false,
 		msg: "",
@@ -183,6 +185,7 @@ const BorrowList = () => {
 								setProcessDrawdown={setProcessDrawdown}
 								setUpdateRepayment={setUpdateRepayment}
 								setDrawdownId={setDrawdownId}
+								setCheckForDrawdown={setCheckForDrawdown}
 							/>
 						))}
 					</div>
@@ -193,6 +196,9 @@ const BorrowList = () => {
 						processDrawdown={processDrawdown}
 						handleDrawdown={cutProcessModal}
 						drawdownId={drawdownId}
+						checkForDrawdown={checkForDrawdown}
+						setCheckForDrawdown={setCheckForDrawdown}
+
 					/>
 				) : (
 					<></>

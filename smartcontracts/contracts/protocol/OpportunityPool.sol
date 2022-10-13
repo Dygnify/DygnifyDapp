@@ -324,7 +324,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         usdcToken.safeTransferFrom(address(this), msg.sender, amount);
     }
 
-    function repayment() public override onlyBorrower {
+    function repayment() public nonReentrant override onlyBorrower {
         require(
             repaymentCounter <= totalRepayments,
             "Repayment Process is done"
@@ -514,6 +514,20 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             opportunityOrigination.markRepaid(opportunityID);
             ISeniorPool(dygnifyConfig.seniorPoolAddress())
                 .withDrawFromOpportunity(false, opportunityID, 0);
+            
+            // auto sending all the funds to seniorpool as all the repayments are done.
+            uint seniorAmount = seniorSubpoolDetails.depositedAmount.add(
+                seniorSubpoolDetails.yieldGenerated
+            );
+
+            if (seniorSubpoolDetails.overdueGenerated > 0) {
+                seniorAmount = seniorAmount.add(seniorSubpoolDetails.overdueGenerated);
+                seniorSubpoolDetails.overdueGenerated = 0;
+            }
+            seniorSubpoolDetails.depositedAmount = 0;
+            seniorSubpoolDetails.yieldGenerated = 0;
+            poolBalance = poolBalance.sub(seniorAmount);
+            usdcToken.transfer(msg.sender, seniorAmount);
         }
         repaymentCounter = repaymentCounter.add(1);
     }
@@ -917,5 +931,20 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             juniorSubpoolDetails.depositedAmount = 0;
             juniorSubpoolDetails.yieldGenerated = 0;
         }
+    }
+
+    function getSeniorPoolWithdrawableAmount()external override returns(uint256 amount){
+        require(
+            seniorSubpoolDetails.isPoolLocked == false,
+            "Senior Subpool is locked"
+        );
+
+        amount = seniorSubpoolDetails.depositedAmount.add(
+            seniorSubpoolDetails.yieldGenerated
+        );
+
+        amount = amount.add(seniorSubpoolDetails.overdueGenerated);
+        
+        return amount;
     }
 }

@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-// import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 import RepaymentModal from "../Modal/RepaymentModal";
-// import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
-// import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const RepaymentCard = ({
@@ -15,13 +12,11 @@ const RepaymentCard = ({
 	setpoolName,
 	setamounts,
 	setUpdateRepayment,
+	setCheck,
 }) => {
 	const [selected, setSelected] = useState(null);
 	const handleRepayment = async () => {
-		setOpenProcessRepayment(true);
 		setSelected(null);
-		setProcessRepayment(true);
-		loadRepaymentList(true);
 	};
 
 	return (
@@ -77,6 +72,7 @@ const RepaymentCard = ({
 					setpoolName={setpoolName}
 					setamounts={setamounts}
 					setUpdateRepayment={setUpdateRepayment}
+					setCheck={setCheck}
 				></RepaymentModal>
 			)}
 		</div>

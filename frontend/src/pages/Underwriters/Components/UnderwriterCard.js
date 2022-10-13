@@ -107,7 +107,7 @@ const UnderwriterCard = ({ data }) => {
 						<PrimaryButton
 							disable={false}
 							onClick={() =>
-								path("/diligenceServiceProvider/poolDetail", {
+								path("/diligenceExpert/poolDetail", {
 									state: { pool: poolDetails, images: logoImgSrc },
 								})
 							}

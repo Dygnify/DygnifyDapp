@@ -11,7 +11,7 @@ import InvestorOverview from "./pages/Investor/InvestorOverview";
 import Invest from "./pages/Investor/Invest";
 import Withdraw from "./pages/Investor/Withdraw";
 import ViewPool from "./pages/Investor/ViewPool";
-import DiligenceServiceProvider from "./pages/Underwriters/DiligenceServiceProvider";
+import DiligenceExpert from "./pages/Underwriters/DiligenceExpert";
 import BorrowRequest from "./pages/Underwriters/BorrowRequest";
 import PoolDetails from "./pages/Underwriters/PoolDetails";
 import ApprovalHistory from "./pages/Underwriters/ApprovalHistory";
@@ -41,10 +41,7 @@ const Paths = () => {
 					<Route path="viewSeniorPool" element={<ViewSeniorPool />} />
 				</Route>
 
-				<Route
-					path="/diligenceServiceProvider"
-					element={<DiligenceServiceProvider />}
-				>
+				<Route path="/diligenceExpert" element={<DiligenceExpert />}>
 					<Route index element={<Navigate to="borrowRequest" />} />
 					<Route path="borrowRequest" element={<BorrowRequest />} />
 					<Route path="poolDetail" element={<PoolDetails />} />

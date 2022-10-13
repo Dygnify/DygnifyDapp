@@ -9,9 +9,9 @@ const ProcessingRepaymentModal = ({
 	walletAddress,
 	poolName,
 	amounts,
+	check,
+	setCheck,
 }) => {
-	console.log(processRepayment, "in fund process modal");
-
 	const navigate = useNavigate();
 
 	return (
@@ -20,6 +20,7 @@ const ProcessingRepaymentModal = ({
 				type="checkbox"
 				id="RepaymentProcessModal"
 				className="modal-toggle"
+				checked={check}
 			/>
 			<div className="modal backdrop-filter backdrop-brightness-[100%] dark:backdrop-brightness-[40%] backdrop-blur-lg px-4">
 				<div className="bg-neutral-50 dark:bg-darkmode-800 w-[100%] sm:w-[85%] md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[45rem] pb-6 rounded-xl md:pb-8">
@@ -29,6 +30,9 @@ const ProcessingRepaymentModal = ({
 						<label
 							htmlFor="RepaymentProcessModal"
 							className="ml-auto cursor-pointer"
+							onClick={() => {
+								setCheck(false);
+							}}
 						>
 							✕
 						</label>

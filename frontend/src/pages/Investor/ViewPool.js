@@ -48,6 +48,7 @@ const ViewPool = () => {
 	const [invest, setInvest] = useState(12);
 	const [transactionList, setTransactionList] = useState(13);
 	const [isFullStatus, setIsFullStatus] = useState();
+	const [checkInvest, setCheckInvest] = useState();
 
 	const [errormsg, setErrormsg] = useState({
 		status: false,
@@ -263,6 +264,7 @@ const ViewPool = () => {
 						setAmounts={setAmounts}
 						setInvest={setInvest}
 						setTransactionList={setTransactionList}
+						setCheckInvest={setCheckInvest}
 					/>
 				) : null}
 
@@ -273,6 +275,8 @@ const ViewPool = () => {
 						txhash={txhash}
 						contractAddress={contractAdrress}
 						amounts={amounts}
+						checkInvest={checkInvest}
+						setCheckInvest={setCheckInvest}
 					/>
 				) : (
 					<></>

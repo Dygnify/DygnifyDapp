@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
-import OverviewIcon from "../../uiTools/Icons/OverviewIcon";
-import BorIcon from "../../uiTools/Icons/BorIcon";
-// import TransactionIcon from "../../uiTools/Icons/TransactionIcon";
-import UnderIcon from "../../uiTools/Icons/UnderIcon";
-import ProfileIcon from "../../uiTools/Icons/ProfileIcon";
+import OverviewIcon from "../../pages/SVGIcons/OverviewIcon";
+import BorIcon from "../../pages/SVGIcons/BorIcon";
+// import TransactionIcon from "../../pages/SVGIcons/TransactionIcon";
+import UnderIcon from "../../pages/SVGIcons/UnderIcon";
+import ProfileIcon from "../../pages/SVGIcons/ProfileIcon";
 
 const BorrowerDashboard = () => {
 	const [linkStatus, setLinkStatus] = useState(false);

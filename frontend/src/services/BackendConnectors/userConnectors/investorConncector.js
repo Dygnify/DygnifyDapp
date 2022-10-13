@@ -38,7 +38,7 @@ export const withdrawAllJunior = async (poolAddress) => {
 export const withdrawSeniorPoolInvestment = async (amount) => {
 	Sentry.captureMessage("withdrawSeniorPoolInvestment", "info");
 	try {
-		if (!amount || amount <= 0) {
+		if (!amount || +amount <= 0) {
 			Sentry.captureMessage("Invalid amount", "warning");
 			return {
 				success: false,
@@ -271,8 +271,7 @@ export const getJuniorWithdrawableOp = async () => {
 				if (tx.opportunityStatus.toString() === "8") {
 					obj.yieldGenerated = getDisplayAmount(apy * stakingBal);
 				}
-				let investorWithdrawable =
-					await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals

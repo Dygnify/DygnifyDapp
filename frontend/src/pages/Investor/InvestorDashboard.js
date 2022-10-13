@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import OverviewIcon from "../../pages/../uiTools/Icons/OverviewIcon";
-import InvestIcon from "../../pages/../uiTools/Icons/InvestIcon";
-import TransactionIcon from "../../pages/../uiTools/Icons/TransactionIcon";
-import WithdrawIcon from "../../pages/../uiTools/Icons/WithdrawIcon";
+import OverviewIcon from "../../pages/SVGIcons/OverviewIcon";
+import InvestIcon from "../../pages/SVGIcons/InvestIcon";
+import TransactionIcon from "../../pages/SVGIcons/TransactionIcon";
+import WithdrawIcon from "../../pages/SVGIcons/WithdrawIcon";
 
 import Header from "../Layout/Header";
 

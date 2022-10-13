@@ -27,6 +27,8 @@ const InvestModal = ({
 	setAmounts,
 	setInvest,
 	setTransactionList,
+	handleDrawdown,
+	setCheckInvest,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [walletBal, setWalletBal] = useState();
@@ -64,6 +66,8 @@ const InvestModal = ({
 		setcontractAdrress(process.env.REACT_APP_SENIORPOOL);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
+		handleDrawdown();
+		setCheckInvest(true);
 		const data = await investInSeniorPool(amount);
 		setSelected(null);
 		if (data.success) {
@@ -108,6 +112,8 @@ const InvestModal = ({
 		setcontractAdrress(poolAddress);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
+		handleDrawdown();
+		setCheckInvest(true);
 		const data = await investInJuniorPool(poolAddress, amount);
 		if (data.success) {
 			settxhash(data.transaction.hash);
@@ -229,7 +235,7 @@ const InvestModal = ({
 	return (
 		<>
 			<input type="checkbox" id="InvestModal" className="modal-toggle" />
-			<div className="modal backdrop-filter backdrop-brightness-[100%] dark:backdrop-brightness-[40%] backdrop-blur-lg">
+			<div className="modal backdrop-filter backdrop-brightness-[100%] backdrop-blur-lg">
 				{loading && <Loader />}
 				<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 				<div

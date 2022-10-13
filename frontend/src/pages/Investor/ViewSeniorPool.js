@@ -35,6 +35,7 @@ const ViewSeniorPool = () => {
 	const [amounts, setAmounts] = useState("");
 
 	const [invest, setInvest] = useState(12);
+	const [checkInvest, setCheckInvest] = useState();
 
 	const [transactionList, setTransactionList] = useState(13);
 	const [errormsg, setErrormsg] = useState({
@@ -132,7 +133,7 @@ const ViewSeniorPool = () => {
 			<div className={`${loading ? "blur-sm" : ""}`}>
 				{selected ? (
 					<InvestModal
-						handleDrawdown={handleDrawdown} //no use check it
+						handleDrawdown={handleDrawdown}
 						isSenior={true}
 						poolName={poolName}
 						estimatedAPY={estimatedAPY}
@@ -144,6 +145,7 @@ const ViewSeniorPool = () => {
 						settxhash={settxhash}
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
+						setCheckInvest={setCheckInvest}
 					/>
 				) : null}
 				{processFundModal ? (
@@ -153,7 +155,8 @@ const ViewSeniorPool = () => {
 						txhash={txhash}
 						contractAddress={contractAdrress}
 						amounts={amounts}
-						setSelected={setSelected}
+						checkInvest={checkInvest}
+						setCheckInvest={setCheckInvest}
 					/>
 				) : (
 					<></>

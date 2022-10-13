@@ -8,7 +8,8 @@ const ProcessingFundsModal = ({
 	txhash,
 	amounts,
 	contractAddress,
-	setSelected,
+	checkInvest,
+	setCheckInvest,
 }) => {
 	const path = useNavigate();
 
@@ -19,6 +20,7 @@ const ProcessingFundsModal = ({
 				type="checkbox"
 				id={invest ? "InvestProcessModal" : "WithdrawProcessModal"}
 				className="modal-toggle"
+				checked={checkInvest}
 			/>
 			<div className="modal backdrop-filter backdrop-brightness-[100%] backdrop-blur-lg px-4">
 				<div className="bg-neutral-50 dark:bg-darkmode-800 w-[100%] sm:w-[85%] md:w-[70%] lg:w-[50%] xl:w-[45%] 2xl:w-[45rem] pb-6 rounded-xl md:pb-8">
@@ -27,7 +29,7 @@ const ProcessingFundsModal = ({
 
 						<label
 							htmlFor={invest ? "InvestProcessModal" : "WithdrawProcessModal"}
-							onClick={() => setSelected(false)}
+							onClick={() => setCheckInvest(false)}
 							className="ml-auto cursor-pointer"
 						>
 							✕
