@@ -8,6 +8,7 @@ const FileUploader = ({
 	error,
 	handleFile,
 	fileName,
+	filetype,
 }) => {
 	const hiddenFileInput = React.useRef(null);
 
@@ -44,7 +45,9 @@ const FileUploader = ({
 					type="file"
 					name={name}
 					onBlur={onBlur}
-					accept="application/pdf, application/vnd.ms-excel"
+					accept={
+						filetype ? filetype : ".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf"
+					}
 					ref={hiddenFileInput}
 					onChange={handleChange}
 					style={{ display: "none" }}
