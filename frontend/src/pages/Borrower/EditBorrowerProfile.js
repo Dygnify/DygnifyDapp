@@ -30,6 +30,13 @@ const EditBorrowerProfileNew = () => {
 	const [uploading, setUploading] = useState(false);
 	const [fileUploadStatus, setFileUploadStatus] = useState([]);
 	const [logoError, setLogoError] = useState();
+	const [checkLicense, setcheckLicense] = useState({
+		err: false,
+		msg: "",
+	});
+
+	const [lincenseText, setLincenseText] = useState("");
+	const [lincenseFile, setLincenseFile] = useState(false);
 	const location = useLocation();
 	const oldBrJson = location.state;
 
@@ -110,6 +117,7 @@ const EditBorrowerProfileNew = () => {
 			businessAddFilesCID.current = AddFile.businessAddFileCID;
 			businessIncoFilesCID.current = IncoFile.businessIncoFileCID;
 		}
+		checkFunction(null);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profileState]);
 
@@ -166,6 +174,7 @@ const EditBorrowerProfileNew = () => {
 	};
 	const onBusinessLicenseFilesUpload = (files) => {
 		setBusinessLicenseFiles(files);
+		checkFunction(files);
 	};
 
 	const uploadBorrowerData = async (formData) => {
@@ -383,6 +392,42 @@ const EditBorrowerProfileNew = () => {
 		}
 	};
 
+	function checkFunction(file) {
+		console.log("checkfun");
+		if (file || businessLicFilesCID.current) {
+			setLincenseFile(true);
+		}
+	}
+
+	useEffect(() => {
+		console.log(lincenseFile);
+		if (lincenseText && lincenseFile) {
+			setcheckLicense({
+				err: false,
+				msg: "",
+			});
+		} else {
+			console.log(lincenseFile);
+
+			if (!lincenseFile && lincenseText) {
+				setcheckLicense({
+					err: true,
+					msg: "please upload document",
+				});
+			} else if (!lincenseText && lincenseFile) {
+				setcheckLicense({
+					err: true,
+					msg: "please enter document name",
+				});
+			} else {
+				setcheckLicense({
+					err: false,
+					msg: "",
+				});
+			}
+		}
+	}, [lincenseText, lincenseFile]);
+
 	return (
 		<div className={`${loading ? "relative" : ""}`}>
 			{
@@ -411,6 +456,7 @@ const EditBorrowerProfileNew = () => {
 					isSubmitting,
 				}) => (
 					<>
+						{setLincenseText(values.bizLicFileName)}
 						<div className={loading ? "blur-sm" : ""}>
 							<div className="font-semibold">
 								<div className="">
@@ -531,6 +577,7 @@ const EditBorrowerProfileNew = () => {
 										value={values.bizLicFileName}
 										onChangeText={handleChange}
 										onChange={onBusinessLicenseFilesUpload}
+										error={checkLicense.err ? checkLicense.msg : ""}
 										onBlur={handleBlur}
 										fileName={
 											profileState && hasKey
@@ -598,7 +645,11 @@ const EditBorrowerProfileNew = () => {
 							</button>
 							<GradientButton
 								className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
-								onClick={handleSubmit}
+								onClick={() => {
+									if (!checkLicense.err) {
+										handleSubmit();
+									}
+								}}
 							>
 								Save and Exit
 							</GradientButton>

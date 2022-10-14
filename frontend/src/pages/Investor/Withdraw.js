@@ -37,12 +37,6 @@ const Withdraw = () => {
 	});
 	const [seniorPoolLoading, setSeniorPoolLoading] = useState(true);
 	const [juniorPoolLoading, setJuniorPoolLoading] = useState(true);
-	const cardData = useRef({
-		opportunityInfo: "",
-		opportunityAmount: "",
-		loanInterest: "",
-		isFull: "",
-	});
 
 	const handleForm = () => {
 		setSelected(null);
@@ -53,8 +47,9 @@ const Withdraw = () => {
 			.then((data) => {
 				if (data.success) {
 					setSeniorPoolInvestment(data.data);
+				} else {
+					setSeniorPoolLoading(false);
 				}
-				setLoading(false);
 			})
 			.catch((error) => console.log("Failed to get liquidity pool investment"));
 
@@ -155,13 +150,6 @@ const Withdraw = () => {
 			.catch((error) => console.log(error));
 	}, []);
 
-	const loadingCard = (
-		<WithdrawCard
-			onClick={() => console.log("card for loading")}
-			data={cardData.current}
-		/>
-	);
-
 	return (
 		<div>
 			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
@@ -207,7 +195,6 @@ const Withdraw = () => {
 							{seniorPoolLoading && (
 								<div className="relative">
 									<Loader />
-									<div className="blur-sm">{loadingCard}</div>
 								</div>
 							)}
 
@@ -219,7 +206,11 @@ const Withdraw = () => {
 									setShowModal={setShowModal}
 								/>
 							) : (
-								""
+								<div className="text-center">
+									<p className="text-neutral-500 text-lg">
+										{juniorPoolLoading ? "" : "No stats are available."}
+									</p>
+								</div>
 							)}
 						</div>
 					</div>
