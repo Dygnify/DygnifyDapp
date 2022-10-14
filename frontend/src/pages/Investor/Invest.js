@@ -184,14 +184,7 @@ const Invest = () => {
 									<ViewPoolCard
 										data={item}
 										key={item.id}
-										onClick={() =>
-											path("/investorDashboard/viewPool", {
-												state: {
-													...item,
-													kycStatus: kycStatus,
-												},
-											})
-										}
+										kycStatus={kycStatus}
 									/>
 								))}
 							</div>

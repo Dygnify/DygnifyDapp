@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
@@ -8,11 +9,13 @@ import {
 	getFileUrl,
 } from "../../../../services/Helpers/skynetIPFS";
 
-const ViewPoolCard = ({ onClick, data, kycStatus }) => {
+const ViewPoolCard = ({ data, kycStatus }) => {
+	const path = useNavigate();
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
 	const [companyName, setCompanyName] = useState();
 	const [logoImgSrc, setLogoImgSrc] = useState();
+	const [opData, setOpData] = useState();
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
@@ -22,6 +25,8 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				getCompanyLogo(
 					opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
 				);
+				console.log(opJson);
+				setOpData(opJson);
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,7 +106,18 @@ const ViewPoolCard = ({ onClick, data, kycStatus }) => {
 				</div>
 
 				<div className="">
-					<PrimaryButton className="w-[100%] text-white" onClick={onClick}>
+					<PrimaryButton
+						className="w-[100%] text-white"
+						onClick={() =>
+							path("/investorDashboard/viewPool", {
+								state: {
+									...data,
+									opData: opData,
+									kycStatus: kycStatus,
+								},
+							})
+						}
+					>
 						View Pool
 					</PrimaryButton>
 				</div>

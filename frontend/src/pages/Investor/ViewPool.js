@@ -116,32 +116,32 @@ const ViewPool = () => {
 			});
 
 			// fetch the opportunity details from IPFS
-			getJSONData(poolData.opportunityInfo).then((opJson) => {
-				if (opJson) {
-					setCompanyDetails(opJson.companyDetails);
-					getCompanyLogo(
-						opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-					);
-					// get the loan purpose
-					const { isSliced, firstText, secondText } = getExtendableTextBreakup(
-						opJson.loan_purpose,
-						200
-					);
 
-					if (isSliced) {
-						setLoanPurpose({
-							firstText: firstText,
-							secondText: secondText,
-							isSliced: isSliced,
-						});
-					} else {
-						setLoanPurpose({
-							firstText: firstText,
-							isSliced: isSliced,
-						});
-					}
+			if (location.state.opData) {
+				setCompanyDetails(location.state.opData.companyDetails);
+				getCompanyLogo(
+					location.state.opData.companyDetails?.companyLogoFile
+						?.businessLogoFileCID
+				);
+				// get the loan purpose
+				const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+					location.state.opData.loan_purpose,
+					200
+				);
+
+				if (isSliced) {
+					setLoanPurpose({
+						firstText: firstText,
+						secondText: secondText,
+						isSliced: isSliced,
+					});
+				} else {
+					setLoanPurpose({
+						firstText: firstText,
+						isSliced: isSliced,
+					});
 				}
-			});
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [poolData, invest]);
@@ -438,77 +438,6 @@ const ViewPool = () => {
 						)}
 					</div>
 				</div>
-
-				{/* Deal Terms */}
-
-				{/* <div style={{ display: "flex" }} className="flex-col w-1/2">
-					<div
-						style={{ display: "flex" }}
-						className="flex-row justify-between mt-10 mb-3"
-					>
-						<div style={{ fontSize: 19, fontWeight: "600" }} className="mb-0">
-							Deals terms
-						</div>
-					</div>
-
-					<div
-						className=" flex-col  justify-center w-full rounded-box"
-						style={{
-							display: "flex",
-							background: " #20232A",
-							borderRadius: "12px",
-						}}
-					>
-						<div style={{ display: "flex" }} className="w-full">
-							{info.map((e) => {
-								<div
-									key={e.label}
-									className="justify-center w-1/3 flex-col items-center "
-									style={{
-										display: "flex",
-										borderRight: "0.5px solid   #292C33",
-										borderBottom: "0.5px solid   #292C33",
-										padding: "40px 0",
-									}}
-								>
-									<div
-										style={{
-											fontSize: 14,
-											color: "#A0ABBB",
-										}}
-									>
-										{e.label}
-									</div>
-									<div style={{ fontSize: 20 }}>{e.value}</div>
-								</div>;
-							})}
-						</div>
-
-						<div style={{ display: "flex" }} className="w-full">
-							{info2.map((e) => {
-								<div
-									key={e.label}
-									className="justify-center w-1/3 flex-col items-center "
-									style={{
-										display: "flex",
-										borderRight: "0.5px solid   #292C33",
-										padding: "40px 0",
-									}}
-								>
-									<div
-										style={{
-											fontSize: 14,
-											color: "#A0ABBB",
-										}}
-									>
-										{e.label}
-									</div>
-									<div style={{ fontSize: 20 }}>{e.value}</div>
-								</div>;
-							})}
-						</div>
-					</div>
-				</div> */}
 
 				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
 					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
