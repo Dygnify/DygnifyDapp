@@ -116,7 +116,6 @@ const ViewPool = () => {
 			});
 
 			// fetch the opportunity details from IPFS
-
 			if (location.state.opData) {
 				setCompanyDetails(location.state.opData.companyDetails);
 				getCompanyLogo(
@@ -141,6 +140,30 @@ const ViewPool = () => {
 						isSliced: isSliced,
 					});
 				}
+			} else {
+				getJSONData(poolData.opportunityInfo).then((opJson) => {
+					if (opJson) {
+						setCompanyDetails(opJson.companyDetails);
+						getCompanyLogo(
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
+						);
+						// get the loan purpose
+						const { isSliced, firstText, secondText } =
+							getExtendableTextBreakup(opJson.loan_purpose, 200);
+						if (isSliced) {
+							setLoanPurpose({
+								firstText: firstText,
+								secondText: secondText,
+								isSliced: isSliced,
+							});
+						} else {
+							setLoanPurpose({
+								firstText: firstText,
+								isSliced: isSliced,
+							});
+						}
+					}
+				});
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

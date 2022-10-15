@@ -29,7 +29,7 @@ function FileUpload({ fileName, progress, status }) {
 	});
 
 	return (
-		<div className=" rounded-md bg-darkmode-50 p-2 pb-0">
+		<div className=" rounded-md bg-neutral-200 dark:bg-darkmode-50 p-2 pb-0">
 			<div className="flex justify-between mb-2">
 				<p>
 					File Name:{" "}
@@ -52,7 +52,7 @@ function FileUpload({ fileName, progress, status }) {
 					{progress}%
 				</span>
 				<progress
-					className={`w-full bg-gray-500 m-0 rounded-md`}
+					className={`w-full bg-gray-100 dark:bg-gray-500 m-0 rounded-md`}
 					value="0"
 					max="100"
 					ref={progressValueRef}

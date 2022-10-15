@@ -12,13 +12,26 @@ import Loader from "../../uiTools/Loading/Loader";
 import { uploadFile, storeJSONData } from "../../services/Helpers/skynetIPFS";
 import ProcessingModal from "./Components/Modal/FileUpload/ProcessingModal";
 
+const URL =
+	/^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
+
+	const [fileErr, setFileErr] = useState({
+		bip: false,
+		bap: false,
+		bicp: false,
+	});
 
 	const [profileState, setProfileState] = useState(null);
 	const [hasKey, setHasKey] = useState();
 	const [loading, setLoading] = useState();
-	const [error, setError] = useState();
+	const [error, setError] = useState({
+		bip: false,
+		bap: false,
+		bicp: false,
+	});
 	const [borrowerAddress, setBorrowerAddress] = useState();
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
@@ -29,7 +42,7 @@ const EditBorrowerProfileNew = () => {
 
 	const [uploading, setUploading] = useState(false);
 	const [fileUploadStatus, setFileUploadStatus] = useState([]);
-	const [logoError, setLogoError] = useState();
+	const [logoError, setLogoError] = useState(false);
 	const [checkLicense, setcheckLicense] = useState({
 		err: false,
 		msg: "",
@@ -54,11 +67,15 @@ const EditBorrowerProfileNew = () => {
 			.label("Company Representative Name")
 			.required(),
 		companyBio: Yup.string().label("Company Bio").required(),
-		bizIdFileName: Yup.string().label("File Name").required(),
-		bizAddFileName: Yup.string().label("File Name").required(),
-		bizLicFileName: Yup.string().label("File Name"),
-		bizIncoFileName: Yup.string().label("File Name").required(),
-		website: Yup.string().label("Website").required(),
+		bizIdFileName: Yup.string().required("File name is required"),
+		bizAddFileName: Yup.string().required("File name is required"),
+		bizLicFileName: Yup.string(),
+		bizIncoFileName: Yup.string().required("File name is required"),
+		website: Yup.string()
+			.matches(URL, "Enter a valid url")
+			.label("Website")
+			.required(),
+		email: Yup.string().email("Invalid Email"),
 	});
 
 	useEffect(() => {
@@ -145,6 +162,20 @@ const EditBorrowerProfileNew = () => {
 
 		if (!logoFile) setLogoError(true);
 
+		const tempFileStatus = {
+			bip: fileErr.bip,
+			bap: fileErr.bap,
+			bicp: fileErr.bicp,
+		};
+
+		if (!businessIdentityFiles) tempFileStatus.bip = true;
+
+		if (!businessAddressFiles) tempFileStatus.bap = true;
+
+		if (!businessIncorporationFiles) tempFileStatus.bicp = true;
+
+		setFileErr(tempFileStatus);
+
 		if (
 			!(
 				businessIdentityFiles &&
@@ -161,16 +192,35 @@ const EditBorrowerProfileNew = () => {
 
 	const onLogoFileUpload = (files) => {
 		setLogoFile(files);
+		setLogoError(false);
 	};
 
 	const onBusinessIdentityFilesUpload = (files) => {
 		setBusinessIdentityFiles(files);
+		setFileErr((prev) => {
+			return {
+				...prev,
+				bip: false,
+			};
+		});
 	};
 	const onBusinessAddressFilesUpload = (files) => {
 		setBusinessAddressFiles(files);
+		setFileErr((prev) => {
+			return {
+				...prev,
+				bap: false,
+			};
+		});
 	};
 	const onBusinessIncorporationFilesUpload = (files) => {
 		setBusinessIncorporationFiles(files);
+		setFileErr((prev) => {
+			return {
+				...prev,
+				bicp: false,
+			};
+		});
 	};
 	const onBusinessLicenseFilesUpload = (files) => {
 		setBusinessLicenseFiles(files);
@@ -536,7 +586,13 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIdentityFilesUpload}
 										onBlur={handleBlur}
-										error={error ? "File required" : errors.bizIdFileName}
+										error={
+											errors.bizIdFileName && touched.bizIdFileName
+												? errors.bizIdFileName
+												: fileErr.bip
+												? "File required"
+												: ""
+										}
 										fileName={
 											profileState
 												? profileState.businessIdFile.businessIdFileName
@@ -550,7 +606,13 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessAddressFilesUpload}
 										onBlur={handleBlur}
-										error={error ? "File required" : errors.bizAddFileName}
+										error={
+											errors.bizAddFileName && touched.bizAddFileName
+												? errors.bizAddFileName
+												: fileErr.bap
+												? "File required"
+												: ""
+										}
 										fileName={
 											profileState
 												? profileState.businessAddFile.businessAddFileName
@@ -564,7 +626,13 @@ const EditBorrowerProfileNew = () => {
 										onChangeText={handleChange}
 										onChange={onBusinessIncorporationFilesUpload}
 										onBlur={handleBlur}
-										error={error ? "File required" : errors.bizIncoFileName}
+										error={
+											errors.bizIncoFileName && touched.bizIncoFileName
+												? errors.bizIncoFileName
+												: fileErr.bicp
+												? "File required"
+												: ""
+										}
 										fileName={
 											profileState
 												? profileState.businessIncoFile.businessIncoFileName
@@ -599,7 +667,9 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											value={values.website}
 											onBlur={handleBlur}
-											error={errors.website}
+											error={
+												touched.website && errors.website ? errors.website : ""
+											}
 										/>
 										<TextField
 											name="email"
@@ -609,6 +679,7 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											onBlur={handleBlur}
 											value={values.email}
+											error={errors.email}
 										/>
 										<TextField
 											name="twitter"
