@@ -515,6 +515,7 @@ const EditBorrowerProfileNew = () => {
 									<div className="mt-2 flex flex-col gap-2">
 										<div className=" flex flex-col gap-2 md:flex-row md:flex-wrap xl:justify-between">
 											<FileUploader
+												filetype={"image/*"}
 												label="Company Logo"
 												className="md:w-[45%] xl:w-[30%]"
 												handleFile={onLogoFileUpload}
