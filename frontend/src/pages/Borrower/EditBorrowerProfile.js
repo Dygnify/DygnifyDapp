@@ -430,7 +430,7 @@ const EditBorrowerProfileNew = () => {
 			}
 			checkEdited(borrowerJsonData);
 
-			if (allowSubmit && !error) {
+			if (allowSubmit) {
 				console.log("Inside allow");
 				await storeJSONData(borrowerAddress, borrowerJsonData);
 			}

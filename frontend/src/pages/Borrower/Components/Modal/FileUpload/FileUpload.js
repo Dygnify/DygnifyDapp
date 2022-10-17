@@ -7,13 +7,13 @@ function FileUpload({ fileName, progress, status }) {
 	const progressValueRef = useRef();
 
 	document.addEventListener("progressDetail", (e) => {
-		const { file, progress } = e.detail;
+		const { file, progress, status } = e.detail;
 		console.log("event listened");
 		let warningColor = "text-warning-500";
 		let success = "text-success-500";
 
-		let status =
-			progress === 100 ? "Completed" : progress > 0 ? "Uploading" : "Pending";
+		// let status =
+		// progress === 100 ? "Completed" : progress > 0 ? "Uploading" : "Pending";
 
 		if (file === fileName) {
 			progressValueRef.current.value = progress;

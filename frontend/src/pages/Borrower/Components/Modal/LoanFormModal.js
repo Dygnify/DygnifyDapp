@@ -181,7 +181,7 @@ const LoanFormModal = ({
 
 	return (
 		<div>
-			<input type="checkbox" id="loanForm-modal" class="modal-toggle" />
+			<input type="checkbox" id="loanForm-modal" className="modal-toggle" />
 			<div
 				// class="modal block backdrop-blur-xl backdrop-opacity-100 md:flex"
 				// style={{ backdropFilter: "brightness(40%) blur(8px)" }}
@@ -193,7 +193,7 @@ const LoanFormModal = ({
 							Create Borrow Request
 						</h3>
 						<label
-							for="loanForm-modal"
+							htmlFor="loanForm-modal"
 							className="btn btn-ghost font-bold w-14 md:pb-3"
 							onClick={() => handleForm()}
 						>
