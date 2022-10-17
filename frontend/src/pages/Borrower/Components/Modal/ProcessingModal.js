@@ -26,7 +26,7 @@ const ProcessingRequestModal = ({
 					<div className="flex justify-between items-center pb-2  border-b border-neutral-300 dark:border-neutral-500">
 						<h3>Create borrow request</h3>
 						<button
-							for="ProcessModal"
+							htmlFor="ProcessModal"
 							className="btn btn-ghost absolute right-1"
 							onClick={() => handleDrawdown()}
 						>
@@ -37,7 +37,7 @@ const ProcessingRequestModal = ({
 								fill="none"
 								xmlns="http://www.w3.org/2000/svg"
 							>
-								<g clip-path="url(#clip0_564_115493)">
+								<g clipPath="url(#clip0_564_115493)">
 									<path
 										className="dark:fill-white fill-black"
 										d="M14.6262 3.39747C15.0168 3.00695 15.0168 2.37378 14.6262 1.98326L13.8501 1.20711C13.4595 0.816582 12.8264 0.816583 12.4359 1.20711L7.66667 5.9763L2.89747 1.20711C2.50695 0.816582 1.87378 0.816582 1.48326 1.20711L0.707106 1.98326C0.316582 2.37378 0.316582 3.00695 0.707107 3.39747L5.4763 8.16667L0.707107 12.9359C0.316582 13.3264 0.316583 13.9595 0.707107 14.3501L1.48326 15.1262C1.87378 15.5168 2.50695 15.5168 2.89747 15.1262L7.66667 10.357L12.4359 15.1262C12.8264 15.5168 13.4595 15.5168 13.8501 15.1262L14.6262 14.3501C15.0168 13.9595 15.0168 13.3264 14.6262 12.9359L9.85703 8.16667L14.6262 3.39747Z"
@@ -61,11 +61,11 @@ const ProcessingRequestModal = ({
 						<p className="justify-center flex text-4xl w-full font-semibold md:py-5">
 							{borrowReqProcess ? "In Progress⏱" : `Yay!🎉`}
 						</p>
-						<p className="justify-center flex text-lg sm:text-lg pt-5 md:pt-0">
+						<div className="justify-center flex text-lg sm:text-lg pt-5 md:pt-0">
 							{borrowReqProcess
 								? "Request is in process"
 								: "Borrow request created successfully."}
-							<p className="pl-1 hidden sm:block">
+							<div className="pl-1 hidden sm:block">
 								{borrowReqProcess ? (
 									<div className="flex gap-1 items-center">
 										<p className="text-warning-400 font-semibold justify-center flex">
@@ -78,8 +78,8 @@ const ProcessingRequestModal = ({
 										Completed
 									</p>
 								)}
-							</p>
-						</p>
+							</div>
+						</div>
 						<p className="sm:hidden text-lg">
 							{borrowReqProcess ? (
 								<div className="flex gap-1 items-center justify-center pt-2">
