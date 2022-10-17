@@ -26,7 +26,7 @@ export function onUploadProgress(progress, { loaded, total }) {
 		progressEvent(progressValue, fileName);
 }
 
-const client = new SkynetClient("https://siasky.net", {
+const client = new SkynetClient("https://skynetfree.net", {
 	onUploadProgress,
 	skynetApiKey: process.env.REACT_APP_SKYNET_APIKEY,
 });
@@ -43,12 +43,10 @@ export async function uploadFile(file) {
 			console.log(`Upload successful, skylink: ${skylink}`);
 			return skylink;
 		} catch (error) {
-
 			captureException(error);
 		}
-	}else{
+	} else {
 		Sentry.captureMessage("file is not define", "warning");
-
 	}
 }
 
@@ -60,9 +58,8 @@ export async function openFileInNewTab(skylink) {
 		} catch (error) {
 			captureException(error);
 		}
-	}else{
+	} else {
 		Sentry.captureMessage("skylink", "warning");
-
 	}
 }
 
@@ -74,7 +71,7 @@ export async function getFileUrl(skylink) {
 		} catch (error) {
 			captureException(error);
 		}
-	}else{
+	} else {
 		Sentry.captureMessage("skylink", "warning");
 	}
 }
@@ -88,7 +85,7 @@ export async function storeJSONData(dataKey, jsonData) {
 		} catch (error) {
 			captureException(error);
 		}
-	}else{
+	} else {
 		Sentry.captureMessage("dataKey && jsonData return false", "warning");
 	}
 }
@@ -102,7 +99,7 @@ export async function getJSONData(dataKey) {
 		} catch (error) {
 			captureException(error);
 		}
-	}else{
+	} else {
 		Sentry.captureMessage("dataKey is not define", "warning");
 	}
 }
