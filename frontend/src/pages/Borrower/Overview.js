@@ -171,9 +171,7 @@ const Overview = () => {
 		for (const op of repaymentList) {
 			let loanAmt = parseFloat(op.actualLoanAmount);
 			totalLoanAmt += loanAmt;
-			totalLoanWithIntAmount +=
-				loanAmt +
-				parseFloat((loanAmt * parseFloat(op.loanActualInterest)) / 100);
+			totalLoanWithIntAmount += op.TotalLoanRepaymentAmount;
 			totalRepaidAmt += op.totalRepaidAmount;
 		}
 		if (totalLoanAmt > 0) {

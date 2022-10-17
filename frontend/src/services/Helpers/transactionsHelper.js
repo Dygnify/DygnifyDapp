@@ -31,8 +31,11 @@ export const getTokenTransactions = async (address, tokenAddress) => {
 					trxArray.push({ ...trx, isWithdraw, opportunityName });
 				}
 			}
-		}else{
-			Sentry.captureMessage("trxData && trxData.res.result return false", "warning");
+		} else {
+			Sentry.captureMessage(
+				"trxData && trxData.res.result return false",
+				"warning"
+			);
 		}
 	} catch (error) {
 		Sentry.captureException(error);
