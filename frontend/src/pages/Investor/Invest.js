@@ -149,6 +149,7 @@ const Invest = () => {
 										},
 									})
 								}
+								isSenior={true}
 								data={seniorPool}
 							/>
 						) : (
@@ -182,6 +183,7 @@ const Invest = () => {
 							<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
 								{juniorPools.map((item) => (
 									<ViewPoolCard
+										isSenior={false}
 										data={item}
 										key={item.id}
 										kycStatus={kycStatus}

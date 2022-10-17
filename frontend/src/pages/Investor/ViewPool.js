@@ -309,7 +309,7 @@ const ViewPool = () => {
 					<div className="flex items-center gap-3 md:gap-5">
 						<img
 							alt="dygnigyImage"
-							src={logoImgSrc}
+							src={logoImgSrc ? logoImgSrc : DygnifyImage}
 							style={{ aspectRatio: "1/1" }}
 							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
 						/>
@@ -506,7 +506,7 @@ const ViewPool = () => {
 							<div className="flex items-center gap-3 md:gap-5">
 								<img
 									alt="logo"
-									src={logoImgSrc}
+									src={logoImgSrc ? logoImgSrc : DygnifyImage}
 									style={{ aspectRatio: "1/1" }}
 									className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
 								/>

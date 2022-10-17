@@ -9,7 +9,7 @@ import {
 	getFileUrl,
 } from "../../../../services/Helpers/skynetIPFS";
 
-const ViewPoolCard = ({ data, kycStatus }) => {
+const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
 	const path = useNavigate();
 	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
@@ -109,13 +109,15 @@ const ViewPoolCard = ({ data, kycStatus }) => {
 					<PrimaryButton
 						className="w-[100%] text-white"
 						onClick={() =>
-							path("/investorDashboard/viewPool", {
-								state: {
-									...data,
-									opData: opData,
-									kycStatus: kycStatus,
-								},
-							})
+							!isSenior
+								? path("/investorDashboard/viewPool", {
+										state: {
+											...data,
+											opData: opData,
+											kycStatus: kycStatus,
+										},
+								  })
+								: onClick()
 						}
 					>
 						View Pool
