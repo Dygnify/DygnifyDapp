@@ -3,10 +3,7 @@ pragma solidity 0.8.4;
 import "../protocol/DygnifyConfig.sol";
 
 interface IOpportunityPool {
-    enum Subpool {
-        JuniorSubpool,
-        SeniorSubpool
-    }
+    enum Subpool {JuniorSubpool, SeniorSubpool}
 
     struct SubpoolDetails {
         uint256 id;
@@ -18,7 +15,7 @@ interface IOpportunityPool {
         uint256 overdueGenerated;
     }
 
-    function isStaking(address _investor) external view returns(bool);
+    function isStaking(address _investor) external view returns (bool);
 
     function initialize(
         DygnifyConfig _dygnifyConfig,
@@ -31,8 +28,6 @@ interface IOpportunityPool {
     ) external;
 
     function deposit(uint8 _subpoolId, uint256 amount) external;
-
-    function withdraw(uint8 _subpoolId, uint256 amount) external;
 
     function drawdown() external;
 
@@ -54,11 +49,9 @@ interface IOpportunityPool {
 
     function getSeniorProfit() external view returns (uint256);
 
-    function getOpportunityName()external view returns(string memory);
+    function getOpportunityName() external view returns (string memory);
 
     function writeOffOpportunity() external;
 
-    function getSeniorPoolWithdrawableAmount()external returns(uint256);
+    function getSeniorPoolWithdrawableAmount() external returns (uint256);
 }
-
-

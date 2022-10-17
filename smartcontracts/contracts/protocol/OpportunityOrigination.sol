@@ -8,6 +8,7 @@ import "../interfaces/IOpportunityOrigination.sol";
 import "./CollateralToken.sol";
 import "../interfaces/IDygnifyKeeper.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import "./Constants.sol";
 
 contract OpportunityOrigination is
     BaseUpgradeablePausable,
@@ -77,8 +78,10 @@ contract OpportunityOrigination is
             "invalid borrower address"
         );
         require(
-            _opportunityData.loanInterest > 0,
-            "Loan Interest Must be greater than 0"
+            (_opportunityData.loanInterest > 0 &&
+                _opportunityData.loanInterest <=
+                (100 * Constants.sixDecimal())),
+            "Loan Interest Must be greater than 0 and less than or equal to 100"
         );
         require(
             _opportunityData.loanTenureInDays > 0,
