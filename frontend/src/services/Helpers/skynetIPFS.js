@@ -2,12 +2,14 @@ import { SkynetClient, genKeyPairFromSeed } from "skynet-js";
 import { captureException } from "@sentry/react";
 const Sentry = require("@sentry/react");
 let fileName = "file";
+let status = "uploading";
 
-function progressEvent(progress, file) {
+function progressEvent(progress, file, status) {
 	const event = new CustomEvent("progressDetail", {
 		detail: {
 			progress: progress,
 			file: file,
+			status: status,
 		},
 	});
 
@@ -23,7 +25,7 @@ export function onUploadProgress(progress, { loaded, total }) {
 
 	// event fire
 	if (fileName !== "savingOtherDataToSkynetDb")
-		progressEvent(progressValue, fileName);
+		progressEvent(progressValue, fileName, "Uploading");
 }
 
 const client = new SkynetClient("https://skynetfree.net", {
@@ -41,6 +43,7 @@ export async function uploadFile(file) {
 			fileName = file.name;
 			const { skylink } = await client.uploadFile(file);
 			console.log(`Upload successful, skylink: ${skylink}`);
+			progressEvent(100, fileName, "Uploaded");
 			return skylink;
 		} catch (error) {
 			captureException(error);
