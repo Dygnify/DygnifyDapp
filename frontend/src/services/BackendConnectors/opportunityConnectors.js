@@ -405,6 +405,7 @@ export const getOpportunitiesWithDues = async () => {
 					}
 
 					let repaymentDate = await poolContract.nextRepaymentTime();
+					let totalRepayments = await poolContract.totalRepayments();
 					let repaymentAmount = await poolContract.getRepaymentAmount();
 					let totalRepaidAmt = await poolContract.totalRepaidAmount();
 					repaymentAmount = ethers.utils.formatUnits(
@@ -420,6 +421,12 @@ export const getOpportunitiesWithDues = async () => {
 					obj.totalRepaidAmount = parseFloat(
 						ethers.utils.formatUnits(totalRepaidAmt, sixDecimals)
 					);
+					// Loan type 0 Bullet Loan and 1 is Term Loan
+					let principal = obj.loanType === "1" ? 0 : obj.actualLoanAmount;
+
+					obj.TotalLoanRepaymentAmount =
+						parseFloat(repaymentAmount) * +totalRepayments + +principal;
+
 					const overdueTime = Math.floor(Date.now() / 1000) - repaymentDate;
 					obj.isOverDue = overdueTime > 0 ? true : false;
 
