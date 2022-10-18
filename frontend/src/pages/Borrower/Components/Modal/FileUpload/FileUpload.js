@@ -8,7 +8,6 @@ function FileUpload({ fileName, progress, status }) {
 
 	document.addEventListener("progressDetail", (e) => {
 		const { file, progress, status } = e.detail;
-		console.log("event listened");
 		let warningColor = "text-warning-500";
 		let success = "text-success-500";
 

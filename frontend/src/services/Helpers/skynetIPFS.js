@@ -2,7 +2,6 @@ import { SkynetClient, genKeyPairFromSeed } from "skynet-js";
 import { captureException } from "@sentry/react";
 const Sentry = require("@sentry/react");
 let fileName = "file";
-let status = "uploading";
 
 function progressEvent(progress, file, status) {
 	const event = new CustomEvent("progressDetail", {
@@ -13,7 +12,6 @@ function progressEvent(progress, file, status) {
 		},
 	});
 
-	console.log("event dispatched");
 	document.dispatchEvent(event);
 }
 
@@ -28,7 +26,7 @@ export function onUploadProgress(progress, { loaded, total }) {
 		progressEvent(progressValue, fileName, "Uploading");
 }
 
-const client = new SkynetClient("https://skynetfree.net", {
+const client = new SkynetClient("https://web3portal.com", {
 	onUploadProgress,
 	skynetApiKey: process.env.REACT_APP_SKYNET_APIKEY,
 });
