@@ -179,18 +179,18 @@ const Overview = () => {
 		}
 
 		totalRepaidAmt = totalRepaidAmt ? totalRepaidAmt : 0;
-		if (totalRepaidAmt > 0) {
-			setTotalRepaidAmt({
-				amount: totalRepaidAmt,
-				displayTotalRepaidAmt: getDisplayAmount(totalRepaidAmt),
-			});
-		}
-		if (totalLoanWithIntAmount) {
-			setTotalLoanAmtWithInterest(totalLoanWithIntAmount);
-			setTotalOutstandingAmt(
-				getDisplayAmount(totalLoanWithIntAmount - totalRepaidAmt)
-			);
-		}
+		setTotalRepaidAmt({
+			amount: totalRepaidAmt,
+			displayTotalRepaidAmt: getDisplayAmount(totalRepaidAmt),
+		});
+		totalLoanWithIntAmount = totalLoanWithIntAmount
+			? totalLoanWithIntAmount
+			: 0;
+
+		setTotalLoanAmtWithInterest(totalLoanWithIntAmount);
+		setTotalOutstandingAmt(
+			getDisplayAmount(totalLoanWithIntAmount - totalRepaidAmt)
+		);
 	}, [repaymentList]);
 
 	return (
@@ -296,7 +296,7 @@ const Overview = () => {
 											<span className="inline-block w-3 h-2 bg-gradient-to-r from-[#4B74FF] to-primary-500 rounded-3xl"></span>
 											Total Outstanding
 										</p>
-										<div className="ml-auto font-semibold md:ml-0 flex md:flex-col gap-2 items-end md:items-start px-4">
+										<div className="ml-auto font-semibold md:ml-0 flex  gap-2 items-end  px-4">
 											<h3 className="text-2xl">{totalOutstandingAmt}</h3>
 											<p className="">{process.env.REACT_APP_TOKEN_NAME}</p>
 										</div>
@@ -307,9 +307,11 @@ const Overview = () => {
 											<span className="inline-block w-3 h-2 bg-white rounded-3xl"></span>
 											Total Repaid
 										</p>
-										<div className="ml-auto font-semibold md:ml-0 flex md:flex-col gap-2 items-end md:items-start px-4">
+										<div className="ml-auto font-semibold md:ml-0 flex  gap-2 items-end  px-4">
 											<h3 className="text-2xl">
-												{totalRepaidAmt?.displayTotalRepaidAmt}
+												{totalRepaidAmt?.displayTotalRepaidAmt
+													? totalRepaidAmt?.displayTotalRepaidAmt
+													: "--"}
 											</h3>
 											<p className="">{process.env.REACT_APP_TOKEN_NAME}</p>
 										</div>
