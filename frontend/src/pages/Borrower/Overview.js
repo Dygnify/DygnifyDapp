@@ -138,7 +138,7 @@ const Overview = () => {
 		const fetchData = async () => {
 			let opportunities = await getOpportunitiesWithDues();
 			if (opportunities.success) {
-				if (opportunities.opportunities.length > 0) {
+				if (opportunities.opportunities.length >= 0) {
 					//sort the list based on date
 					opportunities.opportunities.sort(sortByProperty("epochDueDate"));
 					setRepaymentList(opportunities.opportunities);
@@ -174,7 +174,7 @@ const Overview = () => {
 			totalLoanWithIntAmount += op.TotalLoanRepaymentAmount;
 			totalRepaidAmt += op.totalRepaidAmount;
 		}
-		if (totalLoanAmt > 0) {
+		if (totalLoanAmt >= 0) {
 			setTotalBorrowedAmt(getDisplayAmount(totalLoanAmt));
 		}
 
