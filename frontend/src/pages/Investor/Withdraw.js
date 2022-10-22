@@ -81,8 +81,9 @@ const Withdraw = () => {
 
 						if (res.success) {
 							balance = res.balance;
-							seniorInvestmentData.opportunityAmount =
-								getDisplayAmount(balance);
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								balance
+							);
 						} else {
 							setErrormsg({
 								status: !res.success,
@@ -93,8 +94,9 @@ const Withdraw = () => {
 						let totalInvestment =
 							seniorPoolInvestment.stakingAmt +
 							seniorPoolInvestment.withdrawableAmt;
-						seniorInvestmentData.capitalInvested =
-							getDisplayAmount(totalInvestment);
+						seniorInvestmentData.capitalInvested = getDisplayAmount(
+							totalInvestment
+						);
 
 						const price = await getSeniorPoolDisplaySharePrice(
 							spJson.estimatedAPY
@@ -112,8 +114,7 @@ const Withdraw = () => {
 							).toFixed(6);
 
 							if (+balance >= withdrawAmtWithSharePrice) {
-								seniorInvestmentData.withdrawableAmt =
-									withdrawAmtWithSharePrice;
+								seniorInvestmentData.withdrawableAmt = withdrawAmtWithSharePrice;
 							} else {
 								let humanReadableBal = parseFloat(balance).toFixed(2);
 								seniorInvestmentData.withdrawableAmt =

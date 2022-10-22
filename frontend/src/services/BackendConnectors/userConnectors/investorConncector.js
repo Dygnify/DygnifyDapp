@@ -206,7 +206,7 @@ export const getSeniorPoolSharePrice = async () => {
 	}
 };
 
-export const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
+export const getSeniorPoolDisplaySharePrice = async () => {
 	Sentry.captureMessage("getSeniorPoolDisplaySharePrice", "info");
 	let sharePriceFromContract;
 	let backendSharePrice = await getSeniorPoolSharePrice();
@@ -215,11 +215,9 @@ export const getSeniorPoolDisplaySharePrice = async (defaultSharePrice) => {
 		sharePriceFromContract = parseFloat(backendSharePrice.sharePrice).toFixed(
 			2
 		);
-		let sharePrice =
-			sharePriceFromContract > 0 ? sharePriceFromContract : defaultSharePrice;
+
 		return {
-			sharePrice: sharePrice,
-			displaySharePrice: sharePrice + "%",
+			displaySharePrice: sharePriceFromContract + "%",
 			sharePriceFromContract: sharePriceFromContract,
 			success: true,
 		};
@@ -269,18 +267,14 @@ export const getJuniorWithdrawableOp = async () => {
 				let poolBal = await poolContract.poolBalance();
 				poolBal = ethers.utils.formatUnits(poolBal, sixDecimals);
 
-				let estimatedAPY = await poolContract.getYieldPercentage();
-				let apy = ethers.utils.formatUnits(
-					estimatedAPY[1].toString(),
-					sixDecimals
-				);
+				let estimatedAPY = await poolContract.juniorYieldPerecentage();
 
-				obj.estimatedAPY = apy * 100 + "%";
+				let apy = ethers.utils.formatUnits(estimatedAPY, sixDecimals);
+				obj.estimatedAPY = parseFloat(apy * 100).toFixed(2) + "%";
 				if (tx.opportunityStatus.toString() === "8") {
 					obj.yieldGenerated = getDisplayAmount(apy * stakingBal);
 				}
-				let investorWithdrawable =
-					await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals

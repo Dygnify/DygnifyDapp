@@ -39,8 +39,6 @@ interface IOpportunityPool {
 
     function getRepaymentAmount() external view returns (uint256);
 
-    function getYieldPercentage() external view returns (uint256, uint256);
-
     function getOverDuePercentage() external view returns (uint256, uint256);
 
     function nextRepaymentTime() external view returns (uint256);
