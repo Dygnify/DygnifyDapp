@@ -232,7 +232,7 @@ const Withdraw = () => {
 								<div className="flex flex-col md:flex-row flex-wrap gap-5 md:gap-[1.8vw]">
 									{juniorPools.map((item) => (
 										<WithdrawCard
-											key={Math.random()}
+											key={item.id}
 											data={item}
 											isSeniorPool={false}
 											setSelected={setSelected}
