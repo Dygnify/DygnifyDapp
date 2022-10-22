@@ -173,11 +173,11 @@ input[type="number"] {
  /* For Firefox */
  progress::-moz-progress-bar {
 	background: rgb(37 99 235);
-	border-radius: 0.25em;
+	border-radius: 0.5em;
 }
 
 /* For Chrome or Safari */
 progress::-webkit-progress-value {
 	background: rgb(37 99 235);
-	border-radius: 0.25em;
+	border-radius: 0.5em;
 }

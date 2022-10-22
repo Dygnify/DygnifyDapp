@@ -160,7 +160,7 @@ const EditBorrowerProfileNew = () => {
 	const validations = () => {
 		setLogoError(false);
 
-		if (!logoFile) setLogoError(true);
+		if (!logoFile && !location.state) setLogoError(true);
 
 		const tempFileStatus = {
 			bip: fileErr.bip,
@@ -168,11 +168,13 @@ const EditBorrowerProfileNew = () => {
 			bicp: fileErr.bicp,
 		};
 
-		if (!businessIdentityFiles) tempFileStatus.bip = true;
+		if (!location.state) {
+			if (!businessIdentityFiles) tempFileStatus.bip = true;
 
-		if (!businessAddressFiles) tempFileStatus.bap = true;
+			if (!businessAddressFiles) tempFileStatus.bap = true;
 
-		if (!businessIncorporationFiles) tempFileStatus.bicp = true;
+			if (!businessIncorporationFiles) tempFileStatus.bicp = true;
+		}
 
 		setFileErr(tempFileStatus);
 
