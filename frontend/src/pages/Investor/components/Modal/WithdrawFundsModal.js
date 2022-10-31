@@ -62,7 +62,9 @@ const WithdrawFundsModal = ({
 		inputElement.current.focus();
 	};
 	useEffect(() => {
-		focusInput();
+		if (data?.isSeniorPool) {
+			focusInput();
+		}
 	}, []);
 
 	async function withdrawSeniorPool() {
