@@ -54,11 +54,11 @@ const ProcessingFundsModal = ({
 							</div>
 							{!investProcessing ? (
 								<p className="font-semibold text-base">
-									You successfully invested
+									You successfully {invest ? "invested" : "withdrew"}
 									<span className="text-success-500 px-1">
 										{amounts} {process.env.REACT_APP_TOKEN_NAME}
 									</span>
-									in poolname
+									{invest ? "in" : "from"} pool
 								</p>
 							) : (
 								<></>

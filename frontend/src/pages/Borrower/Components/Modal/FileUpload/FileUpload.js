@@ -51,7 +51,7 @@ function FileUpload({ fileName, progress, status }) {
 					{progress}%
 				</span>
 				<progress
-					className={`w-full bg-gray-100 dark:bg-gray-500 m-0 rounded-md`}
+					className={`w-full bg-gray-100 dark:bg-gray-500 m-0 rounded-lg`}
 					value="0"
 					max="100"
 					ref={progressValueRef}
