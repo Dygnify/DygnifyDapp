@@ -37,6 +37,7 @@ const Withdraw = () => {
 	});
 	const [seniorPoolLoading, setSeniorPoolLoading] = useState(true);
 	const [juniorPoolLoading, setJuniorPoolLoading] = useState(true);
+	const [checkInvest, setCheckInvest] = useState();
 
 	const handleForm = () => {
 		setSelected(null);
@@ -168,6 +169,7 @@ const Withdraw = () => {
 						setAmounts={setAmounts}
 						setUpdateSenior={setUpdateSenior}
 						seniorPoolSharePrice={seniorPoolSharePrice}
+						setCheckInvest={setCheckInvest}
 					/>
 				)}
 				{processFundModal ? (
@@ -177,6 +179,8 @@ const Withdraw = () => {
 						txhash={txhash}
 						contractAddress={contractAdrress}
 						amounts={amounts}
+						checkInvest={checkInvest}
+						setCheckInvest={setCheckInvest}
 					/>
 				) : (
 					<></>

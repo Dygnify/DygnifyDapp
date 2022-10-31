@@ -24,13 +24,12 @@ const ProcessingDrawdownModal = ({
 					<div className="md:px-8 flex px-4 py-3 text-2xl font-semibold border-b border-neutral-500">
 						<h3>Drawdown</h3>
 
-						<label
-							for="DrawdownProcessModal"
+						<button
 							className="ml-auto cursor-pointer"
 							onClick={() => setCheckForDrawdown(false)}
 						>
 							✕
-						</label>
+						</button>
 					</div>
 
 					<div className="px-4 md:px-8 mt-6">
@@ -101,12 +100,13 @@ const ProcessingDrawdownModal = ({
 							</div>
 						</div>
 
-						<div
-							className="border-2 border-neutral-500 rounded-[1.8em] mt-8"
-							onClick={() => navigate("/borrowerDashboard/transaction")}
-						>
+						<div className="border-2 border-neutral-500 rounded-[1.8em] mt-8">
 							<p className="cursor-pointer font-semibold py-3 text-center">
-								View Transaction
+								<button
+									onClick={() => navigate("/borrowerDashboard/transaction")}
+								>
+									View Transaction
+								</button>
 							</p>
 						</div>
 					</div>

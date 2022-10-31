@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useRef } from "react";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
@@ -44,10 +44,12 @@ const InvestModal = ({
 		status: false,
 		msg: "",
 	});
+	const inputElement = useRef();
 
 	useEffect(() => {
 		getWalletBal().then((res) => {
 			if (res.success) {
+				focusInput();
 				setWalletBal(res.balance);
 			} else {
 				console.log(res.msg);
@@ -60,6 +62,10 @@ const InvestModal = ({
 		userAddress();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading]);
+
+	const focusInput = () => {
+		inputElement.current.focus();
+	};
 
 	async function investSenior() {
 		setAmounts(amount);
@@ -104,8 +110,6 @@ const InvestModal = ({
 		);
 		setApprovedvalue(data);
 	}
-
-	console.log(approvedvalue, "----");
 
 	async function investJunior() {
 		setAmounts(amount);
@@ -315,6 +319,7 @@ const InvestModal = ({
 							Enter Amount
 						</label>
 						<input
+							ref={inputElement}
 							type="number"
 							id="investModalAmount"
 							placeholder="0.0"
@@ -332,7 +337,7 @@ const InvestModal = ({
 					</div>
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<label
+						<button
 							onClick={() => {
 								console.log(process.env.REACT_APP_SENIORPOOL);
 								if (!error.approveErr) {
@@ -354,30 +359,29 @@ const InvestModal = ({
 										});
 								}
 							}} //if condition not true then investJunior will execute
-							className={`block font-semibold text-white ${
+							className={`block font-semibold text-white focus:outline-offset-2 ${
 								error.approveErr
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
-									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer  focus:outline-none focus:outline-[#9281FF] hover:outline-[#9281FF]"
 							}  text-center py-2 rounded-[1.8em] select-none `}
 						>
 							Approve
-						</label>
+						</button>
 					</div>
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<label
-							htmlFor={`${error.investErr ? "" : "InvestProcessModal"}`}
+						<button
 							onClick={() => {
 								if (!error.investErr)
 									isSenior ? investSenior() : investJunior();
 							}} //if condition not true then investJunior will execute
-							className={`block font-semibold text-white ${
+							className={`block font-semibold text-white focus:outline-offset-2 ${
 								error.investErr
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
-									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer   focus:outline-none focus:outline-[#9281FF] hover:outline-[#9281FF]"
 							}  text-center py-2 rounded-[1.8em] select-none`}
 						>
 							Invest
-						</label>
+						</button>
 					</div>
 				</div>
 			</div>

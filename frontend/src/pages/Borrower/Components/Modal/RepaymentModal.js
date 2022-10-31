@@ -156,16 +156,12 @@ const RepaymentModal = ({
 					</div>
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<label
-							// className={` w-full ${
-							// 	!isApproved ? "opacity-40 cursor-not-allowed" : ""
-							// }`}
-							className={`block font-semibold text-white ${
+						<button
+							className={`block font-semibold text-white focus:outline-offset-2 ${
 								!isApproved
-									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
-									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
-							}  text-center py-2 rounded-[1.8em] select-none `}
-							// htmlFor={isApproved ? "RepaymentProcessModal" : ""}
+									? "bg-neutral-400 cursor-not-allowed w-full opacity-40 "
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer focus:outline-none focus:outline-[#9281FF] hover:outline-[#9281FF]"
+							}  text-center py-2 rounded-[1.8em] select-none`}
 							onClick={() => {
 								if (isApproved) {
 									setLoading(true);
@@ -186,23 +182,19 @@ const RepaymentModal = ({
 							}}
 						>
 							Approve
-						</label>
+						</button>
 					</div>
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<label
-							// className={` w-full ${
-							// 	!isInvest ? "cursor-not-allowed opacity-40" : ""
-							// } `}
-							className={`block font-semibold text-white ${
+						<button
+							className={`block font-semibold text-white focus:outline-offset-2 ${
 								!isInvest
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
-									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer focus:outline-none focus:outline-[#9281FF] hover:outline-[#9281FF]"
 							}  text-center py-2 rounded-[1.8em] select-none`}
-							htmlFor={isInvest ? "RepaymentProcessModal" : ""}
 							onClick={() => (isInvest ? onRepayment() : "")}
 						>
 							Make Repayment
-						</label>
+						</button>
 					</div>
 				</div>
 			</div>

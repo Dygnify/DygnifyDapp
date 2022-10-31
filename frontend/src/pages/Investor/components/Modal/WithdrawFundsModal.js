@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import {
 	withdrawAllJunior,
@@ -22,12 +22,14 @@ const WithdrawFundsModal = ({
 	setAmounts,
 	setUpdateSenior,
 	seniorPoolSharePrice,
+	setCheckInvest,
 }) => {
 	const [amount, setAmount] = useState("");
 	const [error, setError] = useState({
 		err: true,
 		msg: "",
 	});
+	const inputElement = useRef();
 
 	const [errormsg, setErrormsg] = useState({
 		status: false,
@@ -35,6 +37,7 @@ const WithdrawFundsModal = ({
 	});
 
 	async function withdrawJunior() {
+		setCheckInvest(true);
 		setShowModal(false);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
@@ -47,6 +50,7 @@ const WithdrawFundsModal = ({
 			handleForm();
 			setInvestProcessing(false);
 		} else {
+			setCheckInvest(false);
 			console.log(withdrawalData.msg);
 			setErrormsg({
 				status: !withdrawalData.status,
@@ -54,8 +58,15 @@ const WithdrawFundsModal = ({
 			});
 		}
 	}
+	const focusInput = () => {
+		inputElement.current.focus();
+	};
+	useEffect(() => {
+		focusInput();
+	}, []);
 
 	async function withdrawSeniorPool() {
+		setCheckInvest(true);
 		setShowModal(false);
 		settxhash(false);
 		setProcessFundModal(true);
@@ -73,6 +84,7 @@ const WithdrawFundsModal = ({
 			handleForm();
 			setInvestProcessing(false);
 		} else {
+			setCheckInvest(false);
 			setProcessFundModal(false);
 			console.log(data?.msg);
 			setErrormsg({
@@ -188,6 +200,7 @@ const WithdrawFundsModal = ({
 									Enter Amount
 								</label>
 								<input
+									ref={inputElement}
 									type="number"
 									className="bg-neutral-100 dark:bg-darkmode-700 border-2 border-neutral-300 dark:border-darkmode-50 outline-none px-2 py-3 pr-14 rounded-md placeholder:text-neutral-500 placeholder:font-semibold"
 									id="exampleNumber0"
@@ -216,14 +229,11 @@ const WithdrawFundsModal = ({
 					</div>
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8 flex flex-col gap-4">
-						<label
-							htmlFor={`${
-								error.err ? "WithdrawProcessModal" : "WithdrawProcessModal"
-							}`}
-							className={`block font-semibold text-white ${
+						<button
+							className={`block font-semibold text-white focus:outline-offset-2 ${
 								error.err && data?.isSeniorPool
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
-									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer"
+									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer focus:outline-none focus:outline-[#9281FF] hover:outline-[#9281FF]"
 							}  text-center py-2 rounded-[1.8em] select-none `}
 							onClick={() => {
 								!error.err && data?.isSeniorPool
@@ -232,7 +242,7 @@ const WithdrawFundsModal = ({
 							}}
 						>
 							Withdraw Funds
-						</label>
+						</button>
 					</div>
 				</div>
 			</div>

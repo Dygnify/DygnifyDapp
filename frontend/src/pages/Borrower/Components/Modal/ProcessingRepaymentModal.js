@@ -27,15 +27,14 @@ const ProcessingRepaymentModal = ({
 					<div className="md:px-8 flex px-4 py-3 text-2xl font-semibold border-b border-neutral-300 dark:border-neutral-500">
 						<h3>Repayment</h3>
 
-						<label
-							htmlFor="RepaymentProcessModal"
+						<button
 							className="ml-auto cursor-pointer"
 							onClick={() => {
 								setCheck(false);
 							}}
 						>
 							✕
-						</label>
+						</button>
 					</div>
 
 					<div className="px-4 md:px-8 mt-6">
@@ -96,13 +95,13 @@ const ProcessingRepaymentModal = ({
 
 						<div className="border-2 border-neutral-300 dark:border-neutral-500 rounded-[1.8em] mt-8">
 							<p className="text-black dark:text-white cursor-pointer font-semibold py-3 text-center">
-								<span
+								<button
 									onClick={() => {
 										navigate("/borrowerDashboard/transaction");
 									}}
 								>
 									View Transaction
-								</span>
+								</button>
 							</p>
 						</div>
 					</div>

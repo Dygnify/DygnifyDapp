@@ -78,13 +78,13 @@ const DrawdownModal = ({ data, handleDrawdown, onDrawdown }) => {
 					</div>
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
-						<GradientBtnForModal
-							className={"w-full"}
-							// htmlFor={"DrawdownProcessModal"}
+						<button
 							onClick={onDrawdown}
+							className="block font-semibold text-white focus:outline-offset-2 bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer focus:outline-none focus:outline-[#9281FF] hover:outline-[#9281FF]
+							  text-center py-2 rounded-[1.8em] select-none"
 						>
 							Drawdown Funds
-						</GradientBtnForModal>
+						</button>
 					</div>
 				</div>
 			</div>
