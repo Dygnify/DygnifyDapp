@@ -65,7 +65,7 @@ const WithdrawFundsModal = ({
 		if (data?.isSeniorPool) {
 			focusInput();
 		}
-	}, []);
+	}, [showModal]);
 
 	async function withdrawSeniorPool() {
 		setCheckInvest(true);
