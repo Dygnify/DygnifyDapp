@@ -4,8 +4,11 @@ import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
 const ErrorModal = ({ errormsg, setErrormsg }) => {
 	const unCatcherror1 = errormsg?.msg?.includes("missing revert");
 	const unCatcherror2 = errormsg?.msg?.includes("https://");
-	if (unCatcherror1 || unCatcherror2) {
+	if (unCatcherror1) {
 		setErrormsg((prev) => ({ ...prev, msg: "Please reload this page" }));
+	}
+	if (unCatcherror2) {
+		setErrormsg({ status: false, msg: "" });
 	}
 	const metamaskerr1 = errormsg?.msg?.includes("invalid address");
 	const metamaskerr2 = errormsg?.msg?.includes("unknown account");
