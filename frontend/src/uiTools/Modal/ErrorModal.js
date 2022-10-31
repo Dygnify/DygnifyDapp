@@ -2,8 +2,9 @@ import React from "react";
 import { getOnlyErrorText } from "../../services/Helpers/displayTextHelper";
 
 const ErrorModal = ({ errormsg, setErrormsg }) => {
-	const result = errormsg?.msg?.includes("missing revert");
-	if (result) {
+	const unCatcherror1 = errormsg?.msg?.includes("missing revert");
+	const unCatcherror2 = errormsg?.msg?.includes("https://");
+	if (unCatcherror1 || unCatcherror2) {
 		setErrormsg((prev) => ({ ...prev, msg: "Please reload this page" }));
 	}
 	const metamaskerr1 = errormsg?.msg?.includes("invalid address");
