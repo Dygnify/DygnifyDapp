@@ -297,7 +297,9 @@ const Overview = () => {
 											Total Outstanding
 										</p>
 										<div className="ml-auto font-semibold md:ml-0 flex  gap-2 items-end  px-4">
-											<h3 className="text-2xl">{totalOutstandingAmt}</h3>
+											<h3 className="text-2xl">
+												{totalOutstandingAmt ? totalOutstandingAmt : "--"}
+											</h3>
 											<p className="">{process.env.REACT_APP_TOKEN_NAME}</p>
 										</div>
 									</div>

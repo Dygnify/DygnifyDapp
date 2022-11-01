@@ -14,6 +14,7 @@ export const loadBlockpassWidget = (refId) => {
 };
 
 export const kycOptions = (refId) => {
+	refId = "0x23Db9F9731BCFb35CAc11B2e8373ACD14318bDF5";
 	const options = {
 		url: `https://kyc.blockpass.org/kyc/1.0/connect/${process.env.REACT_APP_CLIENT_ID}/refId/${refId}`,
 		method: "GET",
