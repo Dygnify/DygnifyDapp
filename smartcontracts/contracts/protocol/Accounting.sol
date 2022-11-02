@@ -186,7 +186,7 @@ library Accounting {
         );
     }
 
-    function getTermLoanInterestDistribution(
+    function getInterestDistribution(
         uint256 dygnifyFees,
         uint256 underwriterFees,
         uint256 interestAmount,
@@ -215,7 +215,6 @@ library Accounting {
             interestAmount,
             currentDecimals
         );
-        uint256 leverageRatioInRay = leverageRatio * DSMath.RAY;
         uint256 seniorPoolInvestmentInRay = DSMath.getInRay(
             seniorPoolInvestment,
             currentDecimals

@@ -318,7 +318,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             uint256 seniorPoolInterst;
             uint256 juniorPoolInterst;
             (seniorPoolInterst, juniorPoolInterst) = Accounting
-                .getTermLoanInterestDistribution(
+                .getInterestDistribution(
                 dygnifyConfig.getDygnifyFee(),
                 dygnifyConfig.getJuniorSubpoolFee(),
                 interest,
@@ -373,17 +373,24 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             totalRepaidAmount += amount;
 
             //yield distribution
+            uint256 seniorPoolInterst;
+            uint256 juniorPoolInterst;
+            (seniorPoolInterst, juniorPoolInterst) = Accounting
+                .getInterestDistribution(
+                dygnifyConfig.getDygnifyFee(),
+                dygnifyConfig.getJuniorSubpoolFee(),
+                amount,
+                dygnifyConfig.getLeverageRatio(),
+                loanAmount,
+                seniorSubpoolDetails.totalDepositable
+            );
             seniorSubpoolDetails.yieldGenerated = seniorSubpoolDetails
                 .yieldGenerated
-                .add(
-                seniorYieldPerecentage.mul(amount).div(Constants.sixDecimal())
-            );
+                .add(seniorPoolInterst);
 
             juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
                 .yieldGenerated
-                .add(
-                juniorYieldPerecentage.mul(amount).div(Constants.sixDecimal())
-            );
+                .add(juniorPoolInterst);
 
             //overdue Amount distribution
             juniorSubpoolDetails.overdueGenerated = juniorSubpoolDetails
@@ -414,6 +421,10 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             if (repaymentCounter == totalRepayments) {
                 amount = amount.add(loanAmount);
                 totalRepaidAmount = totalRepaidAmount.add(loanAmount);
+                seniorSubpoolDetails.depositedAmount = seniorSubpoolDetails
+                    .totalDepositable;
+                juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
+                    .totalDepositable;
             }
 
             amount = amount.add(overDueFee);
@@ -513,8 +524,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 .mul(stakingBalance[msg.sender])
                 .div(Constants.sixDecimal());
             require(
-                yieldGatherd <= juniorSubpoolDetails.yieldGenerated,
-                "currently junior subpool don't have Liquidity"
+                yieldGatherd <= juniorSubpoolDetails.yieldGenerated.add(offset),
+                "currently junior subpool yield is less than what is generated"
             );
             juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
                 .depositedAmount

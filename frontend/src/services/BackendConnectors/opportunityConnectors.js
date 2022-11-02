@@ -406,6 +406,7 @@ export const getOpportunitiesWithDues = async () => {
 
 					let repaymentDate = await poolContract.nextRepaymentTime();
 					let totalRepayments = await poolContract.totalRepayments();
+					let repaymentCounter = await poolContract.repaymentCounter();
 					let repaymentAmount = await poolContract.getRepaymentAmount();
 					let totalRepaidAmt = await poolContract.totalRepaidAmount();
 					repaymentAmount = ethers.utils.formatUnits(
@@ -426,7 +427,12 @@ export const getOpportunitiesWithDues = async () => {
 
 					obj.TotalLoanRepaymentAmount =
 						parseFloat(repaymentAmount) * +totalRepayments + +principal;
-
+					// Above logic does not work for last bullet repayment
+					// hence this is little workaround to get the last outstanding amount
+					if (+totalRepayments === +repaymentCounter) {
+						obj.TotalLoanRepaymentAmount =
+							+repaymentAmount + +obj.totalRepaidAmount;
+					}
 					const overdueTime = Math.floor(Date.now() / 1000) - repaymentDate;
 					obj.isOverDue = overdueTime > 0 ? true : false;
 

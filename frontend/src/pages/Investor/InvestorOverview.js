@@ -68,37 +68,36 @@ const InvestorOverview = () => {
 								res.balance
 							);
 
-							let totalInvestment =
+							let totalSPInvestment =
 								seniorPoolInvestment.stakingAmt +
 								seniorPoolInvestment.withdrawableAmt;
+							seniorInvestmentData.capitalInvested = getDisplayAmount(
+								totalSPInvestment
+							);
 
-							seniorInvestmentData.capitalInvested =
-								getDisplayAmount(totalInvestment);
+							const price = await getSeniorPoolDisplaySharePrice(
+								spJson.estimatedAPY
+							);
+
+							if (price.success) {
+								const { displaySharePrice, sharePriceFromContract } = price;
+								seniorInvestmentData.estimatedAPY = displaySharePrice;
+								seniorInvestmentData.yieldGenerated = getDisplayAmount(
+									parseFloat((totalSPInvestment * sharePriceFromContract) / 100)
+								);
+
+								setSeniorPool(seniorInvestmentData);
+							} else {
+								setSeniorPool(null);
+								setErrormsg({
+									status: !price.status,
+									msg: price.msg,
+								});
+							}
 						} else {
 							setErrormsg({
 								status: !res.success,
 								msg: res.msg,
-							});
-						}
-
-						const price = await getSeniorPoolDisplaySharePrice(
-							spJson.estimatedAPY
-						);
-
-						if (price.success) {
-							const { displaySharePrice, sharePriceFromContract } = price;
-							seniorInvestmentData.estimatedAPY = displaySharePrice;
-							seniorInvestmentData.yieldGenerated = getDisplayAmount(
-								parseFloat((totalInvestment * sharePriceFromContract) / 100)
-							);
-
-							setSeniorPool(seniorInvestmentData);
-						} else {
-							setSeniorPool(null);
-							console.log(price.msg);
-							setErrormsg({
-								status: !price.status,
-								msg: price.msg,
 							});
 						}
 					}
