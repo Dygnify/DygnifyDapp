@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { getTrimmedWalletAddress } from "../../../../../services/Helpers/displayTextHelper";
 
 function FileUpload({ fileName, progress, status }) {
 	const [color, setColor] = useState("text-warning-500");
@@ -32,7 +33,9 @@ function FileUpload({ fileName, progress, status }) {
 			<div className="flex justify-between mb-2">
 				<p>
 					File Name:{" "}
-					<span className="underline cursor-default">{fileName}</span>
+					<span className="underline cursor-default">
+						{getTrimmedWalletAddress(fileName, 10)}
+					</span>
 				</p>
 
 				<p>
