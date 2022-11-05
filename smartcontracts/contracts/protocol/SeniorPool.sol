@@ -258,12 +258,17 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
         // update the senior pool balance
         seniorPoolBal = seniorPoolBal.sub(usdcAmount);
         // update the share price
-        uint256 totalSharesAfterWithdrawal = totalShares().sub(amount);
-        sharePrice = (
-            (seniorPoolBal.mul(lpMantissa())).div(totalSharesAfterWithdrawal)
-        )
-            .div(lpMantissa());
-
+        if (seniorPoolBal < lpMantissa()) {
+            sharePrice = 0;
+        } else {
+            uint256 totalSharesAfterWithdrawal = totalShares().sub(amount);
+            uint256 availableProfit = seniorPoolBal.sub(
+                totalSharesAfterWithdrawal
+            );
+            sharePrice = (availableProfit.mul(lpMantissa())).div(
+                totalSharesAfterWithdrawal
+            );
+        }
         // burn the lp token equivalent to amount
         lpToken.burn(msg.sender, amount);
 
