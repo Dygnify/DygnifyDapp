@@ -208,7 +208,7 @@ const PoolDetails = () => {
 
 	const redirectForEmail = () => {
 		if (companyDetails?.email) {
-			window.location.href = companyDetails?.email;
+			window.location.href = "mailto:" + companyDetails?.email;
 		}
 	};
 
