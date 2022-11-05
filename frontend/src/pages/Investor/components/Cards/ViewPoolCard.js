@@ -5,9 +5,9 @@ import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import {
-	getJSONData,
-	getFileUrl,
-} from "../../../../services/Helpers/skynetIPFS";
+	getBorrowerLogoURL,
+	getOpportunityJson,
+} from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
 	const path = useNavigate();
@@ -19,14 +19,22 @@ const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		getJSONData(opportunityInfo).then((opJson) => {
-			if (opJson) {
-				setCompanyName(opJson.company_name);
-				getCompanyLogo(
-					opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-				);
-				console.log(opJson);
-				setOpData(opJson);
+		getOpportunityJson(data).then((read) => {
+			if (read) {
+				read.onloadend = function () {
+					let opJson = JSON.parse(read.result);
+					if (opJson) {
+						setCompanyName(opJson.company_name);
+						let imgUrl = getBorrowerLogoURL(
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID,
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileName
+						);
+						if (imgUrl) {
+							setLogoImgSrc(imgUrl);
+						}
+						setOpData(opJson);
+					}
+				};
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,20 +57,6 @@ const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
 		);
 	};
 
-	async function getCompanyLogo(cid) {
-		if (!cid) {
-			return;
-		}
-		try {
-			getFileUrl(cid).then((res) => {
-				if (res) {
-					setLogoImgSrc(res);
-				}
-			});
-		} catch (error) {
-			console.log(error);
-		}
-	}
 	return (
 		<div
 			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient`}

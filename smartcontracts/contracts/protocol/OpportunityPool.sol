@@ -523,20 +523,21 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             uint256 yieldGatherd = juniorYieldPerecentage
                 .mul(stakingBalance[msg.sender])
                 .div(Constants.sixDecimal());
+            yieldGatherd = yieldGatherd.sub(offset);
             require(
-                yieldGatherd <= juniorSubpoolDetails.yieldGenerated.add(offset),
+                yieldGatherd <= juniorSubpoolDetails.yieldGenerated,
                 "currently junior subpool yield is less than what is generated"
             );
+            uint256 userStakingBal = stakingBalance[msg.sender].sub(offset);
             juniorSubpoolDetails.depositedAmount = juniorSubpoolDetails
                 .depositedAmount
-                .add(offset)
-                .sub(stakingBalance[msg.sender]);
+                .sub(userStakingBal);
             juniorSubpoolDetails.yieldGenerated = juniorSubpoolDetails
                 .yieldGenerated
                 .sub(yieldGatherd);
 
             isStaking[msg.sender] = false;
-            amount = stakingBalance[msg.sender].add(yieldGatherd).sub(offset);
+            amount = userStakingBal.add(yieldGatherd);
 
             if (juniorSubpoolDetails.overdueGenerated > 0) {
                 uint256 overdueGathered = (

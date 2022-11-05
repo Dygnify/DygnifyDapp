@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
-import { getJSONData } from "../../../../services/Helpers/skynetIPFS";
+import {
+	getBorrowerLogoURL,
+	getOpportunityJson,
+} from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const PoolCard = ({ data }) => {
 	const {
@@ -13,12 +16,25 @@ const PoolCard = ({ data }) => {
 	} = data;
 
 	const [companyName, setCompanyName] = useState();
+	const [logoImgSrc, setLogoImgSrc] = useState();
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		getJSONData(opportunityInfo).then((opJson) => {
-			if (opJson) {
-				setCompanyName(opJson.company_name);
+		getOpportunityJson(data).then((read) => {
+			if (read) {
+				read.onloadend = function () {
+					let opJson = JSON.parse(read.result);
+					if (opJson) {
+						setCompanyName(opJson.company_name);
+						let imgUrl = getBorrowerLogoURL(
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID,
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileName
+						);
+						if (imgUrl) {
+							setLogoImgSrc(imgUrl);
+						}
+					}
+				};
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -30,7 +46,7 @@ const PoolCard = ({ data }) => {
 				<img
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
 					className="w-[7rem] lg:w-[12rem]"
-					src={DygnifyImage}
+					src={logoImgSrc ? logoImgSrc : DygnifyImage}
 					alt=""
 				/>
 

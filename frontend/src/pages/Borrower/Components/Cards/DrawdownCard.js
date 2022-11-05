@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import DrawdownModal from "../Modal/DrawdownModal";
-// import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
 import { drawdown } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
-// import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 
 const DrawdownCard = ({

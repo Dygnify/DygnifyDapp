@@ -13,7 +13,7 @@ import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { openFileInNewTab } from "../../services/Helpers/skynetIPFS";
+import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -170,9 +170,12 @@ const PoolDetails = () => {
 		setLoading(false);
 	}
 
-	const viewDocument = (docCid) => {
+	const viewDocument = (docCid, fileName) => {
 		if (!docCid) return null;
-		openFileInNewTab(docCid);
+		let url = getIPFSFileURL(docCid);
+		if (fileName) url += `/${fileName}`;
+		console.log(fileName);
+		window.open(url, "_blank");
 	};
 
 	const redirectToURl = (event) => {

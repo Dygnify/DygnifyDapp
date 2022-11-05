@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../uiTools/Button/PrimaryButton";
 import dollarIcon from "../../../assets/Dollar-icon.svg";
 import default_profile from "../../../assets/default_profile.svg";
-import { getJSONData, getFileUrl } from "../../../services/Helpers/skynetIPFS";
 import Loader from "../../../uiTools/Loading/Loader";
+import {
+	getBorrowerLogoURL,
+	getOpportunityJson,
+} from "../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const UnderwriterCard = ({ data }) => {
 	const path = useNavigate();
@@ -15,14 +18,23 @@ const UnderwriterCard = ({ data }) => {
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		getJSONData(data?.opportunityInfo)
-			.then((opJson) => {
-				if (opJson) {
-					setPoolDetails({ ...data, ...opJson });
-					setCompanyName(opJson.companyDetails?.companyName);
-					getCompanyLogo(
-						opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-					);
+		getOpportunityJson(data)
+			.then((dataReader) => {
+				if (dataReader) {
+					dataReader.onloadend = function () {
+						let opJson = JSON.parse(dataReader.result);
+						if (opJson) {
+							setPoolDetails({ ...data, ...opJson });
+							setCompanyName(opJson.companyDetails?.companyName);
+							let imgUrl = getBorrowerLogoURL(
+								opJson.companyDetails?.companyLogoFile?.businessLogoFileCID,
+								opJson.companyDetails?.companyLogoFile?.businessLogoFileName
+							);
+							if (imgUrl) {
+								setLogoImgSrc(imgUrl);
+							}
+						}
+					};
 				}
 			})
 			.catch((err) => console.log(err))
@@ -31,21 +43,6 @@ const UnderwriterCard = ({ data }) => {
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	async function getCompanyLogo(cid) {
-		if (!cid) {
-			return;
-		}
-		try {
-			getFileUrl(cid).then((res) => {
-				if (res) {
-					setLogoImgSrc(res);
-				}
-			});
-		} catch (error) {
-			console.log(error);
-		}
-	}
 
 	return (
 		<div className="relative">

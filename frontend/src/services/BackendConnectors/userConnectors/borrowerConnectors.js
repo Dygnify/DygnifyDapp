@@ -1,9 +1,15 @@
 const { ethers } = require("ethers");
 const { requestAccount, getEthAddress } = require("./commonConnectors");
 const borrowerContract = require("../../../artifacts/contracts/protocol/Borrower.sol/Borrower.json");
-
 const opportunityPool = require("../../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
-
+const {
+	retrieveFileFromURL,
+	getBinaryFileData,
+} = require("../../Helpers/fileHelper");
+const {
+	getIPFSFileURL,
+	retrieveFiles,
+} = require("../../Helpers/web3storageIPFS");
 const Sentry = require("@sentry/react");
 
 export const getBorrowerDetails = async (address) => {
@@ -142,5 +148,56 @@ export const drawdown = async (poolAddress) => {
 			success: false,
 			msg: error.message,
 		};
+	}
+};
+
+export const getBorrowerJson = async (address) => {
+	Sentry.captureMessage("getBorrowerJson", "info");
+	try {
+		let res = await getBorrowerDetails(address);
+		if (res.success) {
+			let dataReader;
+			let file = await retrieveFiles(res.borrowerCid);
+
+			if (file) {
+				dataReader = getBinaryFileData(file);
+			} else {
+				dataReader = await retrieveFileFromURL(
+					getIPFSFileURL(res.borrowerCid) + "/borrower.json"
+				);
+			}
+			return dataReader;
+		}
+	} catch (error) {
+		Sentry.captureException(error);
+	}
+};
+
+export const getBorrowerLogoURL = (imgCID, fileName) => {
+	if (imgCID && fileName) {
+		let imgUrl = getIPFSFileURL(imgCID);
+		let sanitizedFileName = encodeURI(fileName);
+		return `${imgUrl}/${sanitizedFileName}`;
+	}
+};
+
+export const getOpportunityJson = async (opportunityData) => {
+	Sentry.captureMessage("getOpportunityJson", "info");
+	try {
+		if (opportunityData && opportunityData.opportunityInfo) {
+			let file = await retrieveFiles(opportunityData.opportunityInfo);
+			let dataReader;
+			if (file) {
+				dataReader = getBinaryFileData(file);
+			} else {
+				dataReader = await retrieveFileFromURL(
+					getIPFSFileURL(opportunityData.opportunityInfo) +
+						`/${opportunityData.collateralDocument}.json`
+				);
+			}
+			return dataReader;
+		}
+	} catch (error) {
+		Sentry.captureException(error);
 	}
 };

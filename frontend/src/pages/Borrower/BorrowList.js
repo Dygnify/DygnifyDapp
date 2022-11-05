@@ -13,9 +13,9 @@ import { getUserWalletAddress } from "../../services/BackendConnectors/userConne
 import ProcessingRequestModal from "./Components/Modal/ProcessingModal";
 import KycCheckModal from "./Components/Modal/KycCheckModal";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { getJSONData } from "../../services/Helpers/skynetIPFS";
 import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 import Loader from "../../uiTools/Loading/Loader";
+import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const BorrowList = () => {
 	const [data, setData] = useState([]);
@@ -118,8 +118,8 @@ const BorrowList = () => {
 			if (result.res.status === "error") {
 				setKycStatus(false);
 			}
-			getJSONData(refId).then((res) => {
-				if (res) setProfileStatus(true);
+			getBorrowerDetails().then((res) => {
+				if (res.borrowerCid) setProfileStatus(true);
 				else setProfileStatus(false);
 				setLoading(false);
 			});
@@ -198,7 +198,6 @@ const BorrowList = () => {
 						drawdownId={drawdownId}
 						checkForDrawdown={checkForDrawdown}
 						setCheckForDrawdown={setCheckForDrawdown}
-
 					/>
 				) : (
 					<></>

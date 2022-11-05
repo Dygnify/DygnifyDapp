@@ -20,7 +20,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 import ProcessingDrawdownModal from "./Components/Modal/processingDrawdownModal";
 import ProcessingRepaymentModal from "./Components/Modal/ProcessingRepaymentModal";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { getJSONData } from "../../services/Helpers/skynetIPFS";
+import { getBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const Overview = () => {
 	const [drawdownList, setDrawdownList] = useState([]);
@@ -119,8 +119,8 @@ const Overview = () => {
 				setKycStatus(false);
 			}
 
-			getJSONData(refId).then((res) => {
-				if (res) {
+			getBorrowerDetails().then((res) => {
+				if (res.borrowerCid) {
 					setProfileStatus(true);
 				} else {
 					setProfileStatus(false);

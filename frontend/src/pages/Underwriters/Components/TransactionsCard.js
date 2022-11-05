@@ -1,16 +1,21 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getJSONData } from "../../../services/Helpers/skynetIPFS";
+import { getOpportunityJson } from "../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const TransactionsCard = ({ data }) => {
 	const [companyName, setCompanyName] = useState();
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		getJSONData(data?.opportunityInfo).then((opJson) => {
-			if (opJson) {
-				setCompanyName(opJson.companyDetails?.companyName);
+		getOpportunityJson(data).then((read) => {
+			if (read) {
+				read.onloadend = function () {
+					let opJson = JSON.parse(read.result);
+					if (opJson) {
+						setCompanyName(opJson.companyDetails?.companyName);
+					}
+				};
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps

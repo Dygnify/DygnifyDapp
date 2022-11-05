@@ -6,6 +6,7 @@ import {
 	getJuniorWithdrawableOp,
 	getSeniorPoolDisplaySharePrice,
 	getTotalInvestmentOfInvestor,
+	getSeniorPoolData,
 } from "../../services/BackendConnectors/userConnectors/investorConncector";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,6 @@ import DoughnutChart from "../Components/DoughnutChart";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { getJSONData } from "../../services/Helpers/skynetIPFS";
 
 const InvestorOverview = () => {
 	const [totalInvestment, setTotalInvestment] = useState(0);
@@ -55,54 +55,66 @@ const InvestorOverview = () => {
 
 	useEffect(() => {
 		if (seniorPoolInvestment) {
+			let totalSPInvestment =
+				seniorPoolInvestment.stakingAmt + seniorPoolInvestment.withdrawableAmt;
+			if (totalSPInvestment.toFixed(2) <= 0.0) {
+				return;
+			}
+
 			// fetch data from IPFS
-			getJSONData(process.env.REACT_APP_SENIORPOOL_CID).then(async (spJson) => {
-				try {
-					if (spJson) {
-						let seniorInvestmentData = {};
-						seniorInvestmentData.opportunityName = spJson.poolName;
-						const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
-
-						if (res.success) {
-							seniorInvestmentData.opportunityAmount = getDisplayAmount(
-								res.balance
-							);
-
-							let totalSPInvestment =
-								seniorPoolInvestment.stakingAmt +
-								seniorPoolInvestment.withdrawableAmt;
-							seniorInvestmentData.capitalInvested = getDisplayAmount(
-								totalSPInvestment
-							);
-
-							const price = await getSeniorPoolDisplaySharePrice(
-								spJson.estimatedAPY
-							);
-
-							if (price.success) {
-								const { displaySharePrice, sharePriceFromContract } = price;
-								seniorInvestmentData.estimatedAPY = displaySharePrice;
-								seniorInvestmentData.yieldGenerated = getDisplayAmount(
-									parseFloat((totalSPInvestment * sharePriceFromContract) / 100)
+			getSeniorPoolData().then((read) => {
+				if (read) {
+					read.onloadend = async function () {
+						try {
+							let spJson = JSON.parse(read.result);
+							if (spJson) {
+								let seniorInvestmentData = {};
+								seniorInvestmentData.opportunityName = spJson.poolName;
+								const res = await getWalletBal(
+									process.env.REACT_APP_SENIORPOOL
 								);
 
-								setSeniorPool(seniorInvestmentData);
-							} else {
-								setSeniorPool(null);
-								setErrormsg({
-									status: !price.status,
-									msg: price.msg,
-								});
+								if (res.success) {
+									seniorInvestmentData.opportunityAmount = getDisplayAmount(
+										res.balance
+									);
+
+									seniorInvestmentData.capitalInvested = getDisplayAmount(
+										totalSPInvestment
+									);
+
+									const price = await getSeniorPoolDisplaySharePrice(
+										spJson.estimatedAPY
+									);
+
+									if (price.success) {
+										const { displaySharePrice, sharePriceFromContract } = price;
+										seniorInvestmentData.estimatedAPY = displaySharePrice;
+										seniorInvestmentData.yieldGenerated = getDisplayAmount(
+											parseFloat(
+												(totalSPInvestment * sharePriceFromContract) / 100
+											)
+										);
+
+										setSeniorPool(seniorInvestmentData);
+									} else {
+										setSeniorPool(null);
+										setErrormsg({
+											status: !price.status,
+											msg: price.msg,
+										});
+									}
+								} else {
+									setErrormsg({
+										status: !res.success,
+										msg: res.msg,
+									});
+								}
 							}
-						} else {
-							setErrormsg({
-								status: !res.success,
-								msg: res.msg,
-							});
+						} catch (error) {
+							console.log(error);
 						}
-					}
-				} catch (error) {
-					console.log(error);
+					};
 				}
 			});
 		}
@@ -164,7 +176,7 @@ const InvestorOverview = () => {
 										data={[totalInvestment, totalYield ? totalYield : 0]}
 										color={["#5375FE", "#ffffff"]}
 										width={200}
-										labels={["Total Outstanding", "Total Repaid"]}
+										labels={["Total Investment", "Total Yield"]}
 										borderWidth={[1, 8]}
 										legendStyle={{ display: false }}
 									/>
@@ -173,7 +185,7 @@ const InvestorOverview = () => {
 										data={[1]}
 										color={["#64748B"]}
 										width={200}
-										labels={["Total Outstanding", "Total Repaid"]}
+										labels={["Total Investment", "Total Yield"]}
 										borderWidth={[1, 8]}
 										legendStyle={{ display: false }}
 									/>

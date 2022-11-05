@@ -1,6 +1,4 @@
 import React from "react";
-// import { getBinaryFileData } from "../../../../services/Helpers/fileHelper";
-// import { retrieveFiles } from "../../../../services/Helpers/web3storageIPFS";
 import DoughnutChart from "../../../Components/DoughnutChart";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 const OpportunityCardCollapsible = ({ data }) => {

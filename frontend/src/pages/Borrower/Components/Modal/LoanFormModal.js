@@ -4,12 +4,13 @@ import Stepper from "../../LoanForm/Stepper";
 import Account from "../../LoanForm/Steps/Account";
 import Details from "../../LoanForm/Steps/Details";
 import Final from "../../LoanForm/Steps/Final";
+import { getBorrowerJson } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import {
-	uploadFile,
-	storeJSONData,
-	getJSONData,
-} from "../../../../services/Helpers/skynetIPFS";
-import { getUserWalletAddress } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
+	storeFiles,
+	makeFileObjects,
+} from "../../../../services/Helpers/web3storageIPFS";
+
+import { captureException } from "@sentry/react";
 
 const LoanFormModal = ({
 	setSelected,
@@ -34,15 +35,16 @@ const LoanFormModal = ({
 	const [checkBox, setCheckBox] = useState(false);
 
 	useEffect(() => {
-		getUserWalletAddress().then((res) => {
-			if (res.success) {
-				getJSONData(res.address).then((data) => {
-					if (data) {
+		getBorrowerJson()
+			.then((dataReader) => {
+				if (dataReader) {
+					dataReader.onloadend = function () {
+						let data = JSON.parse(dataReader.result);
 						setBrJson(data);
-					}
-				});
-			}
-		});
+					};
+				}
+			})
+			.catch((e) => captureException(e));
 	}, []);
 
 	const steps = ["Add Loan Details", "Add Collateral", "Submit for Review"];
@@ -80,10 +82,10 @@ const LoanFormModal = ({
 	};
 	async function onFileUpload(selectedFile, loan_info) {
 		try {
-			let collateralHash = await uploadFile(selectedFile);
-			await storeJSONData(collateralHash, loan_info);
-
-			return collateralHash;
+			let collateralHash = await storeFiles(selectedFile);
+			let loanInfoFile = makeFileObjects(loan_info, `${collateralHash}.json`);
+			let loanInfoHash = await storeFiles(loanInfoFile);
+			return [collateralHash, loanInfoHash];
 		} catch (error) {
 			console.log(error);
 		}
@@ -133,16 +135,12 @@ const LoanFormModal = ({
 		loan_info.collateral_filename = collateral_document[0].name;
 		loan_info.companyDetails = brJson;
 
-		const collateralHash = await onFileUpload(
-			collateral_document[0],
+		const [collateralHash, loanInfoHash] = await onFileUpload(
+			collateral_document,
 			loan_info
 		);
-		loanDetails = {
-			...loanDetails,
-			collateralHash,
-			loanInfoHash: collateralHash,
-			loan_name,
-		};
+		loanDetails = { ...loanDetails, collateralHash, loanInfoHash, loan_name };
+
 		// sending data in backend to create opportunity with hash code
 
 		const res = await createOpportunity(loanDetails);

@@ -37,10 +37,10 @@ export function getIPFSFileURL(cid) {
 		return;
 	}
 
-	return `https://${cid}.ipfs.dweb.link`;
+	return `https://w3s.link/ipfs/${cid}`;
 }
 
-export async function retrieveFiles(cid, firstFileOnly) {
+export async function retrieveFiles(cid, firstFileOnly = true) {
 	Sentry.captureMessage("retrieveFiles", "info");
 	try {
 		if (!cid) {
@@ -64,6 +64,5 @@ export async function retrieveFiles(cid, firstFileOnly) {
 		return files;
 	} catch (error) {
 		Sentry.captureException(error);
-		console.log(error);
 	}
 }

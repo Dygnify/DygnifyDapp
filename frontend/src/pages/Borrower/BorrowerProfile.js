@@ -3,7 +3,6 @@ import DocumentCard from "../../uiTools/Card/DocumentCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import KYBModal from "./Components/Modal/KYB/KYBModal";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
-
 import Twitter from "../SVGIcons/Twitter";
 import LinkedIn from "../SVGIcons/LinkedIn";
 import Email from "../SVGIcons/Email";
@@ -11,10 +10,13 @@ import Website from "../SVGIcons/Website";
 import Edits from "../SVGIcons/Edits";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
-
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { getJSONData, getFileUrl } from "../../services/Helpers/skynetIPFS";
+import {
+	getBorrowerJson,
+	getBorrowerLogoURL,
+} from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { captureException } from "@sentry/react";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -45,8 +47,17 @@ const BorrowerProfile = () => {
 
 	useEffect(() => {
 		loadBorrowerProfileData();
-		if (brJson) fetchBorrowerLogo(brJson.companyLogoFile.businessLogoFileCID);
-		setHaskey(brJson ? "businessLicFile" in brJson : false);
+		if (brJson) {
+			let imgUrl = getBorrowerLogoURL(
+				brJson.companyLogoFile.businessLogoFileCID,
+				brJson.companyLogoFile.businessLogoFileName
+			);
+			if (imgUrl) {
+				setLogoImgSrc(imgUrl);
+			}
+
+			setHaskey(brJson ? "businessLicFile" in brJson : false);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -104,43 +115,30 @@ const BorrowerProfile = () => {
 		});
 
 		const fetchData = async () => {
-			getUserWalletAddress().then((res) => {
-				if (res.success) {
-					getJSONData(res.address).then((data) => {
-						if (data) {
-							loadBorrowerData(data);
-							setborrowerJson(data);
-							setHaskey(data ? "businessLicFile" in data : false);
-						} else {
-							setProfileStatus(false);
-						}
-						setLoading(false);
-					});
-				} else {
+			getBorrowerJson()
+				.then((dataReader) => {
+					if (dataReader) {
+						dataReader.onloadend = function () {
+							let brJson = JSON.parse(dataReader.result);
+							loadBorrowerData(brJson);
+							setborrowerJson(brJson);
+							setHaskey(brJson ? "businessLicFile" in brJson : false);
+						};
+					}
+				})
+				.catch((e) => {
+					captureException(e);
+				})
+				.finally(() => {
 					setLoading(false);
-				}
-			});
+				});
 		};
 
-		if (!location.state) fetchData();
+		if (!location.state) {
+			fetchData();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const fetchBorrowerLogo = (imgcid) => {
-		if (imgcid) {
-			try {
-				getFileUrl(imgcid).then((imgFile) => {
-					if (imgFile) {
-						setLogoImgSrc(imgFile);
-					} else {
-						// set the empty logo image
-					}
-				});
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	};
 
 	const loadBorrowerProfileData = (profileData) => {
 		let data;
@@ -171,7 +169,7 @@ const BorrowerProfile = () => {
 					setLinkedin(data.linkedin);
 				}
 			} catch (error) {
-				console.log(error);
+				captureException(error);
 			} finally {
 				setLoading(false);
 			}
@@ -182,18 +180,20 @@ const BorrowerProfile = () => {
 		try {
 			if (jsonData) {
 				// Load the Logo image if there is any
-				fetchBorrowerLogo(
-					jsonData.companyLogoFile
-						? jsonData.companyLogoFile.businessLogoFileCID
-						: jsonData.companyLogoCID
+				let imgUrl = getBorrowerLogoURL(
+					jsonData.companyLogoFile.businessLogoFileCID,
+					jsonData.companyLogoFile.businessLogoFileName
 				);
+				if (imgUrl) {
+					setLogoImgSrc(imgUrl);
+				}
 				// Load rest of the data
 				loadBorrowerProfileData(jsonData);
 
 				console.log("work in progress");
 			}
 		} catch (error) {
-			console.log(error);
+			captureException(error);
 		} finally {
 			setLoading(false);
 		}

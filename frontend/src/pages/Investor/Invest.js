@@ -6,12 +6,12 @@ import {
 	getUserWalletAddress,
 	getWalletBal,
 } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import { getSeniorPoolData } from "../../services/BackendConnectors/userConnectors/investorConncector";
 import { getDisplayAmount } from "../../services/Helpers/displayTextHelper";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import Loader from "../../uiTools/Loading/Loader";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { getJSONData } from "../../services/Helpers/skynetIPFS";
 
 const Invest = () => {
 	const path = useNavigate();
@@ -83,29 +83,35 @@ const Invest = () => {
 
 	useEffect(() => {
 		// fetch data from IPFS
-		getJSONData(process.env.REACT_APP_SENIORPOOL_CID).then(async (spJson) => {
-			if (spJson) {
-				let seniorInvestmentData = {};
-				seniorInvestmentData.opportunityName = spJson.poolName;
-				const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
+		getSeniorPoolData().then((read) => {
+			if (read) {
+				read.onloadend = async function () {
+					let spJson = JSON.parse(read.result);
 
-				if (res.success) {
-					seniorInvestmentData.opportunityAmount = getDisplayAmount(
-						res.balance
-					);
-					seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
-					seniorInvestmentData.poolDescription = spJson.poolDescription;
-					seniorInvestmentData.isFull = false;
-					setSeniorPool(seniorInvestmentData);
-				} else {
-					console.log(res.msg);
-					setErrormsg({
-						status: !res.success,
-						msg: res.msg,
-					});
-				}
+					if (spJson) {
+						let seniorInvestmentData = {};
+						seniorInvestmentData.opportunityName = spJson.poolName;
+						const res = await getWalletBal(process.env.REACT_APP_SENIORPOOL);
 
-				setSeniorPoolLoading(false);
+						if (res.success) {
+							seniorInvestmentData.opportunityAmount = getDisplayAmount(
+								res.balance
+							);
+							seniorInvestmentData.loanInterest = spJson.estimatedAPY + "%";
+							seniorInvestmentData.poolDescription = spJson.poolDescription;
+							seniorInvestmentData.isFull = false;
+							setSeniorPool(seniorInvestmentData);
+						} else {
+							console.log(res.msg);
+							setErrormsg({
+								status: !res.success,
+								msg: res.msg,
+							});
+						}
+
+						setSeniorPoolLoading(false);
+					}
+				};
 			}
 		});
 	}, []);

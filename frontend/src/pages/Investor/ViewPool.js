@@ -19,7 +19,10 @@ import DygnifyImage from "../../assets/Dygnify_Image.png";
 // import UpArrow from "../SVGIcons/UpArrow";
 import DollarImage from "../../assets/Dollar-icon.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
-import { getJSONData, getFileUrl } from "../../services/Helpers/skynetIPFS";
+import {
+	getBorrowerLogoURL,
+	getOpportunityJson,
+} from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -118,10 +121,15 @@ const ViewPool = () => {
 			// fetch the opportunity details from IPFS
 			if (location.state.opData) {
 				setCompanyDetails(location.state.opData.companyDetails);
-				getCompanyLogo(
+				let imgUrl = getBorrowerLogoURL(
 					location.state.opData.companyDetails?.companyLogoFile
-						?.businessLogoFileCID
+						?.businessLogoFileCID,
+					location.state.opData.companyDetails?.companyLogoFile
+						?.businessLogoFileName
 				);
+				if (imgUrl) {
+					setLogoImgSrc(imgUrl);
+				}
 				// get the loan purpose
 				const { isSliced, firstText, secondText } = getExtendableTextBreakup(
 					location.state.opData.loan_purpose,
@@ -141,27 +149,40 @@ const ViewPool = () => {
 					});
 				}
 			} else {
-				getJSONData(poolData.opportunityInfo).then((opJson) => {
-					if (opJson) {
-						setCompanyDetails(opJson.companyDetails);
-						getCompanyLogo(
-							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-						);
-						// get the loan purpose
-						const { isSliced, firstText, secondText } =
-							getExtendableTextBreakup(opJson.loan_purpose, 200);
-						if (isSliced) {
-							setLoanPurpose({
-								firstText: firstText,
-								secondText: secondText,
-								isSliced: isSliced,
-							});
-						} else {
-							setLoanPurpose({
-								firstText: firstText,
-								isSliced: isSliced,
-							});
-						}
+				getOpportunityJson(poolData).then((read) => {
+					if (read) {
+						read.onloadend = function () {
+							let opJson = JSON.parse(read.result);
+							if (opJson) {
+								setCompanyDetails(opJson.companyDetails);
+								let imgUrl = getBorrowerLogoURL(
+									opJson.companyDetails?.companyLogoFile?.businessLogoFileCID,
+									opJson.companyDetails?.companyLogoFile?.businessLogoFileName
+								);
+								if (imgUrl) {
+									setLogoImgSrc(imgUrl);
+								}
+								// get the loan purpose
+								const {
+									isSliced,
+									firstText,
+									secondText,
+								} = getExtendableTextBreakup(opJson.loan_purpose, 200);
+
+								if (isSliced) {
+									setLoanPurpose({
+										firstText: firstText,
+										secondText: secondText,
+										isSliced: isSliced,
+									});
+								} else {
+									setLoanPurpose({
+										firstText: firstText,
+										isSliced: isSliced,
+									});
+								}
+							}
+						};
 					}
 				});
 			}
@@ -248,21 +269,6 @@ const ViewPool = () => {
 			window.open(url, "_blank");
 		}
 	};
-
-	async function getCompanyLogo(cid) {
-		if (!cid) {
-			return;
-		}
-		try {
-			getFileUrl(cid).then((res) => {
-				if (res) {
-					setLogoImgSrc(res);
-				}
-			});
-		} catch (error) {
-			console.log(error);
-		}
-	}
 
 	return (
 		<div>

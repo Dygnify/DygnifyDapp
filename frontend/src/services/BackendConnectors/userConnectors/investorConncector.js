@@ -7,8 +7,17 @@ const { requestAccount, getEthAddress } = require("./commonConnectors");
 const { getOpportunity } = require("../opportunityConnectors");
 const Sentry = require("@sentry/react");
 const { getDisplayAmount } = require("../../Helpers/displayTextHelper");
+const {
+	retrieveFileFromURL,
+	getBinaryFileData,
+} = require("../../Helpers/fileHelper");
+const {
+	getIPFSFileURL,
+	retrieveFiles,
+} = require("../../Helpers/web3storageIPFS");
 
 const sixDecimals = 6;
+const nullAddress = "0x0000000000000000000000000000000000000000";
 
 export const withdrawAllJunior = async (poolAddress) => {
 	Sentry.captureMessage("withdrawAllJunior", "info");
@@ -127,7 +136,9 @@ export const getTotalInvestmentOfInvestor = async () => {
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
 				let { obj } = await getOpportunity(tx);
-
+				if (obj.opportunityPoolAddress === nullAddress) {
+					continue;
+				}
 				const poolContract = new ethers.Contract(
 					obj.opportunityPoolAddress,
 					opportunityPool.abi,
@@ -252,6 +263,9 @@ export const getJuniorWithdrawableOp = async () => {
 			for (let i = 0; i < opportunities.length; i++) {
 				let tx = await originationContract.opportunityToId(opportunities[i]);
 				let { obj } = await getOpportunity(tx);
+				if (obj.opportunityPoolAddress === nullAddress) {
+					continue;
+				}
 
 				const poolContract = new ethers.Contract(
 					obj.opportunityPoolAddress,
@@ -285,7 +299,6 @@ export const getJuniorWithdrawableOp = async () => {
 						: 0;
 				opportunityList.push(obj);
 			}
-			console.log(opportunityList);
 			return { opportunityList, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");
@@ -408,5 +421,24 @@ export const investInJuniorPool = async (poolAddress, amount) => {
 			success: false,
 			msg: error.message,
 		};
+	}
+};
+
+export const getSeniorPoolData = async () => {
+	Sentry.captureMessage("getOpportunityJson", "info");
+	try {
+		let file = await retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID);
+		let dataReader;
+		if (file) {
+			dataReader = getBinaryFileData(file);
+		} else {
+			dataReader = await retrieveFileFromURL(
+				getIPFSFileURL(process.env.REACT_APP_SENIORPOOL_CID) +
+					"/seniorPoolData.json"
+			);
+		}
+		return dataReader;
+	} catch (error) {
+		Sentry.captureException(error);
 	}
 };

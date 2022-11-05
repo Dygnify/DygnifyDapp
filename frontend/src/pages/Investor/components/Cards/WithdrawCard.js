@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import DygnifyImage from "../../../../assets/Dygnify_Image.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
-import {
-	getJSONData,
-	getFileUrl,
-} from "../../../../services/Helpers/skynetIPFS";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 import defaultImg from "../../../../assets/default_profile.svg";
+import {
+	getBorrowerLogoURL,
+	getOpportunityJson,
+} from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	const {
@@ -23,31 +23,25 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 
 	useEffect(() => {
 		// fetch the opportunity details from IPFS
-		getJSONData(opportunityInfo).then((opJson) => {
-			if (opJson) {
-				setCompanyName(opJson.company_name);
-				getCompanyLogo(
-					opJson.companyDetails?.companyLogoFile?.businessLogoFileCID
-				);
+		getOpportunityJson(data).then((reader) => {
+			if (reader) {
+				reader.onloadend = function () {
+					let opJson = JSON.parse(reader.result);
+					if (opJson) {
+						setCompanyName(opJson.company_name);
+						let imgUrl = getBorrowerLogoURL(
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID,
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileName
+						);
+						if (imgUrl) {
+							setLogoImgSrc(imgUrl);
+						}
+					}
+				};
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	async function getCompanyLogo(cid) {
-		if (!cid) {
-			return;
-		}
-		try {
-			getFileUrl(cid).then((res) => {
-				if (res) {
-					setLogoImgSrc(res);
-				}
-			});
-		} catch (error) {
-			console.log(error);
-		}
-	}
 
 	return (
 		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient">

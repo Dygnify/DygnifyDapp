@@ -9,11 +9,15 @@ import GradientButton from "../../uiTools/Button/GradientButton";
 import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import * as Yup from "yup";
 import Loader from "../../uiTools/Loading/Loader";
-import { uploadFile, storeJSONData } from "../../services/Helpers/skynetIPFS";
 import ProcessingModal from "./Components/Modal/FileUpload/ProcessingModal";
+import {
+	makeFileObjects,
+	storeFiles,
+} from "../../services/Helpers/web3storageIPFS";
+import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { captureMessage } from "@sentry/react";
 
-const URL =
-	/^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+const URL = /^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
@@ -36,8 +40,10 @@ const EditBorrowerProfileNew = () => {
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
 	const [businessAddressFiles, setBusinessAddressFiles] = useState();
-	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
-		useState();
+	const [
+		businessIncorporationFiles,
+		setBusinessIncorporationFiles,
+	] = useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
 	const [uploading, setUploading] = useState(false);
@@ -141,7 +147,7 @@ const EditBorrowerProfileNew = () => {
 	const uploadFilesToIPFS = async (files) => {
 		try {
 			if (files.length) {
-				return await uploadFile(files[0]);
+				return await storeFiles(files);
 			}
 		} catch (error) {
 			console.log(error);
@@ -433,8 +439,14 @@ const EditBorrowerProfileNew = () => {
 			checkEdited(borrowerJsonData);
 
 			if (allowSubmit) {
-				console.log("Inside allow");
-				await storeJSONData(borrowerAddress, borrowerJsonData);
+				let file = makeFileObjects(borrowerJsonData, "borrower.json");
+				let borrowerDataCID = await storeFiles(file);
+				// Save this CID in the blockchain
+				await updateBorrowerDetails(borrowerDataCID);
+				captureMessage(
+					"Borrower profile updted successful on blockchain",
+					"info"
+				);
 			}
 			navigate("/borrowerDashboard/borrowerProfile", {
 				state: borrowerJsonData,

@@ -1,3 +1,4 @@
+const Sentry = require("@sentry/react");
 function getBinaryFileData(fileObj) {
 	Sentry.captureMessage("getBinaryFileData", "info");
 	try {
@@ -5,7 +6,7 @@ function getBinaryFileData(fileObj) {
 			let read = new FileReader();
 			read.readAsBinaryString(fileObj);
 			return read;
-		}else{
+		} else {
 			Sentry.captureMessage("fileObj is not defined", "warning");
 		}
 	} catch (error) {
@@ -21,7 +22,7 @@ function getDataURLFromFile(fileObj) {
 			let read = new FileReader();
 			read.readAsDataURL(fileObj);
 			return read;
-		}else{
+		} else {
 			Sentry.captureMessage("fileObj is not defined", "warning");
 		}
 	} catch (error) {
@@ -30,7 +31,26 @@ function getDataURLFromFile(fileObj) {
 	}
 }
 
+async function retrieveFileFromURL(url) {
+	Sentry.captureMessage("retrieveFileFRomURL", "info");
+	try {
+		if (!url) {
+			return;
+		}
+
+		const response = await fetch(url);
+		if (response.status === 200) {
+			let blob = await response.blob();
+			let read = new FileReader();
+			read.readAsBinaryString(blob);
+			return read;
+		}
+	} catch (error) {
+		Sentry.captureException(error);
+	}
+}
 module.exports = {
 	getBinaryFileData,
 	getDataURLFromFile,
+	retrieveFileFromURL,
 };

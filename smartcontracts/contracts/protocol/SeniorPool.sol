@@ -129,9 +129,14 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
         opportunityPool.deposit(1, amount); //hardcoded val of 1 need to be converted into variable
     }
 
-    function withDrawFromOpportunity(bool _isWriteOff, bytes32 opportunityId, uint256 _amount) public override{
+    function withDrawFromOpportunity(
+        bool _isWriteOff,
+        bytes32 opportunityId,
+        uint256 _amount
+    ) public override {
         require(
-            opportunityOrigination.isRepaid(opportunityId) == true || _isWriteOff == true,
+            opportunityOrigination.isRepaid(opportunityId) == true ||
+                _isWriteOff == true,
             "Opportunity is not repaid by borrower."
         );
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
@@ -139,22 +144,23 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
         );
         IOpportunityPool opportunityPool = IOpportunityPool(poolAddress);
         require(
-            msg.sender == poolAddress, "only Opportunity Pool can withdraw." 
+            msg.sender == poolAddress,
+            "only Opportunity Pool can withdraw."
         );
 
         //calculate the shareprice
         uint256 totalProfit;
-        if(_isWriteOff == true)totalProfit = _amount;
+        if (_isWriteOff == true) totalProfit = _amount;
         else totalProfit = opportunityPool.getSeniorProfit();
         uint256 _totalShares = lpToken.totalShares();
         uint256 delta = totalProfit.mul(lpMantissa()).div(_totalShares);
         sharePrice = sharePrice.add(delta);
 
-        if(_isWriteOff == false){
-            uint256 withdrawlAmount = opportunityPool.getSeniorPoolWithdrawableAmount(); //hardcoded val of 1 need to be converted into variable
+        if (_isWriteOff == false) {
+            uint256 withdrawlAmount = opportunityPool
+                .getSeniorPoolWithdrawableAmount(); //hardcoded val of 1 need to be converted into variable
             seniorPoolBal = seniorPoolBal + withdrawlAmount;
-        }
-        else{
+        } else {
             seniorPoolBal = seniorPoolBal + _amount;
         }
     }
@@ -246,11 +252,21 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
             isStaking[msg.sender] = false;
         }
 
+        // Calculate the total USDC based on shareprice
+        uint256 usdcAmount = getUSDCAmountFromShares(amount);
+
+        // update the senior pool balance
+        seniorPoolBal = seniorPoolBal.sub(usdcAmount);
+        // update the share price
+        uint256 totalSharesAfterWithdrawal = totalShares().sub(amount);
+        sharePrice = (
+            (seniorPoolBal.mul(lpMantissa())).div(totalSharesAfterWithdrawal)
+        )
+            .div(lpMantissa());
+
         // burn the lp token equivalent to amount
         lpToken.burn(msg.sender, amount);
 
-        // Calculate the total USDC based on shareprice
-        uint256 usdcAmount = getUSDCAmountFromShares(amount);
         usdcToken.transfer(msg.sender, usdcAmount);
         emit Unstake(msg.sender, amount);
     }
