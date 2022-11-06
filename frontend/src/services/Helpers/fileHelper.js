@@ -1,5 +1,5 @@
 const Sentry = require("@sentry/react");
-function getBinaryFileData(fileObj) {
+export function getBinaryFileData(fileObj) {
 	Sentry.captureMessage("getBinaryFileData", "info");
 	try {
 		if (fileObj) {
@@ -15,7 +15,7 @@ function getBinaryFileData(fileObj) {
 	}
 }
 
-function getDataURLFromFile(fileObj) {
+export function getDataURLFromFile(fileObj) {
 	Sentry.captureMessage("getDataURLFromFile", "info");
 	try {
 		if (fileObj) {
@@ -31,7 +31,7 @@ function getDataURLFromFile(fileObj) {
 	}
 }
 
-async function retrieveFileFromURL(url) {
+export async function retrieveFileFromURL(url) {
 	Sentry.captureMessage("retrieveFileFRomURL", "info");
 	try {
 		if (!url) {
@@ -49,8 +49,3 @@ async function retrieveFileFromURL(url) {
 		Sentry.captureException(error);
 	}
 }
-module.exports = {
-	getBinaryFileData,
-	getDataURLFromFile,
-	retrieveFileFromURL,
-};
