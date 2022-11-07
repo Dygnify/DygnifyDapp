@@ -46,7 +46,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public juniorYieldPerecentage;
     uint256 public seniorOverduePerecentage;
     uint256 public juniorOverduePerecentage;
-    uint256 constant offset = 1;
+    uint256 constant offset = 10;
     bool public isDrawdownsPaused;
 
     // backer's Address => stakingBalance
