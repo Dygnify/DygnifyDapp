@@ -17,7 +17,8 @@ import {
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { captureMessage } from "@sentry/react";
 
-const URL = /^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+const URL =
+	/^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
 
 const EditBorrowerProfileNew = () => {
 	const navigate = useNavigate();
@@ -40,10 +41,8 @@ const EditBorrowerProfileNew = () => {
 	const [logoFile, setLogoFile] = useState();
 	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
 	const [businessAddressFiles, setBusinessAddressFiles] = useState();
-	const [
-		businessIncorporationFiles,
-		setBusinessIncorporationFiles,
-	] = useState();
+	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
+		useState();
 	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
 	const [uploading, setUploading] = useState(false);
@@ -164,7 +163,7 @@ const EditBorrowerProfileNew = () => {
 	};
 
 	const validations = () => {
-		setLogoError(false);
+		// setLogoError(false);
 
 		if (!logoFile && !location.state) setLogoError(true);
 
@@ -257,200 +256,202 @@ const EditBorrowerProfileNew = () => {
 			let tempFileStatus = [];
 			if (businessLicenseFiles) key = true;
 
-			if (logoFile && logoFile.length) {
-				let logoFileObj = {
-					fileName: logoFile[0].name,
-					progress: 0,
-					status: "Pending",
-				};
+			if (!logoError || !fileErr.bip || !fileErr.bap || !fileErr.bicp) {
+				if (logoFile && logoFile.length) {
+					let logoFileObj = {
+						fileName: logoFile[0].name,
+						progress: 0,
+						status: "Pending",
+					};
 
-				tempFileStatus.push(logoFileObj);
-			}
+					tempFileStatus.push(logoFileObj);
+				}
 
-			if (businessIdentityFiles && businessIdentityFiles.length) {
-				let businessIdentityFilesObj = {
-					fileName: businessIdentityFiles[0].name,
-					progress: 0,
-					status: "Pending",
-				};
+				if (businessIdentityFiles && businessIdentityFiles.length) {
+					let businessIdentityFilesObj = {
+						fileName: businessIdentityFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
 
-				tempFileStatus.push(businessIdentityFilesObj);
-			}
+					tempFileStatus.push(businessIdentityFilesObj);
+				}
 
-			if (businessAddressFiles && businessAddressFiles.length) {
-				let businessAddressFilesObj = {
-					fileName: businessAddressFiles[0].name,
-					progress: 0,
-					status: "Pending",
-				};
+				if (businessAddressFiles && businessAddressFiles.length) {
+					let businessAddressFilesObj = {
+						fileName: businessAddressFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
 
-				tempFileStatus.push(businessAddressFilesObj);
-			}
+					tempFileStatus.push(businessAddressFilesObj);
+				}
 
-			if (businessIncorporationFiles && businessIncorporationFiles.length) {
-				let businessIncorporationFilesObj = {
-					fileName: businessIncorporationFiles[0].name,
-					progress: 0,
-					status: "Pending",
-				};
+				if (businessIncorporationFiles && businessIncorporationFiles.length) {
+					let businessIncorporationFilesObj = {
+						fileName: businessIncorporationFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
 
-				tempFileStatus.push(businessIncorporationFilesObj);
-			}
+					tempFileStatus.push(businessIncorporationFilesObj);
+				}
 
-			if (businessLicenseFiles && businessLicenseFiles.length) {
-				let businessLicenseFilesObj = {
-					fileName: businessLicenseFiles[0].name,
-					progress: 0,
-					status: "Pending",
-				};
+				if (businessLicenseFiles && businessLicenseFiles.length) {
+					let businessLicenseFilesObj = {
+						fileName: businessLicenseFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
 
-				tempFileStatus.push(businessLicenseFilesObj);
-			}
+					tempFileStatus.push(businessLicenseFilesObj);
+				}
 
-			console.log(tempFileStatus);
-			setFileUploadStatus(tempFileStatus);
+				console.log(tempFileStatus);
+				setFileUploadStatus(tempFileStatus);
 
-			{
-				if (
-					businessIdentityFiles ||
-					businessAddressFiles ||
-					businessIncorporationFiles ||
-					businessLicenseFiles ||
-					logoFile
-				)
-					if ((logoFile && logoFile.length) || profileState) {
-						logoFileCID.current = await uploadFilesToIPFS(
-							logoFile ? logoFile : profileState.companyLogoFile
+				{
+					if (
+						businessIdentityFiles ||
+						businessAddressFiles ||
+						businessIncorporationFiles ||
+						businessLicenseFiles ||
+						logoFile
+					)
+						if ((logoFile && logoFile.length) || profileState) {
+							logoFileCID.current = await uploadFilesToIPFS(
+								logoFile ? logoFile : profileState.companyLogoFile
+							);
+						}
+					if (
+						(businessIdentityFiles && businessIdentityFiles.length) ||
+						profileState
+					) {
+						businessIdFilesCID.current = await uploadFilesToIPFS(
+							businessIdentityFiles
+								? businessIdentityFiles
+								: profileState.businessIdFile
 						);
 					}
-				if (
-					(businessIdentityFiles && businessIdentityFiles.length) ||
-					profileState
-				) {
-					businessIdFilesCID.current = await uploadFilesToIPFS(
-						businessIdentityFiles
-							? businessIdentityFiles
-							: profileState.businessIdFile
-					);
+					if (
+						(businessAddressFiles && businessAddressFiles.length) ||
+						profileState
+					) {
+						businessAddFilesCID.current = await uploadFilesToIPFS(
+							businessAddressFiles
+								? businessAddressFiles
+								: profileState.businessAddFile
+						);
+					}
+					if (
+						(businessIncorporationFiles && businessIncorporationFiles.length) ||
+						profileState
+					) {
+						businessIncoFilesCID.current = await uploadFilesToIPFS(
+							businessIncorporationFiles
+								? businessIncorporationFiles
+								: profileState.businessIncoFile
+						);
+					}
+					if (
+						(businessLicenseFiles &&
+							businessLicenseFiles.length &&
+							(hasKey || key)) ||
+						(profileState && (hasKey || key))
+					) {
+						businessLicFilesCID.current = await uploadFilesToIPFS(
+							businessLicenseFiles
+								? businessLicenseFiles
+								: profileState.businessLicFile
+						);
+					}
 				}
-				if (
-					(businessAddressFiles && businessAddressFiles.length) ||
-					profileState
-				) {
-					businessAddFilesCID.current = await uploadFilesToIPFS(
-						businessAddressFiles
-							? businessAddressFiles
-							: profileState.businessAddFile
-					);
-				}
-				if (
-					(businessIncorporationFiles && businessIncorporationFiles.length) ||
-					profileState
-				) {
-					businessIncoFilesCID.current = await uploadFilesToIPFS(
-						businessIncorporationFiles
-							? businessIncorporationFiles
-							: profileState.businessIncoFile
-					);
-				}
-				if (
-					(businessLicenseFiles &&
-						businessLicenseFiles.length &&
-						(hasKey || key)) ||
-					(profileState && (hasKey || key))
-				) {
-					businessLicFilesCID.current = await uploadFilesToIPFS(
-						businessLicenseFiles
-							? businessLicenseFiles
-							: profileState.businessLicFile
-					);
-				}
-			}
-			// Prepare a json file with borrower data
-			let borrowerJsonData = {
-				companyName: companyName,
-				companyRepName: companyRepName,
-				companyBio: companyBio,
-				companyLogoFile: {
-					businessLogoFileName: logoFile
-						? logoFile[0].name
-						: profileState.companyLogoFile.businessLogoFileName,
-					businessLogoFileCID: logoFile
-						? logoFileCID.current
-						: profileState.companyLogoFile.businessLogoFileCID,
-				},
-				businessIdFile: {
-					businessIdDocName: businessIdentityFiles
-						? bizIdFileName
-						: profileState.businessIdFile.businessIdDocName,
-					businessIdFileCID: businessIdentityFiles
-						? businessIdFilesCID.current
-						: profileState.businessIdFile.businessIdFileCID,
-					businessIdFileName: businessIdentityFiles
-						? businessIdentityFiles[0].name
-						: profileState.businessIdFile.businessIdFileName,
-				},
-				businessAddFile: {
-					businessAddDocName: businessAddressFiles
-						? bizAddFileName
-						: profileState.businessAddFile.businessAddDocName,
-					businessAddFileCID: businessAddressFiles
-						? businessAddFilesCID.current
-						: profileState.businessAddFile.businessAddFileCID,
-					businessAddFileName: businessAddressFiles
-						? businessAddressFiles[0].name
-						: profileState.businessAddFile.businessAddFileName,
-				},
-				businessIncoFile: {
-					businessIncoDocName: businessIncorporationFiles
-						? bizIncoFileName
-						: profileState.businessIncoFile.businessIncoDocName,
-					businessIncoFileCID: businessIncorporationFiles
-						? businessIncoFilesCID.current
-						: profileState.businessIncoFile.businessIncoFileCID,
-					businessIncoFileName: businessIncorporationFiles
-						? businessIncorporationFiles[0].name
-						: profileState.businessIncoFile.businessIncoFileName,
-				},
-				website: website,
-				email: email,
-				twitter: twitter,
-				linkedin: linkedin,
-			};
-
-			if ((businessLicenseFiles || profileState) && (hasKey || key)) {
-				const licenseFile = {
-					businessLicFile: {
-						businessLicDocName: businessLicenseFiles
-							? bizLicFileName
-							: profileState
-							? profileState.businessLicFile.businessLicDocName
-							: null,
-						businessLicFileCID: businessLicenseFiles
-							? businessLicFilesCID.current
-							: profileState?.businessLicFile.businessLicFileCID,
-						businessLicFileName: businessLicenseFiles
-							? businessLicenseFiles[0].name
-							: profileState?.businessLicFile.businessLicFileName,
+				// Prepare a json file with borrower data
+				let borrowerJsonData = {
+					companyName: companyName,
+					companyRepName: companyRepName,
+					companyBio: companyBio,
+					companyLogoFile: {
+						businessLogoFileName: logoFile
+							? logoFile[0].name
+							: profileState.companyLogoFile.businessLogoFileName,
+						businessLogoFileCID: logoFile
+							? logoFileCID.current
+							: profileState.companyLogoFile.businessLogoFileCID,
 					},
+					businessIdFile: {
+						businessIdDocName: businessIdentityFiles
+							? bizIdFileName
+							: profileState.businessIdFile.businessIdDocName,
+						businessIdFileCID: businessIdentityFiles
+							? businessIdFilesCID.current
+							: profileState.businessIdFile.businessIdFileCID,
+						businessIdFileName: businessIdentityFiles
+							? businessIdentityFiles[0].name
+							: profileState.businessIdFile.businessIdFileName,
+					},
+					businessAddFile: {
+						businessAddDocName: businessAddressFiles
+							? bizAddFileName
+							: profileState.businessAddFile.businessAddDocName,
+						businessAddFileCID: businessAddressFiles
+							? businessAddFilesCID.current
+							: profileState.businessAddFile.businessAddFileCID,
+						businessAddFileName: businessAddressFiles
+							? businessAddressFiles[0].name
+							: profileState.businessAddFile.businessAddFileName,
+					},
+					businessIncoFile: {
+						businessIncoDocName: businessIncorporationFiles
+							? bizIncoFileName
+							: profileState.businessIncoFile.businessIncoDocName,
+						businessIncoFileCID: businessIncorporationFiles
+							? businessIncoFilesCID.current
+							: profileState.businessIncoFile.businessIncoFileCID,
+						businessIncoFileName: businessIncorporationFiles
+							? businessIncorporationFiles[0].name
+							: profileState.businessIncoFile.businessIncoFileName,
+					},
+					website: website,
+					email: email,
+					twitter: twitter,
+					linkedin: linkedin,
 				};
-				borrowerJsonData = { ...borrowerJsonData, ...licenseFile };
-			}
-			checkEdited(borrowerJsonData);
 
-			if (allowSubmit) {
-				let file = makeFileObjects(borrowerJsonData, "borrower.json");
-				let borrowerDataCID = await storeFiles(file);
-				// Save this CID in the blockchain
-				await updateBorrowerDetails(borrowerDataCID);
-				captureMessage(
-					"Borrower profile updted successful on blockchain",
-					"info"
-				);
+				if ((businessLicenseFiles || profileState) && (hasKey || key)) {
+					const licenseFile = {
+						businessLicFile: {
+							businessLicDocName: businessLicenseFiles
+								? bizLicFileName
+								: profileState
+								? profileState.businessLicFile.businessLicDocName
+								: null,
+							businessLicFileCID: businessLicenseFiles
+								? businessLicFilesCID.current
+								: profileState?.businessLicFile.businessLicFileCID,
+							businessLicFileName: businessLicenseFiles
+								? businessLicenseFiles[0].name
+								: profileState?.businessLicFile.businessLicFileName,
+						},
+					};
+					borrowerJsonData = { ...borrowerJsonData, ...licenseFile };
+				}
+				checkEdited(borrowerJsonData);
+
+				if (allowSubmit) {
+					let file = makeFileObjects(borrowerJsonData, "borrower.json");
+					let borrowerDataCID = await storeFiles(file);
+					// Save this CID in the blockchain
+					await updateBorrowerDetails(borrowerDataCID);
+					captureMessage(
+						"Borrower profile updted successful on blockchain",
+						"info"
+					);
+				}
+				navigate("/borrowerDashboard/borrowerProfile", {
+					state: borrowerJsonData,
+				});
 			}
-			navigate("/borrowerDashboard/borrowerProfile", {
-				state: borrowerJsonData,
-			});
 		} catch (error) {
 			console.log(error);
 		}
