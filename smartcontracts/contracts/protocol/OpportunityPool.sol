@@ -297,7 +297,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             );
             uint256 principalReceived = emiAmount.sub(interest);
             totalOutstandingPrincipal = totalOutstandingPrincipal.sub(
-                principalReceived
+                principalReceived.sub(offset)
             );
 
             uint256 juniorPoolPrincipalPortion = principalReceived.div(

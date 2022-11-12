@@ -219,6 +219,20 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
         return amount;
     }
 
+    function sanitizeInputDecimalDiscrepancies(
+        uint256 inputAmt,
+        uint256 withdrawableAmt
+    ) internal pure returns (uint256 amount) {
+        if (
+            inputAmt > withdrawableAmt &&
+            (inputAmt.sub(withdrawableAmt) < lpMantissa())
+        ) {
+            amount = withdrawableAmt;
+        } else {
+            amount = inputAmt;
+        }
+    }
+
     // Withdraw of funds in user wallet
     function withdrawWithLP(uint256 amount) external {
         require(
@@ -239,8 +253,11 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
             }
         }
 
+        // check for decimal discrepancies with input amount
+        uint256 withdrawableAmt = availableForWithdrawal[msg.sender];
+        amount = sanitizeInputDecimalDiscrepancies(amount, withdrawableAmt);
         require(
-            availableForWithdrawal[msg.sender] >= amount,
+            withdrawableAmt >= amount,
             "Withdraw amount is higher than amount available for withdraw"
         );
 

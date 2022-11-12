@@ -219,17 +219,13 @@ export const getSeniorPoolSharePrice = async () => {
 
 export const getSeniorPoolDisplaySharePrice = async () => {
 	Sentry.captureMessage("getSeniorPoolDisplaySharePrice", "info");
-	let sharePriceFromContract;
 	let backendSharePrice = await getSeniorPoolSharePrice();
 
 	if (backendSharePrice.success) {
-		sharePriceFromContract = parseFloat(backendSharePrice.sharePrice).toFixed(
-			2
-		);
-
 		return {
-			displaySharePrice: sharePriceFromContract + "%",
-			sharePriceFromContract: sharePriceFromContract,
+			displaySharePrice:
+				parseFloat(backendSharePrice.sharePrice).toFixed(2) + "%",
+			sharePriceFromContract: backendSharePrice.sharePrice,
 			success: true,
 		};
 	} else {
