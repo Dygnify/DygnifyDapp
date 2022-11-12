@@ -99,7 +99,7 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 
 				<div>
 					<button
-						disable="false"
+						disabled={withdrawableAmt > 0 ? false : true}
 						onClick={() => {
 							setSelected({ ...data, isSeniorPool });
 							setShowModal(true);
@@ -109,7 +109,11 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 							padding: "12px 24px",
 							color: "white",
 						}}
-						className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-semibold flex fill-white  items-center justify-center w-[100%]"
+						className={`${
+							!(withdrawableAmt > 0)
+								? "bg-neutral-400 cursor-not-allowed w-full opacity-40"
+								: "bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full py-[0.4rem] font-semibold flex fill-white  items-center justify-center w-[100%]"
+						}`}
 					>
 						Withdraw Funds
 					</button>
