@@ -273,7 +273,7 @@ export const getJuniorWithdrawableOp = async () => {
 					stakingBal.toString(),
 					sixDecimals
 				);
-				obj.capitalInvested = stakingBal;
+				obj.capitalInvested = getDisplayAmount(stakingBal);
 				let poolBal = await poolContract.poolBalance();
 				poolBal = ethers.utils.formatUnits(poolBal, sixDecimals);
 
