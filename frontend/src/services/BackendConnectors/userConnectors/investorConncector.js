@@ -21,25 +21,31 @@ const nullAddress = "0x0000000000000000000000000000000000000000";
 
 export const withdrawAllJunior = async (poolAddress) => {
 	Sentry.captureMessage("withdrawAllJunior", "info");
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+			const poolContract = new ethers.Contract(
+				poolAddress,
+				opportunityPool.abi,
+				signer
+			);
 
-	if (typeof window.ethereum !== "undefined") {
-		const provider = new ethers.providers.Web3Provider(window.ethereum);
-		console.log({ provider });
-		const signer = provider.getSigner();
-		const poolContract = new ethers.Contract(
-			poolAddress,
-			opportunityPool.abi,
-			signer
-		);
-
-		const transaction = await poolContract.withdrawAll(0); // 0 is juniorpool ID
-		await transaction.wait();
-		return { transaction, success: true };
-	} else {
-		Sentry.captureMessage("Wallet connect error", "warning");
+			const transaction = await poolContract.withdrawAll(0); // 0 is juniorpool ID
+			await transaction.wait();
+			return { transaction, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
+		}
+	} catch (error) {
+		Sentry.captureException(error);
 		return {
 			success: false,
-			msg: "Please connect your wallet!",
+			msg: error.message,
 		};
 	}
 };

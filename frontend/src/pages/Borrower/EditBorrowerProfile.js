@@ -80,7 +80,10 @@ const EditBorrowerProfileNew = () => {
 			.matches(URL, "Enter a valid url")
 			.label("Website")
 			.required(),
-		email: Yup.string().email("Invalid Email"),
+		email: Yup.string()
+			.email("Invalid Email")
+			.label("Email Address")
+			.required(),
 	});
 
 	useEffect(() => {
@@ -477,12 +480,12 @@ const EditBorrowerProfileNew = () => {
 			if (!lincenseFile && lincenseText) {
 				setcheckLicense({
 					err: true,
-					msg: "please upload document",
+					msg: "File required",
 				});
 			} else if (!lincenseText && lincenseFile) {
 				setcheckLicense({
 					err: true,
-					msg: "please enter document name",
+					msg: "File name is required",
 				});
 			} else {
 				setcheckLicense({
@@ -695,7 +698,7 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											onBlur={handleBlur}
 											value={values.email}
-											error={errors.email}
+											error={touched.email && errors.email ? errors.email : ""}
 										/>
 										<TextField
 											name="twitter"
@@ -733,6 +736,7 @@ const EditBorrowerProfileNew = () => {
 							<GradientButton
 								className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
 								onClick={() => {
+									validations();
 									if (!checkLicense.err) {
 										handleSubmit();
 									}

@@ -21,6 +21,7 @@ const WithdrawFundsModal = ({
 	setcontractAdrress,
 	setAmounts,
 	setUpdateSenior,
+	setUpdateJunior,
 	seniorPoolSharePrice,
 	setCheckInvest,
 }) => {
@@ -49,6 +50,7 @@ const WithdrawFundsModal = ({
 			setShowModal(false);
 			handleForm();
 			setInvestProcessing(false);
+			setUpdateJunior(Math.random());
 		} else {
 			setCheckInvest(false);
 			console.log(withdrawalData.msg);

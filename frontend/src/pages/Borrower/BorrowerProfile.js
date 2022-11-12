@@ -35,7 +35,7 @@ const BorrowerProfile = () => {
 	const [twitter, setTwitter] = useState();
 	const [linkedin, setLinkedin] = useState();
 	const location = useLocation();
-	const [profileStatus, setProfileStatus] = useState(true);
+	const [profileStatus, setProfileStatus] = useState(false);
 	const [kycStatus, setKycStatus] = useState(false);
 	const [hasKey, setHaskey] = useState();
 	const [errormsg, setErrormsg] = useState({
@@ -121,6 +121,7 @@ const BorrowerProfile = () => {
 						dataReader.onloadend = function () {
 							let brJson = JSON.parse(dataReader.result);
 							loadBorrowerData(brJson);
+							setProfileStatus(true);
 							setborrowerJson(brJson);
 							setHaskey(brJson ? "businessLicFile" in brJson : false);
 						};

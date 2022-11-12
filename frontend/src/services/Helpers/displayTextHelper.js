@@ -19,9 +19,8 @@ function getExtendableTextBreakup(text, sliceAt) {
 		} else {
 			firstText = textStr;
 		}
-
-		return { isSliced, firstText, secondText };
 	}
+	return { isSliced, firstText, secondText };
 }
 
 function getOnlyErrorText(str) {

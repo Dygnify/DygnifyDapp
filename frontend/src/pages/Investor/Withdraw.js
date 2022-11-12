@@ -31,6 +31,7 @@ const Withdraw = () => {
 	const [amounts, setAmounts] = useState("");
 	const [seniorPoolSharePrice, setSeniorPoolSharePrice] = useState();
 	const [updateSenior, setUpdateSenior] = useState(12);
+	const [updateJunior, setUpdateJunior] = useState(12);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
 		msg: "",
@@ -94,9 +95,8 @@ const Withdraw = () => {
 
 								if (res.success) {
 									balance = res.balance;
-									seniorInvestmentData.opportunityAmount = getDisplayAmount(
-										balance
-									);
+									seniorInvestmentData.opportunityAmount =
+										getDisplayAmount(balance);
 								} else {
 									setErrormsg({
 										status: !res.success,
@@ -104,9 +104,8 @@ const Withdraw = () => {
 									});
 								}
 
-								seniorInvestmentData.capitalInvested = getDisplayAmount(
-									totalInvestment
-								);
+								seniorInvestmentData.capitalInvested =
+									getDisplayAmount(totalInvestment);
 
 								const price = await getSeniorPoolDisplaySharePrice(
 									spJson.estimatedAPY
@@ -124,7 +123,8 @@ const Withdraw = () => {
 									).toFixed(6);
 
 									if (+balance >= withdrawAmtWithSharePrice) {
-										seniorInvestmentData.withdrawableAmt = withdrawAmtWithSharePrice;
+										seniorInvestmentData.withdrawableAmt =
+											withdrawAmtWithSharePrice;
 									} else {
 										let humanReadableBal = parseFloat(balance).toFixed(2);
 										seniorInvestmentData.withdrawableAmt =
@@ -160,7 +160,7 @@ const Withdraw = () => {
 				setJuniorPoolLoading(false);
 			})
 			.catch((error) => console.log(error));
-	}, []);
+	}, [updateJunior]);
 
 	return (
 		<div>
@@ -179,6 +179,7 @@ const Withdraw = () => {
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
 						setUpdateSenior={setUpdateSenior}
+						setUpdateJunior={setUpdateJunior}
 						seniorPoolSharePrice={seniorPoolSharePrice}
 						setCheckInvest={setCheckInvest}
 					/>
