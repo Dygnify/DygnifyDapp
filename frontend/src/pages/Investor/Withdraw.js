@@ -138,10 +138,11 @@ const Withdraw = () => {
 										msg: price.msg,
 									});
 								}
-								setSeniorPoolLoading(false);
 							}
 						} catch (error) {
 							console.log(error);
+						} finally {
+							setSeniorPoolLoading(false);
 						}
 					};
 				}
