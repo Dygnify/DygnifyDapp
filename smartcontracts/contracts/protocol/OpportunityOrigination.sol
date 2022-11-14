@@ -6,6 +6,9 @@ import "./DygnifyConfig.sol";
 import "../interfaces/IOpportunityPool.sol";
 import "../interfaces/IOpportunityOrigination.sol";
 import "./CollateralToken.sol";
+import "../interfaces/IDygnifyKeeper.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import "./Constants.sol";
 
 contract OpportunityOrigination is
     BaseUpgradeablePausable,
@@ -22,6 +25,7 @@ contract OpportunityOrigination is
     mapping(bytes32 => address[9]) underwritersOf;
 
     mapping(address => bytes32[]) public underwriterToOpportunity;
+    mapping(bytes32 => uint256) public override writeOffDaysOf;
 
     // storing all the opportunities in an array.
     bytes32[] public opportunityIds;
@@ -37,14 +41,14 @@ contract OpportunityOrigination is
         );
     }
 
-    function getTotalOpportunities() external view override returns (uint256) {
+    function getTotalOpportunities() external override view returns (uint256) {
         return opportunityIds.length;
     }
 
     function getOpportunityOf(address _borrower)
         external
-        view
         override
+        view
         returns (bytes32[] memory)
     {
         require(address(_borrower) != address(0), "invalid borrower address");
@@ -52,35 +56,49 @@ contract OpportunityOrigination is
     }
 
     //Opportunity Creation
-    function createOpportunity(
-        address _borrower,
-        string calldata _opportunityInfo,
-        uint8 _loanType,
-        uint256 _loanAmount,
-        uint256 _loanTenureInDays,
-        uint256 _loanInterest,
-        uint256 _paymentFrequencyInDays,
-        string calldata _collateralDocument,
-        uint256 _capitalLoss
-    ) external override nonReentrant whenNotPaused {
-        // KYC check (add)
-        // require(kycOf[msg.sender].isDoucument == kycOf[msg.sender].isLiveliness == kycOf[msg.sender].isAddress == kycOf[msg.sender].isAML == kycOf[msg.sender].imageHash == kycOf[msg.sender].result == true,"Please do your KYC before creating opportunity");
-
+    function createOpportunity(CreateOpportunity memory _opportunityData)
+        external
+        override
+        nonReentrant
+        whenNotPaused
+    {
+        // require(
+        //     IERC721Upgradeable(dygnifyConfig.identityTokenAddress()).balanceOf(_opportunityData.borrower) != 0, "KYC Of Borrower is not done yet"
+        // );
         require(
-            _loanType <= uint8(LoanType.TermLoan),
+            uint8(_opportunityData.loanType) <= uint8(LoanType.TermLoan),
             "LoanType : Out of range"
         );
-        require(_loanAmount > 0, "Loan Amount Must be greater than 0");
-        require(address(_borrower) != address(0), "invalid borrower address");
-        require(_loanInterest > 0, "Loan Interest Must be greater than 0");
-        require(_loanTenureInDays > 0, "Loan Tenure Must be greater than 0");
         require(
-            _paymentFrequencyInDays > 0,
+            _opportunityData.loanAmount > 0,
+            "Loan Amount Must be greater than 0"
+        );
+        require(
+            address(_opportunityData.borrower) != address(0),
+            "invalid borrower address"
+        );
+        require(
+            (_opportunityData.loanInterest > 0 &&
+                _opportunityData.loanInterest <=
+                (100 * Constants.sixDecimal())),
+            "Loan Interest Must be greater than 0 and less than or equal to 100"
+        );
+        require(
+            _opportunityData.loanTenureInDays > 0,
+            "Loan Tenure Must be greater than 0"
+        );
+        require(
+            _opportunityData.paymentFrequencyInDays > 0,
             "Payment Frequency Must be greater than 0"
         );
-        require(_capitalLoss > 0, "Capital Loss Must be greater than 0");
+        require(
+            bytes(_opportunityData.opportunityName).length <= 50,
+            "Length of Opportunity name must be less than or equal to 50"
+        );
 
-        bytes32 id = keccak256(abi.encodePacked(_collateralDocument));
+        bytes32 id = keccak256(
+            abi.encodePacked(_opportunityData.collateralDocument)
+        );
         require(
             isOpportunity[id] == false,
             "Same collatoral document is been used to create different opportunity."
@@ -88,19 +106,22 @@ contract OpportunityOrigination is
 
         Opportunity memory _opportunity;
         _opportunity.opportunityID = id;
-        _opportunity.borrower = _borrower;
-        _opportunity.opportunityInfo = _opportunityInfo;
-        _opportunity.loanType = LoanType(_loanType);
-        _opportunity.loanAmount = _loanAmount;
-        _opportunity.loanTenureInDays = _loanTenureInDays;
-        _opportunity.loanInterest = _loanInterest;
-        _opportunity.paymentFrequencyInDays = _paymentFrequencyInDays;
-        _opportunity.collateralDocument = _collateralDocument;
-        _opportunity.capitalLoss = _capitalLoss;
+        _opportunity.borrower = _opportunityData.borrower;
+        _opportunity.opportunityName = _opportunityData.opportunityName;
+        _opportunity.opportunityInfo = _opportunityData.opportunityInfo;
+        _opportunity.loanType = _opportunityData.loanType;
+        _opportunity.loanAmount = _opportunityData.loanAmount;
+        _opportunity.loanTenureInDays = _opportunityData.loanTenureInDays;
+        _opportunity.loanInterest = _opportunityData.loanInterest;
+        _opportunity.paymentFrequencyInDays = _opportunityData
+            .paymentFrequencyInDays;
+        _opportunity.collateralDocument = _opportunityData.collateralDocument;
+        _opportunity.capitalLoss = _opportunityData.capitalLoss;
         _opportunity.createdOn = block.timestamp;
+        writeOffDaysOf[id] = dygnifyConfig.getWriteOffDays();
 
         opportunityToId[id] = _opportunity;
-        opportunityOf[_borrower].push(id);
+        opportunityOf[_opportunityData.borrower].push(id);
         isOpportunity[id] = true;
         opportunityIds.push(id);
     }
@@ -155,15 +176,13 @@ contract OpportunityOrigination is
             _status
         );
 
-        if(_status == uint8(OpportunityStatus.Approved) ){
+        if (_status == uint8(OpportunityStatus.Approved)) {
             mintCollateral(_opportunityId);
             createOpportunityPool(_opportunityId);
         }
     }
 
-    function mintCollateral(bytes32 _opportunityId)
-        private
-    {
+    function mintCollateral(bytes32 _opportunityId) private {
         require(
             isOpportunity[_opportunityId] == true,
             "Opportunity ID doesn't exist"
@@ -200,14 +219,11 @@ contract OpportunityOrigination is
         IOpportunityPool(pool).initialize(
             dygnifyConfig,
             opportunityToId[_opportunityId].opportunityID,
-            opportunityToId[_opportunityId].opportunityInfo,
-            uint8(opportunityToId[_opportunityId].loanType),
             opportunityToId[_opportunityId].loanAmount,
             opportunityToId[_opportunityId].loanTenureInDays,
             opportunityToId[_opportunityId].loanInterest,
             opportunityToId[_opportunityId].paymentFrequencyInDays,
-            opportunityToId[_opportunityId].collateralDocument,
-            opportunityToId[_opportunityId].capitalLoss
+            uint8(opportunityToId[_opportunityId].loanType)
         );
         opportunityToId[_opportunityId].opportunityPoolAddress = pool;
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus
@@ -251,12 +267,14 @@ contract OpportunityOrigination is
             "Opportunity Pool is not created yet"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.Drawndown;
+        IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress())
+            .addOpportunityInKeeper(id);
     }
 
-    function isDrawdown(bytes32 id) public view returns (bool) {
+    function isDrawdown(bytes32 id) public override view returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
-            uint8(opportunityToId[id].opportunityStatus) >=
+            uint8(opportunityToId[id].opportunityStatus) ==
             uint8(OpportunityStatus.Drawndown)
         ) return true;
         else return false;
@@ -278,9 +296,11 @@ contract OpportunityOrigination is
             "Opportunity Pool is not created yet"
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.Repaid;
+        IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress())
+            .removeOpportunityInKeeper(id);
     }
 
-    function isRepaid(bytes32 id) public view returns (bool) {
+    function isRepaid(bytes32 id) public override view returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==
@@ -289,7 +309,7 @@ contract OpportunityOrigination is
         else return false;
     }
 
-    function isActive(bytes32 id) external view returns (bool) {
+    function isActive(bytes32 id) external override view returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==
@@ -298,16 +318,22 @@ contract OpportunityOrigination is
         else return false;
     }
 
+    function getBorrower(bytes32 id) external override view returns (address) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        return opportunityToId[id].borrower;
+    }
+
     function getOpportunityPoolAddress(bytes32 id)
         external
+        override
         view
         returns (address)
     {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         require(
-            uint8(opportunityToId[id].opportunityStatus) ==
+            uint8(opportunityToId[id].opportunityStatus) >=
                 uint8(OpportunityStatus.Active),
-            "Opportunity must be active"
+            "Opportunity must be active/drawndown/repaid"
         );
         address poolAddress = opportunityToId[id].opportunityPoolAddress;
         require(
@@ -319,6 +345,7 @@ contract OpportunityOrigination is
 
     function getAlltheOpportunitiesOf(address borrower)
         external
+        override
         view
         returns (bytes32[] memory)
     {
@@ -329,11 +356,50 @@ contract OpportunityOrigination is
 
     function getUnderWritersOpportunities(address _underwriter)
         external
+        override
         view
         returns (bytes32[] memory)
     {
         require(_underwriter != address(0), "Invalid underwriter sddress");
         bytes32[] memory opportunities = underwriterToOpportunity[_underwriter];
         return opportunities;
+    }
+
+    function getOpportunityNameOf(bytes32 _opportunityId)
+        external
+        override
+        view
+        returns (string memory)
+    {
+        require(
+            isOpportunity[_opportunityId] == true,
+            "Opportunity ID doesn't exist"
+        );
+        Opportunity memory opportunityDetails = opportunityToId[_opportunityId];
+        return opportunityDetails.opportunityName;
+    }
+
+    function markWriteOff(bytes32 id, address _pool) external override {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        require(
+            opportunityToId[id].opportunityStatus ==
+                OpportunityStatus.Drawndown,
+            "Opportunity pool is haven't drawdown yet."
+        );
+        require(
+            msg.sender == dygnifyConfig.dygnifyKeeperAddress(),
+            "Only dygnifyKeeper can mark it as writeoff"
+        );
+        opportunityToId[id].opportunityStatus = OpportunityStatus.WriteOff;
+        IOpportunityPool(_pool).writeOffOpportunity();
+    }
+
+    function isWriteOff(bytes32 id) public override view returns (bool) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        if (
+            uint8(opportunityToId[id].opportunityStatus) ==
+            uint8(OpportunityStatus.WriteOff)
+        ) return true;
+        else return false;
     }
 }

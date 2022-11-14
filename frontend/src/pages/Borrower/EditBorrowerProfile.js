@@ -1,483 +1,755 @@
-import React, { useState, useRef, useEffect, Profiler } from "react";
-import GradientButton from "../../tools/Button/GradientButton";
-import FileFields from "../../tools/Inputs/FileFields";
-import InputGroup from "../../tools/Inputs/InputGroup";
-import TextArea from "../../tools/Inputs/TextArea";
-import TextField from "../../tools/Inputs/TextField";
+import React, { useState, useEffect, useRef } from "react";
+import { Formik } from "formik";
+import TextField from "../../uiTools/Inputs/TextField";
+import InputGroup from "../../uiTools/Inputs/InputGroup";
+import TextArea from "../../uiTools/Inputs/TextArea";
 import FileUploader from "../Components/FileUploader";
-import { storeFiles, makeFileObjects } from "../../services/web3storageIPFS";
-import { updateBorrowerDetails } from "../../components/transaction/TransactionHelper";
 import { useLocation, useNavigate } from "react-router-dom";
-import Loading from "../Components/Loading";
+import GradientButton from "../../uiTools/Button/GradientButton";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import * as Yup from "yup";
+import Loader from "../../uiTools/Loading/Loader";
+import ProcessingModal from "./Components/Modal/FileUpload/ProcessingModal";
+import {
+	makeFileObjects,
+	storeFiles,
+} from "../../services/Helpers/web3storageIPFS";
+import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import { captureMessage } from "@sentry/react";
 
-const EditBorrowerProfile = () => {
-  const navigate = useNavigate();
+const URL =
+	/^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
 
-  const companyName = useRef();
-  const companyRepName = useRef();
-  const companyBio = useRef();
-  const website = useRef();
-  const email = useRef();
-  const twitter = useRef();
-  const linkedin = useRef();
-  const kycFileName = useRef();
-  const bizIdFileName = useRef();
-  const bizAddFileName = useRef();
-  const bizIncoFileName = useRef();
-  const bizLicFileName = useRef();
+const EditBorrowerProfileNew = () => {
+	const navigate = useNavigate();
 
-  const [logoFile, setLogoFile] = useState();
-  const [kycFiles, setKYCFiles] = useState();
-  const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
-  const [businessAddressFiles, setBusinessAddressFiles] = useState();
-  const [businessIncorporationFiles, setBusinessIncorporationFiles] =
-    useState();
-  const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
+	const [fileErr, setFileErr] = useState({
+		bip: false,
+		bap: false,
+		bicp: false,
+	});
 
-  const [profileState, setProfileState] = useState();
+	const [profileState, setProfileState] = useState(null);
+	const [hasKey, setHasKey] = useState();
+	const [loading, setLoading] = useState();
+	const [error, setError] = useState({
+		bip: false,
+		bap: false,
+		bicp: false,
+	});
+	const [borrowerAddress, setBorrowerAddress] = useState();
+	const [logoFile, setLogoFile] = useState();
+	const [businessIdentityFiles, setBusinessIdentityFiles] = useState();
+	const [businessAddressFiles, setBusinessAddressFiles] = useState();
+	const [businessIncorporationFiles, setBusinessIncorporationFiles] =
+		useState();
+	const [businessLicenseFiles, setBusinessLicenseFiles] = useState();
 
-  const [allowSubmit, setAllowSubmit] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const location = useLocation();
-  const [textChange, setTextChange] = useState(false);
-  const [fileChange, setFileChange] = useState(false);
-  const oldBrJson = location.state;
+	const [uploading, setUploading] = useState(false);
+	const [fileUploadStatus, setFileUploadStatus] = useState([]);
+	const [logoError, setLogoError] = useState(false);
+	const [checkLicense, setcheckLicense] = useState({
+		err: false,
+		msg: "",
+	});
 
-  let logoFileCID = "";
-  let kycFilesCID = "";
-  let businessIdFilesCID = "";
-  let businessLicFilesCID = "";
-  let businessAddFilesCID = "";
-  let businessIncoFilesCID = "";
+	const [lincenseText, setLincenseText] = useState("");
+	const [lincenseFile, setLincenseFile] = useState(false);
+	const location = useLocation();
+	const oldBrJson = location.state;
 
-  const checkEdited = (brJson) => {
-    if (JSON.stringify(brJson) === JSON.stringify(oldBrJson))
-      return setAllowSubmit(false);
-  };
+	let logoFileCID = useRef();
+	let businessIdFilesCID = useRef();
+	let businessLicFilesCID = useRef();
+	let businessAddFilesCID = useRef();
+	let businessIncoFilesCID = useRef();
 
-  const onLogoFileUpload = (files) => {
-    setLogoFile(files);
-  };
-  const onKYCFilesUpload = (files) => {
-    setKYCFiles(files);
-  };
-  const onBusinessIdentityFilesUpload = (files) => {
-    setBusinessIdentityFiles(files);
-  };
-  const onBusinessAddressFilesUpload = (files) => {
-    setBusinessAddressFiles(files);
-  };
-  const onBusinessIncorporationFilesUpload = (files) => {
-    setBusinessIncorporationFiles(files);
-  };
-  const onBusinessLicenseFilesUpload = (files) => {
-    setBusinessLicenseFiles(files);
-  };
+	let allowSubmit = true;
 
-  useEffect(() => {
-    if (location.state) {
-      console.log(location.state);
-      setProfileState(location.state);
-    }
-  }, []);
+	const validationSchema = Yup.object().shape({
+		companyName: Yup.string().label("Company Name").required(),
+		companyRepName: Yup.string()
+			.label("Company Representative Name")
+			.required(),
+		companyBio: Yup.string().label("Company Bio").required(),
+		bizIdFileName: Yup.string().required("File name is required"),
+		bizAddFileName: Yup.string().required("File name is required"),
+		bizLicFileName: Yup.string(),
+		bizIncoFileName: Yup.string().required("File name is required"),
+		website: Yup.string()
+			.matches(URL, "Enter a valid url")
+			.label("Website")
+			.required(),
+		email: Yup.string()
+			.email("Invalid Email")
+			.label("Email Address")
+			.required(),
+	});
 
-  useEffect(() => {
-    if (profileState) {
-      const {
-        companyName: name,
-        companyBio: bio,
-        companyRepName: repName,
-        businessIdFile: IdFile,
-        businessAddFile: AddFile,
-        businessIncoFile: IncoFile,
-        businessLicFile: LicFile,
-        companyLogoFile: LogoFile,
-        website: web,
-        twitter: twit,
-        email: mail,
-        linkedin: lin,
-      } = profileState;
+	useEffect(() => {
+		if (location.state) {
+			setProfileState(location.state);
+			setHasKey(location.state ? "businessLicFile" in location.state : true);
+		}
+		getUserWalletAddress().then((res) => {
+			if (res.success) {
+				setBorrowerAddress(res.address);
+			}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-      companyName.current.value = name;
-      companyRepName.current.value = repName;
-      companyBio.current.value = bio;
-      website.current.value = web;
-      email.current.value = mail;
-      twitter.current.value = twit;
-      linkedin.current.value = lin;
-      bizAddFileName.current.value = AddFile.businessAddDocName;
-      bizIdFileName.current.value = IdFile.businessIdDocName;
-      bizIncoFileName.current.value = IncoFile.businessIncoDocName;
-      bizLicFileName.current.value = LicFile.businessLicDocName;
-      // setLogoFile(LogoFile);
-      // console.log(bizAddFileName.current.value);
-      // setBusinessAddressFiles(AddFile);
-      // setBusinessIdentityFiles(IdFile);
-      // setBusinessIncorporationFiles(IncoFile);
-      // setBusinessLicenseFiles(LicFile);
+	const initialValues = {
+		companyName: profileState ? profileState.companyName : "",
+		companyRepName: profileState ? profileState.companyRepName : "",
+		companyBio: profileState ? profileState.companyBio : "",
+		bizIdFileName: profileState
+			? profileState.businessIdFile.businessIdDocName
+			: "",
+		bizAddFileName: profileState
+			? profileState.businessAddFile.businessAddDocName
+			: "",
+		bizLicFileName:
+			profileState && hasKey
+				? profileState.businessLicFile.businessLicDocName
+				: "",
+		bizIncoFileName: profileState
+			? profileState.businessIncoFile.businessIncoDocName
+			: "",
+		website: profileState ? profileState.website : "",
+		email: profileState ? profileState.email : "",
+		twitter: profileState ? profileState.twitter : "",
+		linkedin: profileState ? profileState.linkedin : "",
+	};
 
-      logoFileCID = LogoFile.businessLogoFileCID;
-      businessIdFilesCID = IdFile.businessIdFileCID;
-      businessLicFilesCID = LicFile.businessLicFileCID;
-      businessAddFilesCID = AddFile.businessAddFileCID;
-      businessIncoFilesCID = IncoFile.businessIncoFileCID;
-    }
-  }, [profileState]);
+	useEffect(() => {
+		if (profileState) {
+			const {
+				businessIdFile: IdFile,
+				businessAddFile: AddFile,
+				businessIncoFile: IncoFile,
+				businessLicFile: LicFile,
+				companyLogoFile: LogoFile,
+			} = profileState;
 
-  const uploadFilesToIPFS = async (files) => {
-    try {
-      if (files.length) {
-        return await storeFiles(files);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    return null;
-  };
+			if (hasKey) {
+				businessLicFilesCID.current = LicFile.businessLicFileCID;
+			}
 
-  const uploadBorrowerData = async () => {
-    try {
-      //Insert all the files in one array
+			logoFileCID.current = LogoFile.businessLogoFileCID;
+			businessIdFilesCID.current = IdFile.businessIdFileCID;
 
-      {
-        if (
-          businessIdentityFiles ||
-          businessAddressFiles ||
-          businessIncorporationFiles ||
-          businessLicenseFiles ||
-          logoFile
-        )
-          if ((logoFile && logoFile.length) || profileState) {
-            logoFileCID = await uploadFilesToIPFS(
-              logoFile ? logoFile : profileState.companyLogoFile
-            );
-          }
+			businessAddFilesCID.current = AddFile.businessAddFileCID;
+			businessIncoFilesCID.current = IncoFile.businessIncoFileCID;
+		}
+		checkFunction(null);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [profileState]);
 
-        if (
-          (businessIdentityFiles && businessIdentityFiles.length) ||
-          profileState
-        ) {
-          businessIdFilesCID = await uploadFilesToIPFS(
-            businessIdentityFiles
-              ? businessIdentityFiles
-              : profileState.businessIdFile
-          );
-        }
+	const uploadFilesToIPFS = async (files) => {
+		try {
+			if (files.length) {
+				return await storeFiles(files);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+		return null;
+	};
 
-        if (
-          (businessAddressFiles && businessAddressFiles.length) ||
-          profileState
-        ) {
-          businessAddFilesCID = await uploadFilesToIPFS(
-            businessAddressFiles
-              ? businessAddressFiles
-              : profileState.businessAddFile
-          );
-        }
+	const checkEdited = (brJson) => {
+		if (location.state) {
+			if (JSON.stringify(brJson) === JSON.stringify(oldBrJson)) {
+				return (allowSubmit = false);
+			} //return setAllowSubmit(false);
+		}
+	};
 
-        if (
-          (businessIncorporationFiles && businessIncorporationFiles.length) ||
-          profileState
-        ) {
-          businessIncoFilesCID = await uploadFilesToIPFS(
-            businessIncorporationFiles
-              ? businessIncorporationFiles
-              : profileState.businessIncoFile
-          );
-        }
+	const validations = () => {
+		// setLogoError(false);
 
-        if (
-          (businessLicenseFiles && businessLicenseFiles.length) ||
-          profileState
-        ) {
-          businessLicFilesCID = await uploadFilesToIPFS(
-            businessLicenseFiles
-              ? businessLicenseFiles
-              : profileState.businessLicFile
-          );
-        }
-      }
-      // Prepare a json file with borrower data
-      let borrowerJsonData = {
-        companyName: companyName.current.value,
-        companyRepName: companyRepName.current.value,
-        companyBio: companyBio.current.value,
-        companyLogoFile: {
-          businessLogoFileName: logoFile
-            ? logoFile[0].name
-            : profileState.companyLogoFile.businessLogoFileName,
-          businessLogoFileCID: logoFile
-            ? logoFileCID
-            : profileState.companyLogoFile.businessLogoFileCID,
-        },
+		if (!logoFile && !location.state) setLogoError(true);
 
-        businessIdFile: {
-          businessIdDocName: businessIdentityFiles
-            ? bizIdFileName.current.value
-            : profileState.businessIdFile.businessIdDocName,
-          businessIdFileCID: businessIdentityFiles
-            ? businessIdFilesCID
-            : profileState.businessIdFile.businessIdFileCID,
-          businessIdFileName: businessIdentityFiles
-            ? businessIdentityFiles[0].name
-            : profileState.businessIdFile.businessIdFileName,
-        },
-        businessAddFile: {
-          businessAddDocName: businessAddressFiles
-            ? bizAddFileName.current.value
-            : profileState.businessAddFile.businessAddDocName,
-          businessAddFileCID: businessAddressFiles
-            ? businessAddFilesCID
-            : profileState.businessAddFile.businessAddFileCID,
-          businessAddFileName: businessAddressFiles
-            ? businessAddressFiles[0].name
-            : profileState.businessAddFile.businessAddFileName,
-        },
-        businessIncoFile: {
-          businessIncoDocName: businessIncorporationFiles
-            ? bizIncoFileName.current.value
-            : profileState.businessIncoFile.businessIncoDocName,
-          businessIncoFileCID: businessIncorporationFiles
-            ? businessIncoFilesCID
-            : profileState.businessIncoFile.businessIncoFileCID,
-          businessIncoFileName: businessIncorporationFiles
-            ? businessIncorporationFiles[0].name
-            : profileState.businessIncoFile.businessIncoFileName,
-        },
-        businessLicFile: {
-          businessLicDocName: businessLicenseFiles
-            ? bizLicFileName.current.value
-            : profileState.businessLicFile.businessLicDocName,
-          businessLicFileCID: businessLicenseFiles
-            ? businessLicFilesCID
-            : profileState.businessLicFile.businessLicFileCID,
-          businessLicFileName: businessLicenseFiles
-            ? businessLicenseFiles[0].name
-            : profileState.businessLicFile.businessLicFileName,
-        },
-        website: website.current.value,
-        email: email.current.value,
-        twitter: twitter.current.value,
-        linkedin: linkedin.current.value,
-      };
+		const tempFileStatus = {
+			bip: fileErr.bip,
+			bap: fileErr.bap,
+			bicp: fileErr.bicp,
+		};
 
-      checkEdited(borrowerJsonData);
-      // console.log(borrowerJsonData);
-      if (allowSubmit) {
-        let file = makeFileObjects(borrowerJsonData, Math.random());
-        let borrowerDataCID = await storeFiles(file);
-        // Save this CID in the blockchain
-        console.log("DURING save", borrowerDataCID);
-        console.log(borrowerJsonData);
-        await updateBorrowerDetails(borrowerDataCID);
-        console.log("upload successful");
-      }
-      navigate("/borrower_dashboard/borrower_profile", {
-        state: borrowerJsonData,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+		if (!location.state) {
+			if (!businessIdentityFiles) tempFileStatus.bip = true;
 
-  const checkTextInput = () => {
-    const { companyName: n, companyRepName: r, companyBio: b } = oldBrJson;
-    console.log(
-      companyName,
-      companyBio,
-      companyRepName,
-      "called in check text inpuyt"
-    );
+			if (!businessAddressFiles) tempFileStatus.bap = true;
 
-    if (
-      !(
-        companyName.current.value === n && //now here error is cant read the value
-        companyBio.cuurent.value === r &&
-        companyRepName.current.value === b
-      )
-    )
-      setTextChange(true);
+			if (!businessIncorporationFiles) tempFileStatus.bicp = true;
+		}
 
-    if (
-      businessLicenseFiles ||
-      businessIncorporationFiles ||
-      businessIdentityFiles ||
-      logoFile ||
-      businessAddressFiles
-    )
-      setFileChange(true);
-  };
+		setFileErr(tempFileStatus);
 
-  return (
-    <>
-      <div className={loading ? "blur-sm" : null}>
-        <div className="mb-6">
-          <h2 className="text-xl font-medium">Company Details</h2>
-          <div style={{ display: "flex" }} className="w-full">
-            <FileUploader
-              label="Company Logo"
-              className="w-1/3"
-              handleFile={onLogoFileUpload}
-              fileName={
-                profileState
-                  ? profileState.companyLogoFile.businessLogoFileName
-                  : null
-              }
-            />
-            <TextField
-              label="Company Name"
-              placeholder="Enter Company Name"
-              className="w-1/3 ml-2"
-              reference={companyName}
-            />
-            <TextField
-              label="Company Representative Name"
-              placeholder="Enter Name"
-              className="w-1/3 ml-2"
-              reference={companyRepName}
-            />
-          </div>
-          <div>
-            <TextArea
-              label="Bio"
-              placeholder="Summary About the Organization/Company"
-              className="w-full"
-              reference={companyBio}
-            />
-          </div>
-        </div>
-        {/* <div className="mb-6">
-      <h2 className="text-xl font-medium mb-2">KYC Documents</h2>
-      <InputGroup onChange={onKYCFilesUpload} reference={kycFileName} />
-    </div> */}
-        <div className="mb-6">
-          <h2 className="text-xl font-medium mb-2">KYB Documents</h2>
-          <InputGroup
-            caption="Business Identify Proof"
-            onChange={onBusinessIdentityFilesUpload}
-            reference={bizIdFileName}
-            fileName={
-              profileState ? profileState.businessIdFile.businessIdFileName : ""
-            }
-          />
-          <InputGroup
-            caption="Business Address Proof"
-            onChange={onBusinessAddressFilesUpload}
-            reference={bizAddFileName}
-            fileName={
-              profileState
-                ? profileState.businessAddFile.businessAddFileName
-                : ""
-            }
-          />
-          <InputGroup
-            caption="Business Incorporation Proof"
-            onChange={onBusinessIncorporationFilesUpload}
-            reference={bizIncoFileName}
-            fileName={
-              profileState
-                ? profileState.businessIncoFile.businessIncoFileName
-                : ""
-            }
-          />
-          <InputGroup
-            caption="Business License Proof"
-            onChange={onBusinessLicenseFilesUpload}
-            reference={bizLicFileName}
-            fileName={
-              profileState
-                ? profileState.businessLicFile.businessLicFileName
-                : ""
-            }
-          />
-        </div>
-        <div className="mb-6">
-          <h2 className="text-xl font-medium mb-2">Socials</h2>
-          <div className="w-full" style={{ display: "flex" }}>
-            <TextField
-              label="Website"
-              placeholder="Enter Website URL"
-              className="w-1/2 mr-8"
-              reference={website}
-            />
-            <TextField
-              label="Email Address"
-              placeholder="Enter Email Address"
-              className="w-1/2 ml-8"
-              reference={email}
-            />
-          </div>
-          <div className="w-full" style={{ display: "flex" }}>
-            <TextField
-              label="Twitter"
-              placeholder="Enter Twitter URL"
-              className="w-1/2 mr-8"
-              reference={twitter}
-            />
-            <TextField
-              label="LinkedIn"
-              placeholder="Enter LinkedIn URL"
-              className="w-1/2 ml-8"
-              reference={linkedin}
-            />
-          </div>
-        </div>
-      </div>
+		if (
+			!(
+				businessIdentityFiles &&
+				businessIncorporationFiles &&
+				businessAddressFiles &&
+				logoFile
+			) &&
+			!location.state
+		) {
+			setError(true);
+			setUploading(false);
+		}
+	};
 
-      <div className="my-10 justify-center" style={{ display: "flex" }}>
-        <button
-          style={{
-            borderRadius: "100px",
-            padding: "12px 24px",
-            color: "white",
-          }}
-          className="btn btn-wide btn-outline text-white mr-4"
-        >
-          Exit
-        </button>
-        {loading ? (
-          <Loading />
-        ) : (
-          <GradientButton
-            className="font-medium ml-4"
-            onClick={uploadBorrowerData}
-          >
-            Save and Exit
-          </GradientButton>
-        )}
-      </div>
-    </>
-  );
+	const onLogoFileUpload = (files) => {
+		setLogoFile(files);
+		setLogoError(false);
+	};
+
+	const onBusinessIdentityFilesUpload = (files) => {
+		setBusinessIdentityFiles(files);
+		setFileErr((prev) => {
+			return {
+				...prev,
+				bip: false,
+			};
+		});
+	};
+	const onBusinessAddressFilesUpload = (files) => {
+		setBusinessAddressFiles(files);
+		setFileErr((prev) => {
+			return {
+				...prev,
+				bap: false,
+			};
+		});
+	};
+	const onBusinessIncorporationFilesUpload = (files) => {
+		setBusinessIncorporationFiles(files);
+		setFileErr((prev) => {
+			return {
+				...prev,
+				bicp: false,
+			};
+		});
+	};
+	const onBusinessLicenseFilesUpload = (files) => {
+		setBusinessLicenseFiles(files);
+		checkFunction(files);
+	};
+
+	const uploadBorrowerData = async (formData) => {
+		setUploading(true);
+		try {
+			const {
+				companyName,
+				companyRepName,
+				companyBio,
+				bizIdFileName,
+				bizAddFileName,
+				bizLicFileName,
+				bizIncoFileName,
+				website,
+				email,
+				twitter,
+				linkedin,
+			} = formData;
+
+			validations();
+			let key = false;
+			let tempFileStatus = [];
+			if (businessLicenseFiles) key = true;
+
+			if (!logoError || !fileErr.bip || !fileErr.bap || !fileErr.bicp) {
+				if (logoFile && logoFile.length) {
+					let logoFileObj = {
+						fileName: logoFile[0].name,
+						progress: 0,
+						status: "Pending",
+					};
+
+					tempFileStatus.push(logoFileObj);
+				}
+
+				if (businessIdentityFiles && businessIdentityFiles.length) {
+					let businessIdentityFilesObj = {
+						fileName: businessIdentityFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
+
+					tempFileStatus.push(businessIdentityFilesObj);
+				}
+
+				if (businessAddressFiles && businessAddressFiles.length) {
+					let businessAddressFilesObj = {
+						fileName: businessAddressFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
+
+					tempFileStatus.push(businessAddressFilesObj);
+				}
+
+				if (businessIncorporationFiles && businessIncorporationFiles.length) {
+					let businessIncorporationFilesObj = {
+						fileName: businessIncorporationFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
+
+					tempFileStatus.push(businessIncorporationFilesObj);
+				}
+
+				if (businessLicenseFiles && businessLicenseFiles.length) {
+					let businessLicenseFilesObj = {
+						fileName: businessLicenseFiles[0].name,
+						progress: 0,
+						status: "Pending",
+					};
+
+					tempFileStatus.push(businessLicenseFilesObj);
+				}
+
+				console.log(tempFileStatus);
+				setFileUploadStatus(tempFileStatus);
+
+				{
+					if (
+						businessIdentityFiles ||
+						businessAddressFiles ||
+						businessIncorporationFiles ||
+						businessLicenseFiles ||
+						logoFile
+					)
+						if ((logoFile && logoFile.length) || profileState) {
+							logoFileCID.current = await uploadFilesToIPFS(
+								logoFile ? logoFile : profileState.companyLogoFile
+							);
+						}
+					if (
+						(businessIdentityFiles && businessIdentityFiles.length) ||
+						profileState
+					) {
+						businessIdFilesCID.current = await uploadFilesToIPFS(
+							businessIdentityFiles
+								? businessIdentityFiles
+								: profileState.businessIdFile
+						);
+					}
+					if (
+						(businessAddressFiles && businessAddressFiles.length) ||
+						profileState
+					) {
+						businessAddFilesCID.current = await uploadFilesToIPFS(
+							businessAddressFiles
+								? businessAddressFiles
+								: profileState.businessAddFile
+						);
+					}
+					if (
+						(businessIncorporationFiles && businessIncorporationFiles.length) ||
+						profileState
+					) {
+						businessIncoFilesCID.current = await uploadFilesToIPFS(
+							businessIncorporationFiles
+								? businessIncorporationFiles
+								: profileState.businessIncoFile
+						);
+					}
+					if (
+						(businessLicenseFiles &&
+							businessLicenseFiles.length &&
+							(hasKey || key)) ||
+						(profileState && (hasKey || key))
+					) {
+						businessLicFilesCID.current = await uploadFilesToIPFS(
+							businessLicenseFiles
+								? businessLicenseFiles
+								: profileState.businessLicFile
+						);
+					}
+				}
+				// Prepare a json file with borrower data
+				let borrowerJsonData = {
+					companyName: companyName,
+					companyRepName: companyRepName,
+					companyBio: companyBio,
+					companyLogoFile: {
+						businessLogoFileName: logoFile
+							? logoFile[0].name
+							: profileState.companyLogoFile.businessLogoFileName,
+						businessLogoFileCID: logoFile
+							? logoFileCID.current
+							: profileState.companyLogoFile.businessLogoFileCID,
+					},
+					businessIdFile: {
+						businessIdDocName: businessIdentityFiles
+							? bizIdFileName
+							: profileState.businessIdFile.businessIdDocName,
+						businessIdFileCID: businessIdentityFiles
+							? businessIdFilesCID.current
+							: profileState.businessIdFile.businessIdFileCID,
+						businessIdFileName: businessIdentityFiles
+							? businessIdentityFiles[0].name
+							: profileState.businessIdFile.businessIdFileName,
+					},
+					businessAddFile: {
+						businessAddDocName: businessAddressFiles
+							? bizAddFileName
+							: profileState.businessAddFile.businessAddDocName,
+						businessAddFileCID: businessAddressFiles
+							? businessAddFilesCID.current
+							: profileState.businessAddFile.businessAddFileCID,
+						businessAddFileName: businessAddressFiles
+							? businessAddressFiles[0].name
+							: profileState.businessAddFile.businessAddFileName,
+					},
+					businessIncoFile: {
+						businessIncoDocName: businessIncorporationFiles
+							? bizIncoFileName
+							: profileState.businessIncoFile.businessIncoDocName,
+						businessIncoFileCID: businessIncorporationFiles
+							? businessIncoFilesCID.current
+							: profileState.businessIncoFile.businessIncoFileCID,
+						businessIncoFileName: businessIncorporationFiles
+							? businessIncorporationFiles[0].name
+							: profileState.businessIncoFile.businessIncoFileName,
+					},
+					website: website,
+					email: email,
+					twitter: twitter,
+					linkedin: linkedin,
+				};
+
+				if ((businessLicenseFiles || profileState) && (hasKey || key)) {
+					const licenseFile = {
+						businessLicFile: {
+							businessLicDocName: businessLicenseFiles
+								? bizLicFileName
+								: profileState
+								? profileState.businessLicFile.businessLicDocName
+								: null,
+							businessLicFileCID: businessLicenseFiles
+								? businessLicFilesCID.current
+								: profileState?.businessLicFile.businessLicFileCID,
+							businessLicFileName: businessLicenseFiles
+								? businessLicenseFiles[0].name
+								: profileState?.businessLicFile.businessLicFileName,
+						},
+					};
+					borrowerJsonData = { ...borrowerJsonData, ...licenseFile };
+				}
+				checkEdited(borrowerJsonData);
+
+				if (allowSubmit) {
+					let file = makeFileObjects(borrowerJsonData, "borrower.json");
+					let borrowerDataCID = await storeFiles(file);
+					// Save this CID in the blockchain
+					await updateBorrowerDetails(borrowerDataCID);
+					captureMessage(
+						"Borrower profile updted successful on blockchain",
+						"info"
+					);
+				}
+				navigate("/borrowerDashboard/borrowerProfile", {
+					state: borrowerJsonData,
+				});
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	function checkFunction(file) {
+		console.log("checkfun");
+		if (file || businessLicFilesCID.current) {
+			setLincenseFile(true);
+		}
+	}
+
+	useEffect(() => {
+		console.log(lincenseFile);
+		if (lincenseText && lincenseFile) {
+			setcheckLicense({
+				err: false,
+				msg: "",
+			});
+		} else {
+			console.log(lincenseFile);
+
+			if (!lincenseFile && lincenseText) {
+				setcheckLicense({
+					err: true,
+					msg: "File required",
+				});
+			} else if (!lincenseText && lincenseFile) {
+				setcheckLicense({
+					err: true,
+					msg: "File name is required",
+				});
+			} else {
+				setcheckLicense({
+					err: false,
+					msg: "",
+				});
+			}
+		}
+	}, [lincenseText, lincenseFile]);
+
+	return (
+		<div className={`${loading ? "relative" : ""}`}>
+			{
+				<ProcessingModal
+					setUploading={setUploading}
+					uploading={uploading}
+					fileUploadStatus={fileUploadStatus}
+				/>
+			}
+
+			{loading && <Loader />}
+
+			<Formik
+				initialValues={initialValues}
+				onSubmit={(values) => uploadBorrowerData(values)}
+				validationSchema={validationSchema}
+				enableReinitialize={true}
+			>
+				{({
+					values,
+					errors,
+					touched,
+					handleChange,
+					handleBlur,
+					handleSubmit,
+					isSubmitting,
+				}) => (
+					<>
+						{setLincenseText(values.bizLicFileName)}
+						<div className={loading ? "blur-sm" : ""}>
+							<div className="font-semibold">
+								<div className="">
+									<h2 className="text-[1.4375rem] ">Company Details</h2>
+
+									<div className="mt-2 flex flex-col gap-2">
+										<div className=" flex flex-col gap-2 md:flex-row md:flex-wrap xl:justify-between">
+											<FileUploader
+												filetype={"image/*"}
+												label="Company Logo"
+												className="md:w-[45%] xl:w-[30%]"
+												handleFile={onLogoFileUpload}
+												fileName={
+													profileState
+														? profileState.companyLogoFile.businessLogoFileName
+														: null
+												}
+												error={logoError ? "Please upload logo!" : null}
+											/>
+											<TextField
+												name="companyName"
+												label="Company Name"
+												placeholder="Enter Company Name"
+												className="md:w-[45%] md:ml-auto xl:ml-0 xl:w-[30%]"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyName}
+												error={
+													touched.companyName && errors.companyName
+														? errors.companyName
+														: null
+												}
+											/>
+											<TextField
+												name="companyRepName"
+												label="Company Representative Name"
+												placeholder="Enter Name"
+												className="md:w-[45%] xl:w-[30%]"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyRepName}
+												error={
+													touched.companyRepName && errors.companyRepName
+														? errors.companyRepName
+														: null
+												}
+											/>
+										</div>
+
+										<div className="">
+											<TextArea
+												name="companyBio"
+												label="Bio"
+												placeholder="Summary About the Organization/Company"
+												className="w-full"
+												onChange={handleChange}
+												onBlur={handleBlur}
+												value={values.companyBio}
+												error={
+													touched.companyBio && errors.companyBio
+														? errors.companyBio
+														: null
+												}
+											/>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-8 flex flex-col gap-3">
+									<h2 className="text-[1.4375rem] font-semibold">
+										KYB Documents
+									</h2>
+
+									<InputGroup
+										caption="Business Identify Proof"
+										name="bizIdFileName"
+										value={values.bizIdFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessIdentityFilesUpload}
+										onBlur={handleBlur}
+										error={
+											errors.bizIdFileName && touched.bizIdFileName
+												? errors.bizIdFileName
+												: fileErr.bip
+												? "File required"
+												: ""
+										}
+										fileName={
+											profileState
+												? profileState.businessIdFile.businessIdFileName
+												: ""
+										}
+									/>
+									<InputGroup
+										caption="Business Address Proof"
+										name="bizAddFileName"
+										value={values.bizAddFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessAddressFilesUpload}
+										onBlur={handleBlur}
+										error={
+											errors.bizAddFileName && touched.bizAddFileName
+												? errors.bizAddFileName
+												: fileErr.bap
+												? "File required"
+												: ""
+										}
+										fileName={
+											profileState
+												? profileState.businessAddFile.businessAddFileName
+												: ""
+										}
+									/>
+									<InputGroup
+										caption="Business Incorporation Proof"
+										name="bizIncoFileName"
+										value={values.bizIncoFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessIncorporationFilesUpload}
+										onBlur={handleBlur}
+										error={
+											errors.bizIncoFileName && touched.bizIncoFileName
+												? errors.bizIncoFileName
+												: fileErr.bicp
+												? "File required"
+												: ""
+										}
+										fileName={
+											profileState
+												? profileState.businessIncoFile.businessIncoFileName
+												: ""
+										}
+									/>
+									<InputGroup
+										caption="Business License Proof"
+										name="bizLicFileName"
+										value={values.bizLicFileName}
+										onChangeText={handleChange}
+										onChange={onBusinessLicenseFilesUpload}
+										error={checkLicense.err ? checkLicense.msg : ""}
+										onBlur={handleBlur}
+										fileName={
+											profileState && hasKey
+												? profileState.businessLicFile.businessLicFileName
+												: ""
+										}
+									/>
+								</div>
+
+								<div className="mb-6">
+									<h2 className="text-[1.1875rem] ">Socials</h2>
+
+									<div className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-3">
+										<TextField
+											name="website"
+											label="Website"
+											placeholder="Enter Website URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.website}
+											onBlur={handleBlur}
+											error={
+												touched.website && errors.website ? errors.website : ""
+											}
+										/>
+										<TextField
+											name="email"
+											label="Email Address"
+											placeholder="Enter Email Address"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											onBlur={handleBlur}
+											value={values.email}
+											error={touched.email && errors.email ? errors.email : ""}
+										/>
+										<TextField
+											name="twitter"
+											label="Twitter"
+											placeholder="Enter Twitter URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.twitter}
+											onBlur={handleBlur}
+										/>
+										<TextField
+											name="linkedin"
+											label="LinkedIn"
+											placeholder="Enter LinkedIn URL"
+											className="w-full md:w-[48%]"
+											onChange={handleChange}
+											value={values.linkedin}
+											onBlur={handleBlur}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
+							<button
+								onClick={() =>
+									navigate("/borrowerDashboard/borrowerProfile", {
+										state: oldBrJson,
+									})
+								}
+								className="border-2 border-neutral-500 rounded-3xl py-3 md:w-[40%] xl:w-[min(40%,25rem)]"
+							>
+								Exit
+							</button>
+							<GradientButton
+								className="w-full md:w-[40%] xl:w-[min(40%,25rem)]"
+								onClick={() => {
+									validations();
+									if (!checkLicense.err) {
+										handleSubmit();
+									}
+								}}
+							>
+								Save and Exit
+							</GradientButton>
+						</div>
+					</>
+				)}
+			</Formik>
+		</div>
+	);
 };
 
-export default EditBorrowerProfile;
-
-// if (brJson.companyName !== oldBrJson.companyName) return companyName;
-// if (brJson.companyRepName !== oldBrJson.companyRepName) return companyName;
-// if (brJson.companyBio !== oldBrJson.companyBio) return companyName;
-
-// function jsonDiff(brJson, oldBrJson) {
-
-//   //Json.parse(brJson)
-//   const result = {};
-//   if (Object.is(brJson, oldBrJson)) {
-//     return undefined;
-//   }
-//   if (!oldBrJson || typeof oldBrJson !== "object") {
-//     return oldBrJson;
-//   }
-//   Object.keys(brJson || {})
-//     .concat(Object.keys(oldBrJson || {}))
-//     .forEach((key) => {
-//       if (
-//         typeof oldBrJson[key] === "object" &&
-//         typeof brJson[key] === "object"
-//       ) {
-//         const value = diff(brJson[key], oldBrJson[key]);
-//         if (value !== undefined) {
-//           result[key] = value;
-//         }
-//       }
-//     });
-//   return result;
-// }
+export default EditBorrowerProfileNew;

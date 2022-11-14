@@ -1,24 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import PoolCard from "./investor/components/Cards/PoolCard";
-import Card from "./investor/components/Cards/PoolCard";
 import Paths from "./Paths";
-import DrawdownCard from "./tools/Card/DrawdownCard";
-import RepaymentCard from "./tools/Card/RepaymentCard";
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
 
-import PieGraph from "./investor/components/PieChart";
-import ViewPoolCard from "./investor/components/Cards/ViewPoolCard";
-import WithdrawCard from "./investor/components/Cards/WithdrawCard";
-import DrawdownModal from "./tools/Modal/DrawdownModal";
-import InvestModal from "./investor/components/Modal/InvestModal";
+Sentry.init({
+	dsn: "https://f4a0daaa0b47406f9e612e3b609e8391@o877317.ingest.sentry.io/6744154",
+	integrations: [new BrowserTracing()],
 
-import InvestorDashboardNew from "./pages/Investor/InvestorDashboardNew";
-import BorrowChart from "./components/charts/BorrowChart";
-import PoolDetails from "./pages/Underwriters/PoolDetails";
-import DoughnutChart from "./pages/Components/DoughnutChart";
-import FileUploader from "./pages/Components/FileUploader";
-import LineChart from "./pages/Investor/components/LineChart";
-import TestFile from "./pages/Test";
+	// We recommend adjusting this value in production, or using tracesSampler
+	// for finer control
+	tracesSampleRate: 1.0,
+});
 
 ReactDOM.render(<Paths />, document.getElementById("root"));

@@ -3,48 +3,33 @@ pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "./LPToken.sol";
+import "../interfaces/ILPToken.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "./DygnifyConfig.sol";
 import "./BaseUpgradeablePausable.sol";
-import "./OpportunityOrigination.sol";
-import "./OpportunityPool.sol";
+import "../interfaces/IOpportunityOrigination.sol";
+import "../interfaces/IOpportunityPool.sol";
+import "./ConfigOptions.sol";
+import "./Constants.sol";
+import "../interfaces/ISeniorPool.sol";
 
 /// @title SeniorPool
 /// @author DNyanesh Warade
 /// @notice This contract creates a dygnify staking dApp that rewards users for
 ///         locking up their USDC stablecoin with Dygnify
 
-contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
+contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
     using SafeMathUpgradeable for uint256;
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
-    OpportunityOrigination private opportunityOrigination;
+    IOpportunityOrigination private opportunityOrigination;
 
     struct InvestmentTimestamp {
         uint256 timestamp;
         uint256 amount;
     }
-
-    // userAddress => InvestmentTimestamp
-    mapping(address => InvestmentTimestamp[]) private stackingAmount;
-    // userAddress => amount available for Withdrawal
-    mapping(address => uint256) private availableForWithdrawal;
-    // userAddress => isStaking boolean
-    mapping(address => bool) public isStaking;
-    // userAddress => yieldBalance
-    mapping(address => uint256) private usdcYield;
-
-    string public contractName = "Senior Pool";
-    IERC20 private usdcToken;
-    LPToken private lpToken;
-    uint256 public investmentLockinInMonths;
-    uint256 public seniorPoolBal;
-    uint256 public constant oneday = 60 * 60 * 24;
-    uint256 public constant oneMonth = 30 * oneday;
-    uint256 public sharePrice;
 
     struct KYC {
         bool isDoucument;
@@ -55,7 +40,22 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         bool result;
     }
 
+    // userAddress => InvestmentTimestamp
+    mapping(address => InvestmentTimestamp[]) private stackingAmount;
+    // userAddress => amount available for Withdrawal
+    mapping(address => uint256) private availableForWithdrawal;
+    // userAddress => isStaking boolean
+    mapping(address => bool) public isStaking;
+    // userAddress => yieldBalance
+    mapping(address => uint256) private usdcYield;
     mapping(address => KYC) public kycOf;
+
+    string public contractName = "Senior Pool";
+    IERC20 private usdcToken;
+    ILPToken private lpToken;
+    uint256 public investmentLockinInMonths;
+    uint256 public seniorPoolBal;
+    uint256 public sharePrice;
 
     event Stake(address indexed from, uint256 amount);
     event Unstake(address indexed from, uint256 amount);
@@ -71,18 +71,16 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         address owner = dygnifyConfig.dygnifyAdminAddress();
         require(owner != address(0), "Invalid Owner");
 
-        opportunityOrigination = OpportunityOrigination(
+        opportunityOrigination = IOpportunityOrigination(
             dygnifyConfig.getOpportunityOrigination()
         );
 
         _BaseUpgradeablePausable_init(owner);
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
-        lpToken = LPToken(dygnifyConfig.lpTokenAddress());
-        investmentLockinInMonths = dygnifyConfig.getSeniorPoolMockinMonths();
-        sharePrice = 10**18;
+        lpToken = ILPToken(dygnifyConfig.lpTokenAddress());
+        investmentLockinInMonths = dygnifyConfig.getSeniorPoolLockinMonths();
+        sharePrice = 0;
     }
-
-    function _authorizeUpgrade(address newImplementation) internal override {}
 
     /// @notice Locks the user's USDC within the contract
     /// @dev If the user already staked USDC, then calculate the previous yeild first
@@ -100,8 +98,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         seniorPoolBal = seniorPoolBal + amount;
         usdcToken.transferFrom(msg.sender, address(this), amount);
         address minter = msg.sender;
-        uint256 lpTokenAmount = getNumShares(amount);
-        lpToken.mint(minter, lpTokenAmount);
+        lpToken.mint(minter, amount);
         emit Stake(msg.sender, amount);
     }
 
@@ -123,7 +120,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
             opportunityId
         );
-        OpportunityPool opportunityPool = OpportunityPool(poolAddress);
+        IOpportunityPool opportunityPool = IOpportunityPool(poolAddress);
         uint256 amount = opportunityPool.getSeniorTotalDepositable();
 
         require(amount <= seniorPoolBal, "insufficient Pool balance");
@@ -132,53 +129,40 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         opportunityPool.deposit(1, amount); //hardcoded val of 1 need to be converted into variable
     }
 
-    function withDrawFromOpportunity(bytes32 opportunityId) public onlyAdmin {
+    function withDrawFromOpportunity(
+        bool _isWriteOff,
+        bytes32 opportunityId,
+        uint256 _amount
+    ) public override {
         require(
-            opportunityOrigination.isRepaid(opportunityId) == true,
+            opportunityOrigination.isRepaid(opportunityId) == true ||
+                _isWriteOff == true,
             "Opportunity is not repaid by borrower."
         );
         address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
             opportunityId
         );
-        OpportunityPool opportunityPool = OpportunityPool(poolAddress);
+        IOpportunityPool opportunityPool = IOpportunityPool(poolAddress);
+        require(
+            msg.sender == poolAddress,
+            "only Opportunity Pool can withdraw."
+        );
 
-        uint256 withdrawlAmount = opportunityPool.withdrawAll(1); //hardcoded val of 1 need to be converted into variable
-
-        seniorPoolBal = seniorPoolBal + withdrawlAmount;
-        uint256 totalProfit = usdcToLp(opportunityPool.getSeniorProfit());
-
+        //calculate the shareprice
+        uint256 totalProfit;
+        if (_isWriteOff == true) totalProfit = _amount;
+        else totalProfit = opportunityPool.getSeniorProfit();
         uint256 _totalShares = lpToken.totalShares();
-        uint256 delta = totalProfit.mul(10**18).div(_totalShares);
-
+        uint256 delta = totalProfit.mul(lpMantissa()).div(_totalShares);
         sharePrice = sharePrice.add(delta);
-    }
 
-    function lPMantissa() internal pure returns (uint256) {
-        return uint256(10)**uint256(18);
-    }
-
-    function usdcMantissa() internal pure returns (uint256) {
-        return uint256(10)**uint256(6);
-    }
-
-    function usdcToLp(uint256 amount) internal pure returns (uint256) {
-        return amount.mul(lPMantissa()).div(usdcMantissa());
-    }
-
-    function lpToUSDC(uint256 amount) internal pure returns (uint256) {
-        return amount.div(lPMantissa().div(usdcMantissa()));
-    }
-
-    function getNumShares(uint256 amount) public view returns (uint256) {
-        return usdcToLp(amount).mul(lPMantissa()).div(sharePrice);
-    }
-
-    function getUSDCAmountFromShares(uint256 lpAmount)
-        internal
-        view
-        returns (uint256)
-    {
-        return lpToUSDC(lpAmount.mul(sharePrice).div(lPMantissa()));
+        if (_isWriteOff == false) {
+            uint256 withdrawlAmount = opportunityPool
+                .getSeniorPoolWithdrawableAmount(); //hardcoded val of 1 need to be converted into variable
+            seniorPoolBal = seniorPoolBal + withdrawlAmount;
+        } else {
+            seniorPoolBal = seniorPoolBal + _amount;
+        }
     }
 
     function approveUSDC(address user) public onlyAdmin {
@@ -201,7 +185,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
 
         uint256 stakingAmount;
         uint256 withdrawableAmount;
-        uint256 lockinTime = investmentLockinInMonths * oneMonth;
+        uint256 lockinTime = investmentLockinInMonths * Constants.oneMonth();
         InvestmentTimestamp[] memory arr = stackingAmount[msg.sender];
         for (uint256 i = 0; i < arr.length; i++) {
             if (arr[i].timestamp + lockinTime <= block.timestamp) {
@@ -209,6 +193,9 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
             } else {
                 stakingAmount += arr[i].amount;
             }
+        }
+        if (availableForWithdrawal[msg.sender] > 0) {
+            withdrawableAmount += availableForWithdrawal[msg.sender];
         }
 
         return (withdrawableAmount, stakingAmount);
@@ -232,6 +219,20 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
         return amount;
     }
 
+    function sanitizeInputDecimalDiscrepancies(
+        uint256 inputAmt,
+        uint256 withdrawableAmt
+    ) internal pure returns (uint256 amount) {
+        if (
+            inputAmt > withdrawableAmt &&
+            (inputAmt.sub(withdrawableAmt) < lpMantissa())
+        ) {
+            amount = withdrawableAmt;
+        } else {
+            amount = inputAmt;
+        }
+    }
+
     // Withdraw of funds in user wallet
     function withdrawWithLP(uint256 amount) external {
         require(
@@ -241,7 +242,7 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
 
         // calculate the amount available for investment first
         uint256 stakingAmount;
-        uint256 lockinTime = investmentLockinInMonths * oneMonth;
+        uint256 lockinTime = investmentLockinInMonths * Constants.oneMonth();
         InvestmentTimestamp[] storage arr = stackingAmount[msg.sender];
         for (uint256 i = 0; i < arr.length; i++) {
             if (arr[i].timestamp + lockinTime <= block.timestamp) {
@@ -252,8 +253,11 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
             }
         }
 
+        // check for decimal discrepancies with input amount
+        uint256 withdrawableAmt = availableForWithdrawal[msg.sender];
+        amount = sanitizeInputDecimalDiscrepancies(amount, withdrawableAmt);
         require(
-            availableForWithdrawal[msg.sender] >= amount,
+            withdrawableAmt >= amount,
             "Withdraw amount is higher than amount available for withdraw"
         );
 
@@ -265,12 +269,48 @@ contract SeniorPool is BaseUpgradeablePausable, UUPSUpgradeable {
             isStaking[msg.sender] = false;
         }
 
+        // Calculate the total USDC based on shareprice
+        uint256 usdcAmount = getUSDCAmountFromShares(amount);
+
+        // update the senior pool balance
+        seniorPoolBal = seniorPoolBal.sub(usdcAmount);
+        // update the share price
+        uint256 totalSharesAfterWithdrawal = totalShares().sub(amount);
+        // for small miscellaneous values and when total shares goes down to 0 we set sharePrice directly to 0
+        if (seniorPoolBal < lpMantissa() || totalSharesAfterWithdrawal == 0) {
+            sharePrice = 0;
+        } else {
+            uint256 availableProfit = seniorPoolBal.sub(
+                totalSharesAfterWithdrawal
+            );
+            sharePrice = (availableProfit.mul(lpMantissa())).div(
+                totalSharesAfterWithdrawal
+            );
+        }
         // burn the lp token equivalent to amount
         lpToken.burn(msg.sender, amount);
 
-        // Calculate the total USDC based on shareprice
-        uint256 usdcAmount = getUSDCAmountFromShares(amount);
         usdcToken.transfer(msg.sender, usdcAmount);
         emit Unstake(msg.sender, amount);
+    }
+
+    function totalShares() internal view returns (uint256) {
+        require(
+            address(lpToken) != address(0),
+            "Senior Pool Contract not initialized properly"
+        );
+        return lpToken.totalShares();
+    }
+
+    function lpMantissa() internal pure returns (uint256) {
+        return uint256(10)**uint256(6);
+    }
+
+    function getUSDCAmountFromShares(uint256 amount)
+        internal
+        view
+        returns (uint256)
+    {
+        return amount.add(amount.mul(sharePrice).div(lpMantissa()));
     }
 }

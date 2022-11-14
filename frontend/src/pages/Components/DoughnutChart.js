@@ -5,39 +5,39 @@ import { Doughnut } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const DoughnutChart = ({
-  labels,
-  data,
-  color,
-  width = "202px",
-  cutout = 70,
-  legendStyle,
-  borderWidth = 1,
+	labels,
+	data,
+	color,
+	width = "202px",
+	cutout = 70,
+	legendStyle,
+	borderWidth = 1,
 }) => {
-  const dataValue = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Number of Votes",
-        data: data,
-        backgroundColor: color,
-        borderColor: color,
-        borderWidth: borderWidth,
-      },
-    ],
-  };
-  return (
-    <div style={{ width: width }}>
-      <Doughnut
-        data={dataValue}
-        options={{
-          cutout: cutout,
-          plugins: {
-            legend: legendStyle,
-          },
-        }}
-      />
-    </div>
-  );
+	const dataValue = {
+		labels: labels,
+		datasets: [
+			{
+				label: "Number of Votes",
+				data: data,
+				backgroundColor: color,
+				borderColor: color,
+				borderWidth: borderWidth,
+			},
+		],
+	};
+	return (
+		<div className="w-[12rem] sm:w-[13rem] md:w-[12rem] xl:w-[13rem] 2xl:w-[14rem]">
+			<Doughnut
+				data={dataValue}
+				options={{
+					cutout: cutout,
+					plugins: {
+						legend: legendStyle,
+					},
+				}}
+			/>
+		</div>
+	);
 };
 
 export default DoughnutChart;

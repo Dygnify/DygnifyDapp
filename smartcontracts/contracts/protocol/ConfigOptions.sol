@@ -13,7 +13,10 @@ library ConfigOptions {
         PoolImplAddress,
         CollateralToken,
         OpportunityOrigination,
-        InvestorContract
+        InvestorContract,
+        DygnifyTreasury,
+        DygnifyKeeper,
+        IdentityToken
     }
 
     enum Numbers {
@@ -21,6 +24,8 @@ library ConfigOptions {
         DygnifyFee,
         OverDueFee,
         JuniorSubpoolFee,
-        SeniorPoolFundLockinMonths
+        SeniorPoolFundLockinMonths,
+        WriteOffDays,
+        UnderwriterFee
     }
 }

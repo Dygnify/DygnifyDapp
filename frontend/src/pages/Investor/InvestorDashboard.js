@@ -1,192 +1,115 @@
-import React from "react";
-import { Box, Button, Typography, Stack } from "@mui/material";
-import Opportunity from "./Opportunity";
-import PieGraph from "../../investor/components/PieChart";
-import Graph from "../../mock/components/Graph";
-import { useState } from "react";
-import { useEffect } from "react";
-import { getAllActiveOpportunities } from "../../components/transaction/TransactionHelper";
-import JuniorPoolCard from "./JuniorPoolCard";
-import Header from "../../investor/components/Header";
+import React, { useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import OverviewIcon from "../../pages/SVGIcons/OverviewIcon";
+import InvestIcon from "../../pages/SVGIcons/InvestIcon";
+import TransactionIcon from "../../pages/SVGIcons/TransactionIcon";
+import WithdrawIcon from "../../pages/SVGIcons/WithdrawIcon";
 
-const InvestorDashboard = () => {
-  const [opportunities, setOpportunities] = useState([]);
-  const [juniorPool, setJuniorPool] = useState([]);
-  const [seniorPool, setSeniorPool] = useState([]);
+import Header from "../Layout/Header";
 
-  useEffect(() => {
-    const fetchJSON = async () => {
-      let json = await getAllActiveOpportunities();
-      setOpportunities(json);
-    };
+const InvestorDashboardNew = () => {
+	const [linkStatus, setLinkStatus] = useState(false);
+	const [darkMode, setDarkMode] = useState(true);
 
-    fetchJSON();
-  }, []);
+	const handleChange = (e) => {
+		setLinkStatus(e.target.checked);
+	};
 
-  useEffect(() => {
-    fetch("/juniorPool.json")
-      .then((res) => res.json())
-      .then((data) => setJuniorPool(data));
-  }, []);
+	return (
+		<div className={`${darkMode ? "dark" : ""}`}>
+			<div className="bg-neutral-50 dark:bg-darkmode-900 text-neutral-700 dark:text-white">
+				<Header
+					linkStatus={linkStatus}
+					darkMode={darkMode}
+					setDarkMode={setDarkMode}
+				/>
+				<div className="drawer drawer-mobile border-t-[1px] border-t-[#B8C0CC] dark:border-t-[#20232A]">
+					<input
+						id="dashboard-sidebar"
+						type="checkbox"
+						className="drawer-toggle"
+						checked={linkStatus}
+						onChange={handleChange}
+					/>
 
-  useEffect(() => {
-    fetch("/seniorPool.json")
-      .then((res) => res.json())
-      .then((data) => setSeniorPool(data));
-  }, []);
+					<div
+						className={`py-4 drawer-content  ${
+							linkStatus ? "blur-sm lg:blur-none" : ""
+						}`}
+					>
+						<div className="px-4 sm:px-6 md:px-8 lg:px-4 xl:px-8">
+							<Outlet></Outlet>
+						</div>
+					</div>
 
-  return (
-    <>
-      <style>{"body { background-color: #7165e3 }"}</style>
-      <Header />
-      <Stack sx={{ color: "#ffffff", mt: "28px", textAlign: "center" }}>
-        <Typography variant="h4">Investor Dashboard</Typography>
-      </Stack>
-      <Box
-        sx={{
-          width: "1100px",
-          backgroundColor: "#ffffff",
-          mx: "auto",
-          my: "12px",
-          borderRadius: "12px",
-        }}
-      >
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            width: "900px",
-          }}
-        >
-          <PieGraph />
-          <Stack
-            sx={{
-              py: "38px",
-              width: 400,
-            }}
-          >
-            <Graph />
-          </Stack>
-        </Box>
-      </Box>
-      <Stack
-        sx={{
-          mt: "30px",
-          maxWidth: 1100,
-          py: "10px",
-          textAlign: "center",
-          mx: "auto",
-          color: "#ffffff",
-        }}
-      >
-        <Typography variant="h4">Withdrawal Notifications</Typography>
-      </Stack>
-      <Box>
-        {seniorPool.length ? (
-          <>
-            <Stack
-              sx={{
-                mt: "30px",
-                maxWidth: 1100,
-                py: "10px",
-                mx: "auto",
-                color: "#ffffff",
-              }}
-            >
-              <Typography variant="h5">Senior Pool</Typography>
-            </Stack>
-
-            {seniorPool.map((data, index) => (
-              <JuniorPoolCard key={index} data={data}></JuniorPoolCard>
-            ))}
-          </>
-        ) : (
-          <Stack
-            sx={{
-              mt: "30px",
-              maxWidth: 1100,
-              py: "10px",
-              textAlign: "center",
-              mx: "auto",
-              color: "#ffffff",
-            }}
-          >
-            <Typography variant="h4">No Withdrawal Available!!!</Typography>
-          </Stack>
-        )}
-      </Box>
-      <Box>
-        {juniorPool.length ? (
-          <>
-            <Stack
-              sx={{
-                mt: "30px",
-                maxWidth: 1100,
-                py: "10px",
-                mx: "auto",
-                color: "#ffffff",
-              }}
-            >
-              <Typography variant="h5">Junior Pool</Typography>
-            </Stack>
-
-            {juniorPool.map((data, index) => (
-              <JuniorPoolCard key={index} data={data}></JuniorPoolCard>
-            ))}
-          </>
-        ) : (
-          <Stack
-            sx={{
-              mt: "30px",
-              maxWidth: 1100,
-              py: "10px",
-              textAlign: "center",
-              mx: "auto",
-              color: "#ffffff",
-            }}
-          >
-            <Typography variant="h4">No Withdrawal Available!!!</Typography>
-          </Stack>
-        )}
-      </Box>
-      <Box>
-        {opportunities.length ? (
-          <>
-            <Stack
-              sx={{
-                mt: "30px",
-                maxWidth: 1100,
-                py: "10px",
-                textAlign: "center",
-                mx: "auto",
-                color: "#ffffff",
-              }}
-            >
-              <Typography variant="h4">Active Opportunities</Typography>
-            </Stack>
-            {opportunities.map((opportunity, index) => (
-              <Opportunity key={index} opportunity={opportunity}></Opportunity>
-            ))}
-          </>
-        ) : (
-          <Stack
-            sx={{
-              mt: "30px",
-              maxWidth: 1100,
-              py: "10px",
-              textAlign: "center",
-              mx: "auto",
-              color: "#ffffff",
-            }}
-          >
-            <Typography variant="h4">
-              Sorry..No Approved Opportunities!!!
-            </Typography>
-          </Stack>
-        )}
-      </Box>
-    </>
-  );
+					<div className="drawer-side border-r border-neutral-300 dark:border-darkmode-800">
+						<label
+							htmlFor="dashboard-sidebar"
+							className="drawer-overlay"
+						></label>
+						<ul className="h-full py-4  overflow-y-auto w-60  text-[#64748B] bg-neutral-50 dark:bg-darkmode-900 flex flex-col gap-2 lg:bg-transparent lg:dark:bg-transparent">
+							<li className="font-medium text-center">
+								<NavLink
+									className="flex pl-10 py-4 gap-2"
+									to="/investorDashboard/overview"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									<span>
+										<OverviewIcon />
+									</span>
+									Overview
+								</NavLink>
+							</li>
+							<li className="font-medium text-center ">
+								<NavLink
+									className="flex pl-10 py-4 gap-2"
+									to="/investorDashboard/invest"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									<span className="pl-1">
+										<InvestIcon />
+									</span>
+									Invest
+								</NavLink>
+							</li>
+							<li className="font-medium text-center ">
+								<NavLink
+									className="flex pl-10 py-4 gap-2"
+									to="/investorDashboard/withdraw"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									<span>
+										<WithdrawIcon />
+									</span>
+									Withdraw
+								</NavLink>
+							</li>
+							<li className="font-medium text-center ">
+								<NavLink
+									className="flex pl-10 py-4 gap-2"
+									to="/investorDashboard/transaction"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									<span>
+										<TransactionIcon />
+									</span>
+									Transaction
+								</NavLink>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
-export default InvestorDashboard;
+export default InvestorDashboardNew;

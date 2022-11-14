@@ -1,111 +1,125 @@
 import React, { useState, useEffect } from "react";
 
-import PrimaryButton from "../../../../tools/Button/PrimaryButton";
-import { getBinaryFileData } from "../../../../services/fileHelper";
-import { retrieveFiles } from "../../../../services/web3storageIPFS";
+import { useNavigate } from "react-router-dom";
+import PrimaryButton from "../../../../uiTools/Button/PrimaryButton";
+import DygnifyImage from "../../../../assets/Dygnify_Image.png";
+import DollarImage from "../../../../assets/Dollar-icon.svg";
+import {
+	getBorrowerLogoURL,
+	getOpportunityJson,
+} from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
-const ViewPoolCard = ({ onClick, data, kycStatus }) => {
-  const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
+const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
+	const path = useNavigate();
+	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
 
-  const [companyName, setCompanyName] = useState();
-  const [poolName, setPoolName] = useState(data.poolName);
+	const [companyName, setCompanyName] = useState();
+	const [logoImgSrc, setLogoImgSrc] = useState();
+	const [opData, setOpData] = useState();
 
-  useEffect(() => {
-    // fetch the opportunity details from IPFS
-    retrieveFiles(opportunityInfo, true).then((res) => {
-      if (res) {
-        let read = getBinaryFileData(res);
-        read.onloadend = function () {
-          let opJson = JSON.parse(read.result);
-          if (opJson) {
-            setCompanyName(opJson.company_name);
-            setPoolName(opJson.loanName);
-          }
-        };
-      }
-    });
-  }, []);
+	useEffect(() => {
+		// fetch the opportunity details from IPFS
+		getOpportunityJson(data).then((read) => {
+			if (read) {
+				read.onloadend = function () {
+					let opJson = JSON.parse(read.result);
+					if (opJson) {
+						setCompanyName(opJson.company_name);
+						let imgUrl = getBorrowerLogoURL(
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID,
+							opJson.companyDetails?.companyLogoFile?.businessLogoFileName
+						);
+						if (imgUrl) {
+							setLogoImgSrc(imgUrl);
+						}
+						setOpData(opJson);
+					}
+				};
+			}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-  const StatusButton = ({ label, isFullStatus }) => {
-    return (
-      <div
-        className="rounded-box  text-[#000000] items-center justify-center"
-        style={{
-          fontSize: 16,
-          fontWeight: 600,
-          width: 65,
-          height: 29,
-          display: "flex",
-          background: `${
-            isFullStatus === false
-              ? "#109B81" // greeen
-              : "linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)" // yellow
-          }`,
-        }}
-      >
-        <div>{label}</div>
-      </div>
-    );
-  };
+	const StatusButton = ({ className, isFullStatus }) => {
+		return (
+			<div
+				style={{
+					backgroundImage: `${
+						isFullStatus
+							? "linear-gradient(95.8deg, #FFE202 5%, #F2B24E 95.93%)"
+							: "linear-gradient(97.78deg, #51B960 7.43%, #51B960 7.43%, #51B960 7.43%, #83DC90 90.63%)"
+					}`,
+				}}
+				className={`${className} text-black px-3 rounded-2xl`}
+			>
+				<p>{isFullStatus ? "Full" : "Open"}</p>
+			</div>
+		);
+	};
 
-  return (
-    <div
-      style={{
-        background: `linear-gradient(302.85deg, rgba(168, 154, 255, 0) -1.23%, rgba(168, 154, 255, 0.260833) 99.99%, rgba(168, 154, 255, 0.8) 100%`,
-        boxShadow: `1px 1px 1px rgba(185, 185, 185, 0.1)`,
-        width: 534,
-        height: 289,
-        borderRadius: "16px",
-        display: "flex",
-      }}
-      className="card-body card text-white w-1/3 flex-row items-center"
-    >
-      <img
-        src="/assets/Dygnify_Image.png"
-        style={{ width: 150, height: 150 }}
-      />
-      <div style={{ marginLeft: 32, width: 400 }}>
-        <div style={{ display: "flex", marginTop: -18 }} className="flex-col">
-          <p className="card-title mb-0" style={{ fontSize: 23 }}>
-            {poolName}
-          </p>
-          <p
-            className="card-title mb-4 mt-0"
-            style={{ fontSize: 16, fontWeight: 400 }}
-          >
-            {companyName}
-          </p>
-        </div>
+	return (
+		<div
+			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient`}
+		>
+			<div className="flex items-center gap-6">
+				<img
+					alt=""
+					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
+					className="w-[7rem] lg:w-[6rem] xl:w-[10rem] 2xl:w-[8rem]"
+					src={logoImgSrc ? logoImgSrc : DygnifyImage}
+				/>
 
-        <div style={{ display: "flex" }} className="mb-1 ">
-          <p style={{ display: "flex" }} className="justify-start ">
-            Pool Balance
-          </p>
-          <p style={{ display: "flex" }} className="justify-end">
-            {opportunityAmount} {process.env.REACT_APP_TOKEN_NAME}
-          </p>
-        </div>
-        <div style={{ display: "flex" }} className="mb-1">
-          <p style={{ display: "flex" }} className="justify-start">
-            Estimated APY
-          </p>
-          <p style={{ display: "flex" }} className="justify-end">
-            {loanInterest}
-          </p>
-        </div>
-        <div style={{ display: "flex" }} className="mb-1">
-          <p style={{ display: "flex" }} className="justify-start">
-            Status
-          </p>
+				<div className="lg:hidden">
+					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
+					<p>{companyName}</p>
+				</div>
+			</div>
 
-          <StatusButton label="Open" isFullStatus={isFull} />
-        </div>
-        <div style={{ marginTop: 32 }}>
-          <PrimaryButton onClick={onClick}>View Pool</PrimaryButton>
-        </div>
-      </div>
-    </div>
-  );
+			<div className="flex flex-col gap-6 lg:w-[75%]">
+				<div className="hidden lg:block">
+					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
+					<p>{companyName}</p>
+				</div>
+
+				<div className="flex flex-col gap-1 font-semibold">
+					<div className="flex gap-1">
+						<p className="">Pool Size</p>
+						<img src={DollarImage} className="ml-auto w-[1rem]" alt="" />
+						<p className="">{opportunityAmount}</p>
+					</div>
+
+					<div className="flex">
+						<p className="">Estimated APY</p>
+						<p className="ml-auto ">{loanInterest}</p>
+					</div>
+					<div className="flex">
+						<p className="">Status</p>
+
+						<StatusButton className="ml-auto" isFullStatus={isFull} />
+					</div>
+				</div>
+
+				<div className="">
+					<PrimaryButton
+						className="w-[100%] text-white"
+						onClick={() =>
+							!isSenior
+								? path("/investorDashboard/viewPool", {
+										state: {
+											...data,
+											opData: opData,
+											kycStatus: kycStatus,
+										},
+								  })
+								: onClick()
+						}
+					>
+						View Pool
+					</PrimaryButton>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default ViewPoolCard;
