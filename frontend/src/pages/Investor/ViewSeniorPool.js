@@ -146,6 +146,7 @@ const ViewSeniorPool = () => {
 						setcontractAdrress={setcontractAdrress}
 						setAmounts={setAmounts}
 						setCheckInvest={setCheckInvest}
+						setErrormsg={setErrormsg}
 					/>
 				) : null}
 				{processFundModal ? (

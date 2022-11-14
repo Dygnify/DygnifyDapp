@@ -11,6 +11,7 @@ const DrawdownCard = ({
 	setUpdateRepayment,
 	setDrawdownId,
 	setCheckForDrawdown,
+	setErrormsg,
 }) => {
 	const [selected, setSelected] = useState(null);
 
@@ -32,6 +33,10 @@ const DrawdownCard = ({
 		} else {
 			setOpenProcessDrawdown(false);
 			console.log("cancle");
+			setErrormsg({
+				status: !tx.success,
+				msg: tx.msg,
+			});
 		}
 	};
 

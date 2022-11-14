@@ -383,6 +383,7 @@ const Overview = () => {
 									setpoolName={setpoolName}
 									setamounts={setamounts}
 									setCheck={setCheck}
+									setErrormsg={setErrormsg}
 								/>
 							))}
 						</div>
@@ -421,6 +422,7 @@ const Overview = () => {
 									setUpdateRepayment={setUpdateRepayment}
 									setDrawdownId={setDrawdownId}
 									setCheckForDrawdown={setCheckForDrawdown}
+									setErrormsg={setErrormsg}
 								/>
 							))}
 						</div>

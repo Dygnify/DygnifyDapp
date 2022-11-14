@@ -20,16 +20,13 @@ const RepaymentModal = ({
 	setamounts,
 	setUpdateRepayment,
 	setCheck,
+	setErrormsg,
 }) => {
 	const [walletBal, setWalletBal] = useState();
 	const [approvedvalue, setApprovedvalue] = useState();
 	const [isInvest, setIsInvest] = useState(false);
 	const [isApproved, setIsApproved] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [errormsg, setErrormsg] = useState({
-		status: false,
-		msg: "",
-	});
 
 	useEffect(() => {
 		getWalletBal().then((res) => {
@@ -76,6 +73,10 @@ const RepaymentModal = ({
 		const res = await repayment(data.opportunityPoolAddress);
 		if (!res.success) {
 			setOpenProcessRepayment(false);
+			setErrormsg({
+				status: !res.success,
+				msg: res.msg,
+			});
 		}
 		console.log(res.tx);
 		settransactionId(res.tx.hash);
@@ -84,7 +85,6 @@ const RepaymentModal = ({
 	}
 	return (
 		<div>
-			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
 			<input type="checkbox" id="repayment-modal" className="modal-toggle" />
 			<div className="modal backdrop-filter backdrop-brightness-[100%] backdrop-blur-lg">
 				{loading && <Loader />}

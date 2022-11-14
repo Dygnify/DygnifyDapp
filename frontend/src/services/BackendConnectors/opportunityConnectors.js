@@ -73,9 +73,15 @@ export const createOpportunity = async (formData) => {
 		}
 	} catch (error) {
 		Sentry.captureException(error);
+		if (error?.data) {
+			return {
+				success: false,
+				msg: error.data.message,
+			};
+		}
 		return {
 			success: false,
-			msg: error.data.message,
+			msg: error.message,
 		};
 	}
 };

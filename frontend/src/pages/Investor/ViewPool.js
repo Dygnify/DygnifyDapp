@@ -163,11 +163,8 @@ const ViewPool = () => {
 									setLogoImgSrc(imgUrl);
 								}
 								// get the loan purpose
-								const {
-									isSliced,
-									firstText,
-									secondText,
-								} = getExtendableTextBreakup(opJson.loan_purpose, 200);
+								const { isSliced, firstText, secondText } =
+									getExtendableTextBreakup(opJson.loan_purpose, 200);
 
 								if (isSliced) {
 									setLoanPurpose({
@@ -294,6 +291,7 @@ const ViewPool = () => {
 						setInvest={setInvest}
 						setTransactionList={setTransactionList}
 						setCheckInvest={setCheckInvest}
+						setErrormsg={setErrormsg}
 					/>
 				) : null}
 

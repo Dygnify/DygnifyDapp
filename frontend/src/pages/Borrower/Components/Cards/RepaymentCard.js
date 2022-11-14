@@ -13,6 +13,7 @@ const RepaymentCard = ({
 	setamounts,
 	setUpdateRepayment,
 	setCheck,
+	setErrormsg,
 }) => {
 	const [selected, setSelected] = useState(null);
 	const handleRepayment = async () => {
@@ -73,6 +74,7 @@ const RepaymentCard = ({
 					setamounts={setamounts}
 					setUpdateRepayment={setUpdateRepayment}
 					setCheck={setCheck}
+					setErrormsg={setErrormsg}
 				></RepaymentModal>
 			)}
 		</div>

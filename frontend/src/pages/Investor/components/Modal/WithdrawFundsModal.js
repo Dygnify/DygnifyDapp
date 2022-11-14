@@ -42,7 +42,7 @@ const WithdrawFundsModal = ({
 		setShowModal(false);
 		setProcessFundModal(true);
 		setInvestProcessing(true);
-		setAmounts(amount);
+		setAmounts(getDisplayAmount(data?.withdrawableAmt));
 		setcontractAdrress(data.opportunityPoolAddress);
 		const withdrawalData = await withdrawAllJunior(data.opportunityPoolAddress);
 		if (withdrawalData.success) {

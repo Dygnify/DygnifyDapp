@@ -147,6 +147,7 @@ const BorrowList = () => {
 					setProcessModal={setProcessModal}
 					setUpdateRepayment={setUpdateRepayment}
 					setFileUpload={setFileUpload}
+					setErrormsg={setErrormsg}
 				/>
 			)}
 
@@ -186,6 +187,7 @@ const BorrowList = () => {
 								setUpdateRepayment={setUpdateRepayment}
 								setDrawdownId={setDrawdownId}
 								setCheckForDrawdown={setCheckForDrawdown}
+								setErrormsg={setErrormsg}
 							/>
 						))}
 					</div>

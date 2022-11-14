@@ -121,7 +121,6 @@ const BorrowerProfile = () => {
 						dataReader.onloadend = function () {
 							let brJson = JSON.parse(dataReader.result);
 							loadBorrowerData(brJson);
-							setProfileStatus(true);
 							setborrowerJson(brJson);
 							setHaskey(brJson ? "businessLicFile" in brJson : false);
 						};
@@ -145,7 +144,9 @@ const BorrowerProfile = () => {
 		let data;
 		if (brJson) data = brJson;
 		else data = profileData;
-		console.log(data);
+		if (data) {
+			setProfileStatus(true);
+		}
 		if (data) {
 			try {
 				if (data.companyName) {
