@@ -156,16 +156,10 @@ export const getBorrowerJson = async (address) => {
 	try {
 		let res = await getBorrowerDetails(address);
 		if (res.success) {
-			let dataReader;
-			let file = await retrieveFiles(res.borrowerCid);
+			let dataReader = await retrieveFileFromURL(
+				getIPFSFileURL(res.borrowerCid) + "/borrower.json"
+			);
 
-			if (file) {
-				dataReader = getBinaryFileData(file);
-			} else {
-				dataReader = await retrieveFileFromURL(
-					getIPFSFileURL(res.borrowerCid) + "/borrower.json"
-				);
-			}
 			return dataReader;
 		}
 	} catch (error) {
@@ -185,16 +179,10 @@ export const getOpportunityJson = async (opportunityData) => {
 	Sentry.captureMessage("getOpportunityJson", "info");
 	try {
 		if (opportunityData && opportunityData.opportunityInfo) {
-			let file = await retrieveFiles(opportunityData.opportunityInfo);
-			let dataReader;
-			if (file) {
-				dataReader = getBinaryFileData(file);
-			} else {
-				dataReader = await retrieveFileFromURL(
-					getIPFSFileURL(opportunityData.opportunityInfo) +
-						`/${opportunityData.collateralDocument}.json`
-				);
-			}
+			let dataReader = await retrieveFileFromURL(
+				getIPFSFileURL(opportunityData.opportunityInfo) +
+					`/${opportunityData.collateralDocument}.json`
+			);
 			return dataReader;
 		}
 	} catch (error) {

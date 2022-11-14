@@ -430,15 +430,10 @@ export const getSeniorPoolData = async () => {
 	Sentry.captureMessage("getOpportunityJson", "info");
 	try {
 		let file = await retrieveFiles(process.env.REACT_APP_SENIORPOOL_CID);
-		let dataReader;
-		if (file) {
-			dataReader = getBinaryFileData(file);
-		} else {
-			dataReader = await retrieveFileFromURL(
-				getIPFSFileURL(process.env.REACT_APP_SENIORPOOL_CID) +
-					"/seniorPoolData.json"
-			);
-		}
+		let dataReader = await retrieveFileFromURL(
+			getIPFSFileURL(process.env.REACT_APP_SENIORPOOL_CID) +
+				"/seniorPoolData.json"
+		);
 		return dataReader;
 	} catch (error) {
 		Sentry.captureException(error);
