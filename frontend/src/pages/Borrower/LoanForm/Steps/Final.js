@@ -2,6 +2,7 @@ import ArrowLeft from "../../Components/SVG/ArrowLeft";
 import { useEffect, useState } from "react";
 import Doller from "../../../../assets/Dollar-icon.svg";
 import { getExtendableTextBreakup } from "../../../../services/Helpers/displayTextHelper";
+import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
 export default function Final({
 	handlePrev,
@@ -129,7 +130,7 @@ export default function Final({
 									) : (
 										""
 									)}
-									{formData.loan_amount}
+									{getDisplayAmount(formData.loan_amount)}
 								</span>
 							</div>
 

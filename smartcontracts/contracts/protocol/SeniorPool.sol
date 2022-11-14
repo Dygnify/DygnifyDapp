@@ -275,10 +275,11 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
         // update the senior pool balance
         seniorPoolBal = seniorPoolBal.sub(usdcAmount);
         // update the share price
-        if (seniorPoolBal < lpMantissa()) {
+        uint256 totalSharesAfterWithdrawal = totalShares().sub(amount);
+        // for small miscellaneous values and when total shares goes down to 0 we set sharePrice directly to 0
+        if (seniorPoolBal < lpMantissa() || totalSharesAfterWithdrawal == 0) {
             sharePrice = 0;
         } else {
-            uint256 totalSharesAfterWithdrawal = totalShares().sub(amount);
             uint256 availableProfit = seniorPoolBal.sub(
                 totalSharesAfterWithdrawal
             );
