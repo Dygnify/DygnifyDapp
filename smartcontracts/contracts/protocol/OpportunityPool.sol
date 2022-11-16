@@ -135,7 +135,11 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 totalRepayments
             );
         } else {
-            emiAmount = Accounting.getBulletLoanEMI(loanAmount, loanInterest);
+            emiAmount = Accounting.getBulletLoanEMI(
+                loanAmount,
+                loanInterest,
+                paymentFrequencyInDays
+            );
         }
 
         dailyOverdueInterestRate = dygnifyConfig.getOverDueFee().div(
