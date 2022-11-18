@@ -37,6 +37,7 @@ export default function Account({ formData, handleNext, handleForm }) {
 	const [outlineType, setoutlineType] = useState(false);
 	const [outlineLoan, setoutlineLoan] = useState(false);
 	const [outlinePay, setoutlinePay] = useState(false);
+
 	return (
 		<>
 			<div className=" flex flex-col mt-20 md:mt-14 md:px-5 ">

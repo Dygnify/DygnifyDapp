@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import Header from "../Layout/Header";
 import { useNavigate } from "react-router-dom";
-import BorrowImage from "../../assets/Borrow.svg";
+import BorrowImage from "../../assets/Borrow-dark.png";
 import InvestImage from "../../assets/Invest.svg";
 import InvestImageLightmode from "../../assets/Invest_lightmode.svg";
-import BorrowImageLightmode from "../../assets/Borrow_lightmode.svg";
+import BorrowImageLightmode from "../../assets/Borrow-light.png";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { isConnected } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 const LandingPage = () => {

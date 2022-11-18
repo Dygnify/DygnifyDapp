@@ -33,7 +33,7 @@ function FileUpload({ fileName, progress, status }) {
 			<div className="flex justify-between mb-2">
 				<p>
 					File Name:{" "}
-					<span className="underline cursor-default">
+					<span className="underline cursor-default" title={fileName}>
 						{getTrimmedWalletAddress(fileName, 10)}
 					</span>
 				</p>

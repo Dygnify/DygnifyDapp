@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Doller from "../../../../assets/Dollar-icon.svg";
 import { getExtendableTextBreakup } from "../../../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
+import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 
 export default function Final({
 	handlePrev,
@@ -14,7 +15,6 @@ export default function Final({
 	const [checked, setChecked] = useState(false);
 	const [expand, setExpand] = useState(false);
 	const [expand2, setExpand2] = useState(false);
-	const [expand3, setExpand3] = useState(false);
 
 	const [loanPurpose, setLoanPurpose] = useState({
 		isSliced: false,
@@ -23,12 +23,6 @@ export default function Final({
 	});
 
 	const [documentDescription, setDocumentDescription] = useState({
-		isSliced: false,
-		firstText: "",
-		secondText: "",
-	});
-
-	const [documentName, setDocumentName] = useState({
 		isSliced: false,
 		firstText: "",
 		secondText: "",
@@ -80,34 +74,10 @@ export default function Final({
 		}
 	}
 
-	function DocumentName() {
-		if (!formData || !formData.collateral_document_name) {
-			return;
-		}
-		const { isSliced, firstText, secondText } = getExtendableTextBreakup(
-			formData.collateral_document_name,
-			200
-		);
-
-		if (isSliced) {
-			setDocumentName({
-				firstText: firstText,
-				secondText: secondText,
-				isSliced: isSliced,
-			});
-		} else {
-			setDocumentName({
-				firstText: firstText,
-				isSliced: isSliced,
-			});
-		}
-	}
-
 	useEffect(() => {
 		if (formData) {
 			LoanPurpose();
 			DocumentDescription();
-			DocumentName();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -134,8 +104,12 @@ export default function Final({
 						<div className="flex flex-col gap-2">
 							<div className="font-[500] flex justify-between md:justify-start md:gap-7">
 								<span className=" text-[#A0ABBB]">Pool Name</span>
-								<span className="text-black dark:text-[#fff]">
-									{formData.loan_name}
+								<span
+									className="text-black dark:text-[#fff]"
+									title={formData.loan_name}
+								>
+									{/* {formData.loan_name} */}
+									{getTrimmedWalletAddress(formData.loan_name, 10)}
 								</span>
 							</div>
 
@@ -220,28 +194,12 @@ export default function Final({
 					<div className="flex flex-col md:justify-between gap-1 md:gap-2 md:flex-row">
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral document Name</span>
-							<span className="text-black dark:text-[#fff]">
+							<span
+								className="text-black dark:text-[#fff]"
+								title={formData.collateral_document_name}
+							>
 								{/* {formData.collateral_document_name} */}
-								{documentName.isSliced ? (
-									<div>
-										{documentName.firstText}
-										<span
-											className=" font-semibold cursor-pointer text-[#A0ABBB]"
-											onClick={() => setExpand2(true)}
-										>
-											{expand2 ? null : "... view more"}
-										</span>
-										{expand2 ? <div>{documentName.secondText}</div> : null}
-										<span
-											className=" font-semibold cursor-pointer text-[#A0ABBB]"
-											onClick={() => setExpand2(false)}
-										>
-											{expand2 ? "view less" : null}
-										</span>
-									</div>
-								) : (
-									<div>{documentName.firstText}</div>
-								)}
+								{getTrimmedWalletAddress(formData.collateral_document_name, 10)}
 							</span>
 						</div>
 
@@ -264,16 +222,16 @@ export default function Final({
 									{documentDescription.firstText}
 									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
-										onClick={() => setExpand3(true)}
+										onClick={() => setExpand2(true)}
 									>
-										{expand3 ? null : "... view more"}
+										{expand2 ? null : "... view more"}
 									</span>
-									{expand3 ? <div>{documentDescription.secondText}</div> : null}
+									{expand2 ? <div>{documentDescription.secondText}</div> : null}
 									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
-										onClick={() => setExpand3(false)}
+										onClick={() => setExpand2(false)}
 									>
-										{expand3 ? "view less" : null}
+										{expand2 ? "view less" : null}
 									</span>
 								</div>
 							) : (
