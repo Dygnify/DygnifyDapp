@@ -132,7 +132,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             emiAmount = Accounting.getTermLoanEMI(
                 loanAmount,
                 loanInterest,
-                totalRepayments
+                totalRepayments,
+                paymentFrequencyInDays
             );
         } else {
             emiAmount = Accounting.getBulletLoanEMI(
