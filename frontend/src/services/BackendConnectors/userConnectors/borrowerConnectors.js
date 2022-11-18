@@ -2,13 +2,11 @@ const { ethers } = require("ethers");
 const { requestAccount, getEthAddress } = require("./commonConnectors");
 const borrowerContract = require("../../../artifacts/contracts/protocol/Borrower.sol/Borrower.json");
 const opportunityPool = require("../../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
-const {
-	retrieveFileFromURL,
-	getBinaryFileData,
-} = require("../../Helpers/fileHelper");
+const { retrieveFileFromURL } = require("../../Helpers/fileHelper");
 const {
 	getIPFSFileURL,
-	retrieveFiles,
+	getIPFSFileURLOption2,
+	getIPFSFileURLOption3,
 } = require("../../Helpers/web3storageIPFS");
 const Sentry = require("@sentry/react");
 
@@ -159,7 +157,16 @@ export const getBorrowerJson = async (address) => {
 			let dataReader = await retrieveFileFromURL(
 				getIPFSFileURL(res.borrowerCid) + "/borrower.json"
 			);
-
+			if (!dataReader) {
+				dataReader = await retrieveFileFromURL(
+					getIPFSFileURLOption2(res.borrowerCid) + "/borrower.json"
+				);
+			}
+			if (!dataReader) {
+				dataReader = await retrieveFileFromURL(
+					getIPFSFileURLOption3(res.borrowerCid) + "/borrower.json"
+				);
+			}
 			return dataReader;
 		}
 	} catch (error) {
@@ -183,6 +190,18 @@ export const getOpportunityJson = async (opportunityData) => {
 				getIPFSFileURL(opportunityData.opportunityInfo) +
 					`/${opportunityData.collateralDocument}.json`
 			);
+			if (!dataReader) {
+				dataReader = await retrieveFileFromURL(
+					getIPFSFileURLOption2(opportunityData.opportunityInfo) +
+						`/${opportunityData.collateralDocument}.json`
+				);
+			}
+			if (!dataReader) {
+				dataReader = await retrieveFileFromURL(
+					getIPFSFileURLOption3(opportunityData.opportunityInfo) +
+						`/${opportunityData.collateralDocument}.json`
+				);
+			}
 			return dataReader;
 		}
 	} catch (error) {
