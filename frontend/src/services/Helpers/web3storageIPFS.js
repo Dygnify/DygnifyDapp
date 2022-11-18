@@ -71,6 +71,22 @@ export function getIPFSFileURL(cid) {
 	return `https://w3s.link/ipfs/${cid}`;
 }
 
+export function getIPFSFileURLOption2(cid) {
+	if (!cid) {
+		return;
+	}
+
+	return `https://nftstorage.link/ipfs/${cid}`;
+}
+
+export function getIPFSFileURLOption3(cid) {
+	if (!cid) {
+		return;
+	}
+
+	return `https://dweb.link/ipfs/${cid}`;
+}
+
 export async function retrieveFiles(cid, firstFileOnly = true) {
 	Sentry.captureMessage("retrieveFiles", "info");
 	try {
