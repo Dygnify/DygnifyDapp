@@ -14,6 +14,7 @@ export default function Final({
 	const [checked, setChecked] = useState(false);
 	const [expand, setExpand] = useState(false);
 	const [expand2, setExpand2] = useState(false);
+	const [expand3, setExpand3] = useState(false);
 
 	const [loanPurpose, setLoanPurpose] = useState({
 		isSliced: false,
@@ -22,6 +23,12 @@ export default function Final({
 	});
 
 	const [documentDescription, setDocumentDescription] = useState({
+		isSliced: false,
+		firstText: "",
+		secondText: "",
+	});
+
+	const [documentName, setDocumentName] = useState({
 		isSliced: false,
 		firstText: "",
 		secondText: "",
@@ -49,6 +56,7 @@ export default function Final({
 			});
 		}
 	}
+
 	function DocumentDescription() {
 		if (!formData || !formData.collateral_document_description) {
 			return;
@@ -71,10 +79,35 @@ export default function Final({
 			});
 		}
 	}
+
+	function DocumentName() {
+		if (!formData || !formData.collateral_document_name) {
+			return;
+		}
+		const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+			formData.collateral_document_name,
+			200
+		);
+
+		if (isSliced) {
+			setDocumentName({
+				firstText: firstText,
+				secondText: secondText,
+				isSliced: isSliced,
+			});
+		} else {
+			setDocumentName({
+				firstText: firstText,
+				isSliced: isSliced,
+			});
+		}
+	}
+
 	useEffect(() => {
 		if (formData) {
 			LoanPurpose();
 			DocumentDescription();
+			DocumentName();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -188,7 +221,27 @@ export default function Final({
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral document Name</span>
 							<span className="text-black dark:text-[#fff]">
-								{formData.collateral_document_name}
+								{/* {formData.collateral_document_name} */}
+								{documentName.isSliced ? (
+									<div>
+										{documentName.firstText}
+										<span
+											className=" font-semibold cursor-pointer text-[#A0ABBB]"
+											onClick={() => setExpand2(true)}
+										>
+											{expand2 ? null : "... view more"}
+										</span>
+										{expand2 ? <div>{documentName.secondText}</div> : null}
+										<span
+											className=" font-semibold cursor-pointer text-[#A0ABBB]"
+											onClick={() => setExpand2(false)}
+										>
+											{expand2 ? "view less" : null}
+										</span>
+									</div>
+								) : (
+									<div>{documentName.firstText}</div>
+								)}
 							</span>
 						</div>
 
@@ -211,16 +264,16 @@ export default function Final({
 									{documentDescription.firstText}
 									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
-										onClick={() => setExpand2(true)}
+										onClick={() => setExpand3(true)}
 									>
-										{expand2 ? null : "... view more"}
+										{expand3 ? null : "... view more"}
 									</span>
-									{expand2 ? <div>{documentDescription.secondText}</div> : null}
+									{expand3 ? <div>{documentDescription.secondText}</div> : null}
 									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
-										onClick={() => setExpand2(false)}
+										onClick={() => setExpand3(false)}
 									>
-										{expand2 ? "view less" : null}
+										{expand3 ? "view less" : null}
 									</span>
 								</div>
 							) : (
