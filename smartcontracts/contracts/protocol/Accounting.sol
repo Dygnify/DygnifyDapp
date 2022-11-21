@@ -13,23 +13,31 @@ library Accounting {
     function getTermLoanEMI(
         uint256 loanAmount,
         uint256 loanInterest,
-        uint256 emiCount
+        uint256 emiCount,
+        uint256 paymentFrequency
     ) internal pure returns (uint256) {
         require(
-            loanAmount > 0 && loanInterest > 0 && emiCount > 0,
+            loanAmount > 0 &&
+                loanInterest > 0 &&
+                emiCount > 0 &&
+                paymentFrequency > 0,
             "Invalid paramters"
         );
+
+        uint256 interestForMonths = Constants.oneYearInDays().div(
+            paymentFrequency
+        );
         // Get the monthly interest
-        uint256 interestPerMonth = DSMath.rdiv(
+        uint256 interestForRepayment = DSMath.rdiv(
             DSMath.rdiv(
                 DSMath.getInRay(loanInterest, currentDecimals),
-                (12 * DSMath.RAY)
+                (interestForMonths * DSMath.RAY)
             ),
             (100 * DSMath.RAY)
         );
 
         // Calculate (1+R)^N / [(1+R)^N-1] part of the formula
-        uint256 onePlusInterst = DSMath.RAY.add(interestPerMonth);
+        uint256 onePlusInterst = DSMath.RAY.add(interestForRepayment);
         uint256 onePlusIPMPowerTotalRepay = DSMath.rpow(
             onePlusInterst,
             emiCount
@@ -42,7 +50,7 @@ library Accounting {
             (onePlusIPMPowerTotalRepay - DSMath.RAY)
         );
         uint256 emiAmountInRay = DSMath.rmul(
-            DSMath.rmul(loanAmtInRay, interestPerMonth),
+            DSMath.rmul(loanAmtInRay, interestForRepayment),
             division
         );
 
@@ -51,12 +59,15 @@ library Accounting {
     }
 
     // Calculate the loan interest using standard EMI calculation formula P x R / T
-    function getBulletLoanEMI(uint256 loanAmount, uint256 loanInterest)
-        internal
-        pure
-        returns (uint256)
-    {
-        require(loanAmount > 0 && loanInterest > 0, "Invalid paramters");
+    function getBulletLoanEMI(
+        uint256 loanAmount,
+        uint256 loanInterest,
+        uint256 paymentFrequencyInDays
+    ) internal pure returns (uint256) {
+        require(
+            loanAmount > 0 && loanInterest > 0 && paymentFrequencyInDays > 0,
+            "Invalid paramters"
+        );
         // Get the monthly interest
         uint256 interestPerMonth = DSMath.rdiv(
             DSMath.rdiv(
@@ -65,8 +76,15 @@ library Accounting {
             ),
             (100 * DSMath.RAY)
         );
+        uint256 interestForPayDays = DSMath.rmul(
+            interestPerMonth,
+            DSMath.rdiv(
+                (paymentFrequencyInDays * DSMath.RAY),
+                (Constants.oneMonthInDays() * DSMath.RAY)
+            )
+        );
         uint256 loanAmtInRay = DSMath.getInRay(loanAmount, currentDecimals);
-        uint256 emiAmountInRay = DSMath.rmul(loanAmtInRay, interestPerMonth);
+        uint256 emiAmountInRay = DSMath.rmul(loanAmtInRay, interestForPayDays);
         return emiAmountInRay.div(10**21);
     }
 

@@ -4,6 +4,7 @@ pragma solidity 0.8.4;
 
 library Constants {
     uint256 public constant _oneYearInDays = 360;
+    uint256 public constant _oneMonthInDays = 30;
     uint256 public constant _sixDecimal = 10**6;
     uint256 public constant _oneDay = 60 * 60 * 24;
     uint256 public constant _oneMonth = 30 * _oneDay;
@@ -19,6 +20,10 @@ library Constants {
 
     function oneYearInDays() internal pure returns (uint256) {
         return _oneYearInDays;
+    }
+
+    function oneMonthInDays() internal pure returns (uint256) {
+        return _oneMonthInDays;
     }
 
     function sixDecimal() internal pure returns (uint256) {

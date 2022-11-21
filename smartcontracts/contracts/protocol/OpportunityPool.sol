@@ -46,7 +46,6 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
     uint256 public juniorYieldPerecentage;
     uint256 public seniorOverduePerecentage;
     uint256 public juniorOverduePerecentage;
-    uint256 constant offset = 10;
     bool public isDrawdownsPaused;
 
     // backer's Address => stakingBalance
@@ -132,10 +131,15 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             emiAmount = Accounting.getTermLoanEMI(
                 loanAmount,
                 loanInterest,
-                totalRepayments
+                totalRepayments,
+                paymentFrequencyInDays
             );
         } else {
-            emiAmount = Accounting.getBulletLoanEMI(loanAmount, loanInterest);
+            emiAmount = Accounting.getBulletLoanEMI(
+                loanAmount,
+                loanInterest,
+                paymentFrequencyInDays
+            );
         }
 
         dailyOverdueInterestRate = dygnifyConfig.getOverDueFee().div(
@@ -297,7 +301,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             );
             uint256 principalReceived = emiAmount.sub(interest);
             totalOutstandingPrincipal = totalOutstandingPrincipal.sub(
-                principalReceived.sub(offset)
+                principalReceived.sub(dygnifyConfig.getAdjustmentOffset())
             );
 
             uint256 juniorPoolPrincipalPortion = principalReceived.div(
@@ -515,6 +519,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 isStaking[msg.sender] == true && stakingBalance[msg.sender] > 0,
                 "zero amount to deposit."
             );
+            uint256 offset = dygnifyConfig.getAdjustmentOffset();
             require(
                 stakingBalance[msg.sender] <=
                     juniorSubpoolDetails.depositedAmount.add(offset),

@@ -7,13 +7,12 @@ const { requestAccount, getEthAddress } = require("./commonConnectors");
 const { getOpportunity } = require("../opportunityConnectors");
 const Sentry = require("@sentry/react");
 const { getDisplayAmount } = require("../../Helpers/displayTextHelper");
-const {
-	retrieveFileFromURL,
-	getBinaryFileData,
-} = require("../../Helpers/fileHelper");
+const { retrieveFileFromURL } = require("../../Helpers/fileHelper");
 const {
 	getIPFSFileURL,
 	retrieveFiles,
+	getIPFSFileURLOption2,
+	getIPFSFileURLOption3,
 } = require("../../Helpers/web3storageIPFS");
 
 const sixDecimals = 6;
@@ -434,6 +433,18 @@ export const getSeniorPoolData = async () => {
 			getIPFSFileURL(process.env.REACT_APP_SENIORPOOL_CID) +
 				"/seniorPoolData.json"
 		);
+		if (!dataReader) {
+			dataReader = await retrieveFileFromURL(
+				getIPFSFileURLOption2(process.env.REACT_APP_SENIORPOOL_CID) +
+					"/seniorPoolData.json"
+			);
+		}
+		if (!dataReader) {
+			dataReader = await retrieveFileFromURL(
+				getIPFSFileURLOption3(process.env.REACT_APP_SENIORPOOL_CID) +
+					"/seniorPoolData.json"
+			);
+		}
 		return dataReader;
 	} catch (error) {
 		Sentry.captureException(error);
