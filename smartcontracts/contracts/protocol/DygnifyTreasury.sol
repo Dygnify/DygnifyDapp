@@ -18,7 +18,7 @@ contract DygnifyTreasury is BaseUpgradeablePausable {
         wallet = _wallet;
     }
 
-    function initialize(DygnifyConfig _dygnifyConfig) external initializer {
+    function initialize(DygnifyConfig _dygnifyConfig, address _wallet) external initializer {
         require(
             address(_dygnifyConfig) != address(0),
             "Invalid config address"
@@ -29,6 +29,7 @@ contract DygnifyTreasury is BaseUpgradeablePausable {
         _BaseUpgradeablePausable_init(owner);
         
         usdcToken = IERC20(dygnifyConfig.usdcAddress());
+        wallet = _wallet;
     }
 
     function getTreasuryBalance()public view returns(uint256){
@@ -45,10 +46,10 @@ contract DygnifyTreasury is BaseUpgradeablePausable {
     // }
 
 
-    function reqTx(address to,uint256 value)public{
-        MultiSigWallet obj = MultiSigWallet(wallet);
-        obj.submitTransaction(to,value);
-    }
+    // function reqTx(address to,uint256 value)public{
+    //     MultiSigWallet obj = MultiSigWallet(wallet);
+    //     obj.submitTransaction(to,value);
+    // }
 
 
     function withdraw(address to , uint256 amount)public nonReentrant whenNotPaused{
