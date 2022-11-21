@@ -2,8 +2,9 @@
 pragma solidity 0.8.4;
 
 import "./DygnifyTreasury.sol";
+import "./BaseUpgradeablePausable.sol";
 
-contract MultiSigWallet {
+contract MultiSign is BaseUpgradeablePausable  {
     event Deposit(address indexed sender, uint amount, uint balance);
     event SubmitTransaction(
         address indexed owner,
@@ -52,7 +53,7 @@ contract MultiSigWallet {
         _;
     }
 
-    constructor(address[] memory _owners, uint _numConfirmationsRequired) {
+    function initialize(address[] memory _owners, uint _numConfirmationsRequired) external initializer {
         require(_owners.length > 0, "owners required");
         require(
             _numConfirmationsRequired > 0 &&
