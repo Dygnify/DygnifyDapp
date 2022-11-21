@@ -90,9 +90,7 @@ async function main() {
 	console.log("REACT_APP_DYGNIFYTREASURY = ", dygnifyTreasury.address);
 
 	// DygnifyKeeper
-	const DygnifyKeeper = await hre.ethers.getContractFactory(
-		"DygnifyKeeper"
-	);
+	const DygnifyKeeper = await hre.ethers.getContractFactory("DygnifyKeeper");
 	const dygnifyKeeper = await DygnifyKeeper.deploy();
 
 	await dygnifyKeeper.deployed();
@@ -127,6 +125,8 @@ async function main() {
 	await dygnifyConfig.setNumber(4, 0);
 	// WriteOffDays
 	await dygnifyConfig.setNumber(5, 90);
+	//AdjustmentOffset
+	await dygnifyConfig.setNumber(6, 20);
 	console.log("Initial numbers configured successfully");
 
 	// Initialize contracts
@@ -146,7 +146,7 @@ async function main() {
 	// Initialize the investor contract
 	await investor.initialize(dygnifyConfig.address);
 	// Initialize the dygnifyTreasury contract
-	await dygnifyTreasury.initialize(dygnifyConfig.address); 
+	await dygnifyTreasury.initialize(dygnifyConfig.address);
 	// Initialize the dygnifyKeeper contract
 	await dygnifyKeeper.initialize(dygnifyConfig.address);
 	console.log("All contracts initilaized successfully");
