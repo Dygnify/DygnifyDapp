@@ -1,5 +1,6 @@
 import React from "react";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
+import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
 
 var signatures = {
 	JVBERi0: "application/pdf",
@@ -43,7 +44,11 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 				<p className="font-semibold text-[1.1875rem]">
 					{docName ? null : "view document"}
 				</p>
-				{docName ? <p className="italic"> {docName}</p> : null}
+				{docName ? (
+					<p className="italic" title={docName}>
+						{getTrimmedWalletAddress(docName, 10)}
+					</p>
+				) : null}
 			</div>
 			<span
 				className="text-[#5375FE] cursor-pointer text-[1.1875rem]"

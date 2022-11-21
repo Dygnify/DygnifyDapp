@@ -14,6 +14,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
+import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -31,6 +32,13 @@ const PoolDetails = () => {
 	console.log(opDetails ? opDetails : "");
 
 	const [loanPurpose, setLoanPurpose] = useState({
+		isSliced: false,
+		firstText: "",
+		secondText: "",
+	});
+
+	const [expand2, setExpand2] = useState(false);
+	const [documentDescription, setDocumentDescription] = useState({
 		isSliced: false,
 		firstText: "",
 		secondText: "",
@@ -77,11 +85,35 @@ const PoolDetails = () => {
 			loadInfo();
 			loadLoanPurpose();
 			setCompanyDetails(opDetails.companyDetails);
+			docDescription(opDetails?.collateral_document_description);
 
 			checkForKycAndProfile(opDetails.borrower);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [opDetails]);
+
+	function docDescription(descripton) {
+		if (!descripton || !descripton) {
+			return;
+		}
+		const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+			descripton,
+			200
+		);
+
+		if (isSliced) {
+			setDocumentDescription({
+				firstText: firstText,
+				secondText: secondText,
+				isSliced: isSliced,
+			});
+		} else {
+			setDocumentDescription({
+				firstText: firstText,
+				isSliced: isSliced,
+			});
+		}
+	}
 
 	function loadInfo() {
 		if (opDetails) {
@@ -367,11 +399,18 @@ const PoolDetails = () => {
 					<div className="w-full dark:bg-[#20232A] bg-[#D0D5DD] rounded-xl p-3">
 						<div className="dark:text-[#A0ABBB] text-[#4B5768] font-medium text-lg flex flex-col md:flex-row">
 							<span>
-								Name of documents{" "}
+								Name of documents
 								<span className="text-[#323A46] dark:text-[white] pr-1">-</span>
 							</span>
-							<span className="text-[#323A46] dark:text-[white]">
-								{opDetails?.collateral_document_name}
+							<span
+								className="text-[#323A46] dark:text-[white]"
+								title={opDetails?.collateral_document_name}
+							>
+								{/* {opDetails?.collateral_document_name} */}
+								{getTrimmedWalletAddress(
+									opDetails?.collateral_document_name,
+									10
+								)}
 								<span
 									className="pl-1 text-sm text-[#5375FE] cursor-pointer"
 									onClick={() =>
@@ -387,7 +426,27 @@ const PoolDetails = () => {
 						</div>
 						<div className="text-lg font-medium mb-1">Document descripton</div>
 						<div className="dark:text-[#D0D5DD] text-[#323A46] tracking-wide font-light text-lg px-1 mr-1 pr-6 items-start ">
-							{opDetails?.collateral_document_description}
+							{/* {opDetails?.collateral_document_description} */}
+							{documentDescription.isSliced ? (
+								<div>
+									{documentDescription.firstText}
+									<span
+										className=" font-semibold cursor-pointer text-[#A0ABBB]"
+										onClick={() => setExpand2(true)}
+									>
+										{expand2 ? null : "... view more"}
+									</span>
+									{expand2 ? <div>{documentDescription.secondText}</div> : null}
+									<span
+										className=" font-semibold cursor-pointer text-[#A0ABBB]"
+										onClick={() => setExpand2(false)}
+									>
+										{expand2 ? "view less" : null}
+									</span>
+								</div>
+							) : (
+								documentDescription.firstText
+							)}
 						</div>
 					</div>
 				</div>

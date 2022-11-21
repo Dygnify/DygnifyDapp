@@ -17,6 +17,8 @@ import {
 	getBorrowerLogoURL,
 } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { captureException } from "@sentry/react";
+import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
+import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -29,7 +31,7 @@ const BorrowerProfile = () => {
 	const [logoImgSrc, setLogoImgSrc] = useState();
 	const [companyName, setCompanyName] = useState();
 	const [companyRepName, setCompanyRepName] = useState();
-	const [companyBio, setCompanyBio] = useState();
+	// const [companyBio, setCompanyBio] = useState();
 	const [website, setWebsite] = useState();
 	const [email, setEmail] = useState();
 	const [twitter, setTwitter] = useState();
@@ -41,6 +43,12 @@ const BorrowerProfile = () => {
 	const [errormsg, setErrormsg] = useState({
 		status: false,
 		msg: "",
+	});
+	const [expand, setExpand] = useState(false);
+	const [bio, setBio] = useState({
+		isSliced: false,
+		firstText: "",
+		secondText: "",
 	});
 
 	const brJson = location.state;
@@ -60,6 +68,29 @@ const BorrowerProfile = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	function bioText(companyBio) {
+		if (!companyBio || !companyBio) {
+			return;
+		}
+		const { isSliced, firstText, secondText } = getExtendableTextBreakup(
+			companyBio,
+			200
+		);
+
+		if (isSliced) {
+			setBio({
+				firstText: firstText,
+				secondText: secondText,
+				isSliced: isSliced,
+			});
+		} else {
+			setBio({
+				firstText: firstText,
+				isSliced: isSliced,
+			});
+		}
+	}
 
 	const handleForm = () => {
 		setSelected(null);
@@ -156,7 +187,8 @@ const BorrowerProfile = () => {
 					setCompanyRepName(data.companyRepName);
 				}
 				if (data.companyBio) {
-					setCompanyBio(data.companyBio);
+					// setCompanyBio(data.companyBio);
+					bioText(data.companyBio);
 				}
 				if (data.website) {
 					setWebsite(data.website);
@@ -281,7 +313,9 @@ const BorrowerProfile = () => {
 										</div>
 									</div>
 									<div className=" font-semibold ">
-										<p className="text-[1.1875rem]">{companyName}</p>
+										<p className="text-[1.1875rem]" title={companyName}>
+											{getTrimmedWalletAddress(companyName, 10)}
+										</p>
 										<p className="text-neutral-300">{companyRepName}</p>
 									</div>
 								</div>
@@ -382,7 +416,29 @@ const BorrowerProfile = () => {
 							</div>
 
 							<div className="my-6">
-								<p className="mt-1 text-lg css-fix">{companyBio}</p>
+								<div className="mt-1 text-lg css-fix">
+									{/* {companyBio} */}
+									{bio.isSliced ? (
+										<div>
+											{bio.firstText}
+											<span
+												className=" font-semibold cursor-pointer text-[#A0ABBB]"
+												onClick={() => setExpand(true)}
+											>
+												{expand ? null : "... view more"}
+											</span>
+											{expand ? <div>{bio.secondText}</div> : null}
+											<span
+												className=" font-semibold cursor-pointer text-[#A0ABBB]"
+												onClick={() => setExpand(false)}
+											>
+												{expand ? "view less" : null}
+											</span>
+										</div>
+									) : (
+										bio.firstText
+									)}
+								</div>
 							</div>
 
 							<div className="mb-8 font-semibold">

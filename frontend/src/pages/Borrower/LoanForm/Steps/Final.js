@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Doller from "../../../../assets/Dollar-icon.svg";
 import { getExtendableTextBreakup } from "../../../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
+import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
 
 export default function Final({
 	handlePrev,
@@ -49,6 +50,7 @@ export default function Final({
 			});
 		}
 	}
+
 	function DocumentDescription() {
 		if (!formData || !formData.collateral_document_description) {
 			return;
@@ -71,6 +73,7 @@ export default function Final({
 			});
 		}
 	}
+
 	useEffect(() => {
 		if (formData) {
 			LoanPurpose();
@@ -101,8 +104,12 @@ export default function Final({
 						<div className="flex flex-col gap-2">
 							<div className="font-[500] flex justify-between md:justify-start md:gap-7">
 								<span className=" text-[#A0ABBB]">Pool Name</span>
-								<span className="text-black dark:text-[#fff]">
-									{formData.loan_name}
+								<span
+									className="text-black dark:text-[#fff]"
+									title={formData.loan_name}
+								>
+									{/* {formData.loan_name} */}
+									{getTrimmedWalletAddress(formData.loan_name, 10)}
 								</span>
 							</div>
 
@@ -187,8 +194,12 @@ export default function Final({
 					<div className="flex flex-col md:justify-between gap-1 md:gap-2 md:flex-row">
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
 							<span className=" text-[#A0ABBB]">Collateral document Name</span>
-							<span className="text-black dark:text-[#fff]">
-								{formData.collateral_document_name}
+							<span
+								className="text-black dark:text-[#fff]"
+								title={formData.collateral_document_name}
+							>
+								{/* {formData.collateral_document_name} */}
+								{getTrimmedWalletAddress(formData.collateral_document_name, 10)}
 							</span>
 						</div>
 
