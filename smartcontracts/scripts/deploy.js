@@ -88,6 +88,7 @@ async function main() {
 
 	await dygnifyTreasury.deployed();
 	console.log("REACT_APP_DYGNIFYTREASURY = ", dygnifyTreasury.address);
+<<<<<<< HEAD
 	
 	//MultiSign
 	const MultiSign = await hre.ethers.getContractFactory(
@@ -162,6 +163,70 @@ async function main() {
 				await dygnifyKeeper.initialize(dygnifyConfig.address);
 				
 				console.log("All contracts initilaized successfully");
+=======
+
+	// DygnifyKeeper
+	const DygnifyKeeper = await hre.ethers.getContractFactory("DygnifyKeeper");
+	const dygnifyKeeper = await DygnifyKeeper.deploy();
+
+	await dygnifyKeeper.deployed();
+	console.log("REACT_APP_DYGNIFYKEEPER = ", dygnifyKeeper.address);
+
+	// Initialize the Dygnify config
+	// Set all the addresses
+	await dygnifyConfig.setAddress(1, lpToken.address);
+	await dygnifyConfig.setAddress(
+		2,
+		"0x7c04fAcB6dFa76DccADd04A2d41841cbeD517cC0"
+	);
+	await dygnifyConfig.setAddress(3, seniorPool.address);
+	await dygnifyConfig.setAddress(4, opportunityPool.address);
+	await dygnifyConfig.setAddress(5, collateralToken.address);
+	await dygnifyConfig.setAddress(6, opportunityOrigination.address);
+	await dygnifyConfig.setAddress(7, investor.address);
+	await dygnifyConfig.setAddress(8, dygnifyTreasury.address);
+	await dygnifyConfig.setAddress(9, dygnifyKeeper.address);
+	console.log("DygnifyConfig configured successfully");
+
+	// Set all numbers
+	// leverage ratio
+	await dygnifyConfig.setNumber(0, 4);
+	// Dygnify Fee
+	await dygnifyConfig.setNumber(1, 100000);
+	// OverDueFee
+	await dygnifyConfig.setNumber(2, 5000000);
+	// JuniorSubpoolFee
+	await dygnifyConfig.setNumber(3, 200000);
+	// second value should be the number of months for senior pool funds lockin for investor
+	await dygnifyConfig.setNumber(4, 0);
+	// WriteOffDays
+	await dygnifyConfig.setNumber(5, 90);
+	//AdjustmentOffset
+	await dygnifyConfig.setNumber(6, 20);
+	console.log("Initial numbers configured successfully");
+
+	// Initialize contracts
+	// initialize the senior pool
+	await seniorPool.initialize(dygnifyConfig.address);
+	// Initialize LP token
+	await lpToken.initialize(seniorPool.address);
+	// Initialize Borrower
+	await borrower.initialize(dygnifyConfig.address);
+	// Initialize the Opportunity origination pool
+	await opportunityOrigination.initialize(dygnifyConfig.address);
+	// Initialize the collateral token
+	await collateralToken.initialize(
+		dygnifyConfig.address,
+		opportunityOrigination.address
+	);
+	// Initialize the investor contract
+	await investor.initialize(dygnifyConfig.address);
+	// Initialize the dygnifyTreasury contract
+	await dygnifyTreasury.initialize(dygnifyConfig.address);
+	// Initialize the dygnifyKeeper contract
+	await dygnifyKeeper.initialize(dygnifyConfig.address);
+	console.log("All contracts initilaized successfully");
+>>>>>>> 73b4dea (made adjustment offset configurable)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

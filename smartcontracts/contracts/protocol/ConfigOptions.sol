@@ -26,6 +26,6 @@ library ConfigOptions {
         JuniorSubpoolFee,
         SeniorPoolFundLockinMonths,
         WriteOffDays,
-        UnderwriterFee
+        AdjustmentOffset
     }
 }
