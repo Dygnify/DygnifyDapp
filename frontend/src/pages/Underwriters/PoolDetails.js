@@ -15,6 +15,8 @@ import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
+import GradientButton from "../../uiTools/Button/GradientButton";
+import * as PushAPI from "@pushprotocol/restapi";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -244,6 +246,16 @@ const PoolDetails = () => {
 		}
 	};
 
+	function sendChat() {
+		PushAPI.chat.send({
+			messageContent: "Hello",
+			receiverAddress: "0x647e8dcD7e85cf0f2D04a76091F305Ee9B0C8382",
+			apiKey:
+				"9OjJhnbv7h.wMoGaYOgLJ13AC5DC82sla42FU2XgPImxf5RWZimtDShLkZq1JdzxOfo5jWxwByj",
+			env: "staging",
+			account: "0x23Db9F9731BCFb35CAc11B2e8373ACD14318bDF5",
+		});
+	}
 	return (
 		<div className={`${loading ? "" : ""}`}>
 			{loading && <Loader />}
@@ -450,7 +462,13 @@ const PoolDetails = () => {
 						</div>
 					</div>
 				</div>
-
+				<div>
+					<div className="text-lg font-medium mt-10 mb-3">
+						Send Query to Borrower
+					</div>
+					<input type="text"></input>
+					<GradientButton onClick={sendChat}>Send</GradientButton>
+				</div>
 				{/* section-5 --Borrower Details  */}
 				<div className="flex flex-col w-full">
 					<div className="flex items-center gap-2 text-lg font-medium mt-10 ">

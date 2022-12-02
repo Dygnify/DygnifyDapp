@@ -13,6 +13,7 @@ const {
 	getUserWalletAddress,
 	getEthAddress,
 } = require("./userConnectors/commonConnectors");
+const { sendNotification } = require("../Helpers/pushNotifications");
 
 const Sentry = require("@sentry/react");
 const sixDecimals = 6;
@@ -63,6 +64,11 @@ export const createOpportunity = async (formData) => {
 			];
 			const transaction1 = await contract.createOpportunity(opData);
 			await transaction1.wait();
+			sendNotification(
+				borrowerAdd.address,
+				"Opportunity created successfully",
+				`Opportunity with  ${formData.loan_name} is created successfully.`
+			);
 			return { transaction1, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");

@@ -6,6 +6,7 @@ import BorIcon from "../../pages/SVGIcons/BorIcon";
 // import TransactionIcon from "../../pages/SVGIcons/TransactionIcon";
 import UnderIcon from "../../pages/SVGIcons/UnderIcon";
 import ProfileIcon from "../../pages/SVGIcons/ProfileIcon";
+import { Chat } from "@pushprotocol/uiweb";
 
 const BorrowerDashboard = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
@@ -107,6 +108,12 @@ const BorrowerDashboard = () => {
 						</ul>
 					</div>
 				</div>
+				<Chat
+					account="0x647e8dcD7e85cf0f2D04a76091F305Ee9B0C8382" //user address
+					supportAddress="0x23Db9F9731BCFb35CAc11B2e8373ACD14318bDF5" //support address
+					apiKey="9OjJhnbv7h.wMoGaYOgLJ13AC5DC82sla42FU2XgPImxf5RWZimtDShLkZq1JdzxOfo5jWxwByj"
+					env="staging"
+				/>
 			</div>
 		</div>
 	);

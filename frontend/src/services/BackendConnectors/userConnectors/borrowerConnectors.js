@@ -9,6 +9,7 @@ const {
 	getIPFSFileURLOption3,
 } = require("../../Helpers/web3storageIPFS");
 const Sentry = require("@sentry/react");
+const { sendNotification } = require("../../Helpers/pushNotifications");
 
 export const getBorrowerDetails = async (address) => {
 	try {
@@ -102,6 +103,11 @@ export const repayment = async (poolAddress) => {
 			};
 			const tx = await signer.sendTransaction(transaction);
 			await tx.wait();
+			sendNotification(
+				window.ethereum.selectedAddress,
+				"Repayment Successful",
+				`Repayment for pool ${poolAddress} is successful`
+			);
 			return { tx, success: true };
 		}
 		Sentry.captureMessage("Wallet not connected", "warning");
@@ -132,6 +138,11 @@ export const drawdown = async (poolAddress) => {
 
 			const transaction1 = await poolContract.drawdown();
 			await transaction1.wait();
+			sendNotification(
+				window.ethereum.selectedAddress,
+				"Drawdown Successful",
+				`Drawdown for pool ${poolAddress} is successful`
+			);
 			return { success: true, hash: transaction1 };
 		}
 		Sentry.captureMessage("Wallet not connected", "warning");

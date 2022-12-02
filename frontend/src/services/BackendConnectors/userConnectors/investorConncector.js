@@ -14,6 +14,7 @@ const {
 	getIPFSFileURLOption2,
 	getIPFSFileURLOption3,
 } = require("../../Helpers/web3storageIPFS");
+const { sendNotification } = require("../../Helpers/pushNotifications");
 
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
@@ -32,6 +33,11 @@ export const withdrawAllJunior = async (poolAddress) => {
 
 			const transaction = await poolContract.withdrawAll(0); // 0 is juniorpool ID
 			await transaction.wait();
+			sendNotification(
+				window.ethereum.selectedAddress,
+				"Withdrawal from underwriter pool Successful",
+				`Withdrawal from underwriter pool ${poolAddress} is successful`
+			);
 			return { transaction, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");
@@ -74,6 +80,11 @@ export const withdrawSeniorPoolInvestment = async (amount) => {
 			if (amount && amount > 0) {
 				let transaction = await contract.withdrawWithLP(amount);
 				await transaction.wait();
+				sendNotification(
+					window.ethereum.selectedAddress,
+					"Withdrawal from senior pool Successful",
+					`Withdrawal of ${amount} from senior pool is successful`
+				);
 				return { transaction, success: true };
 			}
 		} else {
@@ -373,9 +384,14 @@ export const investInSeniorPool = async (amount) => {
 				seniorPool.abi,
 				signer
 			);
-			amount = ethers.utils.parseUnits(amount, sixDecimals);
-			let transaction = await contract.stake(amount);
+			const parsedAmount = ethers.utils.parseUnits(amount, sixDecimals);
+			let transaction = await contract.stake(parsedAmount);
 			await transaction.wait();
+			sendNotification(
+				window.ethereum.selectedAddress,
+				"Investment in senior pool Successful",
+				`Investment of ${amount} in senior pool is successful`
+			);
 			return { transaction, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");
@@ -405,9 +421,14 @@ export const investInJuniorPool = async (poolAddress, amount) => {
 				opportunityPool.abi,
 				signer
 			);
-			amount = ethers.utils.parseUnits(amount, sixDecimals);
-			let transaction = await contract.deposit("0", amount); //0 denotes junior subpool
+			const parsedAmount = ethers.utils.parseUnits(amount, sixDecimals);
+			let transaction = await contract.deposit("0", parsedAmount); //0 denotes junior subpool
 			await transaction.wait();
+			sendNotification(
+				window.ethereum.selectedAddress,
+				"Investment in underwriter pool Successful",
+				`Investment of ${amount} in underwriter pool is successful`
+			);
 			return { transaction, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");

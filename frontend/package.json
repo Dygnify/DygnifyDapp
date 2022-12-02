@@ -9,6 +9,8 @@
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.2",
+    "@pushprotocol/restapi": "^0.2.2",
+    "@pushprotocol/uiweb": "^0.2.3",
     "@sentry/react": "^7.13.0",
     "@sentry/tracing": "^7.13.0",
     "@testing-library/jest-dom": "^5.16.4",
