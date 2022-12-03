@@ -7,8 +7,9 @@ import LinkedIn from "../SVGIcons/LinkedIn";
 import Twitter from "../SVGIcons/Twitter";
 import Website from "../SVGIcons/Website";
 import Loader from "../../uiTools/Loading/Loader";
-
+import { Chat } from "@pushprotocol/uiweb";
 import { voteOpportunity } from "../../services/BackendConnectors/opportunityConnectors";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 import axiosHttpService from "../../services/axioscall";
 import { kycOptions } from "../../services/KYC/blockpass";
 import default_profile from "../../assets/default_profile.svg";
@@ -23,6 +24,7 @@ const PoolDetails = () => {
 	const [expand, setExpand] = useState(false);
 	const [opDetails, setOpDetails] = useState();
 	const [companyDetails, setCompanyDetails] = useState();
+	const [diligenceProviderAddress, setDiligenceProviderAddress] = useState();
 	const [info, setInfo] = useState([]);
 	const [errormsg, setErrormsg] = useState({
 		status: false,
@@ -80,6 +82,11 @@ const PoolDetails = () => {
 	useEffect(() => {
 		setOpDetails(location.state.pool);
 		setLogoImgSrc(location.state.images);
+		getUserWalletAddress().then((result) => {
+			if (result.success) {
+				setDiligenceProviderAddress(result.address);
+			}
+		});
 	}, [location.state]);
 
 	useEffect(() => {
@@ -246,16 +253,6 @@ const PoolDetails = () => {
 		}
 	};
 
-	function sendChat() {
-		PushAPI.chat.send({
-			messageContent: "Hello",
-			receiverAddress: "0x647e8dcD7e85cf0f2D04a76091F305Ee9B0C8382",
-			apiKey:
-				"9OjJhnbv7h.wMoGaYOgLJ13AC5DC82sla42FU2XgPImxf5RWZimtDShLkZq1JdzxOfo5jWxwByj",
-			env: "staging",
-			account: "0x23Db9F9731BCFb35CAc11B2e8373ACD14318bDF5",
-		});
-	}
 	return (
 		<div className={`${loading ? "" : ""}`}>
 			{loading && <Loader />}
@@ -462,13 +459,7 @@ const PoolDetails = () => {
 						</div>
 					</div>
 				</div>
-				<div>
-					<div className="text-lg font-medium mt-10 mb-3">
-						Send Query to Borrower
-					</div>
-					<input type="text"></input>
-					<GradientButton onClick={sendChat}>Send</GradientButton>
-				</div>
+
 				{/* section-5 --Borrower Details  */}
 				<div className="flex flex-col w-full">
 					<div className="flex items-center gap-2 text-lg font-medium mt-10 ">
@@ -706,6 +697,13 @@ const PoolDetails = () => {
 				<br />
 				<br />
 			</div>
+			<Chat
+				account={diligenceProviderAddress}
+				supportAddress={opDetails ? opDetails.borrower : ""}
+				apiKey={process.env.REACT_APP_PUSH_API_KEY}
+				env="staging"
+				primaryColor="#4B74FF"
+			/>
 		</div>
 	);
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
 import OverviewIcon from "../../pages/SVGIcons/OverviewIcon";
@@ -7,15 +7,23 @@ import BorIcon from "../../pages/SVGIcons/BorIcon";
 import UnderIcon from "../../pages/SVGIcons/UnderIcon";
 import ProfileIcon from "../../pages/SVGIcons/ProfileIcon";
 import { Chat } from "@pushprotocol/uiweb";
+import { getUserWalletAddress } from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 const BorrowerDashboard = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
+	const [borrowerAddress, setBorrowerAddress] = useState();
 
 	const [darkMode, setDarkMode] = useState(true);
 
 	const handleChange = (e) => {
 		setLinkStatus(e.target.checked);
 	};
+
+	useEffect(() => {
+		getUserWalletAddress().then((result) => {
+			if (result.success) setBorrowerAddress(result.address);
+		});
+	}, []);
 
 	return (
 		<div className={`${darkMode ? "dark" : ""} `}>
@@ -109,10 +117,11 @@ const BorrowerDashboard = () => {
 					</div>
 				</div>
 				<Chat
-					account="0x647e8dcD7e85cf0f2D04a76091F305Ee9B0C8382" //user address
-					supportAddress="0x23Db9F9731BCFb35CAc11B2e8373ACD14318bDF5" //support address
-					apiKey="9OjJhnbv7h.wMoGaYOgLJ13AC5DC82sla42FU2XgPImxf5RWZimtDShLkZq1JdzxOfo5jWxwByj"
+					account={borrowerAddress}
+					supportAddress="0x23Db9F9731BCFb35CAc11B2e8373ACD14318bDF5"
+					apiKey={process.env.REACT_APP_PUSH_API_KEY}
 					env="staging"
+					primaryColor="#4B74FF"
 				/>
 			</div>
 		</div>
