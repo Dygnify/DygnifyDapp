@@ -83,6 +83,12 @@ export const isConnected = async () => {
 					success: true,
 				};
 			}
+		} else if (
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent
+			)
+		) {
+			window.open("https://metamask.app.link/dapp/dygnify.in/");
 		} else {
 			localStorage.setItem("Wallet-Check", false);
 			return {
