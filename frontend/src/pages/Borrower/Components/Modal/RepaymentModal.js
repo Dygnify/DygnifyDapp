@@ -7,7 +7,6 @@ import DollarImage from "../../../../assets/Dollar-icon.svg";
 import approve from "../../../../services/BackendConnectors/approve";
 import allowance from "../../../../services/BackendConnectors/allowance";
 import Loader from "../../../../uiTools/Loading/Loader";
-import ErrorModal from "../../../../uiTools/Modal/ErrorModal";
 
 const RepaymentModal = ({
 	data,
@@ -27,11 +26,28 @@ const RepaymentModal = ({
 	const [isInvest, setIsInvest] = useState(false);
 	const [isApproved, setIsApproved] = useState(false);
 	const [loading, setLoading] = useState(false);
+	// const [checkBalance, setcheckBalance] = useState(false);
+	const [checkBalance, setcheckBalance] = useState({
+		err: false,
+		msg: "",
+	});
 
 	useEffect(() => {
 		getWalletBal().then((res) => {
 			if (res.success) {
 				setWalletBal(res.balance);
+				// console.log(+res.balance, "🚲", +data?.repaymentAmount);
+				if (+res.balance < +data?.repaymentAmount) {
+					setcheckBalance({
+						err: false,
+						msg: "Wallet Balance is less than due amount",
+					});
+				} else {
+					setcheckBalance({
+						err: true,
+						msg: "",
+					});
+				}
 			} else {
 				console.log(res.msg);
 				setErrormsg({
@@ -44,6 +60,8 @@ const RepaymentModal = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading]);
 
+	// console.log(checkBalance,"=++++++++++++++++++++++++++++++++++");
+
 	async function getAllowance() {
 		const newdata = await allowance(
 			window.ethereum.selectedAddress,
@@ -51,7 +69,7 @@ const RepaymentModal = ({
 		);
 		console.log(data.repaymentAmount, "--", newdata);
 
-		if (data.repaymentAmount <= newdata) {
+		if (+data.repaymentAmount <= +newdata) {
 			setIsInvest(true);
 			setIsApproved(false);
 		} else {
@@ -153,17 +171,22 @@ const RepaymentModal = ({
 							<p>Due Date</p>
 							<p>{data?.nextDueDate}</p>
 						</div>
+						{!checkBalance.err && (
+							<p className="text-[0.8rem] text-error-500">
+								{checkBalance.msg}
+							</p>
+						)}
 					</div>
 
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<button
 							className={`block font-semibold text-white focus:outline-offset-2 ${
-								!isApproved
+								!isApproved || !checkBalance.err
 									? "bg-neutral-400 cursor-not-allowed w-full opacity-40 "
 									: "bg-gradient-to-r from-[#4B74FF] to-primary-500 w-[100%] cursor-pointer focus:outline-none focus:outline-[#9281FF] hover:outline-[#9281FF]"
 							}  text-center py-2 rounded-[1.8em] select-none`}
 							onClick={() => {
-								if (isApproved) {
+								if (isApproved && checkBalance.err) {
 									setLoading(true);
 									const approvePromise = approve(
 										data.opportunityPoolAddress,
