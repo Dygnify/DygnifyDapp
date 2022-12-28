@@ -7,7 +7,7 @@ import Wallet from "../../pages/SVGIcons/Wallet";
 import Hamburger from "../../pages/SVGIcons/Hamburger";
 import Cross from "../../assets/cross.svg";
 import { isConnected } from "../../services/BackendConnectors/userConnectors/commonConnectors";
-import { Etherspot } from "@etherspot/react-transaction-buidler";
+
 import Dark from "../../pages/SVGIcons/Dark";
 import Light from "../../pages/SVGIcons/Light";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
@@ -44,9 +44,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 	function hitRequestAccount() {
 		fetchStatus();
 	}
-	function connectedProvider() {
-		console.log("Hello");
-	}
+
 	useEffect(() => {
 		async function fetchData() {
 			darkModeStatus();
@@ -106,7 +104,6 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 						<GradientButton onClick={hitRequestAccount}>
 							<Wallet fill={darkMode ? "white" : "#0D0F11"} /> Connect Wallet
 						</GradientButton>
-						<Etherspot provider={connectedProvider} />
 					</div>
 				) : (
 					<div className="outline outline-[#9281FF] rounded-full  px-4 sm:px-6 md:px-8 flex items-center gap-2 py-2 sm:py-3">
@@ -114,7 +111,6 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 						<div className="font-semibold  text-sm sm:text-base md:text-lg">
 							Connected
 						</div>
-						<Etherspot provider={connectedProvider} />
 					</div>
 				)}
 
