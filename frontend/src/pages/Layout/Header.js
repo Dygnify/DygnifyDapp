@@ -18,7 +18,7 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 		status: false,
 		msg: "",
 	});
-	const connectedProvider = new ethers.providers.Web3Provider(window.ethereum);
+
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -44,7 +44,9 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 	function hitRequestAccount() {
 		fetchStatus();
 	}
-
+	function connectedProvider() {
+		console.log("Hello");
+	}
 	useEffect(() => {
 		async function fetchData() {
 			darkModeStatus();
