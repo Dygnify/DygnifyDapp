@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { convertDate } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import {
-	getTrimmedWalletAddress,
+	getTrimmedString,
 	getDisplayAmount,
 } from "../../../../services/Helpers/displayTextHelper";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
@@ -15,10 +15,10 @@ const TransactionCard = ({ data, address }) => {
 
 	function getUserAddress() {
 		if (data.from.toUpperCase() === address.toUpperCase()) {
-			setUserAddress(getTrimmedWalletAddress(data.to));
+			setUserAddress(getTrimmedString(data.to));
 			setIsWithdraw(true);
 		} else {
-			setUserAddress(getTrimmedWalletAddress(data.from));
+			setUserAddress(getTrimmedString(data.from));
 			setIsWithdraw(false);
 		}
 	}

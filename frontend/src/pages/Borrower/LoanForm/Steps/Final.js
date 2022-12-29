@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Doller from "../../../../assets/Dollar-icon.svg";
 import { getExtendableTextBreakup } from "../../../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
-import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
+import { getTrimmedString } from "../../../../services/Helpers/displayTextHelper";
 
 export default function Final({
 	handlePrev,
@@ -15,6 +15,8 @@ export default function Final({
 	const [checked, setChecked] = useState(false);
 	const [expand, setExpand] = useState(false);
 	const [expand2, setExpand2] = useState(false);
+
+	const [sizeOftext, setSizeOftext] = useState(30);
 
 	const [loanPurpose, setLoanPurpose] = useState({
 		isSliced: false,
@@ -92,6 +94,27 @@ export default function Final({
 
 	console.log("clicked...", formData);
 
+	const handleResize = () => {
+		if (window.innerWidth >= 415 && window.innerWidth < 600) {
+			setSizeOftext(20);
+		} else if (window.innerWidth >= 600 && window.innerWidth < 768) {
+			setSizeOftext(30);
+		} else if (window.innerWidth >= 768 && window.innerWidth < 915) {
+			setSizeOftext(10);
+		} else if (window.innerWidth >= 915 && window.innerWidth < 1100) {
+			setSizeOftext(20);
+		} else if (window.innerWidth >= 1100) {
+			setSizeOftext(30);
+		} else {
+			setSizeOftext(10);
+		}
+	};
+
+	useEffect(() => {
+		handleResize();
+		window.addEventListener("resize", handleResize, false);
+	}, []);
+
 	return (
 		<div className="flex flex-col mt-20 md:mt-14 gap-1 md:gap-1 md:px-5 overflow-hidden">
 			<div className="flex flex-col gap-3">
@@ -108,8 +131,7 @@ export default function Final({
 									className="text-black dark:text-[#fff]"
 									title={formData.loan_name}
 								>
-									{/* {formData.loan_name} */}
-									{getTrimmedWalletAddress(formData.loan_name, 10)}
+									{getTrimmedString(formData.loan_name, 10)}
 								</span>
 							</div>
 
@@ -191,22 +213,33 @@ export default function Final({
 						Collateral
 					</h4>
 
-					<div className="flex flex-col md:justify-between gap-1 md:gap-2 md:flex-row">
+					<div className="flex flex-col md:justify-between gap-1 md:gap-2">
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
-							<span className=" text-[#A0ABBB]">Collateral document Name</span>
+							<span className=" text-[#A0ABBB]">
+								Collateral&nbsp;document&nbsp;Name
+							</span>
 							<span
 								className="text-black dark:text-[#fff]"
 								title={formData.collateral_document_name}
 							>
-								{/* {formData.collateral_document_name} */}
-								{getTrimmedWalletAddress(formData.collateral_document_name, 10)}
+								{formData.collateral_document_name.length > 30
+									? getTrimmedString(
+											formData.collateral_document_name,
+											sizeOftext
+									  )
+									: formData.collateral_document_name}
 							</span>
 						</div>
 
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
-							<span className=" text-[#A0ABBB]">Collateral File</span>
+							<span className=" text-[#A0ABBB]">Collateral&nbsp;File</span>
 							<span className="text-black dark:text-[#fff]">
-								{formData.collateral_document[0]?.name}
+								{formData.collateral_document[0]?.name.length > 30
+									? getTrimmedString(
+											formData.collateral_document[0]?.name,
+											sizeOftext
+									  )
+									: formData.collateral_document[0]?.name}
 							</span>
 						</div>
 					</div>

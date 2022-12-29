@@ -1,6 +1,6 @@
 import React from "react";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
-import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
+import { getTrimmedString } from "../../services/Helpers/displayTextHelper";
 
 var signatures = {
 	JVBERi0: "application/pdf",
@@ -46,7 +46,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 				</p>
 				{docName ? (
 					<p className="italic" title={docName}>
-						{getTrimmedWalletAddress(docName, 10)}
+						{docName.length > 30 ? getTrimmedString(docName, 30) : docName}
 					</p>
 				) : null}
 			</div>

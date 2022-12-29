@@ -1,8 +1,6 @@
-function getTrimmedWalletAddress(walletAddress, trimLength) {
-	if (walletAddress) {
-		return (
-			walletAddress.toString().slice(0, trimLength ? trimLength : 10) + "..."
-		);
+function getTrimmedString(string, trimLength) {
+	if (string) {
+		return string.toString().slice(0, trimLength ? trimLength : 10) + "...";
 	}
 	return null;
 }
@@ -42,7 +40,7 @@ function getDisplayAmount(amount) {
 }
 
 module.exports = {
-	getTrimmedWalletAddress,
+	getTrimmedString,
 	getExtendableTextBreakup,
 	getDisplayAmount,
 	getOnlyErrorText,

@@ -14,7 +14,7 @@ import { kycOptions } from "../../services/KYC/blockpass";
 import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
-import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
+import { getTrimmedString } from "../../services/Helpers/displayTextHelper";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -407,10 +407,7 @@ const PoolDetails = () => {
 								title={opDetails?.collateral_document_name}
 							>
 								{/* {opDetails?.collateral_document_name} */}
-								{getTrimmedWalletAddress(
-									opDetails?.collateral_document_name,
-									10
-								)}
+								{getTrimmedString(opDetails?.collateral_document_name, 10)}
 								<span
 									className="pl-1 text-sm text-[#5375FE] cursor-pointer"
 									onClick={() =>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
+import { getTrimmedString } from "../../../../services/Helpers/displayTextHelper";
 
 const ProcessingDrawdownModal = ({
 	processDrawdown,
@@ -80,9 +80,7 @@ const ProcessingDrawdownModal = ({
 								<div className="flex flex-col gap-1 md:mx-auto">
 									<p className="text-neutral-400">Transaction ID</p>
 									<p className="font-semibold">
-										{drawdownId
-											? getTrimmedWalletAddress(drawdownId, 25)
-											: "--"}
+										{drawdownId ? getTrimmedString(drawdownId, 25) : "--"}
 									</p>
 								</div>
 							</div>
@@ -91,10 +89,7 @@ const ProcessingDrawdownModal = ({
 								<p className="text-neutral-400">Receipient's wallet address</p>
 								<p className="font-semibold">
 									{window.ethereum.selectedAddress
-										? getTrimmedWalletAddress(
-												window.ethereum.selectedAddress,
-												25
-										  )
+										? getTrimmedString(window.ethereum.selectedAddress, 25)
 										: "--"}
 								</p>
 							</div>

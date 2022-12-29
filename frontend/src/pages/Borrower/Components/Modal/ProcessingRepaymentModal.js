@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
+import { getTrimmedString } from "../../../../services/Helpers/displayTextHelper";
 import { getDisplayAmount } from "../../../../services/Helpers/displayTextHelper";
 
 const ProcessingRepaymentModal = ({
@@ -76,9 +76,7 @@ const ProcessingRepaymentModal = ({
 								<div className="flex flex-col gap-1 md:mx-auto">
 									<p className="text-neutral-400">Transaction ID</p>
 									<p className="font-semibold pl-1">
-										{transactionId
-											? getTrimmedWalletAddress(transactionId, 25)
-											: "--"}
+										{transactionId ? getTrimmedString(transactionId, 25) : "--"}
 									</p>
 								</div>
 							</div>
@@ -86,9 +84,7 @@ const ProcessingRepaymentModal = ({
 							<div className="flex flex-col gap-1">
 								<p className="text-neutral-400">Receipient's wallet address</p>
 								<p className="font-semibold overflow-hidden">
-									{walletAddress
-										? getTrimmedWalletAddress(walletAddress, 25)
-										: "--"}
+									{walletAddress ? getTrimmedString(walletAddress, 25) : "--"}
 								</p>
 							</div>
 						</div>
