@@ -46,7 +46,7 @@ const DocumentCard = ({ docName, docCid, fileName, disable }) => {
 				</p>
 				{docName ? (
 					<p className="italic" title={docName}>
-						{docName.length > 30 ? getTrimmedString(docName, 30) : docName}
+						{docName.length > 20 ? getTrimmedString(docName, 20) : docName}
 					</p>
 				) : null}
 			</div>

@@ -314,13 +314,13 @@ const BorrowerProfile = () => {
 									</div>
 									<div className=" font-semibold ">
 										<p className="text-[1.1875rem]" title={companyName}>
-											{companyName?.length > 30
-												? getTrimmedString(companyName, 30)
+											{companyName?.length > 20
+												? getTrimmedString(companyName, 20)
 												: companyName}
 										</p>
 										<p className="text-neutral-300">
-											{companyRepName?.length > 30
-												? getTrimmedString(companyRepName, 30)
+											{companyRepName?.length > 20
+												? getTrimmedString(companyRepName, 20)
 												: companyRepName}
 										</p>
 									</div>
