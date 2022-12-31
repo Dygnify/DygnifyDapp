@@ -333,7 +333,6 @@ const InvestModal = ({
 					<div className="px-4 md:px-8 mt-auto md:mt-8">
 						<button
 							onClick={() => {
-								console.log(process.env.REACT_APP_SENIORPOOL);
 								if (!error.approveErr) {
 									setLoading(true);
 									const data = isSenior

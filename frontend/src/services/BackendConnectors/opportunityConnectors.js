@@ -14,31 +14,10 @@ const {
 	getEthAddress,
 } = require("./userConnectors/commonConnectors");
 const { sendNotification } = require("../Helpers/pushNotifications");
-const { IPaymaster, ChainId } = require("@biconomy/core-types");
-const SmartAccount = require("@biconomy/smart-account").default;
+const { getSmartAccount } = require("../Helpers/biconomyIntegration");
 const Sentry = require("@sentry/react");
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
-let smartAccount;
-const init = async () => {
-	let options = {
-		// activeNetworkId: activeChainId,
-		// supportedNetworksIds: supportedChains,
-		// Network Config.
-		// Link Paymaster / DappAPIKey for the chains you'd want to support Gasless transactions on
-		networkConfig: [
-			{
-				chainId: ChainId.POLYGON_MUMBAI,
-				dappAPIKey: "59fRCMXvk.8a1652f0-b522-4ea7-b296-98628499aee3", // Get one from Paymaster Dashboard
-				// customPaymasterAPI: <IPaymaster Instance of your own Paymaster>
-			},
-		],
-	};
-	const provider = new ethers.providers.Web3Provider(window.ethereum);
-	console.log("SmartAccount", SmartAccount);
-	smartAccount = new SmartAccount(provider, options);
-	smartAccount = await smartAccount.init();
-};
 
 export const createOpportunity = async (formData) => {
 	Sentry.captureMessage("createOpportunity", "info");
@@ -83,19 +62,8 @@ export const createOpportunity = async (formData) => {
 				formData.collateralHash,
 				capitalLoss,
 			];
-			await init();
-			smartAccount.on("txHashGenerated", (response) => {
-				console.log("txHashGenerated event received via emitter", response);
-			});
 
-			smartAccount.on("txMined", (response) => {
-				console.log("txMined event received via emitter", response);
-			});
-
-			smartAccount.on("error", (response) => {
-				console.log("error event received via emitter", response);
-			});
-
+			let smartAccount = await getSmartAccount();
 			const data = contract.interface.encodeFunctionData("createOpportunity", [
 				opData,
 			]);
@@ -106,6 +74,8 @@ export const createOpportunity = async (formData) => {
 			const txResponse = await smartAccount.sendGasLessTransaction({
 				transaction: tx1,
 			});
+
+			// Send Push Notification
 			sendNotification(
 				borrowerAdd.address,
 				"Opportunity created successfully",
@@ -255,6 +225,20 @@ export const voteOpportunity = async (id, vote) => {
 				opportunityOrigination.abi,
 				signer
 			);
+
+			let smartAccount = await getSmartAccount();
+			const data = contract.interface.encodeFunctionData("voteOpportunity", [
+				id,
+				vote,
+			]);
+			const tx1 = {
+				to: process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+				data,
+			};
+			const transaction1 = await smartAccount.sendGasLessTransaction({
+				transaction: tx1,
+			});
+
 			const transaction1 = await contract.voteOpportunity(id, vote);
 			await transaction1.wait();
 			return { transaction1, success: true };

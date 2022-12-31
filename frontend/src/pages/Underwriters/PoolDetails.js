@@ -16,8 +16,6 @@ import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
-import GradientButton from "../../uiTools/Button/GradientButton";
-import * as PushAPI from "@pushprotocol/restapi";
 
 const PoolDetails = () => {
 	const location = useLocation();

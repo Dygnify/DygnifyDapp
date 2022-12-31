@@ -10,6 +10,7 @@ const {
 } = require("../../Helpers/web3storageIPFS");
 const Sentry = require("@sentry/react");
 const { sendNotification } = require("../../Helpers/pushNotifications");
+const { getSmartAccount } = require("../../Helpers/biconomyIntegration");
 
 export const getBorrowerDetails = async (address) => {
 	try {
@@ -64,10 +65,28 @@ export const updateBorrowerDetails = async (cid) => {
 				signer
 			);
 
-			let transaction = await contract.updateBorrowerProfile(cid);
-			await transaction.wait();
+			let smartAccount = await getSmartAccount();
 
-			return { success: true };
+			const data = contract.interface.encodeFunctionData(
+				"updateBorrowerProfile",
+				[cid]
+			);
+
+			const tx1 = {
+				to: process.env.REACT_APP_BORROWER,
+				data,
+			};
+			const transaction = await smartAccount.sendGasLessTransaction({
+				transaction: tx1,
+			});
+
+			// Send Notification
+			sendNotification(
+				window.ethereum.selectedAddress,
+				"Profile Updated Successfully",
+				`Profile for address ${window.ethereum.selectedAddress} updated successfully`
+			);
+			return { success: true, transaction };
 		}
 
 		Sentry.captureMessage("Wallet not connected", "warning");
@@ -136,14 +155,25 @@ export const drawdown = async (poolAddress) => {
 				signer
 			);
 
-			const transaction1 = await poolContract.drawdown();
-			await transaction1.wait();
+			let smartAccount = await getSmartAccount();
+
+			const data = poolContract.interface.encodeFunctionData("drawdown");
+
+			const tx1 = {
+				to: poolAddress,
+				data,
+			};
+			const transaction = await smartAccount.sendGasLessTransaction({
+				transaction: tx1,
+			});
+			// const transaction1 = await poolContract.drawdown();
+			// await transaction1.wait();
 			sendNotification(
 				window.ethereum.selectedAddress,
 				"Drawdown Successful",
 				`Drawdown for pool ${poolAddress} is successful`
 			);
-			return { success: true, hash: transaction1 };
+			return { success: true, hash: transaction };
 		}
 		Sentry.captureMessage("Wallet not connected", "warning");
 		return {

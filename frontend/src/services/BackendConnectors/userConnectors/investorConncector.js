@@ -15,6 +15,7 @@ const {
 	getIPFSFileURLOption3,
 } = require("../../Helpers/web3storageIPFS");
 const { sendNotification } = require("../../Helpers/pushNotifications");
+const { getSmartAccount } = require("../../Helpers/biconomyIntegration");
 
 const sixDecimals = 6;
 const nullAddress = "0x0000000000000000000000000000000000000000";
@@ -31,14 +32,26 @@ export const withdrawAllJunior = async (poolAddress) => {
 				signer
 			);
 
-			const transaction = await poolContract.withdrawAll(0); // 0 is juniorpool ID
-			await transaction.wait();
+			let smartAccount = await getSmartAccount();
+			const data = poolContract.interface.encodeFunctionData("withdrawAll", [
+				0,
+			]);
+			const tx1 = {
+				to: poolAddress,
+				data,
+			};
+			const txResponse = await smartAccount.sendGasLessTransaction({
+				transaction: tx1,
+			});
+
+			// const transaction = await poolContract.withdrawAll(0); // 0 is juniorpool ID
+			// await transaction.wait();
 			sendNotification(
 				window.ethereum.selectedAddress,
 				"Withdrawal from underwriter pool Successful",
 				`Withdrawal from underwriter pool ${poolAddress} is successful`
 			);
-			return { transaction, success: true };
+			return { txResponse, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");
 			return {
@@ -78,14 +91,25 @@ export const withdrawSeniorPoolInvestment = async (amount) => {
 
 			amount = ethers.utils.parseUnits(amount, sixDecimals);
 			if (amount && amount > 0) {
-				let transaction = await contract.withdrawWithLP(amount);
-				await transaction.wait();
+				let smartAccount = await getSmartAccount();
+				const data = contract.interface.encodeFunctionData("withdrawWithLP", [
+					amount,
+				]);
+				const tx1 = {
+					to: process.env.REACT_APP_SENIORPOOL,
+					data,
+				};
+				const txResponse = await smartAccount.sendGasLessTransaction({
+					transaction: tx1,
+				});
+				// let transaction = await contract.withdrawWithLP(amount);
+				// await transaction.wait();
 				sendNotification(
 					window.ethereum.selectedAddress,
 					"Withdrawal from senior pool Successful",
 					`Withdrawal of ${amount} from senior pool is successful`
 				);
-				return { transaction, success: true };
+				return { txResponse, success: true };
 			}
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");
@@ -300,7 +324,8 @@ export const getJuniorWithdrawableOp = async () => {
 				if (tx.opportunityStatus.toString() === "8") {
 					obj.yieldGenerated = getDisplayAmount(apy * stakingBal);
 				}
-				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable =
+					await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals
