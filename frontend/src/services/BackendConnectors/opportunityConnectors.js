@@ -226,18 +226,18 @@ export const voteOpportunity = async (id, vote) => {
 				signer
 			);
 
-			let smartAccount = await getSmartAccount();
-			const data = contract.interface.encodeFunctionData("voteOpportunity", [
-				id,
-				vote,
-			]);
-			const tx1 = {
-				to: process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
-				data,
-			};
-			const transaction1 = await smartAccount.sendGasLessTransaction({
-				transaction: tx1,
-			});
+			// let smartAccount = await getSmartAccount();
+			// const data = contract.interface.encodeFunctionData("voteOpportunity", [
+			// 	id,
+			// 	vote,
+			// ]);
+			// const tx1 = {
+			// 	to: process.env.REACT_APP_OPPORTUNITY_ORIGINATION_ADDRESS,
+			// 	data,
+			// };
+			// const transaction1 = await smartAccount.sendGasLessTransaction({
+			// 	transaction: tx1,
+			// });
 
 			const transaction1 = await contract.voteOpportunity(id, vote);
 			await transaction1.wait();
