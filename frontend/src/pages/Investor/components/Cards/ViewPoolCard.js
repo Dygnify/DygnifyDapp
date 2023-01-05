@@ -11,7 +11,7 @@ import {
 
 const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
 	const path = useNavigate();
-	const { opportunityInfo, opportunityAmount, loanInterest, isFull } = data;
+	const { opportunityAmount, loanInterest, isFull } = data;
 
 	const [companyName, setCompanyName] = useState();
 	const [logoImgSrc, setLogoImgSrc] = useState();

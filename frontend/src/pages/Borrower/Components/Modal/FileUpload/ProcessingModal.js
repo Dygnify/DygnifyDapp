@@ -1,4 +1,3 @@
-import { useState } from "react";
 import FileUpload from "./FileUpload";
 
 function ProcessingModal({ setUploading, uploading, fileUploadStatus }) {
