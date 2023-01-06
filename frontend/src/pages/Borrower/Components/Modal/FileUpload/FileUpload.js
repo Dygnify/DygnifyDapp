@@ -17,8 +17,8 @@ function FileUpload({ fileName, progress, status }) {
 
 		if (file === fileName) {
 			progressValueRef.current.value = progress;
-			progressRef.current.innerHTML = `${progress}%`;
-			statusRef.current.innerHTML = status;
+			progressRef.current.innerText = `${progress}%`;
+			statusRef.current.innerText = status;
 
 			if (status === "Uploading" || status === "Pending") {
 				setColor(warningColor);
