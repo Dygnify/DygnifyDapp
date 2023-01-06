@@ -84,6 +84,8 @@ const EditBorrowerProfileNew = () => {
 			.email("Invalid Email")
 			.label("Email Address")
 			.required(),
+		twitter: Yup.string().matches(URL, "Enter a valid url"),
+		linkedin: Yup.string().matches(URL, "Enter a valid url"),
 	});
 
 	useEffect(() => {
@@ -708,6 +710,9 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											value={values.twitter}
 											onBlur={handleBlur}
+											error={
+												touched.twitter && errors.twitter ? errors.twitter : ""
+											}
 										/>
 										<TextField
 											name="linkedin"
@@ -717,6 +722,11 @@ const EditBorrowerProfileNew = () => {
 											onChange={handleChange}
 											value={values.linkedin}
 											onBlur={handleBlur}
+											error={
+												touched.linkedin && errors.linkedin
+													? errors.linkedin
+													: ""
+											}
 										/>
 									</div>
 								</div>
