@@ -18,7 +18,7 @@ import {
 } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { captureException } from "@sentry/react";
 import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
-import { getTrimmedWalletAddress } from "../../services/Helpers/displayTextHelper";
+import { getTrimmedString } from "../../services/Helpers/displayTextHelper";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -314,9 +314,15 @@ const BorrowerProfile = () => {
 									</div>
 									<div className=" font-semibold ">
 										<p className="text-[1.1875rem]" title={companyName}>
-											{getTrimmedWalletAddress(companyName, 10)}
+											{companyName?.length > 20
+												? getTrimmedString(companyName, 20)
+												: companyName}
 										</p>
-										<p className="text-neutral-300">{companyRepName}</p>
+										<p className="text-neutral-300">
+											{companyRepName?.length > 20
+												? getTrimmedString(companyRepName, 20)
+												: companyRepName}
+										</p>
 									</div>
 								</div>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { getTrimmedWalletAddress } from "../../../../services/Helpers/displayTextHelper";
+import { getTrimmedString } from "../../../../services/Helpers/displayTextHelper";
 import { useNavigate } from "react-router-dom";
 
 const ProcessingFundsModal = ({
@@ -79,7 +79,7 @@ const ProcessingFundsModal = ({
 								<div className="flex flex-col gap-1 md:mx-auto">
 									<p className="text-neutral-400">Transaction ID</p>
 									<p className="font-semibold pl-1">
-										{txhash ? getTrimmedWalletAddress(txhash, 25) : "--"}
+										{txhash ? getTrimmedString(txhash, 25) : "--"}
 									</p>
 								</div>
 							</div>
@@ -88,7 +88,7 @@ const ProcessingFundsModal = ({
 								<p className="text-neutral-400">Contract Address</p>
 								<p className="font-semibold overflow-hidden">
 									{contractAddress
-										? getTrimmedWalletAddress(contractAddress, 25)
+										? getTrimmedString(contractAddress, 25)
 										: "--"}
 								</p>
 							</div>

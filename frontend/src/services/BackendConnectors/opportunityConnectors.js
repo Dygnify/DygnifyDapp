@@ -6,7 +6,7 @@ const {
 const opportunityOrigination = require("../../artifacts/contracts/protocol/OpportunityOrigination.sol/OpportunityOrigination.json");
 const opportunityPool = require("../../artifacts/contracts/protocol/OpportunityPool.sol/OpportunityPool.json");
 const {
-	getTrimmedWalletAddress,
+	getTrimmedString,
 	getDisplayAmount,
 } = require("../Helpers/displayTextHelper");
 const {
@@ -101,7 +101,7 @@ export function getOpportunity(opportunity) {
 		obj.id = opportunity.opportunityID.toString();
 		obj.borrower = opportunity.borrower.toString();
 		obj.opportunityName = opportunity.opportunityName.toString();
-		obj.borrowerDisplayAdd = getTrimmedWalletAddress(obj.borrower);
+		obj.borrowerDisplayAdd = getTrimmedString(obj.borrower);
 		obj.opportunityInfo = opportunity.opportunityInfo.toString();
 		obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
 		let amount = ethers.utils.formatUnits(opportunity.loanAmount, sixDecimals);
