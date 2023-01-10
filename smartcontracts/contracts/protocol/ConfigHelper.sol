@@ -131,9 +131,7 @@ library ConfigHelper {
         returns (address)
     {
         return
-            config.getAddress(
-                uint256(ConfigOptions.Addresses.DygnifyTreasury)
-            );
+            config.getAddress(uint256(ConfigOptions.Addresses.DygnifyTreasury));
     }
 
     function dygnifyKeeperAddress(DygnifyConfig config)
@@ -142,9 +140,7 @@ library ConfigHelper {
         returns (address)
     {
         return
-            config.getAddress(
-                uint256(ConfigOptions.Addresses.DygnifyKeeper)
-            );
+            config.getAddress(uint256(ConfigOptions.Addresses.DygnifyKeeper));
     }
 
     function identityTokenAddress(DygnifyConfig config)
@@ -153,9 +149,7 @@ library ConfigHelper {
         returns (address)
     {
         return
-            config.getAddress(
-                uint256(ConfigOptions.Addresses.IdentityToken)
-            );
+            config.getAddress(uint256(ConfigOptions.Addresses.IdentityToken));
     }
 
     function getWriteOffDays(DygnifyConfig config)
@@ -163,19 +157,15 @@ library ConfigHelper {
         view
         returns (uint256)
     {
-        return
-            config.getNumber(
-                uint256(ConfigOptions.Numbers.WriteOffDays)
-            );
+        return config.getNumber(uint256(ConfigOptions.Numbers.WriteOffDays));
     }
-    function getUnderwriterFee(DygnifyConfig config)
+
+    function getAdjustmentOffset(DygnifyConfig config)
         internal
         view
         returns (uint256)
     {
         return
-            config.getNumber(
-                uint256(ConfigOptions.Numbers.UnderwriterFee)
-            );
+            config.getNumber(uint256(ConfigOptions.Numbers.AdjustmentOffset));
     }
 }
