@@ -1,31 +1,31 @@
 import * as Yup from "yup";
 
 export const loanDetailsValidationSchema = Yup.object().shape({
-  loan_name: Yup.string().label("Loan Name").required(),
-  loan_type: Yup.mixed().label("Loan Type").required(),
-  loan_purpose: Yup.string().label("Loan Purpose"),
-  loan_amount: Yup.number().positive().label("Loan Amount").required(),
-  loan_tenure: Yup.number()
-    .positive()
-    .integer()
-    .min(1)
-    .max(100)
+	loan_name: Yup.string().label("Loan Name").required(),
+	loan_type: Yup.mixed().label("Loan Type").required(),
+	loan_purpose: Yup.string().label("Loan Purpose"),
+	loan_amount: Yup.number().positive().label("Loan Amount").required(),
+	loan_tenure: Yup.number()
+		.positive()
+		.integer()
+		.min(1)
+		.max(100)
 
-    .label("Loan Tenure")
-    .required(),
-  loan_interest: Yup.number()
-    .positive()
-    .min(1)
-    .max(100)
+		.label("Loan Tenure")
+		.required(),
+	loan_interest: Yup.number()
+		.positive()
+		.min(1)
+		.max(100)
 
-    .label("Loan Interest")
-    .required(),
-  payment_frequency: Yup.number()
-    .positive()
-    .min(1)
+		.label("Loan Interest")
+		.required(),
+	payment_frequency: Yup.number()
+		.positive()
+		.min(1)
 
-    .label("Payment Frequency")
-    .required(),
+		.label("Payment Frequency")
+		.required(),
 });
 
 const SUPPORTED_FORMATS = [
@@ -38,14 +38,14 @@ const SUPPORTED_FORMATS = [
 ];
 
 export const CollateralDetailsValidationSchema = Yup.object().shape({
-  collateral_document_name: Yup.string().label("Document Name").required(),
-  collateral_document_description: Yup.string()
-    .label("Document Description")
-    .required(),
-  collateral_document: Yup.mixed().required(),
-  capital_loss: Yup.number()
-    .positive()
-    .min(0)
-    .max(100)
-    .label("First loss capital"),
+	collateral_document_name: Yup.string().label("Document Name").required(),
+	collateral_document_description: Yup.string()
+		.label("Document Description")
+		.required(),
+	collateral_document: Yup.mixed().required(),
+	capital_loss: Yup.number()
+		.positive()
+		.min(0)
+		.max(100)
+		.label("First loss capital"),
 });
