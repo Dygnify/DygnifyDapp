@@ -31,6 +31,12 @@ function getDisplayAmount(amount) {
 		amount = parseFloat(amount).toFixed(2);
 		if (amount > 999) {
 			displayAmt = (amount / 1000).toFixed(2).toString() + "K";
+			if (amount > 999999) {
+				displayAmt = (amount / 1000000).toFixed(2).toString() + "M";
+			}
+			if (amount > 99999999) {
+				displayAmt = (amount / 100000000).toFixed(2).toString() + "b";
+			}
 		} else {
 			displayAmt = amount;
 		}
