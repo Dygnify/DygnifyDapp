@@ -50,7 +50,6 @@ contract SeniorPool is BaseUpgradeablePausable, ISeniorPool {
     mapping(address => uint256) private usdcYield;
     mapping(address => KYC) public kycOf;
 
-    string public contractName = "Senior Pool";
     IERC20 private usdcToken;
     ILPToken private lpToken;
     uint256 public investmentLockinInMonths;

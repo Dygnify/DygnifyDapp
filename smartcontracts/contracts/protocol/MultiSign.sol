@@ -4,7 +4,7 @@ pragma solidity 0.8.4;
 import "./DygnifyTreasury.sol";
 import "./BaseUpgradeablePausable.sol";
 
-contract MultiSign is BaseUpgradeablePausable  {
+contract MultiSign is BaseUpgradeablePausable {
     event Deposit(address indexed sender, uint amount, uint balance);
     event SubmitTransaction(
         address indexed owner,
@@ -53,13 +53,17 @@ contract MultiSign is BaseUpgradeablePausable  {
         _;
     }
 
-    function initialize(address[] memory _owners, uint _numConfirmationsRequired) external initializer {
+    function initialize(
+        address[] memory _owners,
+        uint _numConfirmationsRequired
+    ) external initializer {
         require(_owners.length > 0, "owners required");
         require(
             _numConfirmationsRequired > 0 &&
                 _numConfirmationsRequired <= _owners.length,
             "invalid number of required confirmations"
         );
+        _BaseUpgradeablePausable_init(msg.sender);
 
         for (uint i = 0; i < _owners.length; i++) {
             address owner = _owners[i];
@@ -78,10 +82,7 @@ contract MultiSign is BaseUpgradeablePausable  {
     //     emit Deposit(msg.sender, msg.value, address(this).balance);
     // }
 
-    function submitTransaction(
-        address _to,
-        uint _value
-    ) public onlyOwner {
+    function submitTransaction(address _to, uint _value) public onlyOwner {
         uint txIndex = transactions.length;
 
         transactions.push(
@@ -96,7 +97,9 @@ contract MultiSign is BaseUpgradeablePausable  {
         emit SubmitTransaction(msg.sender, txIndex, _to, _value);
     }
 
-    function confirmTransaction(uint _txIndex)
+    function confirmTransaction(
+        uint _txIndex
+    )
         public
         onlyOwner
         txExists(_txIndex)
@@ -107,16 +110,13 @@ contract MultiSign is BaseUpgradeablePausable  {
         transaction.numConfirmations += 1;
         isConfirmed[_txIndex][msg.sender] = true;
         emit ConfirmTransaction(msg.sender, _txIndex);
-        if(transaction.numConfirmations >= numConfirmationsRequired)
-        executeTransaction(_txIndex);
+        if (transaction.numConfirmations >= numConfirmationsRequired)
+            executeTransaction(_txIndex);
     }
 
-    function executeTransaction(uint _txIndex)
-        public
-        onlyOwner
-        txExists(_txIndex)
-        notExecuted(_txIndex)
-    {
+    function executeTransaction(
+        uint _txIndex
+    ) public onlyOwner txExists(_txIndex) notExecuted(_txIndex) {
         Transaction storage transaction = transactions[_txIndex];
 
         require(
@@ -127,7 +127,10 @@ contract MultiSign is BaseUpgradeablePausable  {
         transaction.executed = true;
 
         // transaction.to.call{value: transaction.value};
-        DygnifyTreasury(tresuryWallet).withdraw(transaction.to,transaction.value);
+        DygnifyTreasury(tresuryWallet).withdraw(
+            transaction.to,
+            transaction.value
+        );
 
         emit ExecuteTransaction(msg.sender, _txIndex);
     }
@@ -136,12 +139,9 @@ contract MultiSign is BaseUpgradeablePausable  {
         tresuryWallet = _address;
     }
 
-    function revokeConfirmation(uint _txIndex)
-        public
-        onlyOwner
-        txExists(_txIndex)
-        notExecuted(_txIndex)
-    {
+    function revokeConfirmation(
+        uint _txIndex
+    ) public onlyOwner txExists(_txIndex) notExecuted(_txIndex) {
         Transaction storage transaction = transactions[_txIndex];
 
         require(isConfirmed[_txIndex][msg.sender], "tx not confirmed");
@@ -160,15 +160,12 @@ contract MultiSign is BaseUpgradeablePausable  {
         return transactions.length;
     }
 
-    function getTransaction(uint _txIndex)
+    function getTransaction(
+        uint _txIndex
+    )
         public
         view
-        returns (
-            address to,
-            uint value,
-            bool executed,
-            uint numConfirmations
-        )
+        returns (address to, uint value, bool executed, uint numConfirmations)
     {
         Transaction storage transaction = transactions[_txIndex];
 
