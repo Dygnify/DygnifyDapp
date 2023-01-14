@@ -30,8 +30,10 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 					if (opJson) {
 						setCompanyName(opJson.company_name);
 						let imgUrl = getBorrowerLogoURL(
-							opJson.companyDetails?.companyLogoFile?.businessLogoFileCID,
-							opJson.companyDetails?.companyLogoFile?.businessLogoFileName
+							opJson.companyDetails?.companyLogoFile
+								?.businessLogoFileCID,
+							opJson.companyDetails?.companyLogoFile
+								?.businessLogoFileName
 						);
 						if (imgUrl) {
 							setLogoImgSrc(imgUrl);
@@ -44,26 +46,40 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient">
+		<div
+			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row   ${
+				isSeniorPool
+					? "md:w-[50%]"
+					: "md:w-[48%] 2xl:w-[min(32%,30rem)]"
+			}   my-gradient`}
+		>
 			<div className="flex items-center gap-6">
 				<img
 					alt=""
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
 					className="w-[7rem] lg:w-[12rem]"
 					src={
-						isSeniorPool ? DygnifyImage : logoImgSrc ? logoImgSrc : defaultImg
+						isSeniorPool
+							? DygnifyImage
+							: logoImgSrc
+							? logoImgSrc
+							: defaultImg
 					}
 				/>
 
 				<div className="lg:hidden">
-					<p className="text-[1.4375rem] font-semibold">{opportunityName}</p>
+					<p className="text-[1.4375rem] font-semibold">
+						{opportunityName}
+					</p>
 					<p className="">{companyName}</p>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-6 lg:w-[75%]">
 				<div className="hidden lg:block">
-					<p className="text-[1.4375rem] font-semibold">{opportunityName}</p>
+					<p className="text-[1.4375rem] font-semibold">
+						{opportunityName}
+					</p>
 					<p className="">{companyName}</p>
 				</div>
 
@@ -71,14 +87,22 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 					<div className="flex gap-1 items-center">
 						<p className="">Pool Size</p>
 
-						<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
+						<img
+							alt=""
+							src={DollarImage}
+							className="ml-auto w-[1rem]"
+						/>
 						<p className="">{opportunityAmount}</p>
 					</div>
 
 					<div className="flex gap-1 items-center">
 						<p className="">Capital Invested</p>
 
-						<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
+						<img
+							alt=""
+							src={DollarImage}
+							className="ml-auto w-[1rem]"
+						/>
 						<p className="">{capitalInvested}</p>
 					</div>
 
@@ -90,9 +114,15 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 					<div className="flex gap-1 items-center">
 						<p className="">Available for Withdrawal</p>
 
-						<img alt="" src={DollarImage} className="ml-auto w-[1rem]" />
+						<img
+							alt=""
+							src={DollarImage}
+							className="ml-auto w-[1rem]"
+						/>
 						<p className="">
-							{withdrawableAmt ? getDisplayAmount(withdrawableAmt) : "- -"}
+							{withdrawableAmt
+								? getDisplayAmount(withdrawableAmt)
+								: "- -"}
 						</p>
 					</div>
 				</div>
