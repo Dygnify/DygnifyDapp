@@ -21,8 +21,8 @@ const paymentfrequency = [
 	{ value: 90, label: 90 },
 ];
 const loantypes = [
-	{ value: 1, label: "Term Loan" },
-	{ value: 0, label: "Bullet Loan" },
+	{ value: "1", label: "Term Loan" },
+	{ value: "0", label: "Bullet Loan" },
 ];
 
 export default function Account({ formData, handleNext, handleForm }) {

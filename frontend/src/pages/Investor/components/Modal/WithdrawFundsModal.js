@@ -67,6 +67,7 @@ const WithdrawFundsModal = ({
 		if (data?.isSeniorPool) {
 			focusInput();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showModal]);
 
 	async function withdrawSeniorPool() {

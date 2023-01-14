@@ -7,13 +7,8 @@ import {
 } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 
 const PoolCard = ({ data }) => {
-	const {
-		opportunityInfo,
-		opportunityAmount,
-		estimatedAPY,
-		capitalInvested,
-		yieldGenerated,
-	} = data;
+	const { opportunityAmount, estimatedAPY, capitalInvested, yieldGenerated } =
+		data;
 
 	const [companyName, setCompanyName] = useState();
 	const [logoImgSrc, setLogoImgSrc] = useState();
