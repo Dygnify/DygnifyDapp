@@ -28,14 +28,14 @@ export const loanDetailsValidationSchema = Yup.object().shape({
 		.required(),
 });
 
-const SUPPORTED_FORMATS = [
-	"image/jpg",
-	"image/jpeg",
-	"image/png",
-	"application/pdf",
-	"application/msword",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
+// const SUPPORTED_FORMATS = [
+// 	"image/jpg",
+// 	"image/jpeg",
+// 	"image/png",
+// 	"application/pdf",
+// 	"application/msword",
+// 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+// ];
 
 export const CollateralDetailsValidationSchema = Yup.object().shape({
 	collateral_document_name: Yup.string().label("Document Name").required(),

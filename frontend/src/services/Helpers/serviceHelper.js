@@ -7,8 +7,6 @@ import {
 	dygnifyKycOCR,
 } from "../ApiOptions/dygnifyAxiosOptions";
 
-
-
 function sanitizePhoneNo(phone) {
 	// Remove additional symbols from the phone number
 	let sanitizedPhoneNo = phone.replace("+", "").replace("-", "");
@@ -28,9 +26,8 @@ export async function sendMobileOtp(phone) {
 			if (mobileOTPRes.code === 200) {
 				return { requestId: mobileOTPRes.res["request_id"], status: true };
 			}
-		}else{
+		} else {
 			Sentry.captureMessage("phone is not defined", "warning");
-
 		}
 	} catch (error) {
 		Sentry.captureException(error);
@@ -52,7 +49,7 @@ export async function checkMobileOtp(requestId, otp, phoneNo) {
 			) {
 				return { status: true };
 			}
-		}else{
+		} else {
 			Sentry.captureMessage("otp && requestId returning false", "warning");
 		}
 	} catch (error) {
@@ -73,7 +70,7 @@ export async function getMobileDetails(requestId, phoneNo, bearerToken) {
 			if (mobileDetailsResp.res["status-code"] === "101") {
 				return { status: true, mobileData: mobileDetailsResp.res };
 			}
-		}else{
+		} else {
 			Sentry.captureMessage("requestId not defined", "warning");
 		}
 	} catch (error) {
@@ -93,7 +90,7 @@ export async function getOCRFetch(file, bearerToken) {
 			if (ocrFetchResp.code === 200) {
 				return { status: true, data: ocrFetchResp.res };
 			}
-		}else{
+		} else {
 			Sentry.captureMessage("file is not define", "warning");
 		}
 	} catch (error) {

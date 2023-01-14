@@ -11,7 +11,6 @@ import {
 const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	const {
 		opportunityName,
-		opportunityInfo,
 		opportunityAmount,
 		estimatedAPY,
 		capitalInvested,
