@@ -35,7 +35,7 @@ function getDisplayAmount(amount) {
 				displayAmt = (amount / 1000000).toFixed(2).toString() + "M";
 			}
 			if (amount > 99999999) {
-				displayAmt = (amount / 100000000).toFixed(2).toString() + "b";
+				displayAmt = (amount / 100000000).toFixed(2).toString() + "B";
 			}
 		} else {
 			displayAmt = amount;
