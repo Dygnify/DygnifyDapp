@@ -644,20 +644,20 @@ function Token() {
 				<h2>Balance : {balance} USDC </h2>
 				<br />
 				<input
-					hidden
+					
 					type="file"
 					onChange={(event) => {
 						setSelectedFile(event.target.files[0]);
 						console.log(event);
 					}}
 				/>
-				<button hidden onClick={onFileUpload}>
+				<button  onClick={onFileUpload}>
 					Upload
 				</button>
-				<button hidden onClick={onFileOpen}>
+				<button  onClick={onFileOpen}>
 					Open File
 				</button>
-				<button hidden onClick={onSaveSeniorPoolData}>Save Senior pool</button>
+				<button  onClick={onSaveSeniorPoolData}>Save Senior pool</button>
 			</header>
 		</div>
 	);

@@ -32,7 +32,7 @@ const FileUploader = ({
 				<div className="flex border-dashed border-[1px] pl-1 dark:border-[#3A3C43] border-[#A0ABBB]  py-2 rounded-lg flex-row bg-lightmode-200 dark:bg-[#24272F] items-center overflow-hidden">
 					<input
 						type="button"
-						className="bg-gray-400 dark:bg-[#30333A]  rounded-full text-white px-2 text-sm py-1"
+						className="bg-gray-400 dark:bg-[#30333A]  rounded-full text-white px-2 text-sm py-1 cursor-pointer"
 						onClick={handleClick}
 						value="Choose file"
 					/>

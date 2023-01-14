@@ -5,7 +5,18 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-	display: none;
+	width: 0px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgb(235, 233, 233);
+}
+
+::-webkit-scrollbar-thumb,
+.token-table-header {
+	background-image: linear-gradient(30deg, #383755, #181a24);
+	box-shadow: inset -1px -1px 1px rgba(185, 185, 185, 0.1);
+	border-radius: 10px;
 }
 
 .css-fix {
@@ -170,8 +181,8 @@ input[type="number"] {
 	fill: black;
 }
 
- /* For Firefox */
- progress::-moz-progress-bar {
+/* For Firefox */
+progress::-moz-progress-bar {
 	background: rgb(37 99 235);
 	border-radius: 0.5em;
 }
@@ -182,12 +193,10 @@ progress::-webkit-progress-value {
 	border-radius: 0.5em;
 }
 
-
 progress::-webkit-progress-bar {
 	border-radius: 0.5em;
 	background-color: rgb(243 244 246);
 }
-
 
 .dark progress::-webkit-progress-bar {
 	background-color: rgb(107 114 128);
