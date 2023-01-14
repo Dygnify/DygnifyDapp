@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";

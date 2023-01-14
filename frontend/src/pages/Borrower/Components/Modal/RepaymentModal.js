@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { repayment } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { getWalletBal } from "../../../../services/BackendConnectors/userConnectors/commonConnectors";
-// import GradientBtnForModal from "../../../../uiTools/Button/GradientBtnForModal";
 import WalletImage from "../../../../assets/wallet_white.png";
 import DollarImage from "../../../../assets/Dollar-icon.svg";
 import approve from "../../../../services/BackendConnectors/approve";
@@ -172,9 +171,7 @@ const RepaymentModal = ({
 							<p>{data?.nextDueDate}</p>
 						</div>
 						{!checkBalance.err && (
-							<p className="text-[0.8rem] text-error-500">
-								{checkBalance.msg}
-							</p>
+							<p className="text-[0.8rem] text-error-500">{checkBalance.msg}</p>
 						)}
 					</div>
 
