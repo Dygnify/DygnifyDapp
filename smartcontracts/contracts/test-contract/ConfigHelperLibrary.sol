@@ -104,9 +104,9 @@ contract ConfigHelperLibrary {
         return ConfigHelper.getWriteOffDays(config);
     }
 
-    function getUnderwriterFee(
+    function getAdjustmentOffset(
         DygnifyConfig config
     ) external view returns (uint256) {
-        return ConfigHelper.getUnderwriterFee(config);
+        return ConfigHelper.getAdjustmentOffset(config);
     }
 }

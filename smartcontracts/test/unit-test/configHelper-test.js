@@ -243,11 +243,11 @@ describe("CongigHelper", function () {
 		});
 	});
 
-	describe("getUnderwriterFee", function () {
-		it("should return underwriterFee", async function () {
+	describe("getAdjustmentOffset", function () {
+		it("should return getAdjustmentOffset", async function () {
 			await dygnifyConfig.setNumber(6, 100000);
 			expect(
-				await configHelper.getUnderwriterFee(dygnifyConfig.address)
+				await configHelper.getAdjustmentOffset(dygnifyConfig.address)
 			).to.equal(100000);
 		});
 	});
