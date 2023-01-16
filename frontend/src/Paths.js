@@ -1,5 +1,4 @@
 import { Route, Routes, HashRouter, Navigate } from "react-router-dom";
-import Token from "./home/Token";
 
 import LandingPage from "./pages/LandingPage/LandingPage";
 import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
@@ -33,7 +32,6 @@ const Paths = () => {
 		<HashRouter>
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
-				<Route path="/token" element={<Token />} />
 				<Route path="/tokenDashboard" element={<TokenDashboard />}>
 					{/* /tokenDashboard/opportunityContract */}
 					<Route
