@@ -22,6 +22,25 @@ export const getEthAddress = async () => {
 	}
 };
 
+export const checkNetwork = async () => {
+	Sentry.captureMessage("checkNetwork", "info");
+
+	const targetNetworkId = "0x13881";
+
+	if (window.ethereum) {
+		const currentChainId = await window.ethereum.request({
+			method: "eth_chainId",
+		});
+
+		// return true if network id is the same
+		if (currentChainId == targetNetworkId) return { success: true };
+		// return false is network id is different
+		return {
+			success: false,
+			msg: "Please Open Metamask and Connect The Polygon network",
+		};
+	}
+};
 export const requestAccount = async (metaMask) => {
 	Sentry.captureMessage("requestAccount", "info");
 	try {
