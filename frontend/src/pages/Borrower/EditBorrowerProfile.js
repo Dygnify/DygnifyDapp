@@ -206,7 +206,6 @@ const EditBorrowerProfileNew = () => {
 			businessIncoFilesCID.current = IncoFile.businessIncoFileCID;
 		}
 		checkFunction(null);
-		console.log(profileState, "👌👌👌");
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profileState]);

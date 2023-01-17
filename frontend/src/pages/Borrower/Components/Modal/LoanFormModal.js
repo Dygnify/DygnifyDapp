@@ -82,6 +82,7 @@ const LoanFormModal = ({
 						handleNext={handleNext}
 						handlePrev={handlePrev}
 						formData={formData}
+						brJson={brJson}
 					/>
 				) : (
 					<Final
@@ -108,10 +109,7 @@ const LoanFormModal = ({
 	async function onFileUpload(selectedFile, loan_info) {
 		try {
 			let collateralHash = await storeFiles(selectedFile);
-			let loanInfoFile = makeFileObjects(
-				loan_info,
-				`${collateralHash}.json`
-			);
+			let loanInfoFile = makeFileObjects(loan_info, `${collateralHash}.json`);
 			let loanInfoHash = await storeFiles(loanInfoFile);
 			return [collateralHash, loanInfoHash];
 		} catch (error) {
@@ -212,11 +210,7 @@ const LoanFormModal = ({
 
 	return (
 		<div>
-			<input
-				type="checkbox"
-				id="loanForm-modal"
-				className="modal-toggle"
-			/>
+			<input type="checkbox" id="loanForm-modal" className="modal-toggle" />
 			<div
 				// class="modal block backdrop-blur-xl backdrop-opacity-100 md:flex"
 				// style={{ backdropFilter: "brightness(40%) blur(8px)" }}

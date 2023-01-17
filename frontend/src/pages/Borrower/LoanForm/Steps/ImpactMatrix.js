@@ -5,31 +5,34 @@ import TextField from "../../../../uiTools/Inputs/TextField";
 import { CollateralDetailsValidationSchema } from "../validations/validation";
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
-export default function ImpactMatrix({ handleNext, handlePrev, formData }) {
+export default function ImpactMatrix({
+	handleNext,
+	handlePrev,
+	formData,
+	brJson,
+}) {
 	const [totalImpacts, setTotalImpacts] = useState([
 		{
-			label: "this is dummy text to test",
+			label: brJson?.checkBoxData?.affordableData.label1,
 			id: 1,
+			value: brJson?.checkBoxData.affordableData.value1,
 		},
 	]);
 	const [totalImpacts2, setTotalImpacts2] = useState([
 		{
-			label: "this is dummy text to test",
+			label: brJson?.checkBoxData?.affordableData.label2,
 			id: 1,
+			value: brJson?.checkBoxData?.affordableData?.value2,
 		},
 	]);
 
 	const formik = useFormik({
 		initialValues: {
 			impact_criteria_name: `${
-				formData.impact_criteria_name
-					? formData.impact_criteria_name
-					: ""
+				formData.impact_criteria_name ? formData.impact_criteria_name : ""
 			}`,
 			impact_criteria_value: `${
-				formData.impact_criteria_value
-					? formData.impact_criteria_value
-					: ""
+				formData.impact_criteria_value ? formData.impact_criteria_value : ""
 			}`,
 		},
 		validationSchema: CollateralDetailsValidationSchema,
@@ -147,66 +150,10 @@ export default function ImpactMatrix({ handleNext, handlePrev, formData }) {
 				</div>
 			</div>
 			<form onSubmit={formik.handleSubmit}>
-				{/* {totalImpacts.map((impact, index) => (
-					<div className="justify-between md:flex md:gap-3 mb-8">
-						<TextField
-							name="impact_criteria_name"
-							value={formik.values.impact_criteria_name}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							reference={inputRef}
-							error={
-								formik.touched.impact_criteria_name &&
-								formik.errors.impact_criteria_name
-									? formik.errors.impact_criteria_name
-									: null
-							}
-							label="Impact Criteria Name"
-							placeholder="Enter Impact Criteria Name"
-							className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
-						></TextField>
-						<TextField
-							name="impact_criteria_value"
-							value={formik.values.impact_criteria_value}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							// reference={inputRef}
-							error={
-								formik.touched.impact_criteria_value &&
-								formik.errors.impact_criteria_value
-									? formik.errors.impact_criteria_value
-									: null
-							}
-							label="Impact Criteria Value"
-							placeholder="Enter Impact Criteria Value"
-							className="w-full md:w-1/2 md:mr-2 mb-5 md:mb-0"
-						></TextField>
-					</div>
-				))}
-				<br />
-				<div className="flex justify-end mr-2">
-					<button
-						type="button"
-						onClick={() => {
-							handleAddImpact();
-						}}
-						className="bg-[#16171d]  text-slate-400 hover:text-slate-300 hover:outline-1 text-sm font-thin py-1 px-2 rounded-full"
-					>
-						Add Impact
-					</button>
-				</div> */}
-
 				<div className=" flex flex-col-reverse gap-5 py-5 md:my-0 md:-mb-14 pt-10 justify-center items-center md:flex-row md:justify-around pb-10">
 					<div className="">
 						<label
 							onClick={() => {
-								// if (
-								// 	formData.collateral_document &&
-								// 	!formik.values.collateral_document[0].name
-								// ) {
-								// 	formik.values.collateral_document =
-								// 		formData.collateral_document;
-								// }
 								handlePrev(formik.values, false);
 							}}
 							className="text-gray-500 md:pl-28 flex-row cursor-pointerm ml-1 flex"
