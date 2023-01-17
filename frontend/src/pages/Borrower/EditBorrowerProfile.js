@@ -16,6 +16,7 @@ import {
 } from "../../services/Helpers/web3storageIPFS";
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { captureMessage } from "@sentry/react";
+import { Field } from "formik";
 
 const URL =
 	/^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
@@ -52,6 +53,26 @@ const EditBorrowerProfileNew = () => {
 		err: false,
 		msg: "",
 	});
+
+	const sustainableCheckedData = [
+		"No Poverty",
+		"Zero Hunger",
+		"Life On Land",
+		"Climate Action",
+		"Gender Equaltiy",
+		"Life Below Water",
+		"Quality Educatiion",
+		"Reduced Inequalities",
+		"Partnerships For The Goals",
+		"Good Health And Well-Being",
+		"Clean Water And Sanitation",
+		"Affordable And Clean Energy",
+		"Decent Work And Economic Growth",
+		"Sustainable Cities And Communities",
+		"Industry, Innovation And Infrastructure",
+		"Responsible Consumption And Production",
+		"Peace, Justice And Strong Institutions",
+	];
 
 	const [lincenseText, setLincenseText] = useState("");
 	const [lincenseFile, setLincenseFile] = useState(false);
@@ -122,6 +143,7 @@ const EditBorrowerProfileNew = () => {
 		email: profileState ? profileState.email : "",
 		twitter: profileState ? profileState.twitter : "",
 		linkedin: profileState ? profileState.linkedin : "",
+		checked: profileState ? profileState.sustainableChecked : "",
 	};
 
 	useEffect(() => {
@@ -254,6 +276,7 @@ const EditBorrowerProfileNew = () => {
 				email,
 				twitter,
 				linkedin,
+				checked,
 			} = formData;
 
 			validations();
@@ -373,6 +396,7 @@ const EditBorrowerProfileNew = () => {
 				}
 				// Prepare a json file with borrower data
 				let borrowerJsonData = {
+					sustainableChecked: checked,
 					companyName: companyName,
 					companyRepName: companyRepName,
 					companyBio: companyBio,
@@ -732,6 +756,36 @@ const EditBorrowerProfileNew = () => {
 								</div>
 							</div>
 						</div>
+						<div>
+							<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC]  rounded-xl">
+								<input type="checkbox" className="peer" />
+
+								<div className="collapse-title flex gap-4 md:gap-8 text-center">
+									<p className="">Sustainable business</p>
+								</div>
+
+								<div className="collapse-content ">
+									<div className="font-semibold pt-8 pb-4">
+										<div className="flex flex-col  md:flex-row md:flex-wrap gap-[0.7em] justify-center">
+											{sustainableCheckedData.map((data) => (
+												<div class="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded">
+													<label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
+														<Field
+															type="checkbox"
+															name="checked"
+															value={data}
+															class="w-[0.9rem] h-[0.9rem] text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+														/>
+														{data}
+													</label>
+												</div>
+											))}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
 							<button
 								onClick={() =>

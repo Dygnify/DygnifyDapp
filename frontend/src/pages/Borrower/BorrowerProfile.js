@@ -38,6 +38,7 @@ const BorrowerProfile = () => {
 	const [linkedin, setLinkedin] = useState();
 	const location = useLocation();
 	const [profileStatus, setProfileStatus] = useState(false);
+	const [sustainableChecked, setSustainableChecked] = useState("");
 	const [kycStatus, setKycStatus] = useState(false);
 	const [hasKey, setHaskey] = useState();
 	const [errormsg, setErrormsg] = useState({
@@ -201,6 +202,9 @@ const BorrowerProfile = () => {
 				}
 				if (data.linkedin) {
 					setLinkedin(data.linkedin);
+				}
+				if (data.sustainableChecked) {
+					setSustainableChecked(data.sustainableChecked);
 				}
 			} catch (error) {
 				captureException(error);
@@ -561,6 +565,50 @@ const BorrowerProfile = () => {
 							</div>
 						</>
 					) : null}
+
+					{sustainableChecked.length > 0 && (
+						<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC]  rounded-xl">
+							<input type="checkbox" className="peer" />
+
+							<div className="collapse-title flex gap-4 md:gap-8 text-center">
+								<p className="">Sustainable business</p>
+							</div>
+							<div className="collapse-content">
+								<div className="font-semibold pt-2 pb-4">
+									<div className="flex flex-col md:flex-row md:flex-wrap gap-[0.6em]">
+										{sustainableChecked &&
+											sustainableChecked.map((data) => (
+												<div class="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded">
+													<svg
+														width="24"
+														height="24"
+														viewBox="0 0 24 24"
+														fill="none"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path
+															d="M6.28571 4.5C5.02514 4.5 4 5.52514 4 6.78571V18.2143C4 19.4749 5.02514 20.5 6.28571 20.5H17.7143C18.9749 20.5 20 19.4749 20 18.2143V6.78571C20 5.52514 18.9749 4.5 17.7143 4.5H6.28571ZM6.28571 18.2143V6.78571H17.7143L17.7166 18.2143H6.28571Z"
+															fill="#10B981"
+														/>
+														<path
+															d="M10.696 12.767L9.4 11.496L8 12.926L10.704 15.573L15.403 10.922L13.997 9.5L10.696 12.767Z"
+															fill="#10B981"
+														/>
+													</svg>
+
+													<label
+														for="bordered-checkbox-1"
+														class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+													>
+														{data}
+													</label>
+												</div>
+											))}
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 		</>
