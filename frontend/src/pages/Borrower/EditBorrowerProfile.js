@@ -53,6 +53,25 @@ const EditBorrowerProfileNew = () => {
 		err: false,
 		msg: "",
 	});
+	const [addNewFeild, setAddNewFeild] = useState(false);
+	const [addNewFeild2, setAddNewFeild2] = useState(false);
+
+	const [checkedData, setcheckedData] = useState("");
+	const [climateState, setClimateState] = useState(false);
+	const [affordableState, setAffordableState] = useState(false);
+
+	const [affordableData, setAffordableData] = useState({
+		label1: "Metric tonnes of Co2 reduced",
+		value1: "",
+		label2: "MW increase in RW generation",
+		value2: "",
+	});
+	const [climateData, setClimateData] = useState({
+		label1: "Metric tonnes of Co2 reduced",
+		value1: "",
+		label2: "MW increase in RW generation",
+		value2: "",
+	});
 
 	const sustainableCheckedData = [
 		"No Poverty",
@@ -122,6 +141,26 @@ const EditBorrowerProfileNew = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+		if (checkedData.length >= 0) {
+			const data = checkedData.includes("Affordable And Clean Energy");
+			if (data) {
+				setAffordableState(true);
+			} else {
+				setAffordableState(false);
+			}
+		}
+		if (checkedData.length >= 0) {
+			const data = checkedData.includes("Climate Action");
+
+			if (data) {
+				setClimateState(true);
+			} else {
+				setClimateState(false);
+			}
+		}
+	}, [checkedData]);
+
 	const initialValues = {
 		companyName: profileState ? profileState.companyName : "",
 		companyRepName: profileState ? profileState.companyRepName : "",
@@ -167,6 +206,8 @@ const EditBorrowerProfileNew = () => {
 			businessIncoFilesCID.current = IncoFile.businessIncoFileCID;
 		}
 		checkFunction(null);
+		console.log(profileState, "👌👌👌");
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profileState]);
 
@@ -394,8 +435,15 @@ const EditBorrowerProfileNew = () => {
 						);
 					}
 				}
+
+				let checkBoxData = {
+					affordableData: affordableData,
+					climateData: climateData,
+				};
+
 				// Prepare a json file with borrower data
 				let borrowerJsonData = {
+					checkBoxData: checkBoxData,
 					sustainableChecked: checked,
 					companyName: companyName,
 					companyRepName: companyRepName,
@@ -556,6 +604,7 @@ const EditBorrowerProfileNew = () => {
 								<div className="">
 									<h2 className="text-[1.4375rem] ">Company Details</h2>
 
+									{setcheckedData(values.checked)}
 									<div className="mt-2 flex flex-col gap-2">
 										<div className=" flex flex-col gap-2 md:flex-row md:flex-wrap xl:justify-between">
 											<FileUploader
@@ -700,6 +749,218 @@ const EditBorrowerProfileNew = () => {
 									/>
 								</div>
 
+								<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC]  rounded-xl mb-5">
+									<input type="checkbox" className="peer" />
+
+									<div className="collapse-title flex gap-4 md:gap-8 text-center">
+										<p className="">Sustainable business</p>
+									</div>
+
+									<div className="collapse-content ">
+										<div className="font-semibold pt-8 pb-4">
+											<div className="flex flex-col  md:flex-row md:flex-wrap gap-[0.7em] justify-center">
+												{sustainableCheckedData.map((data) => (
+													<div class="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded">
+														<label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
+															<Field
+																type="checkbox"
+																name="checked"
+																value={data}
+																class="w-[0.9rem] h-[0.9rem] text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+															/>
+															{data}
+														</label>
+													</div>
+												))}
+											</div>
+										</div>
+									</div>
+								</div>
+
+								{/* card  start*/}
+
+								<div className="">
+									{affordableState && (
+										<>
+											<h2 className="text-[1.1875rem] mb-5 ">
+												Affordable And Clean Energy
+											</h2>
+
+											<div class="w-1/2 dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
+												<ul class="my-4 pt-4 pl-8 pr-8 space-y-3">
+													<li className="flex justify-between items-center">
+														<div className="font-base">
+															<span class="flex-1  whitespace-nowrap">
+																Metric tonnes of Co2 reduced
+															</span>
+														</div>
+														<div>
+															<input
+																type="text"
+																onChange={(e) => {
+																	console.log(e.target.value);
+																	setAffordableData({
+																		label1: "Metric tonnes of Co2 reduced",
+																		value1: e.target.value,
+																		label2: "MW increase in RW generation",
+																		value2: affordableData.value2,
+																	});
+																	console.log(affordableData);
+																}}
+																placeholder="Enter value"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+													</li>
+
+													<li className="flex justify-between items-center">
+														<div className="font-base">
+															<span class="flex-1  whitespace-nowrap">
+																MW increase in RW generation
+															</span>
+														</div>
+														<div>
+															<input
+																type="text"
+																onChange={(e) => {
+																	console.log(e.target.value);
+																	setAffordableData({
+																		label1: "Metric tonnes of Co2 reduced",
+																		value1: affordableData.value1,
+																		label2: "MW increase in RW generation",
+																		value2: e.target.value,
+																	});
+																	console.log(affordableData);
+																}}
+																placeholder="Enter value"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+													</li>
+												</ul>
+
+												<button
+													onClick={() => {
+														setAddNewFeild((prev) => !prev);
+													}}
+													type="button"
+													class="py-2.5  ml-[26rem] px-5 mr-2 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
+												>
+													Add more
+												</button>
+
+												{addNewFeild && (
+													<div className="flex justify-evenly items-center pb-5">
+														<div className="font-base">
+															<input
+																type="text"
+																placeholder="Enter label"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+														<div>
+															<input
+																type="text"
+																placeholder="Enter value"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+													</div>
+												)}
+											</div>
+										</>
+									)}
+
+									{climateState && (
+										<>
+											<h2 className="text-[1.1875rem] mb-5 ">Climate Action</h2>
+
+											<div class="w-1/2 dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
+												<ul class="my-4 pt-4 pl-8 pr-8 space-y-3">
+													<li className="flex justify-between items-center">
+														<div className="font-base">
+															<span class="flex-1  whitespace-nowrap">
+																Metric tonnes of Co2 reduced
+															</span>
+														</div>
+														<div>
+															<input
+																type="text"
+																onChange={(e) => {
+																	console.log(e.target.value);
+																	setClimateData({
+																		label1: "Metric tonnes of Co2 reduced",
+																		value1: e.target.value,
+																		label2: "MW increase in RW generation",
+																		value2: climateData.value2,
+																	});
+																	console.log(climateData);
+																}}
+																placeholder="Enter value"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+													</li>
+													<li className="flex justify-between items-center">
+														<div className="font-base">
+															<span class="flex-1  whitespace-nowrap">
+																MW increase in RW generation
+															</span>
+														</div>
+														<div>
+															<input
+																type="text"
+																onChange={(e) => {
+																	console.log(e.target.value);
+																	setClimateData({
+																		label1: "Metric tonnes of Co2 reduced",
+																		value1: climateData.value1,
+																		label2: "MW increase in RW generation",
+																		value2: e.target.value,
+																	});
+																	console.log(climateData);
+																}}
+																placeholder="Enter value"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+													</li>
+												</ul>
+
+												<button
+													onClick={() => {
+														setAddNewFeild2((prev) => !prev);
+													}}
+													type="button"
+													class="py-2.5  ml-[26rem] px-5 mr-2 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
+												>
+													Add more
+												</button>
+
+												{addNewFeild2 && (
+													<div className="flex justify-evenly items-center pb-5">
+														<div className="font-base">
+															<input
+																type="text"
+																placeholder="Enter label"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+														<div>
+															<input
+																type="text"
+																placeholder="Enter value"
+																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+															/>
+														</div>
+													</div>
+												)}
+											</div>
+										</>
+									)}
+								</div>
+
+								{/* card  end*/}
 								<div className="mb-6">
 									<h2 className="text-[1.1875rem] ">Socials</h2>
 
@@ -752,35 +1013,6 @@ const EditBorrowerProfileNew = () => {
 													: ""
 											}
 										/>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div>
-							<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC]  rounded-xl">
-								<input type="checkbox" className="peer" />
-
-								<div className="collapse-title flex gap-4 md:gap-8 text-center">
-									<p className="">Sustainable business</p>
-								</div>
-
-								<div className="collapse-content ">
-									<div className="font-semibold pt-8 pb-4">
-										<div className="flex flex-col  md:flex-row md:flex-wrap gap-[0.7em] justify-center">
-											{sustainableCheckedData.map((data) => (
-												<div class="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded">
-													<label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
-														<Field
-															type="checkbox"
-															name="checked"
-															value={data}
-															class="w-[0.9rem] h-[0.9rem] text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-														/>
-														{data}
-													</label>
-												</div>
-											))}
-										</div>
 									</div>
 								</div>
 							</div>
