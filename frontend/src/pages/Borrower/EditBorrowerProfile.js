@@ -142,7 +142,7 @@ const EditBorrowerProfileNew = () => {
 	}, []);
 
 	useEffect(() => {
-		if (checkedData.length >= 0) {
+		if (checkedData?.length >= 0) {
 			const data = checkedData.includes("Affordable And Clean Energy");
 			if (data) {
 				setAffordableState(true);
@@ -150,7 +150,7 @@ const EditBorrowerProfileNew = () => {
 				setAffordableState(false);
 			}
 		}
-		if (checkedData.length >= 0) {
+		if (checkedData?.length >= 0) {
 			const data = checkedData.includes("Climate Action");
 
 			if (data) {

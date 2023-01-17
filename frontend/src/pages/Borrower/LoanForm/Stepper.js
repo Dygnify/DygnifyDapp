@@ -104,7 +104,7 @@ const Stepper = ({ steps, currentStep }) => {
 	});
 
 	return (
-		<div className="flex w-full md:w-1/2 mx-auto px-3 md:px-0 mp-14 justify-between items-center">
+		<div className="flex w-full md:w-2/3 mx-auto px-3 md:px-0 mp-14 justify-between items-center">
 			{stepsDisplay}
 		</div>
 	);

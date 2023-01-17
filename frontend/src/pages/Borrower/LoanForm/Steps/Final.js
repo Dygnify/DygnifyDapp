@@ -15,6 +15,11 @@ export default function Final({
 	const [checked, setChecked] = useState(false);
 	const [expand, setExpand] = useState(false);
 	const [expand2, setExpand2] = useState(false);
+	const [isImpactMatrix, setIsImpactMatrix] = useState(
+		!!formData.impact_criteria_name
+	);
+	// console.log('is impact matrix: ', typeof formData.impact_criteria_name === 'undefined'? 'false': 'true');
+	console.log(isImpactMatrix);
 
 	const [sizeOftext, setSizeOftext] = useState(30);
 
@@ -115,6 +120,13 @@ export default function Final({
 		window.addEventListener("resize", handleResize, false);
 	}, []);
 
+	const dummyInfo = [
+		{ name: "dummy test1", value: "120" },
+		{ name: "dummy test2", value: "120" },
+		{ name: "dummy test3", value: "120" },
+		{ name: "dummy test4", value: "120" },
+	];
+
 	return (
 		<div className="flex flex-col mt-20 md:mt-14 gap-1 md:gap-1 md:px-5 overflow-hidden">
 			<div className="flex flex-col gap-3">
@@ -126,7 +138,9 @@ export default function Final({
 					<div className="flex w-full flex-col md:flex-row  justify-between">
 						<div className="flex flex-col gap-2">
 							<div className="font-[500] flex justify-between md:justify-start md:gap-7">
-								<span className=" text-[#A0ABBB]">Pool Name</span>
+								<span className=" text-[#A0ABBB]">
+									Pool Name
+								</span>
 								<span
 									className="text-black dark:text-[#fff]"
 									title={formData.loan_name}
@@ -136,26 +150,41 @@ export default function Final({
 							</div>
 
 							<div className="font-[500] text-base flex justify-between md:justify-start md:gap-4">
-								<span className=" text-[#A0ABBB]">Loan Tenure</span>
+								<span className=" text-[#A0ABBB]">
+									Loan Tenure
+								</span>
 								<span className="text-black dark:text-[#fff]">
-									{formData.loan_tenure ? `${formData.loan_tenure} Months` : ""}
+									{formData.loan_tenure
+										? `${formData.loan_tenure} Months`
+										: ""}
 								</span>
 							</div>
 
 							<div className="font-[500] text-base flex justify-between md:justify-start  md:gap-3">
-								<span className=" text-[#A0ABBB]">Loan Interest</span>
+								<span className=" text-[#A0ABBB]">
+									Loan Interest
+								</span>
 								<span className="text-black dark:text-[#fff]">
-									{formData.loan_interest ? `${formData.loan_interest}%` : ""}
+									{formData.loan_interest
+										? `${formData.loan_interest}%`
+										: ""}
 								</span>
 							</div>
 						</div>
 
 						<div className="mt-1 md:mt-0 flex flex-col gap-2">
 							<div className="font-[500] text-base w-full flex justify-between  md:gap-7">
-								<span className=" text-[#A0ABBB]"> Loan amount</span>
+								<span className=" text-[#A0ABBB]">
+									{" "}
+									Loan amount
+								</span>
 								<span className="text-black dark:text-[#fff] text-right flex gap-1">
 									{formData.loan_amount ? (
-										<img src={Doller} className="w-5" alt="dollerimage" />
+										<img
+											src={Doller}
+											className="w-5"
+											alt="dollerimage"
+										/>
 									) : (
 										""
 									)}
@@ -164,7 +193,9 @@ export default function Final({
 							</div>
 
 							<div className="font-[500] text-base flex justify-between  md:gap-7">
-								<span className=" text-[#A0ABBB]">Repayment frequency</span>
+								<span className=" text-[#A0ABBB]">
+									Repayment frequency
+								</span>
 								<span className="text-black dark:text-[#fff] text-right">
 									{formData.payment_frequency
 										? `${formData.payment_frequency} Days`
@@ -173,10 +204,14 @@ export default function Final({
 							</div>
 
 							<div className="font-[500] text-base flex justify-between  md:gap-7">
-								<span className="font-[500] text-[#A0ABBB]">Loan Type</span>
+								<span className="font-[500] text-[#A0ABBB]">
+									Loan Type
+								</span>
 
 								<span className="text-black dark:text-[#fff] text-right ">
-									{formData.loan_type === "1" ? "Term Loan" : "Bullet Loan"}
+									{formData.loan_type === "1"
+										? "Term Loan"
+										: "Bullet Loan"}
 								</span>
 							</div>
 						</div>
@@ -194,7 +229,9 @@ export default function Final({
 									>
 										{expand ? null : "... view more"}
 									</span>
-									{expand ? <div>{loanPurpose.secondText}</div> : null}
+									{expand ? (
+										<div>{loanPurpose.secondText}</div>
+									) : null}
 									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
 										onClick={() => setExpand(false)}
@@ -232,11 +269,15 @@ export default function Final({
 						</div>
 
 						<div className="font-[500] text-base flex justify-between  md:gap-7">
-							<span className=" text-[#A0ABBB]">Collateral&nbsp;File</span>
+							<span className=" text-[#A0ABBB]">
+								Collateral&nbsp;File
+							</span>
 							<span className="text-black dark:text-[#fff]">
-								{formData.collateral_document[0]?.name.length > 30
+								{formData.collateral_document[0]?.name.length >
+								30
 									? getTrimmedString(
-											formData.collateral_document[0]?.name,
+											formData.collateral_document[0]
+												?.name,
 											sizeOftext
 									  )
 									: formData.collateral_document[0]?.name}
@@ -259,7 +300,11 @@ export default function Final({
 									>
 										{expand2 ? null : "... view more"}
 									</span>
-									{expand2 ? <div>{documentDescription.secondText}</div> : null}
+									{expand2 ? (
+										<div>
+											{documentDescription.secondText}
+										</div>
+									) : null}
 									<span
 										className=" font-semibold cursor-pointer text-[#A0ABBB]"
 										onClick={() => setExpand2(false)}
@@ -273,7 +318,36 @@ export default function Final({
 						</span>
 					</div>
 				</div>
+				{isImpactMatrix && (
+					<div className="flex flex-col gap-1 md:gap-1 mt-5 md:mt-0 ">
+						<h4 className="text-primary font-medium text-lg mb-2 text-[#9281FF]">
+							Impact Matrix
+						</h4>
+
+						<div className="w-[95%] mx-auto">
+							<table className="w-full  border border-slate-100 text-center">
+								<thead className="bg-slate-500 text-black">
+									<tr>
+										<th className="w-1/2">Criteria Name</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody>
+									{dummyInfo.map((item, index) => {
+										return (
+											<tr key={index}>
+												<td>{item.name}</td>
+												<td>{item.value}</td>
+											</tr>
+										);
+									})}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				)}
 			</div>
+			<br />
 			<div className="text-center md:mt-1 mt-5  ">
 				<input
 					type="checkbox"
@@ -288,7 +362,10 @@ export default function Final({
 				<label htmlFor="terms"> I agree to all </label>
 				<span
 					onClick={() => {
-						window.open("https://www.dygnify.com/privacy-policy", "_blank");
+						window.open(
+							"https://www.dygnify.com/privacy-policy",
+							"_blank"
+						);
 					}}
 					className=" underline decoration-1 underline-offset-1 cursor-pointer text-[#6047FF]"
 				>
@@ -329,8 +406,8 @@ export default function Final({
 
 			<div className="flex  justify-center  font-semibold text-sm text-[#FBBF24]">
 				<div className="text-center">
-					Note - This pool created will only be valid for 60 days from the day
-					after verification
+					Note - This pool created will only be valid for 60 days from
+					the day after verification
 				</div>
 			</div>
 		</div>

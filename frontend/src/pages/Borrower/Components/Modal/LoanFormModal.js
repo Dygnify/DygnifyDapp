@@ -3,6 +3,7 @@ import { createOpportunity } from "../../../../services/BackendConnectors/opport
 import Stepper from "../../LoanForm/Stepper";
 import Account from "../../LoanForm/Steps/Account";
 import Details from "../../LoanForm/Steps/Details";
+import ImpactMatrix from "../../LoanForm/Steps/ImpactMatrix";
 import Final from "../../LoanForm/Steps/Final";
 import { getBorrowerJson } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import {
@@ -33,6 +34,7 @@ const LoanFormModal = ({
 	const [currentStep, setCurrentStep] = useState(1);
 	const [brJson, setBrJson] = useState();
 	const [checkBox, setCheckBox] = useState(false);
+	const [isImpactMatrix, setIsImpactMatrix] = useState(true);
 
 	useEffect(() => {
 		getBorrowerJson()
@@ -46,8 +48,15 @@ const LoanFormModal = ({
 			})
 			.catch((e) => captureException(e));
 	}, []);
-
-	const steps = ["Add Loan Details", "Add Collateral", "Submit for Review"];
+	let steps = [];
+	if (isImpactMatrix)
+		steps = [
+			"Add Loan Details",
+			"Add Collateral",
+			"Add Impact",
+			"Submit for Review",
+		];
+	else steps = ["Add Loan Details", "Add Collateral", "Submit for Review"];
 
 	const displayStep = (step) => {
 		switch (step) {
@@ -68,6 +77,22 @@ const LoanFormModal = ({
 					/>
 				);
 			case 3:
+				return isImpactMatrix ? (
+					<ImpactMatrix
+						handleNext={handleNext}
+						handlePrev={handlePrev}
+						formData={formData}
+					/>
+				) : (
+					<Final
+						handlePrev={handlePrev}
+						finalSubmit={finalSubmit}
+						formData={formData}
+						setCheckBox={setCheckBox}
+						checkBox={checkBox}
+					/>
+				);
+			case 4:
 				return (
 					<Final
 						handlePrev={handlePrev}
@@ -83,7 +108,10 @@ const LoanFormModal = ({
 	async function onFileUpload(selectedFile, loan_info) {
 		try {
 			let collateralHash = await storeFiles(selectedFile);
-			let loanInfoFile = makeFileObjects(loan_info, `${collateralHash}.json`);
+			let loanInfoFile = makeFileObjects(
+				loan_info,
+				`${collateralHash}.json`
+			);
 			let loanInfoHash = await storeFiles(loanInfoFile);
 			return [collateralHash, loanInfoHash];
 		} catch (error) {
@@ -139,7 +167,12 @@ const LoanFormModal = ({
 			collateral_document,
 			loan_info
 		);
-		loanDetails = { ...loanDetails, collateralHash, loanInfoHash, loan_name };
+		loanDetails = {
+			...loanDetails,
+			collateralHash,
+			loanInfoHash,
+			loan_name,
+		};
 
 		// sending data in backend to create opportunity with hash code
 
@@ -179,7 +212,11 @@ const LoanFormModal = ({
 
 	return (
 		<div>
-			<input type="checkbox" id="loanForm-modal" className="modal-toggle" />
+			<input
+				type="checkbox"
+				id="loanForm-modal"
+				className="modal-toggle"
+			/>
 			<div
 				// class="modal block backdrop-blur-xl backdrop-opacity-100 md:flex"
 				// style={{ backdropFilter: "brightness(40%) blur(8px)" }}
