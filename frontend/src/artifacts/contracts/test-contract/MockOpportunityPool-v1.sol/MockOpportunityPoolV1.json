@@ -1,0 +1,68 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockOpportunityPoolV1",
+  "sourceName": "contracts/test-contract/MockOpportunityPool-v1.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_subpoolId",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSeniorTotalDepositable",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getYourAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nextRepaymentTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060ed8061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060465760003560e01c80639f964fe614604b578063b4635d5e146063578063df9fd1c1146070578063f4d4c9d7146078575b600080fd5b620f42405b6040519081526020015b60405180910390f35b604051308152602001605a565b6283d6006050565b608760833660046089565b5050565b005b60008060408385031215609a578182fd5b823560ff8116811460a9578283fd5b94602093909301359350505056fea264697066735822122001573bab4c0d8955c6b5e16f81d73be2b5e9f15d40222d723810a69ff3e6579364736f6c63430008040033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060465760003560e01c80639f964fe614604b578063b4635d5e146063578063df9fd1c1146070578063f4d4c9d7146078575b600080fd5b620f42405b6040519081526020015b60405180910390f35b604051308152602001605a565b6283d6006050565b608760833660046089565b5050565b005b60008060408385031215609a578182fd5b823560ff8116811460a9578283fd5b94602093909301359350505056fea264697066735822122001573bab4c0d8955c6b5e16f81d73be2b5e9f15d40222d723810a69ff3e6579364736f6c63430008040033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
