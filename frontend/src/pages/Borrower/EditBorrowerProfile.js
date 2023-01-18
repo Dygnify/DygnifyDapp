@@ -143,7 +143,9 @@ const EditBorrowerProfileNew = () => {
 
 	useEffect(() => {
 		if (checkedData?.length >= 0) {
-			const data = checkedData.includes("Affordable And Clean Energy");
+			const data = checkedData.includes(
+				"Responsible Consumption And Production"
+			);
 			if (data) {
 				setAffordableState(true);
 			} else {
@@ -782,7 +784,7 @@ const EditBorrowerProfileNew = () => {
 									{affordableState && (
 										<>
 											<h2 className="text-[1.1875rem] mb-5 ">
-												Affordable And Clean Energy
+												Responsible Consumption and Production
 											</h2>
 
 											<div class="w-1/2 dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
