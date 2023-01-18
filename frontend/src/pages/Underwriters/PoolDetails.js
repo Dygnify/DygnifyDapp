@@ -678,10 +678,10 @@ const PoolDetails = () => {
 						<></>
 					)}
 
-					<div className="w-full mt-10 text-lg font-medium ">
+					<div className="w-full my-3 mb-5 mt-10 text-lg font-medium ">
 						<div>Projected Impact</div>
 
-						<h6 className="dark:text-[#A0ABBB] text-[#4B5768] mb-0.5">
+						<h6 className="dark:text-[#A0ABBB] text-[#4B5768] mt-7 mb-0.5">
 							Responsible Consumption and Production
 						</h6>
 						<div>

@@ -500,7 +500,7 @@ const ViewPool = () => {
 					)}
 				</div>
 
-				<div className="w-full  mt-10 text-lg font-medium ">
+				<div className="w-full  mt-5 text-lg font-medium ">
 					<h2 className="text-xl font-semibold md:text-2xl py-6">
 						Projected Impact
 					</h2>
