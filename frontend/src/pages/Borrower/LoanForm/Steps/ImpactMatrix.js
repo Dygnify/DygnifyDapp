@@ -42,7 +42,7 @@ export default function ImpactMatrix({
 				formData.impact_criteria_value ? formData.impact_criteria_value : ""
 			}`,
 		},
-		validationSchema: CollateralDetailsValidationSchema,
+		// validationSchema: CollateralDetailsValidationSchema,
 		onSubmit: (values) => {
 			console.log("Impact Matrix: ", values);
 			console.log("Impact Matrix2: ", formik.values);
@@ -75,7 +75,7 @@ export default function ImpactMatrix({
 	// }, []);
 
 	return (
-		<div className="dark:bg-darkmode-800  bg-white w-full mb-8 rounded-2xl mt-20 md:mt-10 px-5 pb-2">
+		<div className="dark:bg-darkmode-800  bg-white w-full mb-8 rounded-2xl mt-20 md:mt-10 px-5 pb-6">
 			<h3 className=" text-[25px]  md:pt-2">Projected Impact</h3>
 			<br />
 
@@ -336,7 +336,7 @@ export default function ImpactMatrix({
 				</div>
 			</div> */}
 			<form onSubmit={formik.handleSubmit}>
-				<div className=" flex flex-col-reverse gap-5 py-5 md:my-0 md:-mb-14 pt-10 justify-center items-center md:flex-row md:justify-around pb-10">
+				<div className=" flex flex-col-reverse gap-5 py-5 md:my-0 md:-mb-14  justify-center items-center md:flex-row md:justify-around pb-10">
 					<div className="">
 						<label
 							onClick={() => {
