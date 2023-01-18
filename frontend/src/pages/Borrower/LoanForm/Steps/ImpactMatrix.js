@@ -33,23 +33,23 @@ export default function ImpactMatrix({
 	const [climateState, setClimateState] = useState(false);
 	const [affordableState, setAffordableState] = useState(false);
 
-	// const formik = useFormik({
-	// 	initialValues: {
-	// 		impact_criteria_name: `${
-	// 			formData.impact_criteria_name ? formData.impact_criteria_name : ""
-	// 		}`,
-	// 		impact_criteria_value: `${
-	// 			formData.impact_criteria_value ? formData.impact_criteria_value : ""
-	// 		}`,
-	// 	},
-	// 	validationSchema: CollateralDetailsValidationSchema,
-	// 	onSubmit: (values) => {
-	// 		console.log("Impact Matrix: ", values);
-	// 		console.log("Impact Matrix2: ", formik.values);
-	// 		console.log("Impact Matrix3: ", formData);
-	// 		handleNext(values, true);
-	// 	},
-	// });
+	const formik = useFormik({
+		initialValues: {
+			impact_criteria_name: `${
+				formData.impact_criteria_name ? formData.impact_criteria_name : ""
+			}`,
+			impact_criteria_value: `${
+				formData.impact_criteria_value ? formData.impact_criteria_value : ""
+			}`,
+		},
+		validationSchema: CollateralDetailsValidationSchema,
+		onSubmit: (values) => {
+			console.log("Impact Matrix: ", values);
+			console.log("Impact Matrix2: ", formik.values);
+			console.log("Impact Matrix3: ", formData);
+			handleNext(values, true);
+		},
+	});
 
 	// const handleAddImpact = () => {
 	// 	const len = totalImpacts.length;
@@ -75,13 +75,16 @@ export default function ImpactMatrix({
 	// }, []);
 
 	return (
-		<div className="dark:bg-darkmode-800  bg-white w-full mb-8 rounded-2xl mt-20 md:mt-10 px-5">
+		<div className="dark:bg-darkmode-800  bg-white w-full mb-8 rounded-2xl mt-20 md:mt-10 px-5 pb-2">
 			<h3 className=" text-[25px]  md:pt-2">Projected Impact</h3>
 			<br />
-			<h4 className="mb-1 text-sm">SDG Goal 1</h4>
 
 			{true && (
 				<>
+					<h2 className="text-[1.1875rem] mb-5 ">
+						Responsible Consumption And Production
+					</h2>
+
 					<div class="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
 						<ul class="my-4 pt-4 pl-8 pr-8 space-y-3">
 							<li className="flex justify-between items-center">
@@ -204,9 +207,8 @@ export default function ImpactMatrix({
 					</small>
 				</div>
 			</div> */}
-			<br />
-			<br />
-			<h4 className="mb-1 text-sm">SDG Goal 2</h4>
+
+			{/* <h4 className="mb-1 text-sm">SDG Goal 2</h4> */}
 
 			{true && (
 				<>
@@ -333,7 +335,7 @@ export default function ImpactMatrix({
 					</small>
 				</div>
 			</div> */}
-			{/* <form onSubmit={formik.handleSubmit}>
+			<form onSubmit={formik.handleSubmit}>
 				<div className=" flex flex-col-reverse gap-5 py-5 md:my-0 md:-mb-14 pt-10 justify-center items-center md:flex-row md:justify-around pb-10">
 					<div className="">
 						<label
@@ -350,7 +352,7 @@ export default function ImpactMatrix({
 						<GradientButton type="submit">Next</GradientButton>
 					</div>
 				</div>
-			</form> */}
+			</form>
 		</div>
 	);
 }
