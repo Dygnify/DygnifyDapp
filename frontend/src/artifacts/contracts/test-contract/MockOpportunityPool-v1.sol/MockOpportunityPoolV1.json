@@ -1,0 +1,134 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockOpportunityPoolV1",
+  "sourceName": "contracts/test-contract/MockOpportunityPool-v1.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_subpoolId",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSeniorTotalDepositable",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getYourAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nextRepaymentTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "oppoOAddress",
+          "type": "address"
+        }
+      ],
+      "name": "toCheckMarkDrawDown",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "oppoOAddress",
+          "type": "address"
+        }
+      ],
+      "name": "toCheckMarkRepaid",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_id",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "poolAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "oppoOAddress",
+          "type": "address"
+        }
+      ],
+      "name": "toCheckmarkWriteOff",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "writeOffOpportunity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b506102dd806100206000396000f3fe608060405234801561001057600080fd5b50600436106100785760003560e01c8063257c27361461007d57806373872e541461007f5780639f964fe614610092578063b4635d5e146100aa578063df9fd1c1146100b8578063ec83be4d146100c1578063f4d4c9d7146100d4578063fa01726b146100e6575b600080fd5b005b61007d61008d366004610211565b6100f9565b620f42405b6040519081526020015b60405180910390f35b6040513081526020016100a1565b6283d600610097565b61007d6100cf36600461023c565b61015b565b61007d6100e2366004610277565b5050565b61007d6100f4366004610211565b6101c6565b604051632bdfaa5160e21b81526004810183905281906001600160a01b0382169063af7ea944906024015b600060405180830381600087803b15801561013e57600080fd5b505af1158015610152573d6000803e3d6000fd5b50505050505050565b604051636dc305f960e01b8152600481018490526001600160a01b038381166024830152829190821690636dc305f990604401600060405180830381600087803b1580156101a857600080fd5b505af11580156101bc573d6000803e3d6000fd5b5050505050505050565b6040516319978a4360e11b81526004810183905281906001600160a01b0382169063332f148690602401610124565b80356001600160a01b038116811461020c57600080fd5b919050565b60008060408385031215610223578182fd5b82359150610233602084016101f5565b90509250929050565b600080600060608486031215610250578081fd5b83359250610260602085016101f5565b915061026e604085016101f5565b90509250925092565b60008060408385031215610289578182fd5b823560ff81168114610299578283fd5b94602093909301359350505056fea26469706673582212204046ee64f7bff7a6095d7ecec8e5f7db3f29614ec1dc725e2e272b3d0842e7f164736f6c63430008040033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100785760003560e01c8063257c27361461007d57806373872e541461007f5780639f964fe614610092578063b4635d5e146100aa578063df9fd1c1146100b8578063ec83be4d146100c1578063f4d4c9d7146100d4578063fa01726b146100e6575b600080fd5b005b61007d61008d366004610211565b6100f9565b620f42405b6040519081526020015b60405180910390f35b6040513081526020016100a1565b6283d600610097565b61007d6100cf36600461023c565b61015b565b61007d6100e2366004610277565b5050565b61007d6100f4366004610211565b6101c6565b604051632bdfaa5160e21b81526004810183905281906001600160a01b0382169063af7ea944906024015b600060405180830381600087803b15801561013e57600080fd5b505af1158015610152573d6000803e3d6000fd5b50505050505050565b604051636dc305f960e01b8152600481018490526001600160a01b038381166024830152829190821690636dc305f990604401600060405180830381600087803b1580156101a857600080fd5b505af11580156101bc573d6000803e3d6000fd5b5050505050505050565b6040516319978a4360e11b81526004810183905281906001600160a01b0382169063332f148690602401610124565b80356001600160a01b038116811461020c57600080fd5b919050565b60008060408385031215610223578182fd5b82359150610233602084016101f5565b90509250929050565b600080600060608486031215610250578081fd5b83359250610260602085016101f5565b915061026e604085016101f5565b90509250925092565b60008060408385031215610289578182fd5b823560ff81168114610299578283fd5b94602093909301359350505056fea26469706673582212204046ee64f7bff7a6095d7ecec8e5f7db3f29614ec1dc725e2e272b3d0842e7f164736f6c63430008040033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
