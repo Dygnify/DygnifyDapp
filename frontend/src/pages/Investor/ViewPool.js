@@ -507,7 +507,7 @@ const ViewPool = () => {
 
 					<div className="">
 						<div>
-							<p className="font-bold  py-6">
+							<p className="font-bold  pb-6 pt-4">
 								Responsible Consumption and Production
 							</p>
 
