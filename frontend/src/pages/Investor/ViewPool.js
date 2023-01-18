@@ -500,6 +500,43 @@ const ViewPool = () => {
 					)}
 				</div>
 
+				<div className="w-full  mt-10 text-lg font-medium ">
+					<h2 className="text-xl font-semibold md:text-2xl py-6">
+						Projected Impact
+					</h2>
+
+					<div className="">
+						<div>
+							<p className="font-bold  py-6">
+								Responsible Consumption and Production
+							</p>
+
+							<div className="justify-between mb-2 w-[58%] bg-lightmode-300 dark:bg-[#20232A] rounded-lg flex px-4 py-3">
+								<div>
+									<p className="font-semibold text-[1.1875rem] ">
+										Percentage of mineable precious metals used in batteries
+									</p>
+								</div>
+								<span className=" cursor-pointer text-[1.1875rem]">23.2</span>
+							</div>
+						</div>
+
+						<div>
+							<p className="font-bold py-6">Climate Action</p>
+							<div className="justify-between mb-2 w-[58%] bg-lightmode-300 dark:bg-[#20232A] rounded-lg flex px-4 py-3">
+								<div>
+									<p className="font-semibold text-[1.1875rem]">
+										Kms of Zero emission achieved (Kms)
+									</p>
+								</div>
+								<span className=" cursor-pointer text-[1.1875rem]">
+									50 Million Kms
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div className="mt-[5em] md:w-[58%]">
 					<h2 className="text-xl font-semibold md:text-2xl mb-6">
 						Borrower Details

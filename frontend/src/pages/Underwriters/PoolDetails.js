@@ -677,6 +677,40 @@ const PoolDetails = () => {
 					) : (
 						<></>
 					)}
+
+					<div className="w-full mt-10 text-lg font-medium ">
+						<div>Projected Impact</div>
+
+						<h6 className="dark:text-[#A0ABBB] text-[#4B5768] mb-0.5">
+							Responsible Consumption and Production
+						</h6>
+						<div>
+							<div className="justify-between mb-2 bg-lightmode-300 dark:bg-[#20232A] rounded-lg flex px-4 py-3">
+								<div>
+									<p className="font-semibold text-[1.1875rem] w-[80%]">
+										Percentage of mineable precious metals used in batteries
+									</p>
+								</div>
+								<span className=" cursor-pointer text-[1.1875rem]">23.2</span>
+							</div>
+						</div>
+
+						<h6 className="dark:text-[#A0ABBB] text-[#4B5768]  mb-0.5">
+							Climate Action
+						</h6>
+						<div>
+							<div className="justify-between mb-2 bg-lightmode-300 dark:bg-[#20232A] rounded-lg flex px-4 py-3">
+								<div>
+									<p className="font-semibold text-[1.1875rem]">
+										Kms of Zero emission achieved (Kms)
+									</p>
+								</div>
+								<span className=" cursor-pointer text-[1.1875rem]">
+									50 Million Kms
+								</span>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<br />
