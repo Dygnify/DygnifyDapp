@@ -30,7 +30,6 @@ const BorrowList = () => {
 	const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 	const [loadDrawdownList, setLoadDrawdownList] = useState();
 
-	const [loading, setLoading] = useState(true);
 	const [drawdownFunds, setDrawdownFunds] = useState(true);
 	const [borrowRequest, setBorrowRequest] = useState(true);
 	const [kycStatus, setKycStatus] = useState();
@@ -69,7 +68,6 @@ const BorrowList = () => {
 				});
 			}
 
-			setLoading(false);
 			setDrawdownFunds(false);
 		};
 		fetchData();
@@ -125,7 +123,6 @@ const BorrowList = () => {
 			getBorrowerDetails().then((res) => {
 				if (res.borrowerCid) setProfileStatus(true);
 				else setProfileStatus(false);
-				setLoading(false);
 			});
 		} catch (error) {
 			console.log(error);
@@ -174,58 +171,62 @@ const BorrowList = () => {
 			) : (
 				<></>
 			)}
-			<div className="mt-8">
+			<div className="mt-8 relative">
 				{drawdownFunds ? (
-					<div className="flex justify-center">
-						<Loader />
+					<div className="">
+						<Loader  />
 					</div>
 				) : (
 					<></>
 				)}
-				<h2 className="font-semibold text-[1.4375rem] mb-4">
-					Drawdown Funds
-				</h2>
+				<div className={`${drawdownFunds?'blur-sm':''}`}>
+					<h2 className="font-semibold text-[1.4375rem] mb-4">
+						Drawdown Funds
+					</h2>
 
-				{data.length === 0 ? (
-					<div className="h-[10rem] flex items-center justify-center">
-						<p className="text-lg font-semibold text-neutral-500">
-							No drawdown available.
-						</p>
-					</div>
-				) : (
-					<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
-						{data.map((item) => (
-							<DrawdownCard
-								key={item?.id}
-								data={item}
-								loadDrawdownList={setLoadDrawdownList}
-								setOpenProcessDrawdown={setOpenProcessDrawdown}
-								setProcessDrawdown={setProcessDrawdown}
-								setUpdateRepayment={setUpdateRepayment}
-								setDrawdownId={setDrawdownId}
-								setCheckForDrawdown={setCheckForDrawdown}
-								setErrormsg={setErrormsg}
-							/>
-						))}
-					</div>
-				)}
+					{data.length === 0 ? (
+						<div className="h-[10rem] flex items-center justify-center">
+							<p className="text-lg font-semibold text-neutral-500">
+								No drawdown available.
+							</p>
+						</div>
+					) : (
+						<div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
+							{data.map((item) => (
+								<DrawdownCard
+									key={item?.id}
+									data={item}
+									loadDrawdownList={setLoadDrawdownList}
+									setOpenProcessDrawdown={
+										setOpenProcessDrawdown
+									}
+									setProcessDrawdown={setProcessDrawdown}
+									setUpdateRepayment={setUpdateRepayment}
+									setDrawdownId={setDrawdownId}
+									setCheckForDrawdown={setCheckForDrawdown}
+									setErrormsg={setErrormsg}
+								/>
+							))}
+						</div>
+					)}
 
-				{openProcessDrawdown ? (
-					<ProcessingDrawdownModal
-						processDrawdown={processDrawdown}
-						handleDrawdown={cutProcessModal}
-						drawdownId={drawdownId}
-						checkForDrawdown={checkForDrawdown}
-						setCheckForDrawdown={setCheckForDrawdown}
-					/>
-				) : (
-					<></>
-				)}
+					{openProcessDrawdown ? (
+						<ProcessingDrawdownModal
+							processDrawdown={processDrawdown}
+							handleDrawdown={cutProcessModal}
+							drawdownId={drawdownId}
+							checkForDrawdown={checkForDrawdown}
+							setCheckForDrawdown={setCheckForDrawdown}
+						/>
+					) : (
+						<></>
+					)}
+				</div>
 			</div>
 
-			<div className={`relative ${borrowRequest ? "h-[18rem]" : ""}`}>
+			<div className={`relative ${borrowRequest ? "h-[25rem]" : ""}`}>
 				{borrowRequest && <Loader />}
-				<div className="my-16">
+				<div className={`${borrowRequest ? "blur-sm" : ""} my-16`}>
 					<h2 className="font-semibold text-[1.4375rem]">
 						Borrow Request
 					</h2>
