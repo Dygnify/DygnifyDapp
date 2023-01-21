@@ -567,7 +567,7 @@ const BorrowerProfile = () => {
 								)}
 
 								{sustainableChecked.length > 0 && (
-									<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC]  rounded-xl">
+									<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] mt-7 rounded-xl">
 										<input type="checkbox" className="peer" />
 
 										<div className="collapse-title flex gap-4 md:gap-8 text-center">
@@ -614,50 +614,35 @@ const BorrowerProfile = () => {
 									</div>
 								)}
 
-								{checkboxData && checkboxData?.affordableData?.value1 && (
-									<div className="my-5 flex justify-around">
-										{true && (
+								{checkboxData && (
+									<div className="my-5 flex justify-between ">
+										{checkboxData?.resConProdData.length > 0 && (
 											<div className="w-1/2">
 												<h2 className="text-[1.1875rem] mb-5 ">
 													Responsible Consumption and Production
 												</h2>
 												<div class="w-[80%] dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
 													<ul class="my-4 pt-5 pl-8 pr-8 pb-5 space-y-3">
-														<li className="flex justify-between items-center">
-															<div className="font-base">
-																<span class="flex-1  whitespace-nowrap">
-																	{checkboxData &&
-																		checkboxData?.affordableData.label1}
-																</span>
-															</div>
-															<div>
-																<span className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[8rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none">
-																	{checkboxData &&
-																		checkboxData?.affordableData?.value1}
-																</span>
-															</div>
-														</li>
-
-														<li className="flex justify-between items-center">
-															<div className="font-base">
-																<span class="flex-1  whitespace-nowrap">
-																	{checkboxData &&
-																		checkboxData?.affordableData.label2}
-																</span>
-															</div>
-															<div>
-																<span className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[8rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none">
-																	{checkboxData &&
-																		checkboxData?.affordableData.value2}
-																</span>
-															</div>
-														</li>
+														{checkboxData?.resConProdData.map((data) => (
+															<li className="flex justify-between items-center">
+																<div className="font-base">
+																	<span class="flex-1  whitespace-nowrap">
+																		{data.title}
+																	</span>
+																</div>
+																<div>
+																	<span className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[8rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none">
+																		{data.value}
+																	</span>
+																</div>
+															</li>
+														))}
 													</ul>
 												</div>
 											</div>
 										)}
 
-										{true && (
+										{checkboxData?.climateData.value1 && (
 											<div className="w-1/2">
 												<h2 className="text-[1.1875rem] mb-5 ">
 													Climate Action

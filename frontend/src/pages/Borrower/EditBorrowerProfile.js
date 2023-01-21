@@ -53,25 +53,81 @@ const EditBorrowerProfileNew = () => {
 		err: false,
 		msg: "",
 	});
-	const [addNewFeild, setAddNewFeild] = useState(false);
-	const [addNewFeild2, setAddNewFeild2] = useState(false);
 
+	// New updates start...................................................
+	//Responsible Consumption And Production start
 	const [checkedData, setcheckedData] = useState("");
-	const [climateState, setClimateState] = useState(false);
-	const [affordableState, setAffordableState] = useState(false);
+	const [resConProdCheckState, setResConProdCheckState] = useState(false);
+	const [resConProdData, setResConProdData] = useState([
+		{ id: "e1", title: "Metric tonnes of Co2 reduced", value: 100 },
+		{ id: "e2", title: "MW increase in RW generation", value: 200 },
+	]);
+	const [isEditresConProd, setIsEditResConProd] = useState(false);
 
-	const [affordableData, setAffordableData] = useState({
-		label1: "Metric tonnes of Co2 reduced",
-		value1: "",
-		label2: "MW increase in RW generation",
-		value2: "",
+	// console.log(profileState?.checkBoxData,"");
+
+	const [formData, setformData] = useState({
+		title: "",
+		value: "",
 	});
+
+	const submitHandler = (event) => {
+		event.preventDefault();
+		setResConProdData((prev) => {
+			{
+				return [...prev, { id: Math.random().toString(), ...formData }];
+			}
+		});
+		setformData({
+			title: "",
+			value: "",
+		});
+		setIsEditResConProd(false);
+	};
+
+	console.log(resConProdData, "🥅🥅🥅");
+
+	const formChangeHandler = (event) => {
+		let { name, value } = event.target;
+		setformData((prev) => {
+			return { ...prev, [name]: value };
+		});
+	};
+
+	//Responsible Consumption And Production end
+
+	//dummy data start
+	// const [resConProdValues, setResConProdValues] = useState({
+	// 	value0: "",
+	// 	value1: "",
+	// });
+
+	// let sustainableDataDummy = [
+	// 	{
+	// 		id: "e1",
+	// 		title: "Metric tonnes of Co2 reduced",
+	// 		value: resConProdValues.value0,
+	// 	},
+	// 	{
+	// 		id: "e2",
+	// 		title: "MW increase in RW generation",
+	// 		value: resConProdValues.value1,
+	// 	},
+	// ];
+
+	//dummy data end
+
+	//Climate Action start
+	const [addNewFeild2, setAddNewFeild2] = useState(false);
+	const [climateState, setClimateState] = useState(false);
 	const [climateData, setClimateData] = useState({
 		label1: "Metric tonnes of Co2 reduced",
 		value1: "",
 		label2: "MW increase in RW generation",
 		value2: "",
 	});
+
+	//Climate Action end
 
 	const sustainableCheckedData = [
 		"No Poverty",
@@ -92,6 +148,8 @@ const EditBorrowerProfileNew = () => {
 		"Responsible Consumption And Production",
 		"Peace, Justice And Strong Institutions",
 	];
+
+	// New updates end.....................................................
 
 	const [lincenseText, setLincenseText] = useState("");
 	const [lincenseFile, setLincenseFile] = useState(false);
@@ -131,6 +189,11 @@ const EditBorrowerProfileNew = () => {
 	useEffect(() => {
 		if (location.state) {
 			setProfileState(location.state);
+
+			if (location.state?.checkBoxData.resConProdData.length > 0) {
+				setResConProdData(location.state?.checkBoxData.resConProdData);
+			}
+
 			setHasKey(location.state ? "businessLicFile" in location.state : true);
 		}
 		getUserWalletAddress().then((res) => {
@@ -147,9 +210,9 @@ const EditBorrowerProfileNew = () => {
 				"Responsible Consumption And Production"
 			);
 			if (data) {
-				setAffordableState(true);
+				setResConProdCheckState(true);
 			} else {
-				setAffordableState(false);
+				setResConProdCheckState(false);
 			}
 		}
 		if (checkedData?.length >= 0) {
@@ -438,8 +501,8 @@ const EditBorrowerProfileNew = () => {
 				}
 
 				let checkBoxData = {
-					affordableData: affordableData,
-					climateData: climateData,
+					resConProdData: resConProdCheckState ? resConProdData : [],
+					climateData: climateState ? climateData : [],
 				};
 
 				// Prepare a json file with borrower data
@@ -780,104 +843,122 @@ const EditBorrowerProfileNew = () => {
 
 								{/* card  start*/}
 
-								<div className="">
-									{affordableState && (
-										<>
+								<div className="flex justify-between">
+									{resConProdCheckState && (
+										<div>
 											<h2 className="text-[1.1875rem] mb-5 ">
 												Responsible Consumption and Production
 											</h2>
 
-											<div class="w-1/2 dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
-												<ul class="my-4 pt-4 pl-8 pr-8 space-y-3">
-													<li className="flex justify-between items-center">
-														<div className="font-base">
-															<span class="flex-1  whitespace-nowrap">
-																Metric tonnes of Co2 reduced
-															</span>
-														</div>
-														<div>
-															<input
-																type="text"
-																onChange={(e) => {
-																	console.log(e.target.value);
-																	setAffordableData({
-																		label1: "Metric tonnes of Co2 reduced",
-																		value1: e.target.value,
-																		label2: "MW increase in RW generation",
-																		value2: affordableData.value2,
-																	});
-																	console.log(affordableData);
-																}}
-																placeholder="Enter value"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
-														</div>
-													</li>
+											<div class="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
+												<ul class="my-4 pt-5 pl-8 pr-8 space-y-3">
+													{/* {sustainableDataDummy.map((data, index) => (
+														<li
+															key={data.id}
+															className="flex justify-between items-center"
+														>
+															<div className="font-base">
+																<span class="flex-1  whitespace-nowrap">
+																	{data.title}
+																</span>
+															</div>
+															<div>
+																<input
+																	type="text"
+																	value={data.value}
+																	onChange={(e) => {
+																		let value = `value${index}`;
+																		setResConProdValues((prev) => {
+																			return {
+																				...prev,
+																				[value]: e.target.value,
+																			};
+																		});
+																	}}
+																	placeholder="Enter value"
+																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+																/>
+															</div>
+														</li>
+													))} */}
 
-													<li className="flex justify-between items-center">
-														<div className="font-base">
-															<span class="flex-1  whitespace-nowrap">
-																MW increase in RW generation
-															</span>
-														</div>
-														<div>
-															<input
-																type="text"
-																onChange={(e) => {
-																	console.log(e.target.value);
-																	setAffordableData({
-																		label1: "Metric tonnes of Co2 reduced",
-																		value1: affordableData.value1,
-																		label2: "MW increase in RW generation",
-																		value2: e.target.value,
-																	});
-																	console.log(affordableData);
-																}}
-																placeholder="Enter value"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
-														</div>
-													</li>
+													{resConProdData.map((data) => (
+														<li
+															key={data.id}
+															className="flex justify-between items-center"
+														>
+															<div className="font-base">
+																<span class="flex-1  whitespace-nowrap">
+																	{data.title}
+																</span>
+															</div>
+															<div>
+																<input
+																	type="text"
+																	value={data.value}
+																	placeholder="Enter value"
+																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+																/>
+															</div>
+														</li>
+													))}
 												</ul>
 
-												<button
-													onClick={() => {
-														setAddNewFeild((prev) => !prev);
-													}}
-													type="button"
-													class="py-2.5  ml-[26rem] px-5 mr-2 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
-												>
-													Add more
-												</button>
+												{!isEditresConProd && (
+													<button
+														onClick={() => {
+															setIsEditResConProd(true);
+														}}
+														type="button"
+														class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
+													>
+														Add New
+													</button>
+												)}
 
-												{addNewFeild && (
-													<div className="flex justify-evenly items-center pb-5">
-														<div className="font-base">
-															<input
-																type="text"
-																placeholder="Enter label"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
+												{isEditresConProd && (
+													<form onSubmit={submitHandler}>
+														<div className="flex justify-between items-center pb-4 mx-8">
+															<div className="font-base">
+																<input
+																	type="text"
+																	name="title"
+																	value={formData.title}
+																	onChange={formChangeHandler}
+																	placeholder="Enter label"
+																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[14rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+																/>
+															</div>
+															<div className="font-base">
+																<input
+																	type="text"
+																	name="value"
+																	value={formData.value}
+																	onChange={formChangeHandler}
+																	placeholder="Enter value"
+																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
+																/>
+															</div>
 														</div>
-														<div>
-															<input
-																type="text"
-																placeholder="Enter value"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
-														</div>
-													</div>
+
+														<button
+															type="submit"
+															class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
+														>
+															Add more
+														</button>
+													</form>
 												)}
 											</div>
-										</>
+										</div>
 									)}
 
 									{climateState && (
-										<>
+										<div>
 											<h2 className="text-[1.1875rem] mb-5 ">Climate Action</h2>
 
-											<div class="w-1/2 dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
-												<ul class="my-4 pt-4 pl-8 pr-8 space-y-3">
+											<div class="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
+												<ul class="my-4 pt-5 pl-8 pr-8 space-y-3">
 													<li className="flex justify-between items-center">
 														<div className="font-base">
 															<span class="flex-1  whitespace-nowrap">
@@ -933,7 +1014,7 @@ const EditBorrowerProfileNew = () => {
 														setAddNewFeild2((prev) => !prev);
 													}}
 													type="button"
-													class="py-2.5  ml-[26rem] px-5 mr-2 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
+													class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
 												>
 													Add more
 												</button>
@@ -957,7 +1038,7 @@ const EditBorrowerProfileNew = () => {
 													</div>
 												)}
 											</div>
-										</>
+										</div>
 									)}
 								</div>
 
