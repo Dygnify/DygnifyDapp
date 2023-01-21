@@ -79,9 +79,15 @@ export const createOpportunity = async (formData) => {
 				msg: error.data.message,
 			};
 		}
+		if (error?.message) {
+			return {
+				success: false,
+				msg: error.message,
+			};
+		}
 		return {
 			success: false,
-			msg: error.message,
+			msg: error,
 		};
 	}
 };
@@ -104,10 +110,14 @@ export function getOpportunity(opportunity) {
 		obj.borrowerDisplayAdd = getTrimmedString(obj.borrower);
 		obj.opportunityInfo = opportunity.opportunityInfo.toString();
 		obj.loanType = opportunity.loanType.toString(); // 0 or 1 need to be handled
-		let amount = ethers.utils.formatUnits(opportunity.loanAmount, sixDecimals);
+		let amount = ethers.utils.formatUnits(
+			opportunity.loanAmount,
+			sixDecimals
+		);
 		obj.opportunityAmount = getDisplayAmount(amount);
 		obj.actualLoanAmount = amount;
-		obj.loanTenure = (opportunity.loanTenureInDays / 30).toString() + " Months";
+		obj.loanTenure =
+			(opportunity.loanTenureInDays / 30).toString() + " Months";
 		let loanInt = ethers.utils.formatUnits(
 			opportunity.loanInterest,
 			sixDecimals
@@ -121,7 +131,8 @@ export function getOpportunity(opportunity) {
 			.formatUnits(opportunity.capitalLoss, sixDecimals)
 			.toString();
 		obj.status = opportunity.opportunityStatus.toString();
-		obj.opportunityPoolAddress = opportunity.opportunityPoolAddress.toString();
+		obj.opportunityPoolAddress =
+			opportunity.opportunityPoolAddress.toString();
 
 		obj.createdOn = convertDate(opportunity.createdOn);
 		obj.epochCreationDate = opportunity.createdOn.toString();
@@ -167,8 +178,13 @@ export const getOpportunitysOf = async () => {
 							provider
 						);
 						let poolBal = await poolContract.poolBalance();
-						obj.poolBalance = ethers.utils.formatUnits(poolBal, sixDecimals);
-						obj.poolDisplayBalance = getDisplayAmount(obj.poolBalance);
+						obj.poolBalance = ethers.utils.formatUnits(
+							poolBal,
+							sixDecimals
+						);
+						obj.poolDisplayBalance = getDisplayAmount(
+							obj.poolBalance
+						);
 					} catch (error) {
 						console.log(error);
 					}
@@ -339,8 +355,14 @@ export const getDrawdownOpportunities = async () => {
 				}
 
 				let poolBalance = await poolContract.poolBalance();
-				poolBalance = ethers.utils.formatUnits(poolBalance, sixDecimals);
-				let loanAmount = ethers.utils.formatUnits(tx.loanAmount, sixDecimals);
+				poolBalance = ethers.utils.formatUnits(
+					poolBalance,
+					sixDecimals
+				);
+				let loanAmount = ethers.utils.formatUnits(
+					tx.loanAmount,
+					sixDecimals
+				);
 				console.log(poolBalance.toString());
 				if (parseInt(poolBalance) >= parseInt(loanAmount)) {
 					let { obj } = getOpportunity(tx);
@@ -410,8 +432,10 @@ export const getOpportunitiesWithDues = async () => {
 
 					let repaymentDate = await poolContract.nextRepaymentTime();
 					let totalRepayments = await poolContract.totalRepayments();
-					let repaymentCounter = await poolContract.repaymentCounter();
-					let repaymentAmount = await poolContract.getRepaymentAmount();
+					let repaymentCounter =
+						await poolContract.repaymentCounter();
+					let repaymentAmount =
+						await poolContract.getRepaymentAmount();
 					let totalRepaidAmt = await poolContract.totalRepaidAmount();
 					repaymentAmount = ethers.utils.formatUnits(
 						repaymentAmount,
@@ -422,22 +446,26 @@ export const getOpportunitiesWithDues = async () => {
 					obj.nextDueDate = convertDate(repaymentDate);
 					obj.epochDueDate = repaymentDate.toString();
 					obj.repaymentAmount = repaymentAmount;
-					obj.repaymentDisplayAmount = getDisplayAmount(repaymentAmount);
+					obj.repaymentDisplayAmount =
+						getDisplayAmount(repaymentAmount);
 					obj.totalRepaidAmount = parseFloat(
 						ethers.utils.formatUnits(totalRepaidAmt, sixDecimals)
 					);
 					// Loan type 0 Bullet Loan and 1 is Term Loan
-					let principal = obj.loanType === "1" ? 0 : obj.actualLoanAmount;
+					let principal =
+						obj.loanType === "1" ? 0 : obj.actualLoanAmount;
 
 					obj.TotalLoanRepaymentAmount =
-						parseFloat(repaymentAmount) * +totalRepayments + +principal;
+						parseFloat(repaymentAmount) * +totalRepayments +
+						+principal;
 					// Above logic does not work for last bullet repayment
 					// hence this is little workaround to get the last outstanding amount
 					if (+totalRepayments === +repaymentCounter) {
 						obj.TotalLoanRepaymentAmount =
 							+repaymentAmount + +obj.totalRepaidAmount;
 					}
-					const overdueTime = Math.floor(Date.now() / 1000) - repaymentDate;
+					const overdueTime =
+						Math.floor(Date.now() / 1000) - repaymentDate;
 					obj.isOverDue = overdueTime > 0 ? true : false;
 
 					opportunities.push(obj);
@@ -479,29 +507,34 @@ export const getAllActiveOpportunities = async () => {
 				let opportunity = await contract.opportunityToId(id);
 				if (opportunity.opportunityStatus.toString() === "5") {
 					// get pool for opportunity
-					let poolAddress = opportunity.opportunityPoolAddress.toString();
+					let poolAddress =
+						opportunity.opportunityPoolAddress.toString();
 					console.log(poolAddress);
 					const poolContract = new ethers.Contract(
 						poolAddress,
 						opportunityPool.abi,
 						provider
 					);
-					let juniorPooldata = await poolContract.juniorSubpoolDetails();
+					let juniorPooldata =
+						await poolContract.juniorSubpoolDetails();
 					let poolBal = await poolContract.poolBalance();
 					let { obj } = getOpportunity(opportunity);
 					let investableAmount =
-						+juniorPooldata[1].toString() - +juniorPooldata[2].toString();
+						+juniorPooldata[1].toString() -
+						+juniorPooldata[2].toString();
 
 					investableAmount = ethers.utils.formatUnits(
 						investableAmount,
 						sixDecimals
 					);
 					obj.investableAmount = investableAmount;
-					obj.investableDisplayAmount = getDisplayAmount(investableAmount);
+					obj.investableDisplayAmount =
+						getDisplayAmount(investableAmount);
 
 					poolBal = ethers.utils.formatUnits(poolBal, sixDecimals);
 
-					obj.isFull = parseFloat(poolBal) >= parseFloat(obj.actualLoanAmount);
+					obj.isFull =
+						parseFloat(poolBal) >= parseFloat(obj.actualLoanAmount);
 					opportunities.push(obj);
 				}
 			}
@@ -549,10 +582,12 @@ export const getAllWithdrawableOpportunities = async () => {
 					let poolBal = await poolContract.poolBalance();
 					if (poolBal.toString() !== "0") {
 						const signer = provider.getSigner();
-						const userStakingAmt = await poolContract.stakingBalance(
-							await signer.getAddress()
-						);
-						const estimatedAPY = await poolContract.juniorYieldPerecentage();
+						const userStakingAmt =
+							await poolContract.stakingBalance(
+								await signer.getAddress()
+							);
+						const estimatedAPY =
+							await poolContract.juniorYieldPerecentage();
 						let { obj } = getOpportunity(tx);
 						obj.capitalInvested = userStakingAmt;
 						obj.estimatedAPY = estimatedAPY;
