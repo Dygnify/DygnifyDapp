@@ -8,6 +8,7 @@ describe("OpportunityPool", function () {
 	let opportunityPool,
 		opportunityOrigination,
 		dygnifyConfig,
+		accounting,
 		investor,
 		usdcToken,
 		lpToken,
@@ -27,6 +28,13 @@ describe("OpportunityPool", function () {
 		dygnifyConfig = await DygnifyConfig.deploy();
 		await dygnifyConfig.deployed();
 		await dygnifyConfig.initialize();
+
+		// Deploy accounting
+		const AccountingLibrary = await ethers.getContractFactory(
+			"AccoutingLibrary"
+		);
+		accounting = await AccountingLibrary.deploy();
+		await accounting.deployed();
 
 		// Deploy OpportunityPool
 		const OpportunityPool = await ethers.getContractFactory("OpportunityPool");
@@ -87,6 +95,289 @@ describe("OpportunityPool", function () {
 		await dygnifyConfig.setNumber(5, 90);
 		//AdjustmentOffset
 		await dygnifyConfig.setNumber(6, 20);
+	});
+
+	describe("initialize", function () {
+		describe("positive cases", function () {
+			it("1. should initialize", async function () {
+				expect(
+					await opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						180,
+						"10000000",
+						30,
+						1
+					)
+				);
+			});
+			it("2. should initialize", async function () {
+				expect(
+					await opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				);
+			});
+			it("3. should initialize", async function () {
+				expect(
+					await opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						60,
+						1
+					)
+				);
+			});
+			it("4. should initialize", async function () {
+				expect(
+					await opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						720,
+						"10000000",
+						90,
+						1
+					)
+				);
+			});
+		});
+		describe("negative cases", function () {
+			it("should revert if 0 address passes as dygnifyConfig", async function () {
+				await expect(
+					opportunityPool.initialize(
+						ethers.constants.AddressZero,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.revertedWith("Invalid config address");
+			});
+			it("should revert if owner is 0 address", async function () {
+				dygnifyConfig.setAddress(0, ethers.constants.AddressZero);
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.revertedWith("Invalid Owner");
+			});
+		});
+		describe("border cases", function () {
+			it("should revert for overflow dygnifyAddress", async function () {
+				await expect(
+					opportunityPool.initialize(
+						overflow,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for overflow opportunityID", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						overflow,
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for overflow loanAmount", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						overflow,
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for overflow loanTenureInDays", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						overflow,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for overflow loanInterest", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						overflow,
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for overflow paymentFrequencyInDays", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						overflow,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for overflow loanType", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						overflow
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow dygnifyConfig", async function () {
+				await expect(
+					opportunityPool.initialize(
+						-1 * dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow dygnifyConfig", async function () {
+				await expect(
+					opportunityPool.initialize(
+						-1000000000,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow opportunityID", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						-1111,
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow loanAmount", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"-10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow loanTenureInDays", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						-360,
+						"10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow loanInterest", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"-10000000",
+						30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow paymentFrequencyInDays", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						-30,
+						1
+					)
+				).to.be.reverted;
+			});
+			it("should revert for underflow opportunityID", async function () {
+				await expect(
+					opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						-1
+					)
+				).to.be.reverted;
+			});
+		});
 	});
 
 	describe("deposit", function () {
@@ -328,82 +619,1695 @@ describe("OpportunityPool", function () {
 	});
 
 	describe("repayment", function () {
-		beforeEach(async () => {
-			// Transfer usdc to seniorPool
-			await usdcToken.transfer(seniorPool.address, "8000000000000");
-			// Transfer usdc to borrower
-			await usdcToken.transfer(borrower.address, "50000000000000");
-			// set allowance
-			await seniorPool.setAllowance(
-				usdcToken.address,
-				opportunityPool.address,
-				"100000000000000000000"
-			);
-			await usdcToken
-				.connect(borrower)
-				.approve(opportunityPool.address, "100000000000000000000");
-			await usdcToken
-				.connect(owner)
-				.approve(opportunityPool.address, "100000000000000000000");
+		describe("for term loan", function () {
+			beforeEach(async () => {
+				// Transfer usdc to seniorPool
+				await usdcToken.transfer(seniorPool.address, "8000000000000");
+				// Transfer usdc to borrower
+				await usdcToken.transfer(borrower.address, "50000000000000");
+				// set allowance
+				await seniorPool.setAllowance(
+					usdcToken.address,
+					opportunityPool.address,
+					"100000000000000000000"
+				);
+				await usdcToken
+					.connect(borrower)
+					.approve(opportunityPool.address, "100000000000000000000");
+				await usdcToken
+					.connect(owner)
+					.approve(opportunityPool.address, "100000000000000000000");
+			});
 
-			// Initialize OpportunityPool
-			await opportunityPool.initialize(
-				dygnifyConfig.address,
-				ethers.utils.formatBytes32String("id1"),
-				"10000000000000",
-				360,
-				"10000000",
-				30,
-				1
-			);
+			async function initPool({
+				dygnifyConfig,
+				opportunityID,
+				loanAmount,
+				loanTenureInDays,
+				loanInterest,
+				paymentFrequencyInDays,
+				loanType,
+			}) {
+				// Initialize OpportunityPool
+				await opportunityPool.initialize(
+					dygnifyConfig,
+					opportunityID,
+					loanAmount,
+					loanTenureInDays,
+					loanInterest,
+					paymentFrequencyInDays,
+					loanType
+				);
 
-			// Unlock juniorPool and seniorPool
-			await opportunityPool.unLockPool(0);
-			await opportunityPool.unLockPool(1);
+				// Unlock juniorPool and seniorPool
+				await opportunityPool.unLockPool(0);
+				await opportunityPool.unLockPool(1);
 
-			// Deposit
-			await opportunityPool.deposit(0, "2000000000000");
-			await seniorPool.deposit(1, "8000000000000");
+				// Deposit
+				await opportunityPool.deposit(0, "2000000000000");
+				await seniorPool.deposit(1, "8000000000000");
+			}
+
+			describe("positive cases", function () {
+				it("1. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("2. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("3. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("4. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("1. after repayment, totalOutstandingPrincipal should decrease", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const amount = await opportunityPool.getRepaymentAmount();
+					const previousPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					const interest = await accounting.getTermLoanInterest(
+						previousPrincipal,
+						30,
+						10000000
+					);
+					const remainingPrincipal = amount - interest - 20;
+					await opportunityPool.connect(borrower).repayment();
+					const afterPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					expect(previousPrincipal - afterPrincipal).to.equal(
+						remainingPrincipal
+					);
+				});
+				it("2. after repayment, totalOutstandingPrincipal should decrease", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const amount = await opportunityPool.getRepaymentAmount();
+					const previousPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					const interest = await accounting.getTermLoanInterest(
+						previousPrincipal,
+						30,
+						10000000
+					);
+					const remainingPrincipal = amount - interest - 20;
+					await opportunityPool.connect(borrower).repayment();
+					const afterPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					expect(previousPrincipal - afterPrincipal).to.equal(
+						remainingPrincipal
+					);
+				});
+				it("3. after repayment, totalOutstandingPrincipal should decrease", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const amount = await opportunityPool.getRepaymentAmount();
+					const previousPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					const interest = await accounting.getTermLoanInterest(
+						previousPrincipal,
+						60,
+						10000000
+					);
+					const remainingPrincipal = amount - interest - 20;
+					await opportunityPool.connect(borrower).repayment();
+					const afterPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					expect(previousPrincipal - afterPrincipal).to.equal(
+						remainingPrincipal
+					);
+				});
+				it("4. after repayment, totalOutstandingPrincipal should decrease", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const amount = await opportunityPool.getRepaymentAmount();
+					const previousPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					const interest = await accounting.getTermLoanInterest(
+						previousPrincipal,
+						90,
+						10000000
+					);
+					const remainingPrincipal = amount - interest - 20;
+					await opportunityPool.connect(borrower).repayment();
+					const afterPrincipal =
+						await opportunityPool.totalOutstandingPrincipal();
+					expect(previousPrincipal - afterPrincipal).to.equal(
+						remainingPrincipal
+					);
+				});
+				it("after repayment, repayment counter should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const previousCounter = await opportunityPool.repaymentCounter();
+					await opportunityPool.connect(borrower).repayment();
+					const afterCounter = await opportunityPool.repaymentCounter();
+					expect(afterCounter - previousCounter).to.equal(1);
+				});
+				it("1. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						30,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("2. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						30,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("3. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						60,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("4. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						90,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("1. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						30,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("2. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						30,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("3. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						60,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("4. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const interest = await accounting.getTermLoanInterest(
+						await opportunityPool.totalOutstandingPrincipal(),
+						90,
+						10000000
+					);
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						interest,
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("after repayment borrower balance should decrease", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const before = await usdcToken.balanceOf(borrower.address);
+					await opportunityPool.connect(borrower).repayment();
+					const after = await usdcToken.balanceOf(borrower.address);
+					expect(before.sub(after)).to.equal(
+						await opportunityPool.getRepaymentAmount()
+					);
+				});
+				it("after repayment, next repayment time should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const previousRepaymentTime =
+						await opportunityPool.nextRepaymentTime();
+					await opportunityPool.connect(borrower).repayment();
+					const afterRepaymentTime = await opportunityPool.nextRepaymentTime();
+					expect(afterRepaymentTime.sub(previousRepaymentTime)).to.be.above(0);
+				});
+				it("treasury should receive fee", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+					expect(await usdcToken.balanceOf(dygnifyTreasury.address)).to.equal(
+						8333333333
+					);
+				});
+				it("1. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("2. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("3. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("4. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 8; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("1. after all repayment outstanding principal should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(await opportunityPool.totalOutstandingPrincipal()).to.be.below(
+						500
+					);
+				});
+				it("2. after all repayment outstanding principal should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(await opportunityPool.totalOutstandingPrincipal()).to.be.below(
+						500
+					);
+				});
+				it("3. after all repayment outstanding principal should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(await opportunityPool.totalOutstandingPrincipal()).to.be.below(
+						500
+					);
+				});
+				it("4. after all repayment outstanding principal should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 8; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(await opportunityPool.totalOutstandingPrincipal()).to.be.below(
+						500
+					);
+				});
+				it("1. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("2. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("3. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("4. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 8; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("1. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 6; i++) {
+						let interest = await accounting.getTermLoanInterest(
+							await opportunityPool.totalOutstandingPrincipal(),
+							30,
+							10000000
+						);
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							interest,
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("2. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 12; i++) {
+						let interest = await accounting.getTermLoanInterest(
+							await opportunityPool.totalOutstandingPrincipal(),
+							30,
+							10000000
+						);
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							interest,
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("3. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 6; i++) {
+						let interest = await accounting.getTermLoanInterest(
+							await opportunityPool.totalOutstandingPrincipal(),
+							60,
+							10000000
+						);
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							interest,
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("4. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 8; i++) {
+						let interest = await accounting.getTermLoanInterest(
+							await opportunityPool.totalOutstandingPrincipal(),
+							90,
+							10000000
+						);
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							interest,
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("after all repayment seniorPool should receive seniorAmount", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(await usdcToken.balanceOf(seniorPool.address)).to.equal(
+						"8307947621828"
+					);
+				});
+			});
+
+			describe("negative cases", function () {
+				beforeEach(async () => {
+					// Initialize OpportunityPool
+					await opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						1
+					);
+
+					// Unlock juniorPool and seniorPool
+					await opportunityPool.unLockPool(0);
+					await opportunityPool.unLockPool(1);
+
+					// Deposit
+					await opportunityPool.deposit(0, "2000000000000");
+					await seniorPool.deposit(1, "8000000000000");
+				});
+				it("should revert if function executor other than borrower", async function () {
+					await opportunityPool.connect(borrower).drawdown();
+					await expect(
+						opportunityPool.connect(owner).repayment()
+					).to.be.revertedWith(
+						"Must have borrower role to perform this action"
+					);
+				});
+				it("should revert if replayment is done", async function () {
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					await expect(opportunityPool.connect(borrower).repayment()).to.be
+						.reverted;
+				});
+				it("should revert if funds in opportunity haven't drawdown", async function () {
+					await expect(
+						opportunityPool.connect(borrower).repayment()
+					).to.be.revertedWith("Funds in opportunity haven't drawdown yet.");
+				});
+			});
 		});
 
-		describe("positive cases", function () {
-			it("should repayment", async function () {
-				await opportunityPool.connect(borrower).drawdown();
-				expect(await opportunityPool.connect(borrower).repayment());
-				expect(await usdcToken.balanceOf(dygnifyTreasury.address)).to.equal(
-					8333333333
+		describe("for bullet loan", function () {
+			beforeEach(async () => {
+				// Transfer usdc to seniorPool
+				await usdcToken.transfer(seniorPool.address, "8000000000000");
+				// Transfer usdc to borrower
+				await usdcToken.transfer(borrower.address, "50000000000000");
+				// set allowance
+				await seniorPool.setAllowance(
+					usdcToken.address,
+					opportunityPool.address,
+					"100000000000000000000"
 				);
+				await usdcToken
+					.connect(borrower)
+					.approve(opportunityPool.address, "100000000000000000000");
+				await usdcToken
+					.connect(owner)
+					.approve(opportunityPool.address, "100000000000000000000");
 			});
-			it("after all repayment seniorPool should receive seniorAmount", async function () {
-				await opportunityPool.connect(borrower).drawdown();
-				for (let i = 0; i < 12; i++) {
-					await opportunityPool.connect(borrower).repayment();
-				}
-				expect(await usdcToken.balanceOf(seniorPool.address)).to.equal(
-					"8307947621828"
-				);
-			});
-		});
 
-		describe("negative cases", function () {
-			it("should revert if function executor other than borrower", async function () {
-				await opportunityPool.connect(borrower).drawdown();
-				await expect(
-					opportunityPool.connect(owner).repayment()
-				).to.be.revertedWith("Must have borrower role to perform this action");
-			});
-			it("should revert if replayment is done", async function () {
-				await opportunityPool.connect(borrower).drawdown();
-				for (let i = 0; i < 12; i++) {
+			async function initPool({
+				dygnifyConfig,
+				opportunityID,
+				loanAmount,
+				loanTenureInDays,
+				loanInterest,
+				paymentFrequencyInDays,
+				loanType,
+			}) {
+				// Initialize OpportunityPool
+				await opportunityPool.initialize(
+					dygnifyConfig,
+					opportunityID,
+					loanAmount,
+					loanTenureInDays,
+					loanInterest,
+					paymentFrequencyInDays,
+					loanType
+				);
+
+				// Unlock juniorPool and seniorPool
+				await opportunityPool.unLockPool(0);
+				await opportunityPool.unLockPool(1);
+
+				// Deposit
+				await opportunityPool.deposit(0, "2000000000000");
+				await seniorPool.deposit(1, "8000000000000");
+			}
+
+			describe("positive cases", function () {
+				it("1. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("2. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("3. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("4. should repayment", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+				});
+				it("after repayment, repayment counter should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const previousCounter = await opportunityPool.repaymentCounter();
 					await opportunityPool.connect(borrower).repayment();
-				}
-				await expect(opportunityPool.connect(borrower).repayment()).to.be
-					.reverted;
+					const afterCounter = await opportunityPool.repaymentCounter();
+					expect(afterCounter - previousCounter).to.equal(1);
+				});
+				it("1. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("2. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("3. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("4. after repayment, senior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[0]);
+				});
+				it("1. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("2. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("3. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("4. after repayment, junior yield should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const res = await accounting.getInterestDistribution(
+						100000,
+						200000,
+						await opportunityPool.emiAmount(),
+						4,
+						10000000000000,
+						(
+							await opportunityPool.seniorSubpoolDetails()
+						).totalDepositable
+					);
+					const before = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(await opportunityPool.connect(borrower).repayment());
+					const after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after - before).to.equal(res[1]);
+				});
+				it("after repayment borrower balance should decrease", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const before = await usdcToken.balanceOf(borrower.address);
+					await opportunityPool.connect(borrower).repayment();
+					const after = await usdcToken.balanceOf(borrower.address);
+					expect(before.sub(after)).to.equal(
+						await opportunityPool.getRepaymentAmount()
+					);
+				});
+				it("after repayment, next repayment time should increase", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					const previousRepaymentTime =
+						await opportunityPool.nextRepaymentTime();
+					await opportunityPool.connect(borrower).repayment();
+					const afterRepaymentTime = await opportunityPool.nextRepaymentTime();
+					expect(afterRepaymentTime.sub(previousRepaymentTime)).to.be.above(0);
+				});
+				it("treasury should receive fee", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					expect(await opportunityPool.connect(borrower).repayment());
+					expect(await usdcToken.balanceOf(dygnifyTreasury.address)).to.equal(
+						8333333333
+					);
+				});
+				it("1. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("2. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("3. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("4. after all repayment, senior deposited amount should 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 1,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 8; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(
+						(await opportunityPool.seniorSubpoolDetails()).depositedAmount
+					).to.equal(0);
+				});
+				it("1. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("2. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("3. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 6; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("4. after all repayment, senior yield should set 0", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 8; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					const after = (await opportunityPool.seniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(0);
+				});
+				it("1. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 180,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 6; i++) {
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							await opportunityPool.emiAmount(),
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("2. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 12; i++) {
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							await opportunityPool.emiAmount(),
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("3. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 60,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 6; i++) {
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							await opportunityPool.emiAmount(),
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("4. after all repayment, junior yield should match", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 720,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 90,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					let yield = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					for (let i = 0; i < 8; i++) {
+						let res = await accounting.getInterestDistribution(
+							100000,
+							200000,
+							await opportunityPool.emiAmount(),
+							4,
+							10000000000000,
+							(
+								await opportunityPool.seniorSubpoolDetails()
+							).totalDepositable
+						);
+						yield = yield.add(res[1]);
+						await opportunityPool.connect(borrower).repayment();
+					}
+					let after = (await opportunityPool.juniorSubpoolDetails())
+						.yieldGenerated;
+					expect(after).to.equal(yield);
+				});
+				it("after all repayment seniorPool should receive seniorAmount", async function () {
+					await initPool({
+						dygnifyConfig: dygnifyConfig.address,
+						opportunityID: ethers.utils.formatBytes32String("id1"),
+						loanAmount: "10000000000000",
+						loanTenureInDays: 360,
+						loanInterest: "10000000",
+						paymentFrequencyInDays: 30,
+						loanType: 0,
+					});
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					expect(await usdcToken.balanceOf(seniorPool.address)).to.equal(
+						"8559999999992"
+					);
+				});
 			});
-			it("should revert if funds in opportunity haven't drawdown", async function () {
-				await expect(
-					opportunityPool.connect(borrower).repayment()
-				).to.be.revertedWith("Funds in opportunity haven't drawdown yet.");
+
+			describe("negative cases", function () {
+				beforeEach(async () => {
+					// Initialize OpportunityPool
+					await opportunityPool.initialize(
+						dygnifyConfig.address,
+						ethers.utils.formatBytes32String("id1"),
+						"10000000000000",
+						360,
+						"10000000",
+						30,
+						0
+					);
+
+					// Unlock juniorPool and seniorPool
+					await opportunityPool.unLockPool(0);
+					await opportunityPool.unLockPool(1);
+
+					// Deposit
+					await opportunityPool.deposit(0, "2000000000000");
+					await seniorPool.deposit(1, "8000000000000");
+				});
+				it("should revert if function executor other than borrower", async function () {
+					await opportunityPool.connect(borrower).drawdown();
+					await expect(
+						opportunityPool.connect(owner).repayment()
+					).to.be.revertedWith(
+						"Must have borrower role to perform this action"
+					);
+				});
+				it("should revert if replayment is done", async function () {
+					await opportunityPool.connect(borrower).drawdown();
+					for (let i = 0; i < 12; i++) {
+						await opportunityPool.connect(borrower).repayment();
+					}
+					await expect(opportunityPool.connect(borrower).repayment()).to.be
+						.reverted;
+				});
+				it("should revert if funds in opportunity haven't drawdown", async function () {
+					await expect(
+						opportunityPool.connect(borrower).repayment()
+					).to.be.revertedWith("Funds in opportunity haven't drawdown yet.");
+				});
 			});
 		});
 	});
