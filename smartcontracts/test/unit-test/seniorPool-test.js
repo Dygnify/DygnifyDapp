@@ -14,7 +14,7 @@ const OVERFLOW =
 const oneYear = 60 * 60 * 24 * 30 * 12;
 const sixMonths = 60 * 60 * 24 * 30 * 6;
 
-describe.only("SeniorPool", function () {
+describe("SeniorPool", function () {
 	let lpToken,
 		dygnifyConfig,
 		seniorPool,
@@ -58,7 +58,7 @@ describe.only("SeniorPool", function () {
 		await lpToken.deployed();
 
 		// deploy USDCTestToken.sol
-		const USDCTestToken = await ethers.getContractFactory("USDCTestToken");
+		const USDCTestToken = await ethers.getContractFactory("TestUSDCToken");
 		uSDCTestToken = await USDCTestToken.deploy(USDCAMOUNT);
 		await uSDCTestToken.deployed();
 
@@ -251,6 +251,7 @@ describe.only("SeniorPool", function () {
 	describe("invest", function () {
 		describe("Positive cases", function () {
 			beforeEach(async function () {
+				await opportunityPool.setSeniorTotalDepositable(1000000);
 				await STAKE(accounts[5], AMOUNT);
 			});
 			it("should invest in given opportunity id", async function () {
@@ -313,6 +314,8 @@ describe.only("SeniorPool", function () {
 	describe("withDrawFromOpportunity", function () {
 		describe("Positive cases", function () {
 			beforeEach(async function () {
+				await opportunityPool.setSeniorPoolWithdrawableAmount(100000);
+				await opportunityPool.setSeniorProfit(9990000);
 				// accounts[5] is staking
 				await STAKE(accounts[5], AMOUNT);
 
