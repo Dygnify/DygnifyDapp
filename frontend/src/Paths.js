@@ -26,6 +26,7 @@ import OpportunityOriginationContract from "./home/Token/OpportunityOriginationC
 import SeniorPoolContract from "./home/Token/SeniorPoolContract";
 import JuniorPoolContract from "./home/Token/JuniorPoolContract";
 import TestUSDC from "./home/Token/TestUSDC";
+import Multisig from "./home/Token/Multisig";
 
 const Paths = () => {
 	return (
@@ -53,6 +54,10 @@ const Paths = () => {
 					<Route
 						path="testUSDC"
 						element={<TestUSDC/>}
+					/>
+					<Route
+						path="multisig"
+						element={<Multisig/>}
 					/>
 				</Route>
 

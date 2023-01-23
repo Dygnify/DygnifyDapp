@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Header from "../../pages/Layout/Header";
 
-
 const TokenDashboard = () => {
 	const [linkStatus, setLinkStatus] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
@@ -86,6 +85,17 @@ const TokenDashboard = () => {
 									}}
 								>
 									Test USDC
+								</NavLink>
+							</li>
+							<li className="font-medium text-center ">
+								<NavLink
+									className="flex pl-10 py-4 gap-2"
+									to="/tokenDashboard/multisig"
+									onClick={() => {
+										setLinkStatus(false);
+									}}
+								>
+									Multisig
 								</NavLink>
 							</li>
 						</ul>

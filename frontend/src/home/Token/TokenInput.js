@@ -1,13 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const TokenInput = ({ placeholder, onChange }) => {
-	const [isDark, setIsDark] = useState(localStorage.getItem("dark-mode"));
-	
-	useEffect(() => {
-		setIsDark(localStorage.getItem("dark-mode"));
-		console.log('dark-mode in useEffect: ', isDark);
-	}, [localStorage.getItem("dark-mode")]);
-
 	const [tokenInputOutline, setTokenInputOutline] = useState(false);
 
 	return (
