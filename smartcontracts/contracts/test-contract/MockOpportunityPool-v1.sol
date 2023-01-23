@@ -4,6 +4,7 @@ pragma solidity 0.8.4;
 import "../protocol/DygnifyConfig.sol";
 import "./MockOpportunityOriginationForTestingOO.sol";
 import "../protocol/SeniorPool.sol";
+
 import "hardhat/console.sol";
 
 contract MockOpportunityPoolV1 {
@@ -64,7 +65,7 @@ contract MockOpportunityPoolV1 {
     }
 
     function getSeniorPoolWithdrawableAmount() external pure returns (uint256) {
-        return 10000000;
+        return 100000;
     }
 
     function getSeniorProfit() external pure returns (uint256) {
