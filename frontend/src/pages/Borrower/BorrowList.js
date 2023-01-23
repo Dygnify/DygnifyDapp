@@ -30,8 +30,8 @@ const BorrowList = () => {
 	const [openProcessDrawdown, setOpenProcessDrawdown] = useState();
 	const [loadDrawdownList, setLoadDrawdownList] = useState();
 
-	const [drawdownFunds, setDrawdownFunds] = useState(true);
-	const [borrowRequest, setBorrowRequest] = useState(true);
+	const [isDrawdownFundsLoading, setIsDrawdownFundsLoading] = useState(true);
+	const [isBorrowRequestLoading, setIsBorrowRequestLoading] = useState(true);
 	const [kycStatus, setKycStatus] = useState();
 	const [profileStatus, setProfileStatus] = useState();
 	const [updateRepayment, setUpdateRepayment] = useState(12);
@@ -50,7 +50,6 @@ const BorrowList = () => {
 	};
 
 	const cutProcessModal = () => {
-		console.log("kadl");
 		setSelected(null);
 		setProcessModal(null);
 	};
@@ -68,7 +67,7 @@ const BorrowList = () => {
 				});
 			}
 
-			setDrawdownFunds(false);
+			setIsDrawdownFundsLoading(false);
 		};
 		fetchData();
 		getUserWalletAddress().then((res) => {
@@ -93,7 +92,7 @@ const BorrowList = () => {
 				} else {
 					console.log(res.msg);
 				}
-				setBorrowRequest(false);
+				setIsBorrowRequestLoading(false);
 			})
 			.catch((error) => console.log(error));
 	}, [updateRepayment]);
@@ -132,7 +131,6 @@ const BorrowList = () => {
 	return (
 		<div className="">
 			<ErrorModal errormsg={errormsg} setErrormsg={setErrormsg} />
-			{/* {loading && <Loader />} */}
 			<DashboardHeader
 				setSelected={setSelected}
 				kycStatus={kycStatus}
@@ -172,14 +170,14 @@ const BorrowList = () => {
 				<></>
 			)}
 			<div className="mt-8 relative">
-				{drawdownFunds ? (
+				{isDrawdownFundsLoading ? (
 					<div className="">
-						<Loader  />
+						<Loader />
 					</div>
 				) : (
 					<></>
 				)}
-				<div className={`${drawdownFunds?'blur-sm':''}`}>
+				<div className={`${isDrawdownFundsLoading ? "blur-sm" : ""}`}>
 					<h2 className="font-semibold text-[1.4375rem] mb-4">
 						Drawdown Funds
 					</h2>
@@ -224,9 +222,17 @@ const BorrowList = () => {
 				</div>
 			</div>
 
-			<div className={`relative ${borrowRequest ? "h-[25rem]" : ""}`}>
-				{borrowRequest && <Loader />}
-				<div className={`${borrowRequest ? "blur-sm" : ""} my-16`}>
+			<div
+				className={`relative ${
+					isBorrowRequestLoading ? "h-[25rem]" : ""
+				}`}
+			>
+				{isBorrowRequestLoading && <Loader />}
+				<div
+					className={`${
+						isBorrowRequestLoading ? "blur-sm" : ""
+					} my-16`}
+				>
 					<h2 className="font-semibold text-[1.4375rem]">
 						Borrow Request
 					</h2>
