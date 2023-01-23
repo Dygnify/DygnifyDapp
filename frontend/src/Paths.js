@@ -1,5 +1,4 @@
 import { Route, Routes, HashRouter, Navigate } from "react-router-dom";
-import Token from "./home/Token";
 
 import LandingPage from "./pages/LandingPage/LandingPage";
 import BorrowerDashboard from "./pages/Borrower/BorrowerDashboard";
@@ -22,16 +21,51 @@ import BorrowerProfile from "./pages/Borrower/BorrowerProfile";
 import EditBorrowerProfile from "./pages/Borrower/EditBorrowerProfile";
 import UnderwriterQueries from "./pages/Borrower/UnderwriterQueries";
 import QueriesPoolDetails from "./pages/Borrower/QueriesPoolDetails";
+import TokenDashboard from "./home/Token/TokenDashboard";
+import OpportunityOriginationContract from "./home/Token/OpportunityOriginationContract";
+import SeniorPoolContract from "./home/Token/SeniorPoolContract";
+import JuniorPoolContract from "./home/Token/JuniorPoolContract";
+import TestUSDC from "./home/Token/TestUSDC";
+import Multisig from "./home/Token/Multisig";
 
 const Paths = () => {
 	return (
 		<HashRouter>
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
-				<Route path="/token" element={<Token />} />
+				<Route path="/tokenDashboard" element={<TokenDashboard />}>
+					{/* /tokenDashboard/opportunityContract */}
+					<Route
+						index
+						element={<Navigate to="opportunityContract" />}
+					/>
+					<Route
+						path="opportunityContract"
+						element={<OpportunityOriginationContract />}
+					/>
+					<Route
+						path="seniorPoolContract"
+						element={<SeniorPoolContract />}
+					/>
+					<Route
+						path="juniorPoolContract"
+						element={<JuniorPoolContract />}
+					/>
+					<Route
+						path="testUSDC"
+						element={<TestUSDC/>}
+					/>
+					<Route
+						path="multisig"
+						element={<Multisig/>}
+					/>
+				</Route>
 
 				{/* // rename */}
-				<Route path="/investorDashboard" element={<InvestorDashboard />}>
+				<Route
+					path="/investorDashboard"
+					element={<InvestorDashboard />}
+				>
 					<Route index element={<Navigate to="overview" />} />
 					<Route path="overview" element={<InvestorOverview />} />
 					<Route path="invest" element={<Invest />} />
@@ -45,20 +79,38 @@ const Paths = () => {
 					<Route index element={<Navigate to="borrowRequest" />} />
 					<Route path="borrowRequest" element={<BorrowRequest />} />
 					<Route path="poolDetail" element={<PoolDetails />} />
-					<Route path="approvalHistory" element={<ApprovalHistory />} />
+					<Route
+						path="approvalHistory"
+						element={<ApprovalHistory />}
+					/>
 				</Route>
 
-				<Route path="/borrowerDashboard" element={<BorrowerDashboard />}>
+				<Route
+					path="/borrowerDashboard"
+					element={<BorrowerDashboard />}
+				>
 					<Route index element={<Navigate to="overview" />} />
 					<Route path="overview" element={<Overview />} />
 
 					<Route path="borrowList" element={<BorrowList />} />
 					<Route path="transaction" element={<Transaction />} />
-					<Route path="borrowerProfile" element={<BorrowerProfile />} />
-					<Route path="underwriterQueries" element={<UnderwriterQueries />} />
-					<Route path="queriesPoolDetail" element={<QueriesPoolDetails />} />
+					<Route
+						path="borrowerProfile"
+						element={<BorrowerProfile />}
+					/>
+					<Route
+						path="underwriterQueries"
+						element={<UnderwriterQueries />}
+					/>
+					<Route
+						path="queriesPoolDetail"
+						element={<QueriesPoolDetails />}
+					/>
 
-					<Route path="editProfile" element={<EditBorrowerProfile />} />
+					<Route
+						path="editProfile"
+						element={<EditBorrowerProfile />}
+					/>
 				</Route>
 			</Routes>
 		</HashRouter>
