@@ -615,7 +615,7 @@ const BorrowerProfile = () => {
 								)}
 
 								{stainableCheckBoxData && (
-									<div className="my-5 flex justify-between ">
+									<div className="my-5 flex justify-between flex-wrap">
 										{stainableCheckBoxData.map((item) => (
 											<div className="w-1/2">
 												<h2 className="text-[1.1875rem] mb-5 ">{item.name}</h2>

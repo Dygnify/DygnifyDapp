@@ -121,7 +121,7 @@ const SustainableCard = ({
 										className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[14rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
 									/>
 								</div>
-								<div className="font-base">
+								<div className="font-base mr-5">
 									<input
 										type="text"
 										name="value"
