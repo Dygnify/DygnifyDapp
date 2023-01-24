@@ -221,15 +221,19 @@ describe("DygnifyKeeper", function () {
 	});
 
 	describe("checkUpkeep", function () {
+		beforeEach(async function () {
+			await opportunityPool.setNextRepaymentTime(8640000);
+		});
 		describe("Positive cases", function () {
 			it("returns upkeppNeeded as true when opportunity threshold is less than timePasses", async function () {
 				const id = ethers.utils.id("aadhar");
+
 				opportunityOrigination.toCheckAddOpportunityInKeeper(
 					id,
 					dygnifyKeeper.address,
 					true
 				);
-
+				await opportunityOrigination.setWriteOffDays(100);
 				await network.provider.send("evm_increaseTime", [86400]);
 				await network.provider.send("evm_mine", []);
 				const upKeepNeeded =
@@ -253,6 +257,7 @@ describe("DygnifyKeeper", function () {
 
 				await network.provider.send("evm_increaseTime", [86400]);
 				await network.provider.send("evm_mine", []);
+				await opportunityOrigination.setWriteOffDays(767678678);
 				const upKeepNeeded =
 					await opportunityOrigination.callStatic.toCheckCheckUpkeep(
 						dygnifyKeeper.address,
@@ -265,6 +270,9 @@ describe("DygnifyKeeper", function () {
 	});
 
 	describe("performUpkeep", function () {
+		beforeEach(async function () {
+			await opportunityPool.setNextRepaymentTime(8640000);
+		});
 		describe("Positive cases", function () {
 			it("returns upkeppNeeded as true when opportunity threshold is less than timePasses", async function () {
 				const id = ethers.utils.id("aadhar");
