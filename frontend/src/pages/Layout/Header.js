@@ -6,7 +6,10 @@ import LogoImage from "../../assets/logo.png";
 import Wallet from "../../pages/SVGIcons/Wallet";
 import Hamburger from "../../pages/SVGIcons/Hamburger";
 import Cross from "../../assets/cross.svg";
-import { isConnected } from "../../services/BackendConnectors/userConnectors/commonConnectors";
+import {
+	isConnected,
+	checkNetwork,
+} from "../../services/BackendConnectors/userConnectors/commonConnectors";
 
 import Dark from "../../pages/SVGIcons/Dark";
 import Light from "../../pages/SVGIcons/Light";
@@ -19,6 +22,16 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 		msg: "",
 	});
 
+	const [chainChange, setChainChange] = useState(0);
+
+	let provider = window.ethereum;
+	//change address
+	provider.on("accountsChanged", (accounts) => window.location.reload());
+	//chain change
+	provider.on("chainChanged", (_chainId) => {
+		window.location.reload();
+	});
+
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -28,15 +41,21 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 		if (getStatus.success) {
 			setStatus(true);
 			localStorage.setItem("Wallet-Check", true);
-			setMetaStatus(true);
+			if (setMetaStatus !== undefined) {
+				setMetaStatus(true);
+			}
 		} else {
 			if (localStorage.getItem("Wallet-Check") === "true") {
 				setStatus(true);
-				setMetaStatus(true);
+				if (setMetaStatus !== undefined) {
+					setMetaStatus(true);
+				}
 			} else {
 				setErrormsg({ status: !getStatus.success, msg: getStatus.msg });
 				setStatus(false);
-				setMetaStatus(false);
+				if (setMetaStatus !== undefined) {
+					setMetaStatus(false);
+				}
 			}
 		}
 	};
@@ -51,6 +70,18 @@ const Header = ({ linkStatus, darkMode, setDarkMode, setMetaStatus }) => {
 			await fetchStatus();
 		}
 		fetchData();
+
+		async function fetchChainId() {
+			const checkChainId = await checkNetwork();
+			if (checkChainId.success !== true) {
+				setErrormsg({
+					status: true,
+					msg: checkChainId.msg,
+				});
+			}
+		}
+		fetchChainId();
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 

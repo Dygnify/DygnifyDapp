@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PoolCard from "./components/Cards/PoolCard";
 import GradientButtonHeader from "../../uiTools/Button/GradientButtonHeader";
 import {
-	getUserSeniorPoolInvestment,
+	// getUserSeniorPoolInvestment,
 	getJuniorWithdrawableOp,
 	getSeniorPoolDisplaySharePrice,
 	getTotalInvestmentOfInvestor,
@@ -79,9 +79,8 @@ const InvestorOverview = () => {
 										res.balance
 									);
 
-									seniorInvestmentData.capitalInvested = getDisplayAmount(
-										totalSPInvestment
-									);
+									seniorInvestmentData.capitalInvested =
+										getDisplayAmount(totalSPInvestment);
 
 									const price = await getSeniorPoolDisplaySharePrice(
 										spJson.estimatedAPY

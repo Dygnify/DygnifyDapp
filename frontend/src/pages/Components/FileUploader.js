@@ -11,6 +11,7 @@ const FileUploader = ({
 	filetype,
 }) => {
 	const hiddenFileInput = React.useRef(null);
+	const [fileSizeError, setFileSizeError] = useState(false);
 
 	const [fileUploadedName, setFileUploadedName] = useState();
 
@@ -19,6 +20,11 @@ const FileUploader = ({
 	};
 	const handleChange = (event) => {
 		const fileUploaded = event.target.files[0];
+		if (fileUploaded.size > 5000000) {
+			setFileSizeError(true);
+			return;
+		} else setFileSizeError(false);
+
 		setFileUploadedName(fileUploaded.name);
 
 		handleFile(event.target.files);
@@ -55,6 +61,11 @@ const FileUploader = ({
 				{error && (
 					<p style={{ color: "red", margin: "0px" }}>
 						<small>{error}</small>
+					</p>
+				)}
+				{fileSizeError && (
+					<p style={{ color: "red", margin: "0px" }}>
+						<small>File size exceeds the limit of 5MB</small>
 					</p>
 				)}
 			</div>

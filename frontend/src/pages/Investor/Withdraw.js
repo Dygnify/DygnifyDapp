@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import WithdrawCard from "./components/Cards/WithdrawCard";
 import { getWalletBal } from "../../services/BackendConnectors/userConnectors/commonConnectors";
@@ -25,7 +25,6 @@ const Withdraw = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [processFundModal, setProcessFundModal] = useState();
 	const [investProcessing, setInvestProcessing] = useState();
-	const [loading, setLoading] = useState(true);
 	const [txhash, settxhash] = useState("");
 	const [contractAdrress, setcontractAdrress] = useState("");
 	const [amounts, setAmounts] = useState("");

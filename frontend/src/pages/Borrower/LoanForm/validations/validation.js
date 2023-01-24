@@ -12,14 +12,16 @@ export const loanDetailsValidationSchema = Yup.object().shape({
 		.max(100)
 		.required()
 
-		.label("Loan Tenure"),
+		.label("Loan Tenure")
+		.required(),
 	loan_interest: Yup.number()
 		.positive()
 		.min(1)
 		.max(100)
 		.required()
 
-		.label("Loan Interest"),
+		.label("Loan Interest")
+		.required(),
 	payment_frequency: Yup.number()
 		.positive()
 		.min(1)
@@ -28,14 +30,14 @@ export const loanDetailsValidationSchema = Yup.object().shape({
 		.required(),
 });
 
-const SUPPORTED_FORMATS = [
-	"image/jpg",
-	"image/jpeg",
-	"image/png",
-	"application/pdf",
-	"application/msword",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
+// const SUPPORTED_FORMATS = [
+// 	"image/jpg",
+// 	"image/jpeg",
+// 	"image/png",
+// 	"application/pdf",
+// 	"application/msword",
+// 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+// ];
 
 export const CollateralDetailsValidationSchema = Yup.object().shape({
 	collateral_document_name: Yup.string().label("Document Name").required(),
