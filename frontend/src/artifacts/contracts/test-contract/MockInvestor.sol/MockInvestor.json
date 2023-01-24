@@ -1,0 +1,71 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockInvestor",
+  "sourceName": "contracts/test-contract/MockInvestor.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "addOpportunity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "isExistInInvestor",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "removeOpportunity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060e38061001f6000396000f3fe6080604052348015600f57600080fd5b5060043610603c5760003560e01c8063a68a1322146041578063de9d9ee8146041578063e954539d146052575b600080fd5b6050604c3660046079565b5050565b005b6065605d3660046079565b600192915050565b604051901515815260200160405180910390f35b60008060408385031215608a578182fd5b82356001600160a01b0381168114609f578283fd5b94602093909301359350505056fea26469706673582212207b9daa8a47a6cdc1c09a004138df65937279878360e09d1ec4901fba5dbb5bc464736f6c63430008040033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b5060043610603c5760003560e01c8063a68a1322146041578063de9d9ee8146041578063e954539d146052575b600080fd5b6050604c3660046079565b5050565b005b6065605d3660046079565b600192915050565b604051901515815260200160405180910390f35b60008060408385031215608a578182fd5b82356001600160a01b0381168114609f578283fd5b94602093909301359350505056fea26469706673582212207b9daa8a47a6cdc1c09a004138df65937279878360e09d1ec4901fba5dbb5bc464736f6c63430008040033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

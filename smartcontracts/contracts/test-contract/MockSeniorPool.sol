@@ -2,18 +2,18 @@
 pragma solidity 0.8.4;
 
 import "../protocol/SeniorPool.sol";
-import "./USDCTestToken.sol";
+import "../protocol/old/TestUSDCToken.sol";
 
 contract MockSeniorPool {
     SeniorPool seniorPool;
-    USDCTestToken uSDCTestToken;
+    TestUSDCToken uSDCTestToken;
 
     constructor(
         address seniorPoolContractAddress,
         address usdcContractAddress
     ) {
         seniorPool = SeniorPool(seniorPoolContractAddress);
-        uSDCTestToken = USDCTestToken(usdcContractAddress);
+        uSDCTestToken = TestUSDCToken(usdcContractAddress);
     }
 
     function approveUSDC(uint amount) internal {

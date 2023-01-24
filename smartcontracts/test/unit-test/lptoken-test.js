@@ -49,7 +49,7 @@ describe("LPToken", function () {
 
 		// deploy USDCTestToken.sol
 
-		const USDCTestToken = await ethers.getContractFactory("USDCTestToken");
+		const USDCTestToken = await ethers.getContractFactory("TestUSDCToken");
 		uSDCTestToken = await USDCTestToken.deploy(USDCAMOUNT);
 		await uSDCTestToken.deployed();
 
