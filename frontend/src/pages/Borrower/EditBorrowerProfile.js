@@ -17,6 +17,7 @@ import {
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { captureMessage } from "@sentry/react";
 import { Field } from "formik";
+import SustainableCard from "../../uiTools/Card/SustainableCard";
 
 const URL =
 	/^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
@@ -55,79 +56,70 @@ const EditBorrowerProfileNew = () => {
 	});
 
 	// New updates start...................................................
-	//Responsible Consumption And Production start
-	const [checkedData, setcheckedData] = useState("");
-	const [resConProdCheckState, setResConProdCheckState] = useState(false);
-	const [resConProdData, setResConProdData] = useState([
-		{ id: "e1", title: "Metric tonnes of Co2 reduced", value: 100 },
-		{ id: "e2", title: "MW increase in RW generation", value: 200 },
-	]);
-	const [isEditresConProd, setIsEditResConProd] = useState(false);
 
-	// console.log(profileState?.checkBoxData,"");
-
-	const [formData, setformData] = useState({
-		title: "",
-		value: "",
-	});
-
-	const submitHandler = (event) => {
-		event.preventDefault();
-		setResConProdData((prev) => {
-			{
-				return [...prev, { id: Math.random().toString(), ...formData }];
-			}
-		});
-		setformData({
-			title: "",
-			value: "",
-		});
-		setIsEditResConProd(false);
-	};
-
-	console.log(resConProdData, "🥅🥅🥅");
-
-	const formChangeHandler = (event) => {
-		let { name, value } = event.target;
-		setformData((prev) => {
-			return { ...prev, [name]: value };
-		});
-	};
-
-	//Responsible Consumption And Production end
+	const [checkedData, setcheckedData] = useState([]);
+	const [stainableCheckBoxData, setStainableCheckBoxData] = useState([]);
 
 	//dummy data start
-	// const [resConProdValues, setResConProdValues] = useState({
-	// 	value0: "",
-	// 	value1: "",
-	// });
 
-	// let sustainableDataDummy = [
-	// 	{
-	// 		id: "e1",
-	// 		title: "Metric tonnes of Co2 reduced",
-	// 		value: resConProdValues.value0,
-	// 	},
-	// 	{
-	// 		id: "e2",
-	// 		title: "MW increase in RW generation",
-	// 		value: resConProdValues.value1,
-	// 	},
-	// ];
+	const sustainableDummyData = [
+		{
+			name: "No Poverty",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Zero Hunger",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Life On Land",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Climate Action",
+			data: [{ title: "Metric tonnes of Co2 reduced", value: "" }],
+		},
+		{
+			name: "Gender Equaltiy",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+				{ title: "time pass", value: "" },
+			],
+		},
+		{
+			name: "Life Below Water",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Quality Education",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Reduced Inequalities",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+	];
 
 	//dummy data end
-
-	//Climate Action start
-	const [addNewFeild2, setAddNewFeild2] = useState(false);
-	const [climateState, setClimateState] = useState(false);
-	const [climateData, setClimateData] = useState({
-		label1: "Metric tonnes of Co2 reduced",
-		value1: "",
-		label2: "MW increase in RW generation",
-		value2: "",
-	});
-
-	//Climate Action end
 
 	const sustainableCheckedData = [
 		"No Poverty",
@@ -136,7 +128,7 @@ const EditBorrowerProfileNew = () => {
 		"Climate Action",
 		"Gender Equaltiy",
 		"Life Below Water",
-		"Quality Educatiion",
+		"Quality Education",
 		"Reduced Inequalities",
 		"Partnerships For The Goals",
 		"Good Health And Well-Being",
@@ -190,8 +182,8 @@ const EditBorrowerProfileNew = () => {
 		if (location.state) {
 			setProfileState(location.state);
 
-			if (location.state?.checkBoxData.resConProdData.length > 0) {
-				setResConProdData(location.state?.checkBoxData.resConProdData);
+			if (location.state?.stainableCheckBoxData?.length > 0) {
+				setStainableCheckBoxData(location.state?.stainableCheckBoxData);
 			}
 
 			setHasKey(location.state ? "businessLicFile" in location.state : true);
@@ -203,28 +195,6 @@ const EditBorrowerProfileNew = () => {
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	useEffect(() => {
-		if (checkedData?.length >= 0) {
-			const data = checkedData.includes(
-				"Responsible Consumption And Production"
-			);
-			if (data) {
-				setResConProdCheckState(true);
-			} else {
-				setResConProdCheckState(false);
-			}
-		}
-		if (checkedData?.length >= 0) {
-			const data = checkedData.includes("Climate Action");
-
-			if (data) {
-				setClimateState(true);
-			} else {
-				setClimateState(false);
-			}
-		}
-	}, [checkedData]);
 
 	const initialValues = {
 		companyName: profileState ? profileState.companyName : "",
@@ -499,15 +469,21 @@ const EditBorrowerProfileNew = () => {
 						);
 					}
 				}
-
-				let checkBoxData = {
-					resConProdData: resConProdCheckState ? resConProdData : [],
-					climateData: climateState ? climateData : [],
-				};
+				let stainableBoxData = [];
+				if (checkedData.length > 0) {
+					stainableCheckBoxData.forEach((item) => {
+						const data = checkedData.includes(item.name);
+						if (data) {
+							stainableBoxData.push(item);
+						}
+					});
+				} else {
+					stainableBoxData = [];
+				}
 
 				// Prepare a json file with borrower data
 				let borrowerJsonData = {
-					checkBoxData: checkBoxData,
+					stainableCheckBoxData: stainableBoxData,
 					sustainableChecked: checked,
 					companyName: companyName,
 					companyRepName: companyRepName,
@@ -824,13 +800,13 @@ const EditBorrowerProfileNew = () => {
 										<div className="font-semibold pt-8 pb-4">
 											<div className="flex flex-col  md:flex-row md:flex-wrap gap-[0.7em] justify-center">
 												{sustainableCheckedData.map((data) => (
-													<div class="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded">
-														<label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
+													<div className="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded">
+														<label className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
 															<Field
 																type="checkbox"
 																name="checked"
 																value={data}
-																class="w-[0.9rem] h-[0.9rem] text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+																className="w-[0.9rem] h-[0.9rem] text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 															/>
 															{data}
 														</label>
@@ -843,203 +819,24 @@ const EditBorrowerProfileNew = () => {
 
 								{/* card  start*/}
 
-								<div className="flex justify-between">
-									{resConProdCheckState && (
-										<div>
-											<h2 className="text-[1.1875rem] mb-5 ">
-												Responsible Consumption and Production
-											</h2>
-
-											<div class="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
-												<ul class="my-4 pt-5 pl-8 pr-8 space-y-3">
-													{/* {sustainableDataDummy.map((data, index) => (
-														<li
-															key={data.id}
-															className="flex justify-between items-center"
-														>
-															<div className="font-base">
-																<span class="flex-1  whitespace-nowrap">
-																	{data.title}
-																</span>
-															</div>
-															<div>
-																<input
-																	type="text"
-																	value={data.value}
-																	onChange={(e) => {
-																		let value = `value${index}`;
-																		setResConProdValues((prev) => {
-																			return {
-																				...prev,
-																				[value]: e.target.value,
-																			};
-																		});
-																	}}
-																	placeholder="Enter value"
-																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-																/>
-															</div>
-														</li>
-													))} */}
-
-													{resConProdData.map((data) => (
-														<li
-															key={data.id}
-															className="flex justify-between items-center"
-														>
-															<div className="font-base">
-																<span class="flex-1  whitespace-nowrap">
-																	{data.title}
-																</span>
-															</div>
-															<div>
-																<input
-																	type="text"
-																	value={data.value}
-																	placeholder="Enter value"
-																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-																/>
-															</div>
-														</li>
-													))}
-												</ul>
-
-												{!isEditresConProd && (
-													<button
-														onClick={() => {
-															setIsEditResConProd(true);
-														}}
-														type="button"
-														class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
-													>
-														Add New
-													</button>
-												)}
-
-												{isEditresConProd && (
-													<form onSubmit={submitHandler}>
-														<div className="flex justify-between items-center pb-4 mx-8">
-															<div className="font-base">
-																<input
-																	type="text"
-																	name="title"
-																	value={formData.title}
-																	onChange={formChangeHandler}
-																	placeholder="Enter label"
-																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[14rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-																/>
-															</div>
-															<div className="font-base">
-																<input
-																	type="text"
-																	name="value"
-																	value={formData.value}
-																	onChange={formChangeHandler}
-																	placeholder="Enter value"
-																	className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-																/>
-															</div>
-														</div>
-
-														<button
-															type="submit"
-															class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
-														>
-															Add more
-														</button>
-													</form>
-												)}
-											</div>
-										</div>
-									)}
-
-									{climateState && (
-										<div>
-											<h2 className="text-[1.1875rem] mb-5 ">Climate Action</h2>
-
-											<div class="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
-												<ul class="my-4 pt-5 pl-8 pr-8 space-y-3">
-													<li className="flex justify-between items-center">
-														<div className="font-base">
-															<span class="flex-1  whitespace-nowrap">
-																Metric tonnes of Co2 reduced
-															</span>
-														</div>
-														<div>
-															<input
-																type="text"
-																onChange={(e) => {
-																	console.log(e.target.value);
-																	setClimateData({
-																		label1: "Metric tonnes of Co2 reduced",
-																		value1: e.target.value,
-																		label2: "MW increase in RW generation",
-																		value2: climateData.value2,
-																	});
-																	console.log(climateData);
-																}}
-																placeholder="Enter value"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
-														</div>
-													</li>
-													<li className="flex justify-between items-center">
-														<div className="font-base">
-															<span class="flex-1  whitespace-nowrap">
-																MW increase in RW generation
-															</span>
-														</div>
-														<div>
-															<input
-																type="text"
-																onChange={(e) => {
-																	console.log(e.target.value);
-																	setClimateData({
-																		label1: "Metric tonnes of Co2 reduced",
-																		value1: climateData.value1,
-																		label2: "MW increase in RW generation",
-																		value2: e.target.value,
-																	});
-																	console.log(climateData);
-																}}
-																placeholder="Enter value"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
-														</div>
-													</li>
-												</ul>
-
-												<button
-													onClick={() => {
-														setAddNewFeild2((prev) => !prev);
-													}}
-													type="button"
-													class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
-												>
-													Add more
-												</button>
-
-												{addNewFeild2 && (
-													<div className="flex justify-evenly items-center pb-5">
-														<div className="font-base">
-															<input
-																type="text"
-																placeholder="Enter label"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
-														</div>
-														<div>
-															<input
-																type="text"
-																placeholder="Enter value"
-																className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-full p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-															/>
-														</div>
-													</div>
-												)}
-											</div>
-										</div>
-									)}
+								<div className="flex flex-wrap justify-between">
+									{sustainableDummyData.map((item) => {
+										if (checkedData) {
+											const data = checkedData.includes(item.name);
+											if (data) {
+												return (
+													<SustainableCard
+														name={item.name}
+														data={item.data}
+														stainableCheckBoxData={stainableCheckBoxData}
+														setStainableCheckBoxData={setStainableCheckBoxData}
+													/>
+												);
+											}
+										} else {
+											return <></>;
+										}
+									})}
 								</div>
 
 								{/* card  end*/}
