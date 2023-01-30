@@ -12,6 +12,7 @@ import {
 } from "../../../../services/Helpers/web3storageIPFS";
 
 import { captureException } from "@sentry/react";
+import Loader from "../../../../uiTools/Loading/Loader";
 
 const LoanFormModal = ({
 	setSelected,
@@ -33,8 +34,11 @@ const LoanFormModal = ({
 	});
 	const [currentStep, setCurrentStep] = useState(1);
 	const [brJson, setBrJson] = useState();
+	const [impactData, setImpactData] = useState([]);
 	const [checkBox, setCheckBox] = useState(false);
-	const [isImpactMatrix, setIsImpactMatrix] = useState(true);
+	const [isImpactMatrix, setIsImpactMatrix] = useState(false);
+	const [loading, setLoading] = useState(true);
+
 
 	useEffect(() => {
 		getBorrowerJson()
@@ -43,11 +47,23 @@ const LoanFormModal = ({
 					dataReader.onloadend = function () {
 						let data = JSON.parse(dataReader.result);
 						setBrJson(data);
+						setImpactData(data?.stainableCheckBoxData);
+						setIsImpactMatrix(impactData?.length > 0);
+						setLoading(false);
 					};
 				}
 			})
 			.catch((e) => captureException(e));
-	}, []);
+	}, [impactData?.length]);
+
+	useEffect(() => {
+		for (let impact of impactData) {
+			for (let dt of impact.data) {
+				dt.value = "";
+			}
+		}
+	}, [impactData]);
+
 	let steps = [];
 	if (isImpactMatrix)
 		steps = [
@@ -82,7 +98,7 @@ const LoanFormModal = ({
 						handleNext={handleNext}
 						handlePrev={handlePrev}
 						formData={formData}
-						brJson={brJson}
+						impactData={impactData}
 					/>
 				) : (
 					<Final
@@ -91,6 +107,7 @@ const LoanFormModal = ({
 						formData={formData}
 						setCheckBox={setCheckBox}
 						checkBox={checkBox}
+						impactData={impactData}
 					/>
 				);
 			case 4:
@@ -101,6 +118,7 @@ const LoanFormModal = ({
 						formData={formData}
 						setCheckBox={setCheckBox}
 						checkBox={checkBox}
+						impactData={impactData}
 					/>
 				);
 			default:
@@ -109,7 +127,10 @@ const LoanFormModal = ({
 	async function onFileUpload(selectedFile, loan_info) {
 		try {
 			let collateralHash = await storeFiles(selectedFile);
-			let loanInfoFile = makeFileObjects(loan_info, `${collateralHash}.json`);
+			let loanInfoFile = makeFileObjects(
+				loan_info,
+				`${collateralHash}.json`
+			);
 			let loanInfoHash = await storeFiles(loanInfoFile);
 			return [collateralHash, loanInfoHash];
 		} catch (error) {
@@ -134,6 +155,9 @@ const LoanFormModal = ({
 		} = data;
 		loan_tenure = loan_tenure * 30;
 		const collateral_document = rest.collateral_document;
+		const impactData = rest.stainableCheckBoxData
+			? rest.stainableCheckBoxData
+			: [];
 
 		setFileUpload({
 			fileName: collateral_document[0].name,
@@ -141,7 +165,6 @@ const LoanFormModal = ({
 			status: "Pending",
 		});
 
-		console.log(rest);
 		let loanDetails = {
 			loan_type,
 			loan_amount,
@@ -154,6 +177,7 @@ const LoanFormModal = ({
 		const loan_info = {
 			loan_name,
 			loan_purpose,
+			impactData
 		};
 		loan_info.collateral_document_name = rest.collateral_document_name;
 		loan_info.collateral_document_description =
@@ -165,6 +189,7 @@ const LoanFormModal = ({
 			collateral_document,
 			loan_info
 		);
+
 		loanDetails = {
 			...loanDetails,
 			collateralHash,
@@ -210,13 +235,18 @@ const LoanFormModal = ({
 
 	return (
 		<div>
-			<input type="checkbox" id="loanForm-modal" className="modal-toggle" />
+			<input
+				type="checkbox"
+				id="loanForm-modal"
+				className="modal-toggle"
+			/>
 			<div
 				// class="modal block backdrop-blur-xl backdrop-opacity-100 md:flex"
 				// style={{ backdropFilter: "brightness(40%) blur(8px)" }}
 				className="modal block backdrop-filter backdrop-brightness-[100%] backdrop-opacity-100 dark:backdrop-brightness-[40%] backdrop-blur-xl md:flex"
 			>
-				<div className="w-screen h-full modal-box max-w-full max-h-full rounded-none md:h-auto md:w-1/2 md:max-w-4xl bg-white dark:bg-[#14171F]   md:rounded-[16px]">
+				{loading && <Loader />}
+				<div className={`${loading ? 'blur-sm':''} w-screen h-full modal-box max-w-full max-h-full rounded-none md:h-auto md:w-1/2 md:max-w-4xl bg-white dark:bg-[#14171F]   md:rounded-[16px]`}>
 					<div className="py-5 md:-mt-2 mb-5 md:py-0 flex justify-between items-center text-center md:border-b-2 md:border-b-[#292C33] -mx-5">
 						<h3 className="font-medium text-lg  md:border-b-[#292C33] ml-5 md:pb-3">
 							Create Borrow Request
