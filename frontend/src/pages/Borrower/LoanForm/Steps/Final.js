@@ -11,15 +11,11 @@ export default function Final({
 	formData,
 	setCheckBox,
 	checkBox,
+	impactData,
 }) {
 	const [checked, setChecked] = useState(false);
 	const [expand, setExpand] = useState(false);
 	const [expand2, setExpand2] = useState(false);
-	const [isImpactMatrix, setIsImpactMatrix] = useState(
-		!!formData.impact_criteria_name
-	);
-	// console.log('is impact matrix: ', typeof formData.impact_criteria_name === 'undefined'? 'false': 'true');
-	console.log(isImpactMatrix);
 
 	const [sizeOftext, setSizeOftext] = useState(30);
 
@@ -94,7 +90,20 @@ export default function Final({
 	}
 
 	const handleClick = () => {
-		finalSubmit(formData);
+		// filtering and keep the impact data if a label has value. 
+		const newImpactData = [];
+		for (let impact of impactData) {
+			const newOb = { name: impact.name, data: [] };
+			for (let dt of impact.data) {
+				if (dt.value) {
+					newOb.data.push(dt);
+				}
+			}
+			if(newOb.data.length>0) newImpactData.push(newOb);
+		}
+
+		if(newImpactData.length>0) finalSubmit({ ...formData, stainableCheckBoxData:newImpactData });
+		else finalSubmit({...formData});
 	};
 
 	console.log("clicked...", formData);
@@ -119,13 +128,6 @@ export default function Final({
 		handleResize();
 		window.addEventListener("resize", handleResize, false);
 	}, []);
-
-	const dummyInfo = [
-		{ name: "dummy test1", value: "120" },
-		{ name: "dummy test2", value: "120" },
-		{ name: "dummy test3", value: "120" },
-		{ name: "dummy test4", value: "120" },
-	];
 
 	return (
 		<div className="flex flex-col mt-20 md:mt-14 gap-1 md:gap-1 md:px-5 overflow-hidden">
@@ -318,34 +320,6 @@ export default function Final({
 						</span>
 					</div>
 				</div>
-				{isImpactMatrix && (
-					<div className="flex flex-col gap-1 md:gap-1 mt-5 md:mt-0 ">
-						<h4 className="text-primary font-medium text-lg mb-2 text-[#9281FF]">
-							Impact Matrix
-						</h4>
-
-						<div className="w-[95%] mx-auto">
-							<table className="w-full  border border-slate-100 text-center">
-								<thead className="bg-slate-500 text-black">
-									<tr>
-										<th className="w-1/2">Criteria Name</th>
-										<th>Value</th>
-									</tr>
-								</thead>
-								<tbody>
-									{dummyInfo.map((item, index) => {
-										return (
-											<tr key={index}>
-												<td>{item.name}</td>
-												<td>{item.value}</td>
-											</tr>
-										);
-									})}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				)}
 			</div>
 			<br />
 			<div className="text-center md:mt-1 mt-5  ">
