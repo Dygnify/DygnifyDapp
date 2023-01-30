@@ -3,15 +3,15 @@ pragma solidity 0.8.4;
 
 import "./DygnifyConfig.sol";
 import "./BaseUpgradeablePausable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "./MultiSign.sol";
 
 contract DygnifyTreasury is BaseUpgradeablePausable, MultiSign {
     DygnifyConfig public dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
-    IERC20 public usdcToken;
-    using SafeERC20 for IERC20;
+    IERC20Upgradeable public usdcToken;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     function initialize(DygnifyConfig _dygnifyConfig) external initializer {
         require(
@@ -23,7 +23,7 @@ contract DygnifyTreasury is BaseUpgradeablePausable, MultiSign {
         require(owner != address(0), "Invalid Owner");
         _BaseUpgradeablePausable_init(owner);
 
-        usdcToken = IERC20(dygnifyConfig.usdcAddress());
+        usdcToken = IERC20Upgradeable(dygnifyConfig.usdcAddress());
     }
 
     function getTreasuryBalance() public view returns (uint256) {
