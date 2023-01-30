@@ -81,8 +81,8 @@ const SustainableCard = ({
 		<Fragment>
 			<div>
 				<h2 className="text-[1.1875rem] mb-5 ">{name}</h2>
-				<div class="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
-					<ul class="my-4 pt-5 pl-8 pr-8 space-y-3">
+				<div className="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
+					<ul className="my-4 pt-5 pl-8 pr-8 space-y-3">
 						{updatedData &&
 							updatedData?.data.map((item) => (
 								<DummyDataCard
@@ -102,7 +102,7 @@ const SustainableCard = ({
 								setIsEditResConProd(true);
 							}}
 							type="button"
-							class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
+							className="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
 						>
 							Add New
 						</button>
@@ -135,7 +135,7 @@ const SustainableCard = ({
 
 							<button
 								type="submit"
-								class="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
+								className="py-2.5  ml-[25rem] px-5 mr-7 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
 							>
 								Add more
 							</button>

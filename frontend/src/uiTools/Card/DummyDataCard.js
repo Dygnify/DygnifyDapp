@@ -77,7 +77,7 @@ const DummyDataCard = ({
 		<>
 			<li className="flex justify-between items-center">
 				<div className="font-base">
-					<span class="flex-1  whitespace-nowrap">{title}</span>
+					<span className="flex-1  whitespace-nowrap">{title}</span>
 				</div>
 				<div className="flex gap-2">
 					<input
