@@ -1,11 +1,15 @@
 import { useFormik } from "formik";
+import { useState } from "react";
 import GradientButton from "../../../../uiTools/Button/GradientButton";
+import SustainableCard from "../../../../uiTools/Card/SustainableCard";
 import ArrowLeft from "../../Components/SVG/ArrowLeft";
 
 export default function ImpactMatrix({
 	handleNext,
 	handlePrev,
 	impactData,
+	impactData2,
+	setImpactData2,
 }) {
 	const formik = useFormik({
 		initialValues: {},
@@ -21,51 +25,17 @@ export default function ImpactMatrix({
 			<br />
 
 			{impactData?.map((item, index) => (
-				<div key={index}>
-					<h2 className="text-[1.1875rem] mb-5 ">{item?.name}</h2>
-
-					<div class="w-full dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
-						<ul class="my-4 pt-4 pl-8 pr-8 space-y-3">
-							{item?.data.map((dt, i) => (
-								<li
-									key={i}
-									className="flex justify-between items-center"
-								>
-									<div className="font-base">
-										<span class="flex-1  whitespace-nowrap">
-											{dt?.title}
-										</span>
-									</div>
-									<div>
-										<input
-											type="text"
-											onChange={(e) => {
-												impactData[index].data[
-													i
-												].value = e.target.value;
-											}}
-											defaultValue={`${impactData[index].data[i].value}`}
-											placeholder="Enter value"
-											className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[15rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none"
-										/>
-									</div>
-								</li>
-							))}
-						</ul>
-
-						<button
-							onClick={() => {
-								// setAddNewFeild((prev) => !prev);
-							}}
-							type="button"
-							class="py-2.5  ml-[32rem] px-5 mr-2 mb-4 text-sm font-medium bg-gradient-to-r  from-[#4B74FF] to-[#9281FF] hover:from-[#9281FF] hover:to-[#4B74FF] capitalize  border-none text-white rounded-3xl  focus:outline-[#9281FF]"
-						>
-							Add more
-						</button>
-					</div>
-				</div>
+				<SustainableCard
+					key={index}
+					name={item.name}
+					data={item.data}
+					stainableCheckBoxData={impactData2}
+					setStainableCheckBoxData={setImpactData2}
+				/>
 			))}
+
 			
+
 			<form onSubmit={formik.handleSubmit}>
 				<div className=" flex flex-col-reverse gap-5 py-5 md:my-0 md:-mb-14  justify-center items-center md:flex-row md:justify-around pb-10">
 					<div className="">

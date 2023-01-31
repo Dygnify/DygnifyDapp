@@ -11,7 +11,7 @@ export default function Final({
 	formData,
 	setCheckBox,
 	checkBox,
-	impactData,
+	impactData2,
 }) {
 	const [checked, setChecked] = useState(false);
 	const [expand, setExpand] = useState(false);
@@ -92,7 +92,7 @@ export default function Final({
 	const handleClick = () => {
 		// filtering and keep the impact data if a label has value. 
 		const newImpactData = [];
-		for (let impact of impactData) {
+		for (let impact of impactData2) {
 			const newOb = { name: impact.name, data: [] };
 			for (let dt of impact.data) {
 				if (dt.value) {

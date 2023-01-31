@@ -38,6 +38,7 @@ const LoanFormModal = ({
 	const [checkBox, setCheckBox] = useState(false);
 	const [isImpactMatrix, setIsImpactMatrix] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const [impactData2, setImpactData2] = useState([]);
 
 
 	useEffect(() => {
@@ -99,6 +100,8 @@ const LoanFormModal = ({
 						handlePrev={handlePrev}
 						formData={formData}
 						impactData={impactData}
+						impactData2={impactData2}
+						setImpactData2={setImpactData2}
 					/>
 				) : (
 					<Final
@@ -107,7 +110,7 @@ const LoanFormModal = ({
 						formData={formData}
 						setCheckBox={setCheckBox}
 						checkBox={checkBox}
-						impactData={impactData}
+						impactData2={impactData2}
 					/>
 				);
 			case 4:
@@ -118,7 +121,7 @@ const LoanFormModal = ({
 						formData={formData}
 						setCheckBox={setCheckBox}
 						checkBox={checkBox}
-						impactData={impactData}
+						impactData2={impactData2}
 					/>
 				);
 			default:
