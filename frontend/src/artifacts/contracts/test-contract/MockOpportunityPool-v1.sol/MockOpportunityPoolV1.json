@@ -1,0 +1,168 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockOpportunityPoolV1",
+  "sourceName": "contracts/test-contract/MockOpportunityPool-v1.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_subpoolId",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSeniorPoolWithdrawableAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSeniorProfit",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSeniorTotalDepositable",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nextRepaymentTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_nextRepayment",
+          "type": "uint256"
+        }
+      ],
+      "name": "setNextRepaymentTime",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_seniorPoolWithdrawableAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "setSeniorPoolWithdrawableAmount",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_seniorProfit",
+          "type": "uint256"
+        }
+      ],
+      "name": "setSeniorProfit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_seniorTotalDepositable",
+          "type": "uint256"
+        }
+      ],
+      "name": "setSeniorTotalDepositable",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "_isWriteOff",
+          "type": "bool"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "opportunityId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_seniorPoolAddress",
+          "type": "address"
+        }
+      ],
+      "name": "toCheckwithDrawFromOpportunity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "writeOffOpportunity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50610297806100206000396000f3fe608060405234801561001057600080fd5b50600436106100a95760003560e01c806395c4877e1161007157806395c4877e146100ff5780639f964fe614610112578063d4d854481461011a578063d661d3201461012d578063df9fd1c114610135578063f4d4c9d71461013d57600080fd5b80631e2aa2c8146100ae578063257c2736146100c15780634ebbcff4146100c357806383933a2b146100d65780638f26582e146100ec575b600080fd5b6100c16100bc3660046101c1565b61014f565b005b6100c16100d1366004610219565b600355565b6003545b60405190815260200160405180910390f35b6100c16100fa366004610219565b600255565b6100c161010d366004610219565b600055565b6001546100da565b6100c1610128366004610219565b600155565b6002546100da565b6000546100da565b6100c161014b366004610231565b5050565b604051630387c6d160e31b81528415156004820152602481018490526044810183905281906001600160a01b03821690631c3e368890606401600060405180830381600087803b1580156101a257600080fd5b505af11580156101b6573d6000803e3d6000fd5b505050505050505050565b600080600080608085870312156101d6578384fd5b843580151581146101e5578485fd5b9350602085013592506040850135915060608501356001600160a01b038116811461020e578182fd5b939692955090935050565b60006020828403121561022a578081fd5b5035919050565b60008060408385031215610243578182fd5b823560ff81168114610253578283fd5b94602093909301359350505056fea2646970667358221220fc1472eda7ec3955b2499ba24a80dc99eadc89a8e9343a70fe6f1bbb2385a25564736f6c63430008040033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100a95760003560e01c806395c4877e1161007157806395c4877e146100ff5780639f964fe614610112578063d4d854481461011a578063d661d3201461012d578063df9fd1c114610135578063f4d4c9d71461013d57600080fd5b80631e2aa2c8146100ae578063257c2736146100c15780634ebbcff4146100c357806383933a2b146100d65780638f26582e146100ec575b600080fd5b6100c16100bc3660046101c1565b61014f565b005b6100c16100d1366004610219565b600355565b6003545b60405190815260200160405180910390f35b6100c16100fa366004610219565b600255565b6100c161010d366004610219565b600055565b6001546100da565b6100c1610128366004610219565b600155565b6002546100da565b6000546100da565b6100c161014b366004610231565b5050565b604051630387c6d160e31b81528415156004820152602481018490526044810183905281906001600160a01b03821690631c3e368890606401600060405180830381600087803b1580156101a257600080fd5b505af11580156101b6573d6000803e3d6000fd5b505050505050505050565b600080600080608085870312156101d6578384fd5b843580151581146101e5578485fd5b9350602085013592506040850135915060608501356001600160a01b038116811461020e578182fd5b939692955090935050565b60006020828403121561022a578081fd5b5035919050565b60008060408385031215610243578182fd5b823560ff81168114610253578283fd5b94602093909301359350505056fea2646970667358221220fc1472eda7ec3955b2499ba24a80dc99eadc89a8e9343a70fe6f1bbb2385a25564736f6c63430008040033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
