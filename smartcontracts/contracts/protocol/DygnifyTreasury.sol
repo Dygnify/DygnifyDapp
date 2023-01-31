@@ -7,21 +7,13 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "./MultiSign.sol";
 
-contract DygnifyTreasury is BaseUpgradeablePausable {
+contract DygnifyTreasury is BaseUpgradeablePausable, MultiSign {
     DygnifyConfig public dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
     IERC20Upgradeable public usdcToken;
     using SafeERC20Upgradeable for IERC20Upgradeable;
-    address wallet;
 
-    function setWallet(address _wallet) public onlyAdmin {
-        wallet = _wallet;
-    }
-
-    function initialize(
-        DygnifyConfig _dygnifyConfig,
-        address _wallet
-    ) external initializer {
+    function initialize(DygnifyConfig _dygnifyConfig) external initializer {
         require(
             address(_dygnifyConfig) != address(0),
             "Invalid config address"
@@ -32,7 +24,6 @@ contract DygnifyTreasury is BaseUpgradeablePausable {
         _BaseUpgradeablePausable_init(owner);
 
         usdcToken = IERC20Upgradeable(dygnifyConfig.usdcAddress());
-        wallet = _wallet;
     }
 
     function getTreasuryBalance() public view returns (uint256) {
@@ -40,30 +31,27 @@ contract DygnifyTreasury is BaseUpgradeablePausable {
         return balance;
     }
 
-    // function withdraw(uint256 amount)public nonReentrant whenNotPaused onlyAdmin{
-    //     require(amount > 0, "amount must be greater than zero");
-    //     uint256 totalBalance = getTreasuryBalance();
-    //     require(amount <= totalBalance, "amount exceeds the total treasury balance");
-
-    //     usdcToken.safeTransferFrom(address(this), msg.sender, amount);
-    // }
-
-    // function reqTx(address to,uint256 value)public{
-    //     MultiSigWallet obj = MultiSigWallet(wallet);
-    //     obj.submitTransaction(to,value);
-    // }
-
     function withdraw(
         address to,
         uint256 amount
-    ) public nonReentrant whenNotPaused {
+    )
+        public
+        nonReentrant
+        whenNotPaused
+        // onlyAdmin
+        multisig(
+            dygnifyConfig.multiSignAddress(),
+            abi.encodeWithSignature("withdraw(address,uint256)", to, amount)
+        )
+    {
         require(amount > 0, "amount must be greater than zero");
-        require(msg.sender == wallet, "not allowed outside tranction");
+        require(to != address(0), "invalid recepient address");
         uint256 totalBalance = getTreasuryBalance();
         require(
             amount <= totalBalance,
             "amount exceeds the total treasury balance"
         );
-        usdcToken.safeTransferFrom(address(this), to, amount);
+
+        usdcToken.transfer(to, amount);
     }
 }

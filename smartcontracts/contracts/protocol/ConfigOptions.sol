@@ -16,7 +16,8 @@ library ConfigOptions {
         InvestorContract,
         DygnifyTreasury,
         DygnifyKeeper,
-        IdentityToken
+        IdentityToken,
+        MultiSign
     }
 
     enum Numbers {
