@@ -337,7 +337,7 @@ const ViewPool = () => {
 								onClick={redirectToURl}
 							>
 								<LinkedIn />
-								LinkedIn
+								<p className="hidden sm:block">LinkedIn</p>
 							</button>
 						) : (
 							<></>
@@ -349,7 +349,7 @@ const ViewPool = () => {
 								onClick={redirectToURl}
 							>
 								<Website />
-								Website
+								<p className="hidden sm:block">Website</p>
 							</button>
 						) : (
 							<></>
@@ -361,7 +361,8 @@ const ViewPool = () => {
 								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
 								onClick={redirectToURl}
 							>
-								<Twitter /> twitter
+								<Twitter />
+								<p className="hidden sm:block">twitter</p>
 							</button>
 						) : (
 							<></>
@@ -530,7 +531,7 @@ const ViewPool = () => {
 										onClick={redirectToURl}
 									>
 										<LinkedIn />
-										LinkedIn
+										<p className="hidden sm:block">LinkedIn</p>
 									</button>
 								) : (
 									<></>
@@ -542,7 +543,8 @@ const ViewPool = () => {
 										onClick={redirectToURl}
 									>
 										<Website />
-										Website
+
+										<p className="hidden sm:block">Website</p>
 									</button>
 								) : (
 									<></>
@@ -554,7 +556,8 @@ const ViewPool = () => {
 										className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
 										onClick={redirectToURl}
 									>
-										<Twitter /> twitter
+										<Twitter />
+										<p className="hidden sm:block">twitter</p>
 									</button>
 								) : (
 									<></>
