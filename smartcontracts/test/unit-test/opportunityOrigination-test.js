@@ -1,10 +1,12 @@
 const { expect, assert } = require("chai");
-const { ethers, network } = require("hardhat");
+const { ethers } = require("hardhat");
 
 const OVERFLOW =
 	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
 const ZEROADDRESS = ethers.constants.AddressZero;
+const USDCAMOUNT = "9999999999000000";
 const ID = ethers.utils.id("aadhar");
+const AMOUNT = "100000000000";
 
 describe("OpportunityOrigination", function () {
 	let opportunityOrigination,
@@ -12,9 +14,16 @@ describe("OpportunityOrigination", function () {
 		configHelper,
 		collateralToken,
 		opportunityPool,
-		dygnifyKeeper;
+		dygnifyKeeper,
+		uSDCTestToken,
+		seniorPool,
+		lpToken,
+		investor,
+		dygnifyTreasury,
+		accounts;
 
 	beforeEach(async () => {
+		accounts = await ethers.getSigners();
 		// deploy DygnifyConfig.sol
 		const DygnifyConfig = await ethers.getContractFactory("DygnifyConfig");
 		dygnifyConfig = await DygnifyConfig.deploy();
@@ -33,6 +42,11 @@ describe("OpportunityOrigination", function () {
 		await configHelper.deployed();
 
 		// deploy DygnifyKeeper.sol
+		const Investor = await hre.ethers.getContractFactory("Investor");
+		investor = await Investor.deploy();
+		await investor.deployed();
+
+		// deploy DygnifyKeeper.sol
 		const DygnifyKeeper = await hre.ethers.getContractFactory("DygnifyKeeper");
 		dygnifyKeeper = await DygnifyKeeper.deploy();
 		await dygnifyKeeper.deployed();
@@ -42,28 +56,80 @@ describe("OpportunityOrigination", function () {
 		collateralToken = await CollateralToken.deploy();
 		await collateralToken.deployed();
 
-		// deploy OpportunityPool.sol
+		// deploy MockOpportunityPoolV1.sol
 		const OpportunityPool = await ethers.getContractFactory("OpportunityPool");
 		opportunityPool = await OpportunityPool.deploy();
 		await opportunityPool.deployed();
 
+		// deploy USDCTestToken.sol
+
+		const USDCTestToken = await ethers.getContractFactory("TestUSDCToken");
+		uSDCTestToken = await USDCTestToken.deploy(USDCAMOUNT);
+		await uSDCTestToken.deployed();
+
+		// Senior pool deployment
+		const SeniorPool = await hre.ethers.getContractFactory("SeniorPool");
+		seniorPool = await SeniorPool.deploy();
+
+		await seniorPool.deployed();
+
+		// DygnifyTreasury
+		const DygnifyTreasury = await hre.ethers.getContractFactory(
+			"DygnifyTreasury"
+		);
+		dygnifyTreasury = await DygnifyTreasury.deploy();
+
+		await dygnifyTreasury.deployed();
+
+		// deploy LPToken.sol
+		const LPToken = await ethers.getContractFactory("LPToken");
+		lpToken = await LPToken.deploy();
+		await lpToken.deployed();
+
 		// initialize dygnifyConfig and pass it to opportunityOrigination
 		await dygnifyConfig.initialize();
 
-		// await dygnifyConfig.setAddress(4, opportunityPool.address);
+		await dygnifyConfig.setAddress(1, lpToken.address);
+		await dygnifyConfig.setAddress(2, uSDCTestToken.address);
+		await dygnifyConfig.setAddress(3, seniorPool.address);
+		await dygnifyConfig.setAddress(4, opportunityPool.address);
 		await dygnifyConfig.setAddress(5, collateralToken.address);
+		await dygnifyConfig.setAddress(7, investor.address);
 		await dygnifyConfig.setAddress(6, opportunityOrigination.address);
 		await dygnifyConfig.setAddress(9, dygnifyKeeper.address);
+		await dygnifyConfig.setAddress(8, dygnifyTreasury.address);
+
 		await opportunityOrigination.initialize(dygnifyConfig.address);
-		// await dygnifyKeeper.initialize(dygnifyConfig.address);
+		await seniorPool.initialize(dygnifyConfig.address);
+		await lpToken.initialize(seniorPool.address);
+		await dygnifyTreasury.initialize(
+			dygnifyConfig.address,
+			accounts[10].address
+		);
+		await investor.initialize(dygnifyConfig.address);
+
+		// Set all numbers
+		// leverage ratio
+		await dygnifyConfig.setNumber(0, 4);
+		// Dygnify Fee
+		await dygnifyConfig.setNumber(1, 100000);
+		// OverDueFee
+		await dygnifyConfig.setNumber(2, 5000000);
+		// JuniorSubpoolFee
+		await dygnifyConfig.setNumber(3, 200000);
+		// second value should be the number of months for senior pool funds lockin for investor
+		await dygnifyConfig.setNumber(4, 0);
+		// WriteOffDays
+		await dygnifyConfig.setNumber(5, 90);
+		//AdjustmentOffset
+		await dygnifyConfig.setNumber(6, 20);
+		await dygnifyKeeper.initialize(dygnifyConfig.address);
 		// initialize collateralToken
 		await collateralToken.initialize(
 			dygnifyConfig.address,
 			opportunityOrigination.address
 		);
 	});
-
-	// createOpportunity function
 
 	describe("createOpportunity", function () {
 		const createOpportunity = ({
@@ -866,94 +932,72 @@ describe("OpportunityOrigination", function () {
 	});
 
 	describe("markDrawDown", function () {
+		async function fun(borrower, underwriter, amount) {
+			// create opportunity
+			await opportunityOrigination.createOpportunity({
+				borrower: borrower.address,
+				opportunityName: "xyz",
+				opportunityInfo: "for term loan",
+				loanType: 1,
+				loanAmount: amount,
+				loanTenureInDays: 512,
+				loanInterest: 10000000,
+				paymentFrequencyInDays: 30,
+				collateralDocument: "aadhar",
+				capitalLoss: 10000000,
+			});
+
+			// call assignUnderwriters function
+			await opportunityOrigination.assignUnderwriters(ID, underwriter.address);
+
+			await opportunityOrigination.connect(underwriter).voteOpportunity(ID, 2);
+
+			let opportunity = await opportunityOrigination.opportunityToId(ID);
+
+			const poolAddress = opportunity.opportunityPoolAddress;
+
+			opportunityPool = await ethers.getContractAt(
+				"OpportunityPool",
+				poolAddress
+			);
+
+			await uSDCTestToken.transfer(borrower.address, amount);
+			await uSDCTestToken.connect(borrower).approve(seniorPool.address, amount);
+			await seniorPool.connect(borrower).stake(amount);
+
+			// Unlock juniorPool and seniorPool
+			await opportunityPool.unLockPool(1);
+
+			await seniorPool.approveUSDC(opportunityPool.address);
+			await seniorPool.invest(ID);
+
+			// deposit 20% of AMOUNT into junior Pool
+			const amountToJunior = amount * 0.2;
+			//	await uSDCTestToken.transfer(underwriter.address, 2 * amountToJunior);
+			await uSDCTestToken.approve(opportunityPool.address, amountToJunior);
+			await opportunityPool.deposit(0, amountToJunior);
+
+			await opportunityPool.connect(borrower).drawdown();
+
+			opportunity = await opportunityOrigination.opportunityToId(ID);
+
+			assert(opportunity.opportunityStatus, 6);
+		}
+
 		describe("Positive cases", function () {
-			let opportunityPool, opportunityOrigination, admin;
-			beforeEach(async function () {
+			it("should markdown opportunity successfully", async function () {
 				const accounts = await ethers.getSigners();
-				// deploy MockOpportunityPoolV1.sol
-				const OpportunityPool = await ethers.getContractFactory(
-					"MockOpportunityPoolV1"
-				);
-				opportunityPool = await OpportunityPool.deploy();
-				await opportunityPool.deployed();
-
-				// deployMockOpportunityOriginationForTestingOO.sol
-				const OpportunityOrigination = await ethers.getContractFactory(
-					"MockOpportunityOriginationForTestingOO"
-				);
-				opportunityOrigination = await OpportunityOrigination.deploy(
-					dygnifyConfig.address,
-					opportunityPool.address,
-					dygnifyKeeper.address
-				);
-				await opportunityOrigination.deployed();
-
-				// set addresses
-				await dygnifyConfig.setAddress(6, opportunityOrigination.address);
-				await dygnifyKeeper.initialize(dygnifyConfig.address);
-			});
-			it("should markdown opportunity successfully", async function () {
-				const [borrower, underwriter] = await ethers.getSigners();
-
-				// create opportunity and make it active
-				await opportunityOrigination.createOpportunity(
-					{
-						borrower: borrower.address,
-						opportunityName: "xyz",
-						opportunityInfo: "for term loan",
-						loanType: 1,
-						loanAmount: 2500000000000,
-						loanTenureInDays: 512,
-						loanInterest: 10000000,
-						paymentFrequencyInDays: 30,
-						collateralDocument: "aadhar",
-						capitalLoss: 10000000,
-					},
-					5
-				);
-
-				const tx = await opportunityPool.toCheckMarkDrawDown(
-					ID,
-					opportunityOrigination.address
-				);
-
-				await tx.wait(1);
-
-				const opportunity = await opportunityOrigination.opportunityToId(ID);
-
-				assert.equal(opportunity.opportunityStatus, 6);
+				fun(accounts[1], accounts[2], AMOUNT);
 			});
 
 			it("should markdown opportunity successfully", async function () {
-				const [borrower, underwriter] = await ethers.getSigners();
+				const accounts = await ethers.getSigners();
+				fun(accounts[7], accounts[3], 2 * AMOUNT);
+			});
 
-				// create opportunity and make it active
-				await opportunityOrigination.createOpportunity(
-					{
-						borrower: borrower.address,
-						opportunityName: "kjk",
-						opportunityInfo: "for term loan",
-						loanType: 1,
-						loanAmount: 2500000000000,
-						loanTenureInDays: 120,
-						loanInterest: 10000000,
-						paymentFrequencyInDays: 30,
-						collateralDocument: "aadhar",
-						capitalLoss: 10000000,
-					},
-					5
-				);
-
-				const tx = await opportunityPool.toCheckMarkDrawDown(
-					ID,
-					opportunityOrigination.address
-				);
-
-				await tx.wait(1);
-
-				const opportunity = await opportunityOrigination.opportunityToId(ID);
-
-				assert.equal(opportunity.opportunityStatus, 6);
+			it("should markdown opportunity successfully", async function () {
+				const accounts = await ethers.getSigners();
+				fun(accounts[2], accounts[10], 55 * AMOUNT);
 			});
 		});
 
@@ -1027,94 +1071,82 @@ describe("OpportunityOrigination", function () {
 	});
 
 	describe("markRepaid", function () {
+		async function fun(borrower, underwriter, amount) {
+			// create opportunity
+
+			await opportunityOrigination.createOpportunity({
+				borrower: borrower.address,
+				opportunityName: "xyz",
+				opportunityInfo: "for term loan",
+				loanType: 1,
+				loanAmount: amount,
+				loanTenureInDays: 360,
+				loanInterest: 10000000,
+				paymentFrequencyInDays: 30,
+				collateralDocument: "aadhar",
+				capitalLoss: 10000000,
+			});
+
+			// call assignUnderwriters function
+			await opportunityOrigination.assignUnderwriters(ID, underwriter.address);
+
+			await opportunityOrigination.connect(underwriter).voteOpportunity(ID, 2);
+
+			let opportunity = await opportunityOrigination.opportunityToId(ID);
+
+			const poolAddress = opportunity.opportunityPoolAddress;
+
+			opportunityPool = await ethers.getContractAt(
+				"OpportunityPool",
+				poolAddress
+			);
+
+			await uSDCTestToken.transfer(borrower.address, 100 * amount);
+			await uSDCTestToken
+				.connect(borrower)
+				.approve(seniorPool.address, 100 * amount);
+			await seniorPool.connect(borrower).stake(amount);
+
+			// Unlock juniorPool and seniorPool
+			await opportunityPool.unLockPool(1);
+
+			await seniorPool.approveUSDC(opportunityPool.address);
+			await seniorPool.invest(ID);
+
+			// deposit 20% of AMOUNT into junior Pool
+			const amountToJunior = amount * 0.2;
+			//	await uSDCTestToken.transfer(underwriter.address, 2 * amountToJunior);
+			await uSDCTestToken.approve(opportunityPool.address, amountToJunior);
+			await opportunityPool.deposit(0, amountToJunior);
+
+			await opportunityPool.connect(borrower).drawdown();
+
+			await uSDCTestToken
+				.connect(borrower)
+				.approve(opportunityPool.address, 50 * amount);
+
+			// totalRepayments
+			const totalRepayments = await opportunityPool.totalRepayments();
+			for (let i = 0; i < totalRepayments.toNumber(); i++) {
+				await opportunityPool.connect(borrower).repayment();
+			}
+
+			opportunity = await opportunityOrigination.opportunityToId(ID);
+
+			assert.equal(opportunity.opportunityStatus, 8);
+		}
+
 		describe("Positive cases", function () {
-			let opportunityPool, opportunityOrigination, admin;
-			beforeEach(async function () {
-				const accounts = await ethers.getSigners();
-				// deploy MockOpportunityPoolV1.sol
-				const OpportunityPool = await ethers.getContractFactory(
-					"MockOpportunityPoolV1"
-				);
-				opportunityPool = await OpportunityPool.deploy();
-				await opportunityPool.deployed();
-
-				// deployMockOpportunityOriginationForTestingOO.sol
-				const OpportunityOrigination = await ethers.getContractFactory(
-					"MockOpportunityOriginationForTestingOO"
-				);
-				opportunityOrigination = await OpportunityOrigination.deploy(
-					dygnifyConfig.address,
-					opportunityPool.address,
-					dygnifyKeeper.address
-				);
-				await opportunityOrigination.deployed();
-
-				// set addresses
-				await dygnifyConfig.setAddress(6, opportunityOrigination.address);
-				await dygnifyKeeper.initialize(dygnifyConfig.address);
-			});
 			it("should markRepaid opportunity successfully", async function () {
-				const [borrower] = await ethers.getSigners();
-
-				// create opportunity and make it active
-				await opportunityOrigination.createOpportunity(
-					{
-						borrower: borrower.address,
-						opportunityName: "xyz",
-						opportunityInfo: "for term loan",
-						loanType: 1,
-						loanAmount: 2500000000000,
-						loanTenureInDays: 512,
-						loanInterest: 10000000,
-						paymentFrequencyInDays: 30,
-						collateralDocument: "aadhar",
-						capitalLoss: 10000000,
-					},
-					6
-				);
-
-				const tx = await opportunityPool.toCheckMarkRepaid(
-					ID,
-					opportunityOrigination.address
-				);
-
-				await tx.wait(1);
-
-				const opportunity = await opportunityOrigination.opportunityToId(ID);
-
-				assert.equal(opportunity.opportunityStatus, 8);
+				await fun(accounts[3], accounts[2], AMOUNT);
 			});
 
 			it("should markRepaid opportunity successfully", async function () {
-				const [borrower] = await ethers.getSigners();
+				await fun(accounts[7], accounts[2], 88 * AMOUNT);
+			});
 
-				// create opportunity and make it active
-				await opportunityOrigination.createOpportunity(
-					{
-						borrower: borrower.address,
-						opportunityName: "kjk",
-						opportunityInfo: "for term loan",
-						loanType: 1,
-						loanAmount: 2500000000000,
-						loanTenureInDays: 120,
-						loanInterest: 10000000,
-						paymentFrequencyInDays: 30,
-						collateralDocument: "aadhar",
-						capitalLoss: 10000000,
-					},
-					6
-				);
-
-				const tx = await opportunityPool.toCheckMarkRepaid(
-					ID,
-					opportunityOrigination.address
-				);
-
-				await tx.wait(1);
-
-				const opportunity = await opportunityOrigination.opportunityToId(ID);
-
-				assert.equal(opportunity.opportunityStatus, 8);
+			it("should markRepaid opportunity successfully", async function () {
+				await fun(accounts[4], accounts[9], 3 * AMOUNT);
 			});
 		});
 
@@ -1156,83 +1188,89 @@ describe("OpportunityOrigination", function () {
 	});
 
 	describe("markWriteOff", function () {
+		let mockDygnifyKeeper;
+
+		async function fun(borrower, underwriter, amount) {
+			// create opportunity
+			await opportunityOrigination.createOpportunity({
+				borrower: borrower.address,
+				opportunityName: "xyz",
+				opportunityInfo: "for term loan",
+				loanType: 1,
+				loanAmount: amount,
+				loanTenureInDays: 360,
+				loanInterest: 10000000,
+				paymentFrequencyInDays: 30,
+				collateralDocument: "aadhar",
+				capitalLoss: 10000000,
+			});
+
+			// call assignUnderwriters function
+			await opportunityOrigination.assignUnderwriters(ID, underwriter.address);
+
+			await opportunityOrigination.connect(underwriter).voteOpportunity(ID, 2);
+
+			let opportunity = await opportunityOrigination.opportunityToId(ID);
+
+			const poolAddress = opportunity.opportunityPoolAddress;
+
+			opportunityPool = await ethers.getContractAt(
+				"OpportunityPool",
+				poolAddress
+			);
+
+			await uSDCTestToken.transfer(borrower.address, 100 * amount);
+			await uSDCTestToken
+				.connect(borrower)
+				.approve(seniorPool.address, 100 * amount);
+			await seniorPool.connect(borrower).stake(amount);
+
+			// Unlock juniorPool and seniorPool
+			await opportunityPool.unLockPool(1);
+
+			await seniorPool.approveUSDC(opportunityPool.address);
+			await seniorPool.invest(ID);
+
+			// deposit 20% of AMOUNT into junior Pool
+			const amountToJunior = amount * 0.2;
+			//	await uSDCTestToken.transfer(underwriter.address, 2 * amountToJunior);
+			await uSDCTestToken.approve(opportunityPool.address, amountToJunior);
+			await opportunityPool.deposit(0, amountToJunior);
+
+			await opportunityPool.connect(borrower).drawdown();
+
+			// deploy DygnifyKeeper.sol
+			const MockDygnifyKeeper = await hre.ethers.getContractFactory(
+				"MockDygnifyKeeper"
+			);
+			mockDygnifyKeeper = await MockDygnifyKeeper.deploy();
+			await mockDygnifyKeeper.deployed();
+
+			await dygnifyConfig.setAddress(9, mockDygnifyKeeper.address);
+
+			await mockDygnifyKeeper.toCheckMarkWriteOff(
+				opportunityOrigination.address,
+				ID,
+				poolAddress
+			);
+
+			opportunity = await opportunityOrigination.opportunityToId(ID);
+			assert.equal(opportunity.opportunityStatus, 7);
+		}
 		describe("Positive cases", function () {
-			let opportunityPool, opportunityOrigination;
-			beforeEach(async function () {
-				// deploy MockOpportunityPoolV1.sol
-				const OpportunityPool = await ethers.getContractFactory(
-					"MockOpportunityPoolV1"
-				);
-				opportunityPool = await OpportunityPool.deploy();
-				await opportunityPool.deployed();
-				// deployMockOpportunityOriginationForTestingOO.sol
-				const OpportunityOrigination = await ethers.getContractFactory(
-					"MockOpportunityOriginationForTestingOO"
-				);
-				opportunityOrigination = await OpportunityOrigination.deploy(
-					dygnifyConfig.address,
-					opportunityPool.address,
-					opportunityPool.address
-				);
-				await opportunityOrigination.deployed();
-				// set addresses
-				await dygnifyConfig.setAddress(6, opportunityOrigination.address);
-				await dygnifyConfig.setAddress(9, opportunityPool.address);
-				await dygnifyKeeper.initialize(dygnifyConfig.address);
-			});
 			it("should markWriteOff opportunity successfully", async function () {
-				const [borrower, underwriter] = await ethers.getSigners();
-				// create opportunity and make it active
-				await opportunityOrigination.createOpportunity(
-					{
-						borrower: borrower.address,
-						opportunityName: "xyz",
-						opportunityInfo: "for term loan",
-						loanType: 1,
-						loanAmount: 2500000000000,
-						loanTenureInDays: 512,
-						loanInterest: 10000000,
-						paymentFrequencyInDays: 30,
-						collateralDocument: "aadhar",
-						capitalLoss: 10000000,
-					},
-					6
-				);
-				const tx = await opportunityPool.toCheckmarkWriteOff(
-					ID,
-					opportunityPool.address,
-					opportunityOrigination.address
-				);
-				await tx.wait(1);
-				const opportunity = await opportunityOrigination.opportunityToId(ID);
-				assert.equal(opportunity.opportunityStatus, 7);
+				const accounts = await ethers.getSigners();
+				await fun(accounts[1], accounts[3], AMOUNT);
 			});
+
 			it("should markWriteOff opportunity successfully", async function () {
-				const [borrower, underwriter] = await ethers.getSigners();
-				// create opportunity and make it active
-				await opportunityOrigination.createOpportunity(
-					{
-						borrower: borrower.address,
-						opportunityName: "xyz",
-						opportunityInfo: "for bullet loan",
-						loanType: 0,
-						loanAmount: 250000000000,
-						loanTenureInDays: 512,
-						loanInterest: 10000000,
-						paymentFrequencyInDays: 30,
-						collateralDocument: "aadhar",
-						capitalLoss: 10000000,
-					},
-					6
-				);
-				const tx = await opportunityPool.toCheckmarkWriteOff(
-					ID,
-					opportunityPool.address,
-					opportunityOrigination.address
-				);
-				await tx.wait(1);
-				const opportunity = await opportunityOrigination.opportunityToId(ID);
-				assert.equal(opportunity.opportunityStatus, 7);
+				const accounts = await ethers.getSigners();
+				await fun(accounts[1], accounts[5], 2 * AMOUNT);
+			});
+
+			it("should markWriteOff opportunity successfully", async function () {
+				const accounts = await ethers.getSigners();
+				await fun(accounts[5], accounts[3], 8 * AMOUNT);
 			});
 		});
 

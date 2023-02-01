@@ -2,17 +2,14 @@
 pragma solidity 0.8.4;
 
 import "../protocol/DygnifyKeeper.sol";
-import "../interfaces/IOpportunityPool.sol";
-import "./MockOpportunityPool.sol";
-import "hardhat/console.sol";
 
 contract MockOpportunityOriginationV1 {
     bool isDrawdownBool = true;
     bool isUpkeepNeededBool = true;
+    bool isActiveBool = true;
+    bool isRepaidBool = true;
+    uint256 writeOffDays;
 
-    // put address of mock of opportunityPool
-    // address add = 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6;
-    //address add = 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9;
     address poolAddress;
 
     constructor(address _poolAddress) {
@@ -24,8 +21,13 @@ contract MockOpportunityOriginationV1 {
         else return false;
     }
 
-    function isActive(bytes32 id) external pure returns (bool) {
-        return true;
+    function isActive(bytes32 id) external view returns (bool) {
+        if (isActiveBool) return true;
+        return false;
+    }
+
+    function makeIsActiveFalse() external {
+        isActiveBool = false;
     }
 
     function getOpportunityPoolAddress(
@@ -34,12 +36,12 @@ contract MockOpportunityOriginationV1 {
         return poolAddress;
     }
 
-    function writeOffDaysOf(bytes32 id) external view returns (uint256) {
-        if (isUpkeepNeededBool) {
-            return 100;
-        }
+    function setWriteOffDays(uint _writeOffDays) external {
+        writeOffDays = _writeOffDays;
+    }
 
-        return 767678678;
+    function writeOffDaysOf(bytes32 id) external view returns (uint256) {
+        return writeOffDays;
     }
 
     function markWriteOff(bytes32 id, address add) external {}
@@ -76,5 +78,15 @@ contract MockOpportunityOriginationV1 {
     function toCheckperformUpkeep(address keeperAddress) external {
         DygnifyKeeper keeper = DygnifyKeeper(keeperAddress);
         keeper.performUpkeep("0x");
+    }
+
+    // for SeniorPool contract's testing
+    function isRepaid(bytes32 id) external view returns (bool) {
+        if (isRepaidBool) return true;
+        return false;
+    }
+
+    function makeIsRepaidFalse() external {
+        isRepaidBool = false;
     }
 }
