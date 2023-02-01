@@ -311,12 +311,11 @@ const ViewPool = () => {
 
 				<div className=" flex items-center">
 					<div className="flex items-center gap-3 md:gap-5">
-						<img
-							alt="dygnigyImage"
-							src={logoImgSrc ? logoImgSrc : DygnifyImage}
-							style={{ aspectRatio: "1/1" }}
-							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
-						/>
+						<div className="avatar">
+							<div className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]">
+								<img alt="logo" src={logoImgSrc ? logoImgSrc : DygnifyImage} />
+							</div>
+						</div>
 
 						<div>
 							<p className="text-lg font-semibold">
@@ -509,12 +508,14 @@ const ViewPool = () => {
 					<div>
 						<div className=" flex items-center">
 							<div className="flex items-center gap-3 md:gap-5">
-								<img
-									alt="logo"
-									src={logoImgSrc ? logoImgSrc : DygnifyImage}
-									style={{ aspectRatio: "1/1" }}
-									className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
-								/>
+								<div className="avatar">
+									<div className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]">
+										<img
+											alt="logo"
+											src={logoImgSrc ? logoImgSrc : DygnifyImage}
+										/>
+									</div>
+								</div>
 
 								<div>
 									<p className="text-lg font-semibold">

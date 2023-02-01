@@ -54,11 +54,11 @@ const UnderwriterCard = ({ data }) => {
 			>
 				{/* section-1 */}
 				<div className="flex-row flex space-x-5 px-4 col-span-4 lg:pl-5 lg:pr-1">
-					<img
-						alt=""
-						src={logoImgSrc ? logoImgSrc : default_profile}
-						className="w-28 h-28 lg:my-auto rounded-full xl:w-36  xl:h-36 2xl:w-[7.5rem] 2xl:h-[7.5rem]"
-					/>
+					<div className="avatar">
+						<div className="w-28 h-28 lg:my-auto rounded-full xl:w-36  xl:h-36 2xl:w-[7.5rem] 2xl:h-[7.5rem]">
+							<img alt="logo" src={logoImgSrc ? logoImgSrc : default_profile} />
+						</div>
+					</div>
 					<div className="mt-7 -space-y-1 lg:hidden ">
 						<p className="font-medium text-2xl">
 							{data.opportunityName ? data.opportunityName : "Name of Pool"}
