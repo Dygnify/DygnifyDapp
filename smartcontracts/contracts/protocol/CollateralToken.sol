@@ -49,7 +49,7 @@ contract CollateralToken is
         _grantRole(Constants.upgraderRole(), owner);
     }
 
-    function _baseURI() internal pure override returns (string memory) {
+    function _baseURI() internal override pure returns (string memory) {
         return "ipfs://";
     }
 
@@ -74,9 +74,10 @@ contract CollateralToken is
     function _beforeTokenTransfer(
         address from,
         address to,
-        uint256 tokenId
+        uint256 tokenId,
+        uint256 batchSize
     ) internal override whenNotPaused {
-        super._beforeTokenTransfer(from, to, tokenId);
+        super._beforeTokenTransfer(from, to, tokenId, batchSize);
     }
 
     function _authorizeUpgrade(address newImplementation)
@@ -96,8 +97,8 @@ contract CollateralToken is
 
     function tokenURI(uint256 tokenId)
         public
-        view
         override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+        view
         returns (string memory)
     {
         return super.tokenURI(tokenId);
@@ -105,8 +106,8 @@ contract CollateralToken is
 
     function supportsInterface(bytes4 interfaceId)
         public
-        view
         override(ERC721Upgradeable, AccessControlUpgradeable)
+        view
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
