@@ -95,7 +95,7 @@ const TokenDashboard = () => {
 										setLinkStatus(false);
 									}}
 								>
-									Multisig
+									MultiSign
 								</NavLink>
 							</li>
 						</ul>

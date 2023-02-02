@@ -26,13 +26,15 @@ import OpportunityOriginationContract from "./home/Token/OpportunityOriginationC
 import SeniorPoolContract from "./home/Token/SeniorPoolContract";
 import JuniorPoolContract from "./home/Token/JuniorPoolContract";
 import TestUSDC from "./home/Token/TestUSDC";
-import Multisig from "./home/Token/Multisig";
+import MultiSign from "./home/Token/MultiSign";
+import Token from "./home/Token";
 
 const Paths = () => {
 	return (
 		<HashRouter>
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
+				<Route path="/token" element={<Token />} />
 				<Route path="/tokenDashboard" element={<TokenDashboard />}>
 					{/* /tokenDashboard/opportunityContract */}
 					<Route
@@ -51,14 +53,8 @@ const Paths = () => {
 						path="juniorPoolContract"
 						element={<JuniorPoolContract />}
 					/>
-					<Route
-						path="testUSDC"
-						element={<TestUSDC/>}
-					/>
-					<Route
-						path="multisig"
-						element={<Multisig/>}
-					/>
+					<Route path="testUSDC" element={<TestUSDC />} />
+					<Route path="multisig" element={<MultiSign/>} />
 				</Route>
 
 				{/* // rename */}
