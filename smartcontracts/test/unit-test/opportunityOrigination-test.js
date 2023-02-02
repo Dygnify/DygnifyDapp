@@ -56,7 +56,7 @@ describe("OpportunityOrigination", function () {
 		collateralToken = await CollateralToken.deploy();
 		await collateralToken.deployed();
 
-		// deploy MockOpportunityPoolV1.sol
+		// deploy OpportunityPool.sol
 		const OpportunityPool = await ethers.getContractFactory("OpportunityPool");
 		opportunityPool = await OpportunityPool.deploy();
 		await opportunityPool.deployed();
