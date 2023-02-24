@@ -5,7 +5,7 @@ const { ethers } = require("hardhat");
 const overflow =
 	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
 
-describe.only("DynifyTresury", function () {
+describe("DynifyTresury", function () {
 	let dygnifyConfig,
 		multiSign,
 		usdcToken,
@@ -128,10 +128,19 @@ describe.only("DynifyTresury", function () {
 		});
 
 		describe("negative cases", function () {
-			it("should not be able to withdraw funds simultaneously", async function () {
-				dygnifyTreasury.withdraw(user.address, "5000000000000");
+			it("Should not be able to withdraw funds simultaneously", async function () {
+				await dygnifyTreasury.withdraw(user.address, "5000000000000");
 				await multiSign.connect(owner1).confirmTransaction(0);
-				expect(multiSign.connect(owner2).confirmTransaction(0)).to.be.reverted;
+				await multiSign.connect(owner2).confirmTransaction(0);
+				await expect(
+					multiSign.connect(owner1).confirmTransaction(0)
+				).to.be.revertedWith("tx already executed");
+				await expect(
+					multiSign.connect(owner2).confirmTransaction(0)
+				).to.be.revertedWith("tx already executed");
+				await expect(
+					multiSign.connect(owner1).confirmTransaction(0)
+				).to.be.revertedWith("tx already executed");
 			});
 
 			it("should revert invalid recepient address", async function () {
