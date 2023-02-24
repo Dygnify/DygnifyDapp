@@ -13,11 +13,9 @@ import "./ConfigOptions.sol";
  */
 
 library ConfigHelper {
-    function dygnifyAdminAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function dygnifyAdminAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return config.getAddress(uint256(ConfigOptions.Addresses.DygnifyAdmin));
     }
 
@@ -25,146 +23,120 @@ library ConfigHelper {
         return config.getAddress(uint256(ConfigOptions.Addresses.USDCToken));
     }
 
-    function lpTokenAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function lpTokenAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return config.getAddress(uint256(ConfigOptions.Addresses.LPToken));
     }
 
-    function seniorPoolAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function seniorPoolAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return config.getAddress(uint256(ConfigOptions.Addresses.SeniorPool));
     }
 
-    function poolImplAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function poolImplAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return
             config.getAddress(uint256(ConfigOptions.Addresses.PoolImplAddress));
     }
 
-    function collateralTokenAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function collateralTokenAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return
             config.getAddress(uint256(ConfigOptions.Addresses.CollateralToken));
     }
 
-    function getLeverageRatio(DygnifyConfig config)
-        internal
-        view
-        returns (uint256)
-    {
+    function getLeverageRatio(
+        DygnifyConfig config
+    ) internal view returns (uint256) {
         return config.getNumber(uint256(ConfigOptions.Numbers.LeverageRatio));
     }
 
-    function getOverDueFee(DygnifyConfig config)
-        internal
-        view
-        returns (uint256)
-    {
+    function getOverDueFee(
+        DygnifyConfig config
+    ) internal view returns (uint256) {
         return config.getNumber(uint256(ConfigOptions.Numbers.OverDueFee));
     }
 
-    function getSeniorPoolLockinMonths(DygnifyConfig config)
-        internal
-        view
-        returns (uint256)
-    {
+    function getSeniorPoolLockinMonths(
+        DygnifyConfig config
+    ) internal view returns (uint256) {
         return
             config.getNumber(
                 uint256(ConfigOptions.Numbers.SeniorPoolFundLockinMonths)
             );
     }
 
-    function getOpportunityOrigination(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function getOpportunityOrigination(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return
             config.getAddress(
                 uint256(ConfigOptions.Addresses.OpportunityOrigination)
             );
     }
 
-    function getDygnifyFee(DygnifyConfig config)
-        internal
-        view
-        returns (uint256)
-    {
+    function getDygnifyFee(
+        DygnifyConfig config
+    ) internal view returns (uint256) {
         return config.getNumber(uint256(ConfigOptions.Numbers.DygnifyFee));
     }
 
-    function getJuniorSubpoolFee(DygnifyConfig config)
-        internal
-        view
-        returns (uint256)
-    {
+    function getJuniorSubpoolFee(
+        DygnifyConfig config
+    ) internal view returns (uint256) {
         return
             config.getNumber(uint256(ConfigOptions.Numbers.JuniorSubpoolFee));
     }
 
-    function investorContractAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function investorContractAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return
             config.getAddress(
                 uint256(ConfigOptions.Addresses.InvestorContract)
             );
     }
 
-    function dygnifyTreasuryAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function dygnifyTreasuryAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return
             config.getAddress(uint256(ConfigOptions.Addresses.DygnifyTreasury));
     }
 
-    function dygnifyKeeperAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function dygnifyKeeperAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return
             config.getAddress(uint256(ConfigOptions.Addresses.DygnifyKeeper));
     }
 
-    function identityTokenAddress(DygnifyConfig config)
-        internal
-        view
-        returns (address)
-    {
+    function identityTokenAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
         return
             config.getAddress(uint256(ConfigOptions.Addresses.IdentityToken));
     }
 
-    function getWriteOffDays(DygnifyConfig config)
-        internal
-        view
-        returns (uint256)
-    {
+    function multiSignAddress(
+        DygnifyConfig config
+    ) internal view returns (address) {
+        return config.getAddress(uint256(ConfigOptions.Addresses.MultiSign));
+    }
+
+    function getWriteOffDays(
+        DygnifyConfig config
+    ) internal view returns (uint256) {
         return config.getNumber(uint256(ConfigOptions.Numbers.WriteOffDays));
     }
 
-    function getAdjustmentOffset(DygnifyConfig config)
-        internal
-        view
-        returns (uint256)
-    {
+    function getAdjustmentOffset(
+        DygnifyConfig config
+    ) internal view returns (uint256) {
         return
             config.getNumber(uint256(ConfigOptions.Numbers.AdjustmentOffset));
     }
