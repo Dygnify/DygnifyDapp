@@ -7,6 +7,7 @@ import {
 	getBorrowerLogoURL,
 	getOpportunityJson,
 } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import ImageCard from "./ImageCard";
 
 const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 	const {
@@ -49,23 +50,13 @@ const WithdrawCard = ({ data, isSeniorPool, setSelected, setShowModal }) => {
 			}   my-gradient`}
 		>
 			<div className="flex items-center gap-6">
-				<div className="avatar">
-					<div
-						style={{ borderRadius: "50%", aspectRatio: "1/1" }}
-						className="w-[7rem] lg:w-[10rem]"
-					>
-						<img
-							alt="logo"
-							src={
-								isSeniorPool
-									? DygnifyImage
-									: logoImgSrc
-									? logoImgSrc
-									: defaultImg
-							}
-						/>
-					</div>
-				</div>
+				<ImageCard
+					src={
+						isSeniorPool ? DygnifyImage : logoImgSrc ? logoImgSrc : defaultImg
+					}
+					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
+					className="w-[7rem] lg:w-[10rem]"
+				/>
 
 				<div className="lg:hidden">
 					<p className="text-[1.4375rem] font-semibold">{opportunityName}</p>

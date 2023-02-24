@@ -15,6 +15,7 @@ import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 import { getTrimmedString } from "../../services/Helpers/displayTextHelper";
+import ImageCard from "../Investor/components/Cards/ImageCard";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -254,14 +255,10 @@ const PoolDetails = () => {
 				<div className="flex flex-col gap-6 overflow-hidden flex-wrap md:flex-row md:justify-between  ">
 					{/* section-1-1 --profile  */}
 					<div className="flex items-center gap-6 ">
-						<div className="avatar">
-							<div className="w-20 h-20 rounded-full lg:w-24 lg:h-24 xl:w-28  xl:h-28">
-								<img
-									alt="logo"
-									src={logoImgSrc ? logoImgSrc : default_profile}
-								/>
-							</div>
-						</div>
+						<ImageCard
+							src={logoImgSrc ? logoImgSrc : default_profile}
+							className="w-20 h-20 rounded-full lg:w-24 lg:h-24 xl:w-28  xl:h-28"
+						/>
 						<div>
 							<div className="font-medium text-2xl -mb-1 xl:text-3xl">
 								{opDetails?.loan_name}

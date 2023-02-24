@@ -23,6 +23,7 @@ import {
 	getBorrowerLogoURL,
 	getOpportunityJson,
 } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import ImageCard from "./components/Cards/ImageCard";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -311,11 +312,10 @@ const ViewPool = () => {
 
 				<div className=" flex items-center">
 					<div className="flex items-center gap-3 md:gap-5">
-						<div className="avatar">
-							<div className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]">
-								<img alt="logo" src={logoImgSrc ? logoImgSrc : DygnifyImage} />
-							</div>
-						</div>
+						<ImageCard
+							src={logoImgSrc ? logoImgSrc : DygnifyImage}
+							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
+						/>
 
 						<div>
 							<p className="text-lg font-semibold">
@@ -508,14 +508,10 @@ const ViewPool = () => {
 					<div>
 						<div className=" flex items-center">
 							<div className="flex items-center gap-3 md:gap-5">
-								<div className="avatar">
-									<div className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]">
-										<img
-											alt="logo"
-											src={logoImgSrc ? logoImgSrc : DygnifyImage}
-										/>
-									</div>
-								</div>
+								<ImageCard
+									src={logoImgSrc ? logoImgSrc : DygnifyImage}
+									className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
+								/>
 
 								<div>
 									<p className="text-lg font-semibold">

@@ -5,6 +5,7 @@ import {
 	getBorrowerLogoURL,
 	getOpportunityJson,
 } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import ImageCard from "./ImageCard";
 
 const PoolCard = ({ data }) => {
 	const { opportunityAmount, estimatedAPY, capitalInvested, yieldGenerated } =
@@ -38,14 +39,11 @@ const PoolCard = ({ data }) => {
 	return (
 		<div className="flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient">
 			<div className="flex items-center gap-6">
-				<div className="avatar">
-					<div
-						style={{ borderRadius: "50%", aspectRatio: "1/1" }}
-						className="w-[7rem] lg:w-[10rem]"
-					>
-						<img alt="logo" src={logoImgSrc ? logoImgSrc : DygnifyImage} />
-					</div>
-				</div>
+				<ImageCard
+					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
+					src={logoImgSrc ? logoImgSrc : DygnifyImage}
+					className="w-[7rem] lg:w-[10rem]"
+				/>
 
 				<div className="lg:hidden">
 					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
