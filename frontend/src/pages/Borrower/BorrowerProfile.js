@@ -19,6 +19,7 @@ import {
 import { captureException } from "@sentry/react";
 import { getExtendableTextBreakup } from "../../services/Helpers/displayTextHelper";
 import { getTrimmedString } from "../../services/Helpers/displayTextHelper";
+import ImageCard from "../Investor/components/Cards/ImageCard";
 
 const BorrowerProfile = () => {
 	const navigate = useNavigate();
@@ -300,18 +301,14 @@ const BorrowerProfile = () => {
 						<>
 							<div className="flex justify-between items-center">
 								<div className="flex gap-2 items-center ">
-									<div className="avatar">
-										<div className="rounded-full w-20">
-											<img
-												alt=""
-												src={
-													logoImgSrc
-														? logoImgSrc
-														: require("../../assets/noImage.jpeg")
-												}
-											/>
-										</div>
-									</div>
+									<ImageCard
+										src={
+											logoImgSrc
+												? logoImgSrc
+												: require("../../assets/noImage.jpeg")
+										}
+										className="rounded-full w-20"
+									/>
 									<div className=" font-semibold ">
 										<p className="text-[1.1875rem]" title={companyName}>
 											{companyName?.length > 20
