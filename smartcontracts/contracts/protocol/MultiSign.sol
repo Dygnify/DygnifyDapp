@@ -10,20 +10,24 @@ contract MultiSign is BaseUpgradeablePausable {
         address indexed owner,
         uint indexed txIndex,
         address indexed to,
-        uint value
+        uint value,
+        bytes data
     );
     event ConfirmTransaction(address indexed owner, uint indexed txIndex);
     event RevokeConfirmation(address indexed owner, uint indexed txIndex);
     event ExecuteTransaction(address indexed owner, uint indexed txIndex);
+    event OwnerAdded(address indexed owner);
+    event OwnerRemoved(address indexed owner);
+    event ConfirmationsRequiredUpdated(uint numConfirmationsRequired);
 
     address[] public owners;
     mapping(address => bool) public isOwner;
     uint public numConfirmationsRequired;
-    address tresuryWallet;
 
     struct Transaction {
         address to;
         uint value;
+        bytes data;
         bool executed;
         uint numConfirmations;
     }
@@ -34,7 +38,7 @@ contract MultiSign is BaseUpgradeablePausable {
     Transaction[] public transactions;
 
     modifier onlyOwner() {
-        require(isOwner[tx.origin], "not owner");
+        require(isOwner[msg.sender], "not owner");
         _;
     }
 
@@ -53,7 +57,24 @@ contract MultiSign is BaseUpgradeablePausable {
         _;
     }
 
-    function initialize(
+    modifier multisig(address _multisigAddress, bytes memory _data) {
+        require(_multisigAddress != address(0), "invalid multisig address");
+        if (msg.sender != _multisigAddress) {
+            (bool success, bytes memory data) = _multisigAddress.call{value: 0}(
+                abi.encodeWithSignature(
+                    "submitTransaction(address,uint256,bytes)",
+                    address(this),
+                    0,
+                    _data
+                )
+            );
+            require(success, string(data));
+        } else {
+            _;
+        }
+    }
+
+    function _MultiSign_init(
         address[] memory _owners,
         uint _numConfirmationsRequired
     ) external initializer {
@@ -78,29 +99,31 @@ contract MultiSign is BaseUpgradeablePausable {
         numConfirmationsRequired = _numConfirmationsRequired;
     }
 
-    // receive() external payable {
-    //     emit Deposit(msg.sender, msg.value, address(this).balance);
-    // }
-
-    function submitTransaction(address _to, uint _value) public onlyOwner {
+    function submitTransaction(
+        address _to,
+        uint _value,
+        bytes memory _data
+    ) external {
+        require(_to != address(0), "invalid address");
         uint txIndex = transactions.length;
 
         transactions.push(
             Transaction({
                 to: _to,
                 value: _value,
+                data: _data,
                 executed: false,
                 numConfirmations: 0
             })
         );
 
-        emit SubmitTransaction(msg.sender, txIndex, _to, _value);
+        emit SubmitTransaction(msg.sender, txIndex, _to, _value, _data);
     }
 
     function confirmTransaction(
         uint _txIndex
     )
-        public
+        external
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
@@ -109,14 +132,17 @@ contract MultiSign is BaseUpgradeablePausable {
         Transaction storage transaction = transactions[_txIndex];
         transaction.numConfirmations += 1;
         isConfirmed[_txIndex][msg.sender] = true;
+
         emit ConfirmTransaction(msg.sender, _txIndex);
-        if (transaction.numConfirmations >= numConfirmationsRequired)
+
+        if (transaction.numConfirmations >= numConfirmationsRequired) {
             executeTransaction(_txIndex);
+        }
     }
 
     function executeTransaction(
         uint _txIndex
-    ) public onlyOwner txExists(_txIndex) notExecuted(_txIndex) {
+    ) private onlyOwner txExists(_txIndex) notExecuted(_txIndex) {
         Transaction storage transaction = transactions[_txIndex];
 
         require(
@@ -126,22 +152,17 @@ contract MultiSign is BaseUpgradeablePausable {
 
         transaction.executed = true;
 
-        // transaction.to.call{value: transaction.value};
-        DygnifyTreasury(tresuryWallet).withdraw(
-            transaction.to,
-            transaction.value
-        );
+        (bool success, bytes memory data) = transaction.to.call{
+            value: transaction.value
+        }(transaction.data);
+        require(success, string(data));
 
         emit ExecuteTransaction(msg.sender, _txIndex);
     }
 
-    function setTresuryWalletAddress(address _address) public {
-        tresuryWallet = _address;
-    }
-
     function revokeConfirmation(
         uint _txIndex
-    ) public onlyOwner txExists(_txIndex) notExecuted(_txIndex) {
+    ) external onlyOwner txExists(_txIndex) notExecuted(_txIndex) {
         Transaction storage transaction = transactions[_txIndex];
 
         require(isConfirmed[_txIndex][msg.sender], "tx not confirmed");
@@ -150,6 +171,42 @@ contract MultiSign is BaseUpgradeablePausable {
         isConfirmed[_txIndex][msg.sender] = false;
 
         emit RevokeConfirmation(msg.sender, _txIndex);
+    }
+
+    function addOwner(address owner) external onlyAdmin {
+        require(owner != address(0), "invalid owner");
+        require(!isOwner[owner], "owner not unique");
+        isOwner[owner] = true;
+        owners.push(owner);
+        emit OwnerAdded(owner);
+        numConfirmationsRequired += 1;
+    }
+
+    function removeOwner(address owner) external onlyAdmin {
+        require(owner != address(0), "invalid owner");
+        require(isOwner[owner], "owner does not exist");
+        isOwner[owner] = false;
+        for (uint256 i = 0; i < owners.length - 1; i++)
+            if (owners[i] == owner) {
+                owners[i] = owners[owners.length - 1];
+                break;
+            }
+        owners.pop();
+        numConfirmationsRequired -= 1;
+        emit OwnerRemoved(owner);
+    }
+
+    function updateNumConfirmationsRequired(
+        uint _numConfirmationsRequired
+    ) external onlyAdmin {
+        require(
+            _numConfirmationsRequired > 0 &&
+                _numConfirmationsRequired <= owners.length,
+            "invalid number of confirmations required"
+        );
+        numConfirmationsRequired = _numConfirmationsRequired;
+
+        emit ConfirmationsRequiredUpdated(numConfirmationsRequired);
     }
 
     function getOwners() public view returns (address[] memory) {
@@ -165,13 +222,20 @@ contract MultiSign is BaseUpgradeablePausable {
     )
         public
         view
-        returns (address to, uint value, bool executed, uint numConfirmations)
+        returns (
+            address to,
+            uint value,
+            bytes memory data,
+            bool executed,
+            uint numConfirmations
+        )
     {
         Transaction storage transaction = transactions[_txIndex];
 
         return (
             transaction.to,
             transaction.value,
+            transaction.data,
             transaction.executed,
             transaction.numConfirmations
         );
