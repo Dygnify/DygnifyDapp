@@ -15,6 +15,7 @@ import default_profile from "../../assets/default_profile.svg";
 import ErrorModal from "../../uiTools/Modal/ErrorModal";
 import { getIPFSFileURL } from "../../services/Helpers/web3storageIPFS";
 import { getTrimmedString } from "../../services/Helpers/displayTextHelper";
+import ImageCard from "../Investor/components/Cards/ImageCard";
 
 const PoolDetails = () => {
 	const location = useLocation();
@@ -254,13 +255,10 @@ const PoolDetails = () => {
 				<div className="flex flex-col gap-6 overflow-hidden flex-wrap md:flex-row md:justify-between  ">
 					{/* section-1-1 --profile  */}
 					<div className="flex items-center gap-6 ">
-						<div>
-							<img
-								alt="logo"
-								src={logoImgSrc ? logoImgSrc : default_profile}
-								className="w-20 h-20 rounded-full lg:w-24 lg:h-24 xl:w-28  xl:h-28"
-							></img>
-						</div>
+						<ImageCard
+							src={logoImgSrc ? logoImgSrc : default_profile}
+							className="w-20 h-20 rounded-full lg:w-24 lg:h-24 xl:w-28  xl:h-28"
+						/>
 						<div>
 							<div className="font-medium text-2xl -mb-1 xl:text-3xl">
 								{opDetails?.loan_name}
@@ -451,11 +449,14 @@ const PoolDetails = () => {
 				{/* section-5 --Borrower Details  */}
 				<div className="flex flex-col w-full">
 					<div className="flex items-center gap-2 text-lg font-medium mt-10 ">
-						<img
-							alt="logoimage"
-							src={logoImgSrc ? logoImgSrc : default_profile}
-							className="w-16 h-16 rounded-full md:hidden"
-						></img>
+						<div className="avatar md:hidden">
+							<div className="w-16 h-16 rounded-full md:hidden">
+								<img
+									alt="logo"
+									src={logoImgSrc ? logoImgSrc : default_profile}
+								/>
+							</div>
+						</div>
 						Borrower Details
 					</div>
 					{/* section-5-1 --social media*/}
@@ -511,11 +512,14 @@ const PoolDetails = () => {
 					{/* section-5-2 --Companyname*/}
 					<div className="md:flex md:justify-between md:items-center md:mt-2 md:mb-3 ">
 						<div className="text-lg font-medium mt-10 md:flex md:items-center gap-4 md:mt-0">
-							<img
-								alt="logoimage"
-								src={logoImgSrc ? logoImgSrc : default_profile}
-								className="w-16 h-16 rounded-full hidden md:block"
-							></img>
+							<div className="avatar hidden md:block">
+								<div className="w-16 h-16 rounded-full">
+									<img
+										alt="logo"
+										src={logoImgSrc ? logoImgSrc : default_profile}
+									/>
+								</div>
+							</div>
 
 							{companyDetails
 								? companyDetails.companyName

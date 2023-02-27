@@ -330,7 +330,7 @@ const InvestModal = ({
 						)}
 					</div>
 
-					<div className="px-4 md:px-8 mt-auto md:mt-8">
+					<div className="px-4 md:px-8 mt-auto md:mt-8 py-5 md:pb-0">
 						<button
 							onClick={() => {
 								console.log(process.env.REACT_APP_SENIORPOOL);
