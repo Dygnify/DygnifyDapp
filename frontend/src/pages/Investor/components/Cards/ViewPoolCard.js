@@ -8,6 +8,7 @@ import {
 	getBorrowerLogoURL,
 	getOpportunityJson,
 } from "../../../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import ImageCard from "./ImageCard";
 
 const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
 	const path = useNavigate();
@@ -62,13 +63,11 @@ const ViewPoolCard = ({ data, kycStatus, isSenior, onClick }) => {
 			className={`flex flex-col gap-6 px-4 py-6 rounded-xl sm:px-8 lg:flex-row md:w-[48%] 2xl:w-[min(32%,30rem)]  my-gradient`}
 		>
 			<div className="flex items-center gap-6">
-				<img
-					alt=""
+				<ImageCard
 					style={{ borderRadius: "50%", aspectRatio: "1/1" }}
-					className="w-[7rem] lg:w-[6rem] xl:w-[10rem] 2xl:w-[8rem]"
 					src={logoImgSrc ? logoImgSrc : DygnifyImage}
+					className="w-[7rem] lg:w-[6rem] xl:w-[10rem] 2xl:w-[8rem]"
 				/>
-
 				<div className="lg:hidden">
 					<p className="text-2xl font-semibold">{data?.opportunityName}</p>
 					<p>{companyName}</p>
