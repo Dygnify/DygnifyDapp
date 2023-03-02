@@ -298,6 +298,7 @@ describe("SeniorPool", function () {
 					capitalLoss: 10000000,
 				});
 
+				await opportunityPool.setSeniorTotalDepositable(AMOUNT);
 				await expect(seniorPool.invest(ID)).to.be.revertedWith(
 					"insufficient Pool balance"
 				);
@@ -369,7 +370,7 @@ describe("SeniorPool", function () {
 			it("reverts when withDrawFromOpportunity function not called by opportunity pool", async function () {
 				await expect(
 					seniorPool.withDrawFromOpportunity(true, ID, AMOUNT)
-				).to.be.revertedWith("only Opportunity Pool can withdraw");
+				).to.be.revertedWith("only Opportunity Pool can withdraw.");
 			});
 		});
 
