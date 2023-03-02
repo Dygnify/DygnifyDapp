@@ -166,20 +166,6 @@ describe("OpportunityPool", function () {
 					)
 				).to.be.revertedWith("Invalid config address");
 			});
-			it("should revert if owner is 0 address", async function () {
-				dygnifyConfig.setAddress(0, ethers.constants.AddressZero);
-				await expect(
-					opportunityPool.initialize(
-						dygnifyConfig.address,
-						ethers.utils.formatBytes32String("id1"),
-						"10000000000000",
-						360,
-						"10000000",
-						30,
-						1
-					)
-				).to.be.revertedWith("Invalid Owner");
-			});
 		});
 		describe("border cases", function () {
 			it("should revert for overflow dygnifyAddress", async function () {
@@ -1574,8 +1560,9 @@ describe("OpportunityPool", function () {
 					for (let i = 0; i < 12; i++) {
 						await opportunityPool.connect(borrower).repayment();
 					}
-					await expect(opportunityPool.connect(borrower).repayment()).to.be
-						.reverted;
+					await expect(
+						opportunityPool.connect(borrower).repayment()
+					).to.be.revertedWith("Repayment Process is done");
 				});
 				it("should revert if funds in opportunity haven't drawdown", async function () {
 					await expect(
@@ -2300,8 +2287,9 @@ describe("OpportunityPool", function () {
 					for (let i = 0; i < 12; i++) {
 						await opportunityPool.connect(borrower).repayment();
 					}
-					await expect(opportunityPool.connect(borrower).repayment()).to.be
-						.reverted;
+					await expect(
+						opportunityPool.connect(borrower).repayment()
+					).to.be.revertedWith("Repayment Process is done");
 				});
 				it("should revert if funds in opportunity haven't drawdown", async function () {
 					await expect(

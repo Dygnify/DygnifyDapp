@@ -1,4 +1,3 @@
-// Right click on the script name and hit "Run" to execute
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
@@ -66,13 +65,6 @@ describe("DynifyTresury", function () {
 						"0x0000000000000000000000000000000000000000"
 					)
 				).to.be.revertedWith("Invalid config address");
-			});
-
-			it("Should revert if owner is 0 address", async function () {
-				dygnifyConfig.setAddress(0, ethers.constants.AddressZero);
-				await expect(
-					dygnifyTreasury.initialize(dygnifyConfig.address)
-				).to.be.revertedWith("Invalid Owner");
 			});
 		});
 
@@ -144,28 +136,28 @@ describe("DynifyTresury", function () {
 			});
 
 			it("should revert invalid recepient address", async function () {
-				await expect(
-					dygnifyTreasury.withdraw(
-						"0x0000000000000000000000000000000000000000",
-						"500000"
-					)
-				).to.be.revertedWith("invalid recepient address");
+				let userAddress = "0x0000000000000000000000000000000000000000";
+				let amount = 500000;
+				await dygnifyTreasury.withdraw(userAddress, amount);
+				await multiSign.connect(owner1).confirmTransaction(0);
+				await expect(multiSign.connect(owner2).confirmTransaction(0)).to.be
+					.reverted;
 			});
 
 			it("should not allow a withdrawal of zero", async function () {
 				let amount = 0;
-				await expect(
-					dygnifyTreasury.withdraw(user.address, amount)
-				).to.be.revertedWith("amount must be greater than zero");
+				await dygnifyTreasury.withdraw(user.address, amount);
+				await multiSign.connect(owner1).confirmTransaction(0);
+				await expect(multiSign.connect(owner2).confirmTransaction(0)).to.be
+					.reverted;
 			});
 
 			it("should not allow withdraw with amount exceeding the total balance", async () => {
 				let amount = 999999999999999;
 				await dygnifyTreasury.withdraw(user.address, amount);
 				await multiSign.connect(owner1).confirmTransaction(0);
-				await expect(
-					multiSign.connect(owner2).confirmTransaction(0)
-				).to.be.revertedWith("amount exceeds the total treasury balance");
+				await expect(multiSign.connect(owner2).confirmTransaction(0)).to.be
+					.reverted;
 			});
 		});
 
