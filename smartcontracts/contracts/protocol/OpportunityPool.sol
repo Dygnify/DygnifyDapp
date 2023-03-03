@@ -460,9 +460,8 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
             seniorSubpoolDetails.yieldGenerated = 0;
             poolBalance = poolBalance.sub(seniorAmount);
             usdcToken.transfer(dygnifyConfig.seniorPoolAddress(), seniorAmount);
-        } else {
-            repaymentCounter = repaymentCounter.add(1);
         }
+        repaymentCounter = repaymentCounter.add(1);
     }
 
     // this function will withdraw all the available amount of executor including yield and overdue profit

@@ -23,6 +23,7 @@ import {
 	getBorrowerLogoURL,
 	getOpportunityJson,
 } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
+import ImageCard from "./components/Cards/ImageCard";
 
 const ViewPool = () => {
 	const location = useLocation();
@@ -311,10 +312,8 @@ const ViewPool = () => {
 
 				<div className=" flex items-center">
 					<div className="flex items-center gap-3 md:gap-5">
-						<img
-							alt="dygnigyImage"
+						<ImageCard
 							src={logoImgSrc ? logoImgSrc : DygnifyImage}
-							style={{ aspectRatio: "1/1" }}
 							className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
 						/>
 
@@ -337,7 +336,7 @@ const ViewPool = () => {
 								onClick={redirectToURl}
 							>
 								<LinkedIn />
-								LinkedIn
+								<p className="hidden sm:block">LinkedIn</p>
 							</button>
 						) : (
 							<></>
@@ -349,7 +348,7 @@ const ViewPool = () => {
 								onClick={redirectToURl}
 							>
 								<Website />
-								Website
+								<p className="hidden sm:block">Website</p>
 							</button>
 						) : (
 							<></>
@@ -361,7 +360,8 @@ const ViewPool = () => {
 								className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
 								onClick={redirectToURl}
 							>
-								<Twitter /> twitter
+								<Twitter />
+								<p className="hidden sm:block">twitter</p>
 							</button>
 						) : (
 							<></>
@@ -508,10 +508,8 @@ const ViewPool = () => {
 					<div>
 						<div className=" flex items-center">
 							<div className="flex items-center gap-3 md:gap-5">
-								<img
-									alt="logo"
+								<ImageCard
 									src={logoImgSrc ? logoImgSrc : DygnifyImage}
-									style={{ aspectRatio: "1/1" }}
 									className="rounded-[50%] w-[4em] sm:w-[5em] md:w-[6em]"
 								/>
 
@@ -530,7 +528,7 @@ const ViewPool = () => {
 										onClick={redirectToURl}
 									>
 										<LinkedIn />
-										LinkedIn
+										<p className="hidden sm:block">LinkedIn</p>
 									</button>
 								) : (
 									<></>
@@ -542,7 +540,8 @@ const ViewPool = () => {
 										onClick={redirectToURl}
 									>
 										<Website />
-										Website
+
+										<p className="hidden sm:block">Website</p>
 									</button>
 								) : (
 									<></>
@@ -554,7 +553,8 @@ const ViewPool = () => {
 										className="btn CreateProfileIcon btn-sm px-2 dark:border-none btn-outline dark:bg-[#292C33] border border-neutral-500  dark:text-white text-black py-2 gap-1 rounded-full  lowercase flex pb-5"
 										onClick={redirectToURl}
 									>
-										<Twitter /> twitter
+										<Twitter />
+										<p className="hidden sm:block">twitter</p>
 									</button>
 								) : (
 									<></>

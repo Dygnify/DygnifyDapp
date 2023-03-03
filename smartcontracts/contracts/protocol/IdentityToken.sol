@@ -11,12 +11,20 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "./Constants.sol";
 
-contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable {
+contract IdentityToken is
+    Initializable,
+    ERC721Upgradeable,
+    ERC721URIStorageUpgradeable,
+    PausableUpgradeable,
+    AccessControlUpgradeable,
+    ERC721BurnableUpgradeable,
+    UUPSUpgradeable
+{
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
 
-    function initialize() initializer public {
+    function initialize() public initializer {
         __ERC721_init("IdentityToken", "ID");
         __ERC721URIStorage_init();
         __Pausable_init();
@@ -30,7 +38,7 @@ contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgr
         _grantRole(Constants.upgraderRole(), msg.sender);
     }
 
-    function _baseURI() internal pure override returns (string memory) {
+    function _baseURI() internal override pure returns (string memory) {
         return "ipfs://";
     }
 
@@ -42,26 +50,32 @@ contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgr
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) public onlyRole(Constants.minterRole()) {
+    function safeMint(address to, string memory uri)
+        public
+        onlyRole(Constants.minterRole())
+    {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        view
-        whenNotPaused
-        override
-    {
-        require(from == address(0) || to == address(0), "Not allowed to transfer token");
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256,
+        uint256
+    ) internal override view whenNotPaused {
+        require(
+            from == address(0) || to == address(0),
+            "Not allowed to transfer token"
+        );
     }
 
     function _authorizeUpgrade(address newImplementation)
         internal
-        onlyRole(Constants.upgraderRole())
         override
+        onlyRole(Constants.upgraderRole())
     {}
 
     // The following functions are overrides required by Solidity.
@@ -75,8 +89,8 @@ contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgr
 
     function tokenURI(uint256 tokenId)
         public
-        view
         override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+        view
         returns (string memory)
     {
         return super.tokenURI(tokenId);
@@ -84,8 +98,8 @@ contract IdentityToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgr
 
     function supportsInterface(bytes4 interfaceId)
         public
-        view
         override(ERC721Upgradeable, AccessControlUpgradeable)
+        view
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
