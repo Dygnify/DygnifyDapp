@@ -376,7 +376,7 @@ describe("OpportunityOrigination", function () {
 
 			it("revert when opportunityName greater than 50", async function () {
 				const oppoName =
-					"000000000000078978798798798798798798kjkjkjkjkjkjkjkj955555787090000070777";
+					"000000000000078978798798798798798798kjkjkjkjkkjkjkljlkjlkjjklkjlkjjkjkjkj955555787090000070777";
 				const borrower = await ethers.getSigner();
 				await expect(
 					opportunityOrigination.createOpportunity({
