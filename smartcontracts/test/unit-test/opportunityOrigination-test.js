@@ -186,7 +186,7 @@ describe("OpportunityOrigination", function () {
 					assert.equal(opportunityIds.toString(), "1");
 				};
 
-			it("1. should createOpportunity successfully", async function () {
+			it("1. create opportunity given for term loan", async function () {
 				await createOpportunity({
 					borrowerAddress: accounts[1].address,
 					opportunityName: "xyz",
@@ -202,7 +202,7 @@ describe("OpportunityOrigination", function () {
 				})();
 			});
 
-			it("2. should createOpportunity successfully", async function () {
+			it("2. should createOpportunity for bullet loan", async function () {
 				await createOpportunity({
 					borrowerAddress: accounts[1].address,
 					opportunityName: "abc",
@@ -217,7 +217,7 @@ describe("OpportunityOrigination", function () {
 					expected: [accounts[1].address],
 				})();
 			});
-			it("3. should createOpportunity successfully", async function () {
+			it("3. should createOpportunity successfully given valid parameters", async function () {
 				await createOpportunity({
 					borrowerAddress: accounts[1].address,
 					opportunityName: "xyz",
@@ -233,7 +233,7 @@ describe("OpportunityOrigination", function () {
 				})();
 			});
 
-			it("4. should createOpportunity successfully", async function () {
+			it("4. creates opportunity when capitalLoss is 0", async function () {
 				await createOpportunity({
 					borrowerAddress: accounts[1].address,
 					opportunityName: "xyz",
@@ -244,7 +244,7 @@ describe("OpportunityOrigination", function () {
 					loanInterest: 9000000,
 					paymentFrequencyInDays: 30,
 					collateralDocument: "pan",
-					capitalLoss: 10000000,
+					capitalLoss: 0,
 					expected: [accounts[1].address],
 				})();
 			});
@@ -376,7 +376,7 @@ describe("OpportunityOrigination", function () {
 
 			it("revert when opportunityName greater than 50", async function () {
 				const oppoName =
-					"000000000000078978798798798798798798kjkjkjkjkkjkjkljlkjlkjjklkjlkjjkjkjkj955555787090000070777";
+					"000000000000078978798798798798798798kjkjkjkjkkj7777kjkljlkjlkjjklkjlkjjkjkjkj955555787090000070777";
 				const borrower = await ethers.getSigner();
 				await expect(
 					opportunityOrigination.createOpportunity({
@@ -964,12 +964,12 @@ describe("OpportunityOrigination", function () {
 		}
 
 		describe("Positive cases", function () {
-			it("should markdown opportunity successfully", async function () {
+			it("should markdown opportunity for valid parameters", async function () {
 				const accounts = await ethers.getSigners();
 				fun(accounts[1], accounts[2], AMOUNT);
 			});
 
-			it("should markdown opportunity successfully", async function () {
+			it("markdown opportunity", async function () {
 				const accounts = await ethers.getSigners();
 				fun(accounts[7], accounts[3], 2 * AMOUNT);
 			});
@@ -1134,11 +1134,11 @@ describe("OpportunityOrigination", function () {
 		}
 
 		describe("Positive cases", function () {
-			it("should markRepaid opportunity successfully", async function () {
+			it("should markRepaid opportunity successfully for valid parameters", async function () {
 				await fun(accounts[3], accounts[2], AMOUNT);
 			});
 
-			it("should markRepaid opportunity successfully", async function () {
+			it("mark opportunity as repaid ", async function () {
 				await fun(accounts[7], accounts[2], 88 * AMOUNT);
 			});
 
@@ -1247,12 +1247,12 @@ describe("OpportunityOrigination", function () {
 			expect(afterBalance.sub(beforeBalance)).to.equal(amount);
 		}
 		describe("Positive cases", function () {
-			it("should markWriteOff opportunity successfully", async function () {
+			it("markWriteOff opportunity", async function () {
 				const accounts = await ethers.getSigners();
 				await fun(accounts[1], accounts[3], AMOUNT);
 			});
 
-			it("should markWriteOff opportunity successfully", async function () {
+			it("should markWriteOff opportunity successfully given valid parameters", async function () {
 				const accounts = await ethers.getSigners();
 				await fun(accounts[1], accounts[5], 2 * AMOUNT);
 			});
