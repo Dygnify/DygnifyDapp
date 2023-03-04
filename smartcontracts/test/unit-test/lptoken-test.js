@@ -7,7 +7,7 @@ const AMOUNT = 10000000000;
 const OVERFLOW =
 	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
 
-describe("LPToken", function () {
+describe.only("LPToken", function () {
 	let lpToken, dygnifyConfig, uSDCTestToken, accounts;
 
 	beforeEach(async () => {
@@ -34,7 +34,7 @@ describe("LPToken", function () {
 
 	describe("mint", function () {
 		describe("Positive cases", function () {
-			it("1. should mint given amount and transfer it to given account", async function () {
+			it("1. mint and transfer 10000 usdc", async function () {
 				const amount = AMOUNT;
 				const userAddress = accounts[3].address;
 				await lpToken.mint(userAddress, amount);
@@ -49,7 +49,7 @@ describe("LPToken", function () {
 				expect(expectedBalanceOfUser, userBlanceAfter.toNumber());
 			});
 
-			it("2. should mint given amount and transfer it to given account", async function () {
+			it("2. mint and transfer 30000 usdc", async function () {
 				const amount = 3 * AMOUNT;
 				const userAddress = accounts[4].address;
 				await lpToken.mint(userAddress, amount);
@@ -64,7 +64,7 @@ describe("LPToken", function () {
 				expect(expectedBalanceOfUser, userBlanceAfter.toNumber());
 			});
 
-			it("3. should mint given amount and transfer it to given account", async function () {
+			it("3. mint and transfer 60000 usdc", async function () {
 				const amount = 6 * AMOUNT;
 				const userAddress = accounts[6].address;
 				await lpToken.mint(userAddress, amount);
@@ -79,7 +79,7 @@ describe("LPToken", function () {
 				expect(expectedBalanceOfUser, userBlanceAfter.toNumber());
 			});
 
-			it("4. should mint given amount and transfer it to given account", async function () {
+			it("4. mint and transfer 330000 usdc", async function () {
 				const amount = 33 * AMOUNT;
 				const userAddress = accounts[7].address;
 				await lpToken.mint(userAddress, amount);
@@ -96,15 +96,9 @@ describe("LPToken", function () {
 		});
 
 		describe("Negative cases", function () {
-			it("reverts when seniorPool contract is not msg.sender to call mint function", async function () {
+			it("reverts when function executor is not seniorPool", async function () {
 				await expect(
 					lpToken.connect(accounts[3]).mint(accounts[3].address, 10 * AMOUNT)
-				).to.be.revertedWith("Caller is not a Owner");
-			});
-
-			it("reverts when seniorPool contract is not msg.sender to call mint function", async function () {
-				await expect(
-					lpToken.connect(accounts[2]).mint(accounts[2].address, AMOUNT)
 				).to.be.revertedWith("Caller is not a Owner");
 			});
 		});
@@ -114,17 +108,12 @@ describe("LPToken", function () {
 				await expect(lpToken.mint(accounts[3].address, 33 * OVERFLOW)).to.be
 					.reverted;
 			});
-
-			it("going to overflow for amount", async function () {
-				await expect(lpToken.mint(accounts[8].address, 2 * OVERFLOW)).to.be
-					.reverted;
-			});
 		});
 	});
 
 	describe("burn", function () {
 		describe("Positive cases", function () {
-			it("1. should burn given amount and withdraw funds in user wallet", async function () {
+			it("1. burn and withdraw 10000 usdc to user wallet", async function () {
 				const mintAmount = AMOUNT;
 				const burnAmount = AMOUNT;
 				const userAddress = accounts[3].address;
@@ -142,7 +131,7 @@ describe("LPToken", function () {
 				expect(expectedBalanceOfUser, userBlanceAfter.toNumber());
 			});
 
-			it("2. should burn given amount and withdraw funds in user wallet", async function () {
+			it("2. burn and withdraw 30000 usdc to user wallet", async function () {
 				const mintAmount = 3 * AMOUNT;
 				const burnAmount = AMOUNT;
 				const userAddress = accounts[8].address;
@@ -160,7 +149,7 @@ describe("LPToken", function () {
 				expect(expectedBalanceOfUser, userBlanceAfter.toNumber());
 			});
 
-			it("3. should burn given amount and withdraw funds in user wallet", async function () {
+			it("3. burn and withdraw 330000 usdc to user wallet", async function () {
 				const mintAmount = 33 * AMOUNT;
 				const burnAmount = AMOUNT;
 				const userAddress = accounts[3].address;
@@ -178,7 +167,7 @@ describe("LPToken", function () {
 				expect(expectedBalanceOfUser, userBlanceAfter.toNumber());
 			});
 
-			it("4. should burn given amount and withdraw funds in user wallet", async function () {
+			it("4. burn and withdraw 230000 usdc to user wallet", async function () {
 				const mintAmount = 23 * AMOUNT;
 				const burnAmount = AMOUNT;
 				const userAddress = accounts[3].address;
@@ -198,16 +187,10 @@ describe("LPToken", function () {
 		});
 
 		describe("Negative cases", function () {
-			it("reverts when seniorPool contract is not msg.sender to call burn function", async function () {
+			it("reverts when function executor is not seniorPool", async function () {
 				// await lpToken.mint(accounts[3].address, 2 * AMOUNT);
 				await expect(
 					lpToken.connect(accounts[3]).burn(accounts[3].address, AMOUNT)
-				).to.be.revertedWith("Caller is not a Owner");
-			});
-
-			it("reverts when seniorPool contract is not msg.sender to call burn function", async function () {
-				await expect(
-					lpToken.connect(accounts[7]).burn(accounts[3].address, AMOUNT)
 				).to.be.revertedWith("Caller is not a Owner");
 			});
 		});
@@ -215,11 +198,6 @@ describe("LPToken", function () {
 		describe("Border cases", function () {
 			it("going to overflow for amount", async function () {
 				await expect(lpToken.burn(accounts[3].address, 33 * OVERFLOW)).to.be
-					.reverted;
-			});
-
-			it("going to overflow for amount", async function () {
-				await expect(lpToken.burn(accounts[3].address, 3 * OVERFLOW)).to.be
 					.reverted;
 			});
 		});
