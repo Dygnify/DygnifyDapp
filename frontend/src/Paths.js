@@ -27,14 +27,12 @@ import SeniorPoolContract from "./home/Token/SeniorPoolContract";
 import JuniorPoolContract from "./home/Token/JuniorPoolContract";
 import TestUSDC from "./home/Token/TestUSDC";
 import MultiSign from "./home/Token/MultiSign";
-import Token from "./home/Token";
 
 const Paths = () => {
 	return (
 		<HashRouter>
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
-				<Route path="/token" element={<Token />} />
 				<Route path="/tokenDashboard" element={<TokenDashboard />}>
 					{/* /tokenDashboard/opportunityContract */}
 					<Route

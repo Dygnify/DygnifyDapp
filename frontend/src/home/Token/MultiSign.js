@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getAllTransactions } from "../../services/BackendConnectors/multiSignConnectors";
+import { getAllTransactions, getNumConfirmationsRequired } from "../../services/BackendConnectors/multiSignConnectors";
 import GradientButton from "../../uiTools/Button/GradientButton";
 import TokenInput from "./TokenInput";
 
 const MultiSign = () => {
-	// dummy infomation
+	const [transactionQueue, setTransactionQueue] = useState([]);
 	const queueData = [
 		{
 			transactionID: 1,
@@ -44,20 +44,18 @@ const MultiSign = () => {
 	];
 
 	const [info, setInfo] = useState(null);
-	useEffect(()=>{
-		async function fnc(){
-			let res = await getAllTransactions();
-			console.log("🎈🎈11", res);	
-		}
-		fnc();
-	},[])
 	
-	// async function demoFnc(){
-	// 	let res = await getAllTransactions();
-	// 	console.log("🎈🎈", res);
-	// }
-	// demoFnc();
-	// console.log('🎈🎈', info);
+	async function demoFnc(){
+		console.log('❎❎');
+		let res = await getAllTransactions();
+		// let res = await getNumConfirmationsRequired();
+		// if(res.success===true){
+		// 	setTransactionQueue(res.traxactions);
+		// }
+		console.log("🎈🎈", res);
+		console.log('🍤🍤', res.traxactions[0].executed);
+		// console.log("🎈🎈", res.transaction.toString());
+	}
 
 	return (
 		<div className="p-4 pl-8">
@@ -162,7 +160,7 @@ const MultiSign = () => {
 				<div className="-mt-1 divider"></div>
 				<div className="mt-6 flex flex-col sm:flex-row items-center sm:justify-center gap-y-2 sm:gap-x-8 mb-4 my-gradient px-4 py-8 md:w-[60%] mx-auto rounded-xl">
 					<TokenInput placeholder="Enter owner address" />
-					<GradientButton>Submit</GradientButton>
+					<GradientButton onClick={()=>demoFnc()}>Submit</GradientButton>
 				</div>
 			</section>
 

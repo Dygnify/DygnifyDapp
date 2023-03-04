@@ -321,7 +321,7 @@ const Overview = () => {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> 
 
 					<div className="flex flex-col gap-4 md:w-[25%]">
 						<div className="card-gradient py-4 rounded-xl px-4 sm:px-6 md:h-[50%]">

@@ -344,3 +344,41 @@ export const getAllTransactions = async () => {
 		};
 	}
 };
+
+export const getNumConfirmationsRequired = async () => {
+	Sentry.captureMessage("getAllTransactions", "info");
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+			const contract = new ethers.Contract(
+				process.env.REACT_APP_MULTISIGN,
+				multiSign.abi,
+				signer
+			);
+			const transaction = await contract.numConfirmationsRequired();
+			return { transaction, success: true };
+		} else {
+			Sentry.captureMessage("Wallet connect error", "warning");
+			return {
+				success: false,
+				msg: "please connect your wallet!",
+			};
+		}
+	} catch (error) {
+		Sentry.captureException(error);
+		if (error?.data) {
+			return {
+				success: false,
+				msg: error.data.message,
+			};
+		}
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
+};
+
+
