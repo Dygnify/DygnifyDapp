@@ -21,7 +21,6 @@ describe("LPToken", function () {
 		const LPToken = await ethers.getContractFactory("LPToken");
 		lpToken = await LPToken.deploy();
 		await lpToken.deployed();
-		l;
 
 		const USDCTestToken = await ethers.getContractFactory("TestUSDCToken");
 		uSDCTestToken = await USDCTestToken.deploy(USDCAMOUNT);
