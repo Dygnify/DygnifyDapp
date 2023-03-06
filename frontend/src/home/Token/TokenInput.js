@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const TokenInput = ({ placeholder, onChange }) => {
+const TokenInput = ({ placeholder, onChange, ...rest }) => {
 	const [tokenInputOutline, setTokenInputOutline] = useState(false);
 
 	return (
@@ -24,6 +24,7 @@ const TokenInput = ({ placeholder, onChange }) => {
 				type="text"
 				placeholder={placeholder}
 				className="outline-none w-[256px] appearance-none rounded-lg bg-lightmode-200 dark:bg-[#24272F]"
+				{...rest}
 			/>
 		</div>
 	);
