@@ -1591,6 +1591,19 @@ const data = [
 	},
 ];
 
+const OpportunityStatus = {
+	UnderReview: 0,
+	Rejected: 1,
+	Approved: 2,
+	Unsure: 3,
+	Collateralized: 4,
+	Active: 5,
+	Drawndown: 6,
+	WriteOff: 7,
+	Repaid: 8,
+};
+const subpool = { JuniorSubpool: 0, SeniorSubpool: 1 };
+
 describe("Dygnify integrated test", function () {
 	let dygnifyConfig,
 		seniorPool,
@@ -1742,7 +1755,7 @@ describe("Dygnify integrated test", function () {
 		await usdcToken.transfer(borrowerUser.address, "1000000000000000000");
 	});
 
-	const fun = ({
+	const basicDygnifyEndToEndFlow = ({
 		opportunityName,
 		opportunityInfo,
 		loanType,
@@ -1788,17 +1801,17 @@ describe("Dygnify integrated test", function () {
 			const seniorAmount = (loanAmount * 0.8).toString();
 			// deposit 20% of AMOUNT into junior Pool
 			const amountToJunior = (loanAmount - seniorAmount).toString();
-			//	await usdcToken.transfer(underwriter.address, 2 * amountToJunior);
 			await usdcToken
 				.connect(underwriter)
 				.approve(opportunityPool.address, amountToJunior);
-			await opportunityPool.connect(underwriter).deposit(0, amountToJunior);
-			// 80 %
+			await opportunityPool
+				.connect(underwriter)
+				.deposit(subpool.JuniorSubpool, amountToJunior);
+			// deposit 80% of AMOUNT into senior Pool
 			await usdcToken
 				.connect(investorUser)
 				.approve(seniorPool.address, seniorAmount);
 			await seniorPool.connect(investorUser).stake(seniorAmount);
-			// await opportunityPool.connect(admin).unLockPool(1);
 			await seniorPool.approveUSDC(opportunityPool.address);
 			await seniorPool.invest(ID);
 
@@ -1808,21 +1821,25 @@ describe("Dygnify integrated test", function () {
 			let afterBalance = await usdcToken.balanceOf(borrowerUser.address);
 			// Opportunity status should marked as drawdown
 			opportunity = await opportunityOrigination.opportunityToId(ID);
-			expect(opportunity.opportunityStatus).to.equal(6);
+			expect(opportunity.opportunityStatus).to.equal(
+				OpportunityStatus.Drawndown
+			);
 			// Borrower should receive usdc
 			expect(afterBalance.sub(beforeBalance)).to.equal(loanAmount);
 			// Approve test usdc
 			await usdcToken
 				.connect(borrowerUser)
 				.approve(opportunityPool.address, "100000000000000000000");
-			const repaymentCount = loanTenureInDays / paymentFrequencyInDays;
+			const totalRepayments = (
+				await opportunityPool.totalRepayments()
+			).toNumber();
 			// Repayment
-			for (let i = 0; i < repaymentCount; i++) {
+			for (let i = 0; i < totalRepayments; i++) {
 				await opportunityPool.connect(borrowerUser).repayment();
 			}
 			// Opportunity status should marked as repaid
 			opportunity = await opportunityOrigination.opportunityToId(ID);
-			expect(opportunity.opportunityStatus).to.equal(8);
+			expect(opportunity.opportunityStatus).to.equal(OpportunityStatus.Repaid);
 
 			// Underwriter withdraw from OpportunityPool
 			beforeBalance = await usdcToken.balanceOf(underwriter.address);
@@ -1841,17 +1858,19 @@ describe("Dygnify integrated test", function () {
 				return Math.pow(10, 6);
 			}
 
-			const sharePriceBefore = await seniorPool.sharePrice();
+			const sharePrice = await seniorPool.sharePrice();
 			let investedAmount = seniorAmount;
 			const expectedUSDCAmount = getUSDCAmountFromShares(
 				investedAmount,
-				sharePriceBefore.toString(),
+				sharePrice.toString(),
 				lpMantissa().toString()
 			);
 
-			// Investor withdraw from SeniorPool
+			const [withdrawableAmt] = await seniorPool
+				.connect(investorUser)
+				.getUserInvestment();
 			beforeBalance = await usdcToken.balanceOf(investorUser.address);
-			await seniorPool.connect(investorUser).withdrawWithLP(investedAmount);
+			await seniorPool.connect(investorUser).withdrawWithLP(withdrawableAmt);
 			afterBalance = await usdcToken.balanceOf(investorUser.address);
 			expect(afterBalance.sub(beforeBalance)).to.equal(expectedUSDCAmount);
 		};
@@ -1866,7 +1885,7 @@ describe("Dygnify integrated test", function () {
 			`${i + 1}. ${type}-${data[i].loanInterest / 1000000}%-${
 				data[i].paymentFrequencyInDays
 			}D-${data[i].loanTenureInDays / 30}M-${data[i].loanAmount / 1000000}`,
-			fun({
+			basicDygnifyEndToEndFlow({
 				opportunityName: data[i].opportunityName,
 				opportunityInfo: data[i].opportunityInfo,
 				loanType: data[i].loanType,
