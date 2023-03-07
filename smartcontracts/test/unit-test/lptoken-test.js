@@ -7,11 +7,12 @@ const AMOUNT = 10000000000;
 const OVERFLOW =
 	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
 
-describe.only("LPToken", function () {
+describe("LPToken", function () {
 	let lpToken, dygnifyConfig, uSDCTestToken, accounts;
 
 	beforeEach(async () => {
 		accounts = await ethers.getSigners();
+		
 
 		const DygnifyConfig = await ethers.getContractFactory("DygnifyConfig");
 		dygnifyConfig = await DygnifyConfig.deploy();

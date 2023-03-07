@@ -16,16 +16,15 @@ contract DygnifyKeeper is
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
     IOpportunityOrigination private opportunityOrigination;
-    
     bytes32[] private drawdownOpportunites;
     bool private stopKeeper;
 
+    event OpportunityAddedInKeeper(bytes32 indexed id);
+    event OpportunityRemovedFromKeeper(bytes32 indexed id);
+
     // @notice initializes the contract
     // @param DygnifyConfig : dygnify config address
-    function initialize(DygnifyConfig _dygnifyConfig)
-        public
-        initializer
-    {
+    function initialize(DygnifyConfig _dygnifyConfig) public initializer {
         require(
             address(_dygnifyConfig) != address(0),
             "Invalid config address"
@@ -46,12 +45,9 @@ contract DygnifyKeeper is
         bytes calldata /* checkData */
     )
         external
-        override
         view
-        returns (
-            bool upkeepNeeded,
-            bytes memory /* performData */
-        )
+        override
+        returns (bool upkeepNeeded, bytes memory /* performData */)
     {
         bool isUpkeepNeeded;
         for (uint256 i = 0; i < drawdownOpportunites.length; i++) {
@@ -59,12 +55,10 @@ contract DygnifyKeeper is
                 opportunityOrigination.getOpportunityPoolAddress(
                     drawdownOpportunites[i]
                 )
-            )
-                .nextRepaymentTime();
+            ).nextRepaymentTime();
             if (dueTime < block.timestamp) {
-                uint opportunityThreshold = opportunityOrigination.writeOffDaysOf( 
-                        drawdownOpportunites[i]
-                ) * 86400;
+                uint opportunityThreshold = opportunityOrigination
+                    .writeOffDaysOf(drawdownOpportunites[i]) * 86400;
                 uint256 timePassed = block.timestamp - dueTime;
                 if (timePassed > opportunityThreshold) {
                     isUpkeepNeeded = true;
@@ -84,12 +78,10 @@ contract DygnifyKeeper is
                 opportunityOrigination.getOpportunityPoolAddress(
                     drawdownOpportunites[i]
                 )
-            )
-                .nextRepaymentTime();
+            ).nextRepaymentTime();
             if (dueTime < block.timestamp) {
-                uint opportunityThreshold = opportunityOrigination.writeOffDaysOf( 
-                        drawdownOpportunites[i]
-                ) * 86400;
+                uint opportunityThreshold = opportunityOrigination
+                    .writeOffDaysOf(drawdownOpportunites[i]) * 86400;
                 uint256 timePassed = block.timestamp - dueTime;
                 if (timePassed > opportunityThreshold) {
                     opportunityOrigination.markWriteOff(
@@ -98,13 +90,23 @@ contract DygnifyKeeper is
                             drawdownOpportunites[i]
                         )
                     );
-                    drawdownOpportunites[i] = drawdownOpportunites[drawdownOpportunites
-                        .length - 1];
-                    delete drawdownOpportunites[drawdownOpportunites.length -
-                        1];
+                    drawdownOpportunites[i] = drawdownOpportunites[
+                        drawdownOpportunites.length - 1
+                    ];
+
+                    bytes32 id = drawdownOpportunites[
+                        drawdownOpportunites.length - 1
+                    ];
+
+                    delete drawdownOpportunites[
+                        drawdownOpportunites.length - 1
+                    ];
+
+                    emit OpportunityRemovedFromKeeper(id);
                 }
             }
         }
+
         stopKeeper = false;
     }
 
@@ -113,12 +115,14 @@ contract DygnifyKeeper is
             opportunityOrigination.isDrawdown(_id) == true,
             "opportunity is not drawdown"
         );
+
         require(
             msg.sender == dygnifyConfig.getOpportunityOrigination(),
             "opportunityOrigination contract can add the opportunity in keeper"
         );
 
         drawdownOpportunites.push(_id);
+        emit OpportunityAddedInKeeper(_id);
     }
 
     function removeOpportunityInKeeper(bytes32 _id) public override {
@@ -129,9 +133,12 @@ contract DygnifyKeeper is
 
         for (uint256 i = 0; i < drawdownOpportunites.length; i++) {
             if (drawdownOpportunites[i] == _id) {
-                drawdownOpportunites[i] = drawdownOpportunites[drawdownOpportunites
-                    .length - 1];
+                drawdownOpportunites[i] = drawdownOpportunites[
+                    drawdownOpportunites.length - 1
+                ];
+
                 delete drawdownOpportunites[drawdownOpportunites.length - 1];
+                emit OpportunityRemovedFromKeeper(_id);
             }
         }
     }
