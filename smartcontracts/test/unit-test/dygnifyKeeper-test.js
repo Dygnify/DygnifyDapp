@@ -1,15 +1,12 @@
 const { expect, assert } = require("chai");
 const { ethers, network } = require("hardhat");
 
-const OVERFLOW =
-	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
 const ID = ethers.utils.id("aadhar");
 
 describe("DygnifyKeeper", function () {
 	let dygnifyConfig, opportunityOrigination, dygnifyKeeper, opportunityPool;
 
 	beforeEach(async () => {
-		const owner = await ethers.getSigner();
 		// deploy DygnifyConfig.sol
 		const DygnifyConfig = await ethers.getContractFactory("DygnifyConfig");
 		dygnifyConfig = await DygnifyConfig.deploy();
@@ -40,79 +37,34 @@ describe("DygnifyKeeper", function () {
 		await dygnifyKeeper.deployed();
 
 		// set all the addresses
-
-		await dygnifyConfig.setAddress(6, opportunityOrigination.address);
 		await dygnifyConfig.setAddress(9, dygnifyKeeper.address);
+		await dygnifyConfig.setAddress(6, opportunityOrigination.address);
+
 		await dygnifyKeeper.initialize(dygnifyConfig.address);
 	});
 
 	describe("addOpportunityInKeeper", function () {
 		describe("Positive cases", function () {
-			it("should add drawdown opportunities to drawdownOpportunites array successfully", async function () {
-				const id = ethers.utils.id("aadhar");
-				expect(
-					await opportunityOrigination.toCheckAddOpportunityInKeeper(
-						id,
-						dygnifyKeeper.address,
-						true
-					)
-				);
-			});
-
-			it("should add drawdown opportunities to drawdownOpportunites array successfully", async function () {
-				const id = ethers.utils.id("pan card");
-				expect(
-					await opportunityOrigination.toCheckAddOpportunityInKeeper(
-						id,
-						dygnifyKeeper.address,
-						true
-					)
-				);
-			});
-
-			it("should add drawdown opportunities to drawdownOpportunites array successfully", async function () {
-				const id = ethers.utils.id("shrda niwas");
-				expect(
-					await opportunityOrigination.toCheckAddOpportunityInKeeper(
-						id,
-						dygnifyKeeper.address,
-						true
-					)
-				);
-			});
-
-			it("should add drawdown opportunities to drawdownOpportunites array successfully", async function () {
-				const id = ethers.utils.id(" a b c ");
-				expect(
-					await opportunityOrigination.toCheckAddOpportunityInKeeper(
-						id,
-						dygnifyKeeper.address,
-						true
-					)
-				);
+			it("add drawdowned opportunity in keeper", async function () {
+				await expect(
+					opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address)
+				)
+					.to.emit(dygnifyKeeper, "OpportunityAddedInKeeper")
+					.withArgs(ID);
 			});
 		});
 
 		describe("Negative cases", function () {
 			it("reverts when opportunity is not drawdown", async function () {
-				opportunityOrigination.isActive(ID);
-
+				await opportunityOrigination.setIsDrawdown(false);
 				await expect(
-					opportunityOrigination.toCheckAddOpportunityInKeeper(
-						ID,
-						dygnifyKeeper.address,
-						false
-					)
+					dygnifyKeeper.addOpportunityInKeeper(ID)
 				).to.be.revertedWith("opportunity is not drawdown");
 			});
 
 			it("reverts when caller is not opportunityOrigination", async function () {
 				await expect(
-					opportunityOrigination.toCheckAddOpportunityInKeeper(
-						ID,
-						dygnifyKeeper.address,
-						true
-					)
+					dygnifyKeeper.addOpportunityInKeeper(ID)
 				).to.be.revertedWith(
 					"opportunityOrigination contract can add the opportunity in keeper"
 				);
@@ -121,16 +73,8 @@ describe("DygnifyKeeper", function () {
 
 		describe("Border cases", function () {
 			it("going to overflow for id", async function () {
-				const id =
-					"0x664effaae7bbb2eb34ccb3c136943afaa8fe7bcfb55aef38e6ed7788d7ff2e4478";
-
-				await expect(
-					opportunityOrigination.toCheckAddOpportunityInKeeper(
-						id,
-						dygnifyKeeper.address,
-						true
-					)
-				).to.be.reverted;
+				await expect(dygnifyKeeper.addOpportunityInKeeper(ID + "1232")).to.be
+					.reverted;
 			});
 		});
 	});
@@ -146,59 +90,51 @@ describe("DygnifyKeeper", function () {
 					ethers.utils.id("aadhar4"),
 				];
 
-				for (let i = 0; i < ids.legth; i++) {
-					opportunityOrigination.toCheckAddOpportunityInKeeper(
+				for (let i = 0; i < ids.length; i++) {
+					await opportunityOrigination.markDrawDown(
 						ids[i],
-						dygnifyKeeper.address,
-						true
+						dygnifyKeeper.address
 					);
 				}
 			});
 
-			it("should remove drawdown opportunity from drawdownOpportunites array successfully", async function () {
-				expect(
-					await opportunityOrigination.toCheckRemoveOpportunityInKeeper(
-						ids[0],
-						dygnifyKeeper.address
-					)
-				);
+			it("remove ids[0] opportunity form keeper and expect event to emit", async function () {
+				await expect(
+					opportunityOrigination.markRepaid(ids[0], dygnifyKeeper.address)
+				)
+					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
+					.withArgs(ids[0]);
 			});
 
-			it("should remove drawdown opportunity from drawdownOpportunites array successfully", async function () {
-				expect(
-					await opportunityOrigination.toCheckRemoveOpportunityInKeeper(
-						ids[1],
-						dygnifyKeeper.address
-					)
-				);
+			it("remove ids[1] opportunity form keeper and expect event to emit", async function () {
+				await expect(
+					opportunityOrigination.markRepaid(ids[1], dygnifyKeeper.address)
+				)
+					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
+					.withArgs(ids[1]);
 			});
 
-			it("should remove drawdown opportunity from drawdownOpportunites array successfully", async function () {
-				expect(
-					await opportunityOrigination.toCheckRemoveOpportunityInKeeper(
-						ids[2],
-						dygnifyKeeper.address
-					)
-				);
+			it("remove ids[2] opportunity form keeper and expect event to emit", async function () {
+				await expect(
+					opportunityOrigination.markRepaid(ids[2], dygnifyKeeper.address)
+				)
+					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
+					.withArgs(ids[2]);
 			});
 
-			it("should remove drawdown opportunity from drawdownOpportunites array successfully", async function () {
-				expect(
-					await opportunityOrigination.toCheckRemoveOpportunityInKeeper(
-						ids[3],
-						dygnifyKeeper.address
-					)
-				);
+			it("remove ids[3] opportunity form keeper and expect event to emit", async function () {
+				await expect(
+					opportunityOrigination.markRepaid(ids[3], dygnifyKeeper.address)
+				)
+					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
+					.withArgs(ids[3]);
 			});
 		});
 
 		describe("Negative cases", function () {
 			it("reverts when caller is not opportunityOrigination", async function () {
 				await expect(
-					opportunityOrigination.toCheckRemoveOpportunityInKeeper(
-						ID,
-						dygnifyKeeper.address
-					)
+					dygnifyKeeper.removeOpportunityInKeeper(ID)
 				).to.be.revertedWith(
 					"opportunityOrigination contract can add the opportunity in keeper"
 				);
@@ -207,15 +143,8 @@ describe("DygnifyKeeper", function () {
 
 		describe("Border cases", function () {
 			it("going to overflow for id", async function () {
-				const id =
-					"0x664effaae7bbb2eb34ccb3c136943afaa8fe7bcfb55aef38e6ed7788d7ff2e4478";
-
-				await expect(
-					opportunityOrigination.toCheckRemoveOpportunityInKeeper(
-						id,
-						dygnifyKeeper.address
-					)
-				).to.be.reverted;
+				await expect(dygnifyKeeper.removeOpportunityInKeeper(ID + "123")).to.be
+					.reverted;
 			});
 		});
 	});
@@ -226,86 +155,56 @@ describe("DygnifyKeeper", function () {
 		});
 		describe("Positive cases", function () {
 			it("returns upkeppNeeded as true when opportunity threshold is less than timePasses", async function () {
-				const id = ethers.utils.id("aadhar");
-
-				opportunityOrigination.toCheckAddOpportunityInKeeper(
-					id,
-					dygnifyKeeper.address,
-					true
-				);
+				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
 				await opportunityOrigination.setWriteOffDays(100);
 				await network.provider.send("evm_increaseTime", [86400]);
 				await network.provider.send("evm_mine", []);
-				const upKeepNeeded =
-					await opportunityOrigination.callStatic.toCheckCheckUpkeep(
-						dygnifyKeeper.address,
-						true
-					);
+				const upKeepNeeded = await dygnifyKeeper.callStatic.checkUpkeep("0x");
 
-				assert(upKeepNeeded);
+				assert(upKeepNeeded[0]);
 			});
 		});
 
 		describe("Negative cases", function () {
 			it("returns upkeppNeeded as false when opportunity threshold is greater than timePasses", async function () {
-				const id = ethers.utils.id("aadhar");
-				opportunityOrigination.toCheckAddOpportunityInKeeper(
-					id,
-					dygnifyKeeper.address,
-					true
-				);
+				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
 
 				await network.provider.send("evm_increaseTime", [86400]);
 				await network.provider.send("evm_mine", []);
 				await opportunityOrigination.setWriteOffDays(767678678);
-				const upKeepNeeded =
-					await opportunityOrigination.callStatic.toCheckCheckUpkeep(
-						dygnifyKeeper.address,
-						false
-					);
-
-				assert(!upKeepNeeded);
+				const upKeepNeeded = await dygnifyKeeper.callStatic.checkUpkeep("0x");
 			});
 		});
 	});
 
 	describe("performUpkeep", function () {
-		beforeEach(async function () {
-			await opportunityPool.setNextRepaymentTime(8640000);
-		});
 		describe("Positive cases", function () {
 			it("returns upkeppNeeded as true when opportunity threshold is less than timePasses", async function () {
-				const id = ethers.utils.id("aadhar");
-				opportunityOrigination.toCheckAddOpportunityInKeeper(
-					id,
-					dygnifyKeeper.address,
-					true
+				await opportunityPool.setNextRepaymentTime(
+					Math.floor(Date.now() / 1000) + 86400
 				);
 
-				await network.provider.send("evm_increaseTime", [86400]);
+				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
+				await network.provider.send("evm_increaseTime", [86401]);
 				await network.provider.send("evm_mine", []);
-				const tx = await opportunityOrigination.toCheckperformUpkeep(
-					dygnifyKeeper.address
-				);
 
-				assert(tx);
+				await expect(dygnifyKeeper.performUpkeep("0x"))
+					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
+					.withArgs(ID);
 			});
 		});
 
 		describe("Negative cases", function () {
 			it("returns upkeppNeeded as false when opportunity threshold is greater than timePasses", async function () {
-				const id = ethers.utils.id("aadhar");
-				opportunityOrigination.toCheckAddOpportunityInKeeper(
-					id,
-					dygnifyKeeper.address,
-					true
+				await opportunityPool.setNextRepaymentTime(
+					Math.floor(Date.now() / 1000) + 8640000
 				);
+				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
 
-				const tx = await opportunityOrigination.toCheckperformUpkeep(
-					dygnifyKeeper.address
+				await expect(dygnifyKeeper.performUpkeep("0x")).not.to.emit(
+					dygnifyKeeper,
+					"OpportunityRemovedFromKeeper"
 				);
-
-				assert(tx);
 			});
 		});
 	});

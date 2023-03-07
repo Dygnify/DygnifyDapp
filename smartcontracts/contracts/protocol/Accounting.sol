@@ -21,7 +21,7 @@ library Accounting {
                 loanInterest > 0 &&
                 emiCount > 0 &&
                 paymentFrequency > 0,
-            "Invalid paramters"
+            "Invalid parameters"
         );
 
         uint256 interestForMonths = Constants.oneYearInDays().div(
@@ -55,7 +55,7 @@ library Accounting {
         );
 
         // Current emi amount comes in 10^27 decimals, and finally we need it in 10^6
-        return emiAmountInRay.div(10**21);
+        return emiAmountInRay.div(10 ** 21);
     }
 
     // Calculate the loan interest using standard EMI calculation formula P x R / T
@@ -66,7 +66,7 @@ library Accounting {
     ) internal pure returns (uint256) {
         require(
             loanAmount > 0 && loanInterest > 0 && paymentFrequencyInDays > 0,
-            "Invalid paramters"
+            "Invalid parameters"
         );
         // Get the monthly interest
         uint256 interestPerMonth = DSMath.rdiv(
@@ -85,7 +85,7 @@ library Accounting {
         );
         uint256 loanAmtInRay = DSMath.getInRay(loanAmount, currentDecimals);
         uint256 emiAmountInRay = DSMath.rmul(loanAmtInRay, interestForPayDays);
-        return emiAmountInRay.div(10**21);
+        return emiAmountInRay.div(10 ** 21);
     }
 
     function getTermLoanInterest(
@@ -95,7 +95,7 @@ library Accounting {
     ) internal pure returns (uint256) {
         require(
             oustandingPrincipal > 0 && noOfDays > 0 && loanInterest > 0,
-            "Invalid paramters"
+            "Invalid parameters"
         );
 
         // Get the daily interest
@@ -118,7 +118,7 @@ library Accounting {
             outstandingPrincipalInRay,
             totalInterest
         );
-        return interest.div(10**21);
+        return interest.div(10 ** 21);
     }
 
     function getYieldPercentage(
@@ -199,8 +199,8 @@ library Accounting {
             )
         );
         return (
-            _seniorYieldPerecentage.div(10**21),
-            _juniorYieldPerecentage.div(10**21)
+            _seniorYieldPerecentage.div(10 ** 21),
+            _juniorYieldPerecentage.div(10 ** 21)
         );
     }
 
@@ -275,8 +275,8 @@ library Accounting {
         );
 
         return (
-            finalSeniorPoolInterest.div(10**21),
-            finalJuniorPoolInterest.div(10**21)
+            finalSeniorPoolInterest.div(10 ** 21),
+            finalJuniorPoolInterest.div(10 ** 21)
         );
     }
 }

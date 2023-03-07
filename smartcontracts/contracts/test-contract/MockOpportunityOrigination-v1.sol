@@ -21,6 +21,10 @@ contract MockOpportunityOriginationV1 {
         else return false;
     }
 
+    function setIsDrawdown(bool val) external {
+        isDrawdownBool = val;
+    }
+
     function isActive(bytes32 id) external view returns (bool) {
         if (isActiveBool) return true;
         return false;
@@ -46,38 +50,12 @@ contract MockOpportunityOriginationV1 {
 
     function markWriteOff(bytes32 id, address add) external {}
 
-    function toCheckAddOpportunityInKeeper(
-        bytes32 _id,
-        address keeperAddress,
-        bool _isDrawdownBool
-    ) external {
-        isDrawdownBool = _isDrawdownBool;
-        DygnifyKeeper keeper = DygnifyKeeper(keeperAddress);
-        keeper.addOpportunityInKeeper(_id);
+    function markDrawDown(bytes32 _id, address keeperAddress) external {
+        IDygnifyKeeper(keeperAddress).addOpportunityInKeeper(_id);
     }
 
-    function toCheckRemoveOpportunityInKeeper(
-        bytes32 _id,
-        address keeperAddress
-    ) external {
-        DygnifyKeeper keeper = DygnifyKeeper(keeperAddress);
-        keeper.removeOpportunityInKeeper(_id);
-    }
-
-    function toCheckCheckUpkeep(
-        address keeperAddress,
-        bool _isUpkeepNeededBool
-    ) external returns (bool) {
-        isUpkeepNeededBool = _isUpkeepNeededBool;
-        DygnifyKeeper keeper = DygnifyKeeper(keeperAddress);
-        (bool needed, ) = keeper.checkUpkeep("0x");
-
-        return needed;
-    }
-
-    function toCheckperformUpkeep(address keeperAddress) external {
-        DygnifyKeeper keeper = DygnifyKeeper(keeperAddress);
-        keeper.performUpkeep("0x");
+    function markRepaid(bytes32 _id, address keeperAddress) external {
+        IDygnifyKeeper(keeperAddress).removeOpportunityInKeeper(_id);
     }
 
     // for SeniorPool contract's testing
