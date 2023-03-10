@@ -681,6 +681,34 @@ const PoolDetails = () => {
 					) : (
 						<></>
 					)}
+
+					{opDetails?.impactData?.length > 0 && (
+						<div className="w-full my-3 mb-5 mt-10 text-lg font-medium ">
+							<div>Projected Impact</div>
+
+							{opDetails?.impactData.map((item) => (
+								<>
+									<h6 className="dark:text-[#A0ABBB] text-[#4B5768] mt-7 mb-0.5">
+										{item.name}
+									</h6>
+									{item?.data.map((item) => (
+										<div>
+											<div className="justify-between mb-2 bg-lightmode-300 dark:bg-[#20232A] rounded-lg flex px-4 py-3">
+												<div>
+													<p className="font-semibold text-[1.1875rem] w-[100%]">
+														{item.title}
+													</p>
+												</div>
+												<span className=" cursor-pointer text-[1.1875rem]">
+													{item.value}
+												</span>
+											</div>
+										</div>
+									))}
+								</>
+							))}
+						</div>
+					)}
 				</div>
 
 				<br />

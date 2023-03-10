@@ -39,6 +39,7 @@ const BorrowerProfile = () => {
 	const [linkedin, setLinkedin] = useState();
 	const location = useLocation();
 	const [profileStatus, setProfileStatus] = useState(false);
+	const [sustainableChecked, setSustainableChecked] = useState("");
 	const [kycStatus, setKycStatus] = useState(false);
 	const [hasKey, setHaskey] = useState();
 	const [errormsg, setErrormsg] = useState({
@@ -52,6 +53,7 @@ const BorrowerProfile = () => {
 		secondText: "",
 	});
 
+	const [stainableCheckBoxData, setStainableCheckBoxData] = useState("");
 	const brJson = location.state;
 
 	useEffect(() => {
@@ -179,6 +181,8 @@ const BorrowerProfile = () => {
 		if (data) {
 			setProfileStatus(true);
 		}
+		setStainableCheckBoxData(data?.stainableCheckBoxData);
+
 		if (data) {
 			try {
 				if (data.companyName) {
@@ -202,6 +206,9 @@ const BorrowerProfile = () => {
 				}
 				if (data.linkedin) {
 					setLinkedin(data.linkedin);
+				}
+				if (data.sustainableChecked) {
+					setSustainableChecked(data.sustainableChecked);
 				}
 			} catch (error) {
 				captureException(error);
@@ -554,6 +561,84 @@ const BorrowerProfile = () => {
 									/>
 								) : (
 									<DocumentCard docName={"No document added!"} disable={true} />
+								)}
+
+								{sustainableChecked.length > 0 && (
+									<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] mt-7 rounded-xl">
+										<input type="checkbox" className="peer" />
+
+										<div className="collapse-title flex gap-4 md:gap-8 text-center">
+											<p className="">Sustainable business</p>
+										</div>
+										<div className="collapse-content">
+											<div className="font-semibold pt-2 pb-4">
+												<div className="flex flex-col md:flex-row md:flex-wrap gap-[0.6em]">
+													{sustainableChecked &&
+														sustainableChecked.map((data) => (
+															<div
+																key={data}
+																className="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded"
+															>
+																<svg
+																	width="24"
+																	height="24"
+																	viewBox="0 0 24 24"
+																	fill="none"
+																	xmlns="http://www.w3.org/2000/svg"
+																>
+																	<path
+																		d="M6.28571 4.5C5.02514 4.5 4 5.52514 4 6.78571V18.2143C4 19.4749 5.02514 20.5 6.28571 20.5H17.7143C18.9749 20.5 20 19.4749 20 18.2143V6.78571C20 5.52514 18.9749 4.5 17.7143 4.5H6.28571ZM6.28571 18.2143V6.78571H17.7143L17.7166 18.2143H6.28571Z"
+																		fill="#10B981"
+																	/>
+																	<path
+																		d="M10.696 12.767L9.4 11.496L8 12.926L10.704 15.573L15.403 10.922L13.997 9.5L10.696 12.767Z"
+																		fill="#10B981"
+																	/>
+																</svg>
+
+																<label
+																	htmlFor="bordered-checkbox-1"
+																	className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+																>
+																	{data}
+																</label>
+															</div>
+														))}
+												</div>
+											</div>
+										</div>
+									</div>
+								)}
+
+								{stainableCheckBoxData && (
+									<div className="my-5 flex justify-between flex-wrap">
+										{stainableCheckBoxData.map((item) => (
+											<div key={item.name} className="w-1/2">
+												<h2 className="text-[1.1875rem] mb-5 ">{item.name}</h2>
+												<div className="w-[80%] dark:bg-[#24272F] mb-5 outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC] bg-lightmode-200 rounded-lg shadow-md ">
+													<ul className="my-4 pt-5 pl-8 pr-8 pb-5 space-y-3">
+														{item.data.map((data) => (
+															<li
+																key={data.title}
+																className="flex justify-between items-center"
+															>
+																<div className="font-base">
+																	<span className="flex-1  whitespace-nowrap">
+																		{data.title}
+																	</span>
+																</div>
+																<div>
+																	<span className="border text-black dark:text-white  text-sm rounded-lg  border-[#BBC0CC] block w-[8rem] p-2.5 dark:bg-[#24272F] dark:border-gray-600 outline-none">
+																		{data.value}
+																	</span>
+																</div>
+															</li>
+														))}
+													</ul>
+												</div>
+											</div>
+										))}
+									</div>
 								)}
 							</div>
 						</>

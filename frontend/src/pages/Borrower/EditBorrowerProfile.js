@@ -16,6 +16,8 @@ import {
 } from "../../services/Helpers/web3storageIPFS";
 import { updateBorrowerDetails } from "../../services/BackendConnectors/userConnectors/borrowerConnectors";
 import { captureMessage } from "@sentry/react";
+import { Field } from "formik";
+import SustainableCard from "../../uiTools/Card/SustainableCard";
 
 const URL =
 	/^((https?|ftp):\/\/)?(www.)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
@@ -52,6 +54,94 @@ const EditBorrowerProfileNew = () => {
 		err: false,
 		msg: "",
 	});
+
+	// New updates start...................................................
+
+	const [checkedData, setcheckedData] = useState([]);
+	const [stainableCheckBoxData, setStainableCheckBoxData] = useState([]);
+
+	//dummy data start
+
+	const sustainableDummyData = [
+		{
+			name: "No Poverty",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Zero Hunger",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Life On Land",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Climate Action",
+			data: [{ title: "Metric tonnes of Co2 reduced", value: "" }],
+		},
+		{
+			name: "Gender Equaltiy",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+				{ title: "time pass", value: "" },
+			],
+		},
+		{
+			name: "Life Below Water",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Quality Education",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+		{
+			name: "Reduced Inequalities",
+			data: [
+				{ title: "Metric tonnes of Co2 reduced", value: "" },
+				{ title: "MW increase in RW generation", value: "" },
+			],
+		},
+	];
+
+	//dummy data end
+
+	const sustainableCheckedData = [
+		"No Poverty",
+		"Zero Hunger",
+		"Life On Land",
+		"Climate Action",
+		"Gender Equaltiy",
+		"Life Below Water",
+		"Quality Education",
+		"Reduced Inequalities",
+		"Partnerships For The Goals",
+		"Good Health And Well-Being",
+		"Clean Water And Sanitation",
+		"Affordable And Clean Energy",
+		"Decent Work And Economic Growth",
+		"Sustainable Cities And Communities",
+		"Industry, Innovation And Infrastructure",
+		"Responsible Consumption And Production",
+		"Peace, Justice And Strong Institutions",
+	];
+
+	// New updates end.....................................................
 
 	const [lincenseText, setLincenseText] = useState("");
 	const [lincenseFile, setLincenseFile] = useState(false);
@@ -91,6 +181,11 @@ const EditBorrowerProfileNew = () => {
 	useEffect(() => {
 		if (location.state) {
 			setProfileState(location.state);
+
+			if (location.state?.stainableCheckBoxData?.length > 0) {
+				setStainableCheckBoxData(location.state?.stainableCheckBoxData);
+			}
+
 			setHasKey(location.state ? "businessLicFile" in location.state : true);
 		}
 		getUserWalletAddress().then((res) => {
@@ -122,6 +217,7 @@ const EditBorrowerProfileNew = () => {
 		email: profileState ? profileState.email : "",
 		twitter: profileState ? profileState.twitter : "",
 		linkedin: profileState ? profileState.linkedin : "",
+		checked: profileState ? profileState.sustainableChecked : "",
 	};
 
 	useEffect(() => {
@@ -145,6 +241,7 @@ const EditBorrowerProfileNew = () => {
 			businessIncoFilesCID.current = IncoFile.businessIncoFileCID;
 		}
 		checkFunction(null);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profileState]);
 
@@ -254,6 +351,7 @@ const EditBorrowerProfileNew = () => {
 				email,
 				twitter,
 				linkedin,
+				checked,
 			} = formData;
 
 			validations();
@@ -371,8 +469,22 @@ const EditBorrowerProfileNew = () => {
 						);
 					}
 				}
+				let stainableBoxData = [];
+				if (checkedData.length > 0) {
+					stainableCheckBoxData.forEach((item) => {
+						const data = checkedData.includes(item.name);
+						if (data) {
+							stainableBoxData.push(item);
+						}
+					});
+				} else {
+					stainableBoxData = [];
+				}
+
 				// Prepare a json file with borrower data
 				let borrowerJsonData = {
+					stainableCheckBoxData: stainableBoxData,
+					sustainableChecked: checked,
 					companyName: companyName,
 					companyRepName: companyRepName,
 					companyBio: companyBio,
@@ -532,6 +644,7 @@ const EditBorrowerProfileNew = () => {
 								<div className="">
 									<h2 className="text-[1.4375rem] ">Company Details</h2>
 
+									{setcheckedData(values.checked)}
 									<div className="mt-2 flex flex-col gap-2">
 										<div className=" flex flex-col gap-2 md:flex-row md:flex-wrap xl:justify-between">
 											<FileUploader
@@ -676,6 +789,57 @@ const EditBorrowerProfileNew = () => {
 									/>
 								</div>
 
+								<div className="collapse collapse-arrow bg-lightmode-200 dark:bg-[#24272F] outline outline-1 outline-offset-0 dark:outline-[#3A3C43] outline-[#BBC0CC]  rounded-xl mb-5">
+									<input type="checkbox" className="peer" />
+
+									<div className="collapse-title flex gap-4 md:gap-8 text-center">
+										<p className="">Sustainable business</p>
+									</div>
+
+									<div className="collapse-content ">
+										<div className="font-semibold pt-8 pb-4">
+											<div className="flex flex-col  md:flex-row md:flex-wrap gap-[0.7em] justify-center">
+												{sustainableCheckedData.map((data) => (
+													<div className="flex items-center md:w-[23%] pl-4 border dark:border-[#3A3C43] border-[#BBC0CC] rounded">
+														<label className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
+															<Field
+																type="checkbox"
+																name="checked"
+																value={data}
+																className="w-[0.9rem] h-[0.9rem] text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+															/>
+															{data}
+														</label>
+													</div>
+												))}
+											</div>
+										</div>
+									</div>
+								</div>
+
+								{/* card  start*/}
+
+								<div className="flex flex-wrap justify-between">
+									{sustainableDummyData.map((item) => {
+										if (checkedData) {
+											const data = checkedData.includes(item.name);
+											if (data) {
+												return (
+													<SustainableCard
+														name={item.name}
+														data={item.data}
+														stainableCheckBoxData={stainableCheckBoxData}
+														setStainableCheckBoxData={setStainableCheckBoxData}
+													/>
+												);
+											}
+										} else {
+											return <></>;
+										}
+									})}
+								</div>
+
+								{/* card  end*/}
 								<div className="mb-6">
 									<h2 className="text-[1.1875rem] ">Socials</h2>
 
@@ -732,6 +896,7 @@ const EditBorrowerProfileNew = () => {
 								</div>
 							</div>
 						</div>
+
 						<div className="my-10 font-semibold flex flex-col gap-5 md:gap-8 md:flex-row md:justify-center">
 							<button
 								onClick={() =>

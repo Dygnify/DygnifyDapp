@@ -30,6 +30,7 @@ const ViewPool = () => {
 	const [poolData, setPoolData] = useState();
 	const [transactionData, setTransactionData] = useState([]);
 	const [expand, setExpand] = useState(false);
+	const [impactData, setImpactData] = useState([]);
 	const [companyDetails, setCompanyDetails] = useState();
 	const [kycStatus, setKycStatus] = useState();
 	const [poolBal, setPoolBal] = useState();
@@ -106,6 +107,7 @@ const ViewPool = () => {
 		if (poolData) {
 			loadInfo();
 			console.log(poolData);
+			setImpactData(poolData?.opData?.impactData);
 			// get pool balance
 			getWalletBal(poolData.opportunityPoolAddress).then((res) => {
 				if (res.success) {
@@ -282,7 +284,9 @@ const ViewPool = () => {
 						poolLimit={poolData?.opportunityAmount}
 						estimatedAPY={poolData?.loanInterest}
 						investableAmount={poolData?.investableAmount}
-						investableDisplayAmount={poolData?.investableDisplayAmount}
+						investableDisplayAmount={
+							poolData?.investableDisplayAmount
+						}
 						setProcessFundModal={setProcessFundModal}
 						setInvestProcessing={setInvestProcessing}
 						setSelected={setSelected}
@@ -322,7 +326,9 @@ const ViewPool = () => {
 								{poolData?.opportunityName}
 							</p>
 							<p className="text-neutral-500">
-								{companyDetails ? companyDetails.companyName : ""}
+								{companyDetails
+									? companyDetails.companyName
+									: ""}
 							</p>
 						</div>
 					</div>
@@ -389,7 +395,9 @@ const ViewPool = () => {
 								>
 									{expand ? null : " ...view more"}
 								</span>
-								{expand ? <span>{loanPurpose.secondText}</span> : null}
+								{expand ? (
+									<span>{loanPurpose.secondText}</span>
+								) : null}
 								<span
 									onClick={() => setExpand(false)}
 									className="cursor-pointer font-semibold"
@@ -407,14 +415,24 @@ const ViewPool = () => {
 					<div className="rounded-md px-4 py-6 border dark:border-[#363637] flex flex-col gap-6 md:w-[22rem] xl:w-[25rem] bg-gradient-to-tl from-[#ffffff00] dark:from-[#20232a00] to-[#D1D1D1] dark:to-[#20232A]">
 						<div className="flex ">
 							<div className="flex flex-col justify-start text-neutral-500 dark:text-neutral-200">
-								<p className=" font-bold text-md mb-2">Estimated APY.</p>
+								<p className=" font-bold text-md mb-2">
+									Estimated APY.
+								</p>
 
-								<p className=" font-bold text-md mb-2">Pool Limit</p>
+								<p className=" font-bold text-md mb-2">
+									Pool Limit
+								</p>
 
-								<p className=" font-bold text-md mb-2">Total supplied</p>
+								<p className=" font-bold text-md mb-2">
+									Total supplied
+								</p>
 
-								<p className=" font-bold text-md mb-2">Payment terms</p>
-								<p className=" font-bold text-md mb-2">Payment frequency</p>
+								<p className=" font-bold text-md mb-2">
+									Payment terms
+								</p>
+								<p className=" font-bold text-md mb-2">
+									Payment frequency
+								</p>
 							</div>
 							<div className="ml-auto flex flex-col justify-start">
 								<p className="font-semibold text-xl mb-1">
@@ -422,18 +440,30 @@ const ViewPool = () => {
 								</p>
 
 								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
-									<img src={DollarImage} className="w-4" alt="Dollar" />
-									{poolData ? poolData.opportunityAmount : "--"}
+									<img
+										src={DollarImage}
+										className="w-4"
+										alt="Dollar"
+									/>
+									{poolData
+										? poolData.opportunityAmount
+										: "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1 flex gap-1 items-center">
-									<img src={DollarImage} className="w-4" alt="DollarImage" />
+									<img
+										src={DollarImage}
+										className="w-4"
+										alt="DollarImage"
+									/>
 									{poolBal ? poolBal : "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1">
 									{poolData ? poolData.loanTenure : "--"}
 								</p>
 								<p className="font-semibold text-xl mb-1">
-									{poolData ? poolData.paymentFrequencyInDays : "--"}
+									{poolData
+										? poolData.paymentFrequencyInDays
+										: "--"}
 								</p>
 							</div>
 						</div>
@@ -442,7 +472,8 @@ const ViewPool = () => {
 							htmlFor={kycStatus ? "InvestModal" : ""}
 							id={kycStatus ? "" : "blockpass-kyc-connect"}
 							onClick={() => {
-								if (kycStatus && !isFullStatus) return setSelected(true);
+								if (kycStatus && !isFullStatus)
+									return setSelected(true);
 								else return null;
 							}}
 							className={`block font-semibold text-white ${
@@ -467,7 +498,9 @@ const ViewPool = () => {
 				</div>
 
 				<div className="mt-[3em] md:mt-[4em] md:w-[58%]">
-					<h2 className="text-xl font-semibold md:text-2xl">Recent Activity</h2>
+					<h2 className="text-xl font-semibold md:text-2xl">
+						Recent Activity
+					</h2>
 					{transactionData?.length ? (
 						<div className=" mt-8 py-6  justify-start gap-4    flex font-bold border-y border-neutral-300 dark:border-darkmode-500">
 							<p className="w-1/3 md:w-1/4 pl-4">Address</p>
@@ -496,9 +529,40 @@ const ViewPool = () => {
 							))}
 						</div>
 					) : (
-						<p>Transaction details are not available at this moment</p>
+						<p>
+							Transaction details are not available at this moment
+						</p>
 					)}
 				</div>
+
+				{impactData?.length > 0 && (
+					<div className="w-full  mt-5 text-lg font-medium ">
+						<h2 className="text-xl font-semibold md:text-2xl py-6">
+							Projected Impact
+						</h2>
+
+						{impactData.map((item) => (
+							<div>
+								<p className="font-bold  pb-6 pt-4">
+									{item.name}
+								</p>
+
+								{item?.data?.map((data) => (
+									<div className="justify-between mb-2 w-[58%] bg-lightmode-300 dark:bg-[#20232A] rounded-lg flex px-4 py-3">
+										<div>
+											<p className="font-semibold text-[1.1875rem] ">
+												{data.title}
+											</p>
+										</div>
+										<span className=" cursor-pointer text-[1.1875rem]">
+											{data.value}
+										</span>
+									</div>
+								))}
+							</div>
+						))}
+					</div>
+				)}
 
 				<div className="mt-[5em] md:w-[58%]">
 					<h2 className="text-xl font-semibold md:text-2xl mb-6">

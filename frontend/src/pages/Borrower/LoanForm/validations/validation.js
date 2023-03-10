@@ -3,13 +3,14 @@ import * as Yup from "yup";
 export const loanDetailsValidationSchema = Yup.object().shape({
 	loan_name: Yup.string().label("Loan Name").required(),
 	loan_type: Yup.mixed().label("Loan Type").required(),
-	loan_purpose: Yup.string().label("Loan Purpose"),
+	loan_purpose: Yup.string().label("Loan Purpose").required(),
 	loan_amount: Yup.number().positive().label("Loan Amount").required(),
 	loan_tenure: Yup.number()
 		.positive()
 		.integer()
 		.min(1)
 		.max(100)
+		.required()
 
 		.label("Loan Tenure")
 		.required(),
@@ -17,6 +18,7 @@ export const loanDetailsValidationSchema = Yup.object().shape({
 		.positive()
 		.min(1)
 		.max(100)
+		.required()
 
 		.label("Loan Interest")
 		.required(),
