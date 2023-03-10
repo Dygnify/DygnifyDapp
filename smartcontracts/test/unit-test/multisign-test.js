@@ -32,9 +32,9 @@ describe("Multisign", function () {
 		multiSign = await MultiSign.deploy();
 		await multiSign.deployed();
 
-		// Deploy and initialize UsdcToken
-		const UsdcToken = await ethers.getContractFactory("UsdcToken");
-		usdcToken = await UsdcToken.deploy();
+		// Deploy UsdcToken
+		const UsdcToken = await ethers.getContractFactory("TestUSDCToken");
+		usdcToken = await UsdcToken.deploy("100000000000000000");
 		await usdcToken.deployed();
 
 		// Deploy and Initialize DygnifyTreasury
@@ -48,7 +48,6 @@ describe("Multisign", function () {
 		await dygnifyConfig.setAddress(8, dygnifyTreasury.address);
 
 		// Initialize
-		await usdcToken.initialize();
 		await dygnifyTreasury.initialize(dygnifyConfig.address);
 
 		// Transfer Usdc

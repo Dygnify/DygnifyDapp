@@ -13,6 +13,8 @@ contract DygnifyTreasury is BaseUpgradeablePausable, MultiSign {
     IERC20Upgradeable public usdcToken;
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
+    event Withdrawn(address indexed to, uint256 amount);
+
     function initialize(DygnifyConfig _dygnifyConfig) external initializer {
         require(
             address(_dygnifyConfig) != address(0),
@@ -53,5 +55,6 @@ contract DygnifyTreasury is BaseUpgradeablePausable, MultiSign {
         );
 
         usdcToken.transfer(to, amount);
+        emit Withdrawn(to, amount);
     }
 }

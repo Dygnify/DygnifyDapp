@@ -1638,8 +1638,8 @@ describe("Dygnify integrated test", function () {
 		await dygnifyConfig.initialize();
 
 		// Deploy UsdcToken
-		const UsdcToken = await ethers.getContractFactory("UsdcToken");
-		usdcToken = await UsdcToken.deploy();
+		const UsdcToken = await ethers.getContractFactory("TestUSDCToken");
+		usdcToken = await UsdcToken.deploy("10000000000000000000000000000");
 		await usdcToken.deployed();
 
 		// Deploy SeniorPool
@@ -1723,8 +1723,6 @@ describe("Dygnify integrated test", function () {
 		await dygnifyConfig.setNumber(6, 20);
 
 		// Initialize contracts
-		// Initialize UsdcToken
-		await usdcToken.initialize();
 		// Initialize the senior pool
 		await seniorPool.initialize(dygnifyConfig.address);
 		// Initialize LP token

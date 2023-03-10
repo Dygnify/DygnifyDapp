@@ -18,6 +18,23 @@ contract OpportunityOrigination is
     CollateralToken public collateralToken;
     using ConfigHelper for DygnifyConfig;
 
+    event OpportunityCreated(bytes32 indexed opportunityId);
+    event UnderwritersAssigned(
+        bytes32 indexed opportunityId,
+        address underwriter
+    );
+    event OpportunityVoted(bytes32 indexed opportunityId, uint8 status);
+    event OpportunityPoolCreated(
+        bytes32 indexed opportunityId,
+        address opportunityPool
+    );
+    event MarkedDrawDown(bytes32 indexed opportunityId);
+    event MarkedRepaid(bytes32 indexed opportunityId);
+    event MarkedWriteOff(
+        bytes32 indexed opportunityId,
+        address opportunityPool
+    );
+
     mapping(bytes32 => Opportunity) public opportunityToId;
     mapping(address => bytes32[]) public opportunityOf;
     mapping(bytes32 => bool) public isOpportunity;
@@ -41,27 +58,21 @@ contract OpportunityOrigination is
         );
     }
 
-    function getTotalOpportunities() external override view returns (uint256) {
+    function getTotalOpportunities() external view override returns (uint256) {
         return opportunityIds.length;
     }
 
-    function getOpportunityOf(address _borrower)
-        external
-        override
-        view
-        returns (bytes32[] memory)
-    {
+    function getOpportunityOf(
+        address _borrower
+    ) external view override returns (bytes32[] memory) {
         require(address(_borrower) != address(0), "invalid borrower address");
         return opportunityOf[_borrower];
     }
 
     //Opportunity Creation
-    function createOpportunity(CreateOpportunity memory _opportunityData)
-        external
-        override
-        nonReentrant
-        whenNotPaused
-    {
+    function createOpportunity(
+        CreateOpportunity memory _opportunityData
+    ) external override nonReentrant whenNotPaused {
         // require(
         //     IERC721Upgradeable(dygnifyConfig.identityTokenAddress()).balanceOf(_opportunityData.borrower) != 0, "KYC Of Borrower is not done yet"
         // );
@@ -124,16 +135,14 @@ contract OpportunityOrigination is
         opportunityOf[_opportunityData.borrower].push(id);
         isOpportunity[id] = true;
         opportunityIds.push(id);
+        emit OpportunityCreated(id);
     }
 
     // In future, this function assign random underwriters to a opportunity ID. currently it only assign 1 underwriter
-    function assignUnderwriters(bytes32 _opportunityId, address _underwriter)
-        external
-        override
-        onlyAdmin
-        nonReentrant
-        whenNotPaused
-    {
+    function assignUnderwriters(
+        bytes32 _opportunityId,
+        address _underwriter
+    ) external override onlyAdmin nonReentrant whenNotPaused {
         require(_underwriter != address(0), "Invalid Address");
         require(
             isOpportunity[_opportunityId] == true,
@@ -146,14 +155,13 @@ contract OpportunityOrigination is
         );
         underwritersOf[_opportunityId][0] = _underwriter;
         underwriterToOpportunity[_underwriter].push(_opportunityId);
+        emit UnderwritersAssigned(_opportunityId, _underwriter);
     }
 
-    function voteOpportunity(bytes32 _opportunityId, uint8 _status)
-        external
-        override
-        nonReentrant
-        whenNotPaused
-    {
+    function voteOpportunity(
+        bytes32 _opportunityId,
+        uint8 _status
+    ) external override nonReentrant whenNotPaused {
         require(
             underwritersOf[_opportunityId][0] == msg.sender,
             "You are not an audiitor for this Opportunity."
@@ -180,6 +188,7 @@ contract OpportunityOrigination is
             mintCollateral(_opportunityId);
             createOpportunityPool(_opportunityId);
         }
+        emit OpportunityVoted(_opportunityId, _status);
     }
 
     function mintCollateral(bytes32 _opportunityId) private {
@@ -200,10 +209,9 @@ contract OpportunityOrigination is
         );
     }
 
-    function createOpportunityPool(bytes32 _opportunityId)
-        private
-        returns (address pool)
-    {
+    function createOpportunityPool(
+        bytes32 _opportunityId
+    ) private returns (address pool) {
         require(
             opportunityToId[_opportunityId].opportunityStatus ==
                 OpportunityStatus.Collateralized,
@@ -228,6 +236,7 @@ contract OpportunityOrigination is
         opportunityToId[_opportunityId].opportunityPoolAddress = pool;
         opportunityToId[_opportunityId].opportunityStatus = OpportunityStatus
             .Active;
+        emit OpportunityPoolCreated(_opportunityId, pool);
         return pool;
     }
 
@@ -269,9 +278,10 @@ contract OpportunityOrigination is
         opportunityToId[id].opportunityStatus = OpportunityStatus.Drawndown;
         IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress())
             .addOpportunityInKeeper(id);
+        emit MarkedDrawDown(id);
     }
 
-    function isDrawdown(bytes32 id) public override view returns (bool) {
+    function isDrawdown(bytes32 id) public view override returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==
@@ -298,9 +308,10 @@ contract OpportunityOrigination is
         opportunityToId[id].opportunityStatus = OpportunityStatus.Repaid;
         IDygnifyKeeper(dygnifyConfig.dygnifyKeeperAddress())
             .removeOpportunityInKeeper(id);
+        emit MarkedRepaid(id);
     }
 
-    function isRepaid(bytes32 id) public override view returns (bool) {
+    function isRepaid(bytes32 id) public view override returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==
@@ -309,7 +320,7 @@ contract OpportunityOrigination is
         else return false;
     }
 
-    function isActive(bytes32 id) external override view returns (bool) {
+    function isActive(bytes32 id) external view override returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==
@@ -318,17 +329,14 @@ contract OpportunityOrigination is
         else return false;
     }
 
-    function getBorrower(bytes32 id) external override view returns (address) {
+    function getBorrower(bytes32 id) external view override returns (address) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         return opportunityToId[id].borrower;
     }
 
-    function getOpportunityPoolAddress(bytes32 id)
-        external
-        override
-        view
-        returns (address)
-    {
+    function getOpportunityPoolAddress(
+        bytes32 id
+    ) external view override returns (address) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         require(
             uint8(opportunityToId[id].opportunityStatus) >=
@@ -343,34 +351,25 @@ contract OpportunityOrigination is
         return poolAddress;
     }
 
-    function getAlltheOpportunitiesOf(address borrower)
-        external
-        override
-        view
-        returns (bytes32[] memory)
-    {
+    function getAlltheOpportunitiesOf(
+        address borrower
+    ) external view override returns (bytes32[] memory) {
         require(borrower != address(0), "Invalid Borrower sddress");
         bytes32[] memory opportunities = opportunityOf[borrower];
         return opportunities;
     }
 
-    function getUnderWritersOpportunities(address _underwriter)
-        external
-        override
-        view
-        returns (bytes32[] memory)
-    {
+    function getUnderWritersOpportunities(
+        address _underwriter
+    ) external view override returns (bytes32[] memory) {
         require(_underwriter != address(0), "Invalid underwriter sddress");
         bytes32[] memory opportunities = underwriterToOpportunity[_underwriter];
         return opportunities;
     }
 
-    function getOpportunityNameOf(bytes32 _opportunityId)
-        external
-        override
-        view
-        returns (string memory)
-    {
+    function getOpportunityNameOf(
+        bytes32 _opportunityId
+    ) external view override returns (string memory) {
         require(
             isOpportunity[_opportunityId] == true,
             "Opportunity ID doesn't exist"
@@ -392,9 +391,10 @@ contract OpportunityOrigination is
         );
         opportunityToId[id].opportunityStatus = OpportunityStatus.WriteOff;
         IOpportunityPool(_pool).writeOffOpportunity();
+        emit MarkedWriteOff(id, _pool);
     }
 
-    function isWriteOff(bytes32 id) public override view returns (bool) {
+    function isWriteOff(bytes32 id) public view override returns (bool) {
         require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
         if (
             uint8(opportunityToId[id].opportunityStatus) ==

@@ -15,7 +15,7 @@ describe("DygnifyKeeper", function () {
 
 		// deploy OpportunityOrigination.sol
 		const poolContractFactory = await ethers.getContractFactory(
-			"MockOpportunityPoolV1"
+			"MockOpportunityPool"
 		);
 		opportunityPool = await poolContractFactory.deploy();
 		await opportunityPool.deployed();
@@ -24,12 +24,13 @@ describe("DygnifyKeeper", function () {
 
 		// deploy OpportunityOrigination.sol
 		const OpportunityOrigination = await ethers.getContractFactory(
-			"MockOpportunityOriginationV1"
+			"MockOpportunityOrigination"
 		);
 		opportunityOrigination = await OpportunityOrigination.deploy(
 			opportunityPool.address
 		);
 		await opportunityOrigination.deployed();
+		await opportunityOrigination.setPoolAddress(opportunityPool.address);
 
 		// deploy DygnifyKeeper.sol
 		const DygnifyKeeper = await hre.ethers.getContractFactory("DygnifyKeeper");
@@ -46,8 +47,9 @@ describe("DygnifyKeeper", function () {
 	describe("addOpportunityInKeeper", function () {
 		describe("Positive cases", function () {
 			it("add drawdowned opportunity in keeper", async function () {
+				await opportunityOrigination.setIsDrawdown(true);
 				await expect(
-					opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address)
+					opportunityOrigination.markdrawDown(ID, dygnifyKeeper.address)
 				)
 					.to.emit(dygnifyKeeper, "OpportunityAddedInKeeper")
 					.withArgs(ID);
@@ -63,6 +65,7 @@ describe("DygnifyKeeper", function () {
 			});
 
 			it("reverts when caller is not opportunityOrigination", async function () {
+				await opportunityOrigination.setIsDrawdown(true);
 				await expect(
 					dygnifyKeeper.addOpportunityInKeeper(ID)
 				).to.be.revertedWith(
@@ -89,9 +92,10 @@ describe("DygnifyKeeper", function () {
 					ethers.utils.id("aadhar3"),
 					ethers.utils.id("aadhar4"),
 				];
+				await opportunityOrigination.setIsDrawdown(true);
 
 				for (let i = 0; i < ids.length; i++) {
-					await opportunityOrigination.markDrawDown(
+					await opportunityOrigination.markdrawDown(
 						ids[i],
 						dygnifyKeeper.address
 					);
@@ -100,7 +104,7 @@ describe("DygnifyKeeper", function () {
 
 			it("remove ids[0] opportunity form keeper and expect event to emit", async function () {
 				await expect(
-					opportunityOrigination.markRepaid(ids[0], dygnifyKeeper.address)
+					opportunityOrigination.markrepaid(ids[0], dygnifyKeeper.address)
 				)
 					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
 					.withArgs(ids[0]);
@@ -108,7 +112,7 @@ describe("DygnifyKeeper", function () {
 
 			it("remove ids[1] opportunity form keeper and expect event to emit", async function () {
 				await expect(
-					opportunityOrigination.markRepaid(ids[1], dygnifyKeeper.address)
+					opportunityOrigination.markrepaid(ids[1], dygnifyKeeper.address)
 				)
 					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
 					.withArgs(ids[1]);
@@ -116,7 +120,7 @@ describe("DygnifyKeeper", function () {
 
 			it("remove ids[2] opportunity form keeper and expect event to emit", async function () {
 				await expect(
-					opportunityOrigination.markRepaid(ids[2], dygnifyKeeper.address)
+					opportunityOrigination.markrepaid(ids[2], dygnifyKeeper.address)
 				)
 					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
 					.withArgs(ids[2]);
@@ -124,7 +128,7 @@ describe("DygnifyKeeper", function () {
 
 			it("remove ids[3] opportunity form keeper and expect event to emit", async function () {
 				await expect(
-					opportunityOrigination.markRepaid(ids[3], dygnifyKeeper.address)
+					opportunityOrigination.markrepaid(ids[3], dygnifyKeeper.address)
 				)
 					.to.emit(dygnifyKeeper, "OpportunityRemovedFromKeeper")
 					.withArgs(ids[3]);
@@ -151,28 +155,30 @@ describe("DygnifyKeeper", function () {
 
 	describe("checkUpkeep", function () {
 		beforeEach(async function () {
-			await opportunityPool.setNextRepaymentTime(8640000);
+			await opportunityPool.increaseNextRepaymentTime(8640000);
 		});
 		describe("Positive cases", function () {
 			it("returns upkeppNeeded as true when opportunity threshold is less than timePasses", async function () {
-				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
+				await opportunityOrigination.setIsDrawdown(true);
+				await opportunityOrigination.markdrawDown(ID, dygnifyKeeper.address);
 				await opportunityOrigination.setWriteOffDays(100);
-				await network.provider.send("evm_increaseTime", [86400]);
+				await network.provider.send("evm_increaseTime", [86400000]);
 				await network.provider.send("evm_mine", []);
 				const upKeepNeeded = await dygnifyKeeper.callStatic.checkUpkeep("0x");
-
 				assert(upKeepNeeded[0]);
 			});
 		});
 
 		describe("Negative cases", function () {
 			it("returns upkeppNeeded as false when opportunity threshold is greater than timePasses", async function () {
-				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
+				await opportunityOrigination.setIsDrawdown(true);
+				await opportunityOrigination.markdrawDown(ID, dygnifyKeeper.address);
 
 				await network.provider.send("evm_increaseTime", [86400]);
 				await network.provider.send("evm_mine", []);
 				await opportunityOrigination.setWriteOffDays(767678678);
 				const upKeepNeeded = await dygnifyKeeper.callStatic.checkUpkeep("0x");
+				assert(!upKeepNeeded[0]);
 			});
 		});
 	});
@@ -180,11 +186,10 @@ describe("DygnifyKeeper", function () {
 	describe("performUpkeep", function () {
 		describe("Positive cases", function () {
 			it("returns upkeppNeeded as true when opportunity threshold is less than timePasses", async function () {
-				await opportunityPool.setNextRepaymentTime(
-					Math.floor(Date.now() / 1000) + 86400
-				);
+				await opportunityOrigination.setIsDrawdown(true);
+				await opportunityPool.increaseNextRepaymentTime(86400);
 
-				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
+				await opportunityOrigination.markdrawDown(ID, dygnifyKeeper.address);
 				await network.provider.send("evm_increaseTime", [86401]);
 				await network.provider.send("evm_mine", []);
 
@@ -196,11 +201,9 @@ describe("DygnifyKeeper", function () {
 
 		describe("Negative cases", function () {
 			it("returns upkeppNeeded as false when opportunity threshold is greater than timePasses", async function () {
-				await opportunityPool.setNextRepaymentTime(
-					Math.floor(Date.now() / 1000) + 8640000
-				);
-				await opportunityOrigination.markDrawDown(ID, dygnifyKeeper.address);
-
+				await opportunityOrigination.setIsDrawdown(true);
+				await opportunityPool.increaseNextRepaymentTime(8640000);
+				await opportunityOrigination.markdrawDown(ID, dygnifyKeeper.address);
 				await expect(dygnifyKeeper.performUpkeep("0x")).not.to.emit(
 					dygnifyKeeper,
 					"OpportunityRemovedFromKeeper"
