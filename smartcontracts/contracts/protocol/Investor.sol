@@ -12,6 +12,9 @@ contract Investor is BaseUpgradeablePausable, IInvestor {
     using ConfigHelper for DygnifyConfig;
     IOpportunityOrigination public opportunityOrigination;
 
+    event OpportunityAdded(address indexed _investor, bytes32 _id);
+    event OpportunityRemoved(address indexed _investor, bytes32 _id);
+
     mapping(address => bytes32[]) public investorToOpportunity;
 
     function initialize(DygnifyConfig _dygnifyConfig) external initializer {
@@ -28,49 +31,77 @@ contract Investor is BaseUpgradeablePausable, IInvestor {
         _BaseUpgradeablePausable_init(owner);
     }
 
-
     function addOpportunity(address _investor, bytes32 _id) external override {
-        address poolAddress = opportunityOrigination.getOpportunityPoolAddress(_id);
+        address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
+            _id
+        );
         require(_investor != address(0), "Invalid Investor address");
         require(poolAddress != address(0), "Opportunity pool doesn't exist.");
-        require(msg.sender == poolAddress, "Given opportunity can only be added by that pool." );
-        require(IOpportunityPool(poolAddress).isStaking(_investor) == true, "Investor is not having a staking position in provided opportunity.");
+        require(
+            msg.sender == poolAddress,
+            "Given opportunity can only be added by that pool."
+        );
+        require(
+            IOpportunityPool(poolAddress).isStaking(_investor) == true,
+            "Investor is not having a staking position in provided opportunity."
+        );
         bool exist = isExistInInvestor(_investor, _id);
-        if(exist == false){
+        if (exist == false) {
             investorToOpportunity[_investor].push(_id);
+            emit OpportunityAdded(_investor, _id);
         }
     }
-    
-    function removeOpportunity(address _investor, bytes32 _id) external override {
-        address poolAddress = opportunityOrigination.getOpportunityPoolAddress(_id);
+
+    function removeOpportunity(
+        address _investor,
+        bytes32 _id
+    ) external override {
+        address poolAddress = opportunityOrigination.getOpportunityPoolAddress(
+            _id
+        );
         require(_investor != address(0), "Invalid Investor address");
         require(poolAddress != address(0), "Opportunity pool doesn't exist.");
-        require(msg.sender == poolAddress, "Given opportunity can only be added by that pool." );
+        require(
+            msg.sender == poolAddress,
+            "Given opportunity can only be added by that pool."
+        );
         bool exist = isExistInInvestor(_investor, _id);
-        require(exist == true, "Investor doesn't invested in this opportunity.");
+        require(
+            exist == true,
+            "Investor doesn't invested in this opportunity."
+        );
 
         bytes32[] memory opportunities = investorToOpportunity[_investor];
 
         for (uint256 i = 0; i < opportunities.length; i++) {
-            if(opportunities[i] == _id){
-                investorToOpportunity[_investor][i] = investorToOpportunity[_investor][opportunities.length - 1];
-                delete investorToOpportunity[_investor][opportunities.length - 1];
+            if (opportunities[i] == _id) {
+                investorToOpportunity[_investor][i] = investorToOpportunity[
+                    _investor
+                ][opportunities.length - 1];
+                delete investorToOpportunity[_investor][
+                    opportunities.length - 1
+                ];
             }
         }
-        
+        emit OpportunityRemoved(_investor, _id);
     }
 
-    function getOpportunityOfInvestor(address _investor)external override view returns(bytes32[] memory){
+    function getOpportunityOfInvestor(
+        address _investor
+    ) external view override returns (bytes32[] memory) {
         require(_investor != address(0), "Invalid investor address");
         bytes32[] memory opportunities = investorToOpportunity[_investor];
         return opportunities;
     }
 
-    function isExistInInvestor(address _investor, bytes32 _id)public override view returns(bool){
+    function isExistInInvestor(
+        address _investor,
+        bytes32 _id
+    ) public view override returns (bool) {
         require(_investor != address(0), "Invalid investor address");
         bytes32[] memory opportunities = investorToOpportunity[_investor];
         for (uint256 i = 0; i < opportunities.length; i++) {
-            if(opportunities[i] == _id){
+            if (opportunities[i] == _id) {
                 return true;
             }
         }
