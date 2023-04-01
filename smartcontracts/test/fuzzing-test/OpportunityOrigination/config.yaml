@@ -1,0 +1,3 @@
+initialize: test/fuzzing-test/OpportunityOrigination/init.json
+# allContracts: true
+cryticArgs: ["--solc-remaps", "@openzeppelin=node_modules/@openzeppelin"]
