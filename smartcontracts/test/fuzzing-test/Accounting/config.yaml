@@ -1,0 +1,7 @@
+cryticArgs: ["--solc-remaps", "@openzeppelin=node_modules/@openzeppelin"]
+# testMode: assertion
+seqLen: 50
+# testLimit: 20000
+# cryticArgs: ["--compile-force-framework", "Buidler"]
+coverage: true
+# checkAsserts: true
