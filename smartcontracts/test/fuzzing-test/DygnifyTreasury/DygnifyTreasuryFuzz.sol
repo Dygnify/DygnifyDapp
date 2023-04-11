@@ -5,10 +5,11 @@ import "../../../contracts/protocol/DygnifyTreasury.sol";
 
 contract DygnifyTreasuryFuzz is DygnifyTreasury {
     function echidna_test_getTreasuryBalance() public returns (bool) {
+        uint256 Amount = 50000000000000;
         address DygnifyTreasuryAddr = 0x34D402F14D58E001D8EfBe6585051BF9706AA064;
         DygnifyTreasury dygnifyTreasury = DygnifyTreasury(DygnifyTreasuryAddr);
         uint256 TreasuryBalance = dygnifyTreasury.getTreasuryBalance();
-        return TreasuryBalance >= 0;
+        return TreasuryBalance >= 0 && TreasuryBalance == Amount;
     }
 
     function echidna_test_withdraw() public returns (bool) {

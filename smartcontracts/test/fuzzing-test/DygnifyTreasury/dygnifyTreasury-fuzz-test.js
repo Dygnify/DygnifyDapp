@@ -1,10 +1,7 @@
 const { expect, assert } = require("chai");
 const { ethers } = require("hardhat");
 
-const overflow =
-	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
-
-describe.only("DygnifyTreasuryFuzz", function () {
+describe("DygnifyTreasuryFuzz", function () {
 	let dygnifyConfig,
 		multiSign,
 		usdcToken,
@@ -70,17 +67,13 @@ describe.only("DygnifyTreasuryFuzz", function () {
 			await usdcToken.transfer(dygnifyTreasury.address, "50000000000000");
 
 			// Get the initial treasury balance
-			// const InitialTreasuryBalance = await dygnifyTreasury.getTreasuryBalance();
-			// assert.equal(InitialTreasuryBalance, "100000000000000");
+			const InitialTreasuryBalance = await dygnifyTreasury.getTreasuryBalance();
+			assert.equal(InitialTreasuryBalance, "100000000000000");
 
 			// Withdraw USDC
 			await dygnifyTreasury.withdraw(user.address, "50000000000000");
 			await multiSign.connect(owner1).confirmTransaction(0);
 			await multiSign.connect(owner2).confirmTransaction(0);
-
-			// Get the updated User balance
-			// const UserBalance = await usdcToken.balanceOf(user.address);
-			// assert.equal(UserBalance.toString(), "50000000000000");
 
 			// Get the updated treasury balance
 			const UpdatedTreasuryBalance = await dygnifyTreasury.getTreasuryBalance();
