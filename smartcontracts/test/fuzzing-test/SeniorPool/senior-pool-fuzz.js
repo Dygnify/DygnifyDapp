@@ -8,11 +8,7 @@ const OFFSET = new BN(10);
 
 const ID = ethers.utils.id("aadhar");
 
-const OVERFLOW =
-	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
-
 const oneYear = 60 * 60 * 24 * 30 * 12;
-const sixMonths = 60 * 60 * 24 * 30 * 6;
 let count = 0;
 
 describe("SeniorPoolFuzz", function () {
@@ -101,10 +97,6 @@ describe("SeniorPoolFuzz", function () {
 		await seniorPool.connect(account).stake(AMOUNT);
 	};
 
-	function lpMantissa() {
-		return Math.pow(10, 6);
-	}
-
 	describe("stake", function () {
 		describe("Positive cases", function () {
 			it("1. stake 10000 usdc in senior pool", async function () {
@@ -190,14 +182,6 @@ describe("SeniorPoolFuzz", function () {
 
 				const amount = AMOUNT / 2;
 				await opportunityPool.repayment(true, ID, amount, seniorPool.address);
-
-				// const provider = new ethers.providers.JsonRpcProvider(
-				// 	"http://localhost:8545"
-				// );
-
-				// after withDrawFromOpportunity{sharePrice, seniorPoolBalance, usdcBalance}
-
-				const seniorPoolBalBefore = await seniorPool.seniorPoolBal();
 
 				// 12 months in seconds + 1 second
 				await network.provider.send("evm_increaseTime", [oneYear + 1]);

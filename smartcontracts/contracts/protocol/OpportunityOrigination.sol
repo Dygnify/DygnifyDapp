@@ -402,4 +402,11 @@ contract OpportunityOrigination is
         ) return true;
         else return false;
     }
+
+    function getOpportunity(
+        bytes32 id
+    ) external view override returns (Opportunity memory) {
+        require(isOpportunity[id] == true, "Opportunity ID doesn't exist");
+        return opportunityToId[id];
+    }
 }

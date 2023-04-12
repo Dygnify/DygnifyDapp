@@ -4,7 +4,7 @@ const { ethers } = require("hardhat");
 const overflow =
 	"115792089237316195423570985008687907853269984665640564039457584007913129639937";
 
-describe.only("DygnifyTreasuryFuzz", function () {
+describe("DygnifyTreasuryFuzz", function () {
 	let dygnifyConfig,
 		multiSign,
 		usdcToken,

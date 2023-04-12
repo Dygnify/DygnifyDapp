@@ -60,12 +60,14 @@ describe("LPTokenFuzz", function () {
 		describe("Positive cases", function () {
 			it("1. burn and withdraw 10000 usdc to user wallet", async function () {
 				const mintAmount = AMOUNT;
-				const burnAmount = AMOUNT - AMOUNT / 2;
+				const burnAmount = AMOUNT;
 				const userAddress = accounts[3].address;
 				await lpToken.mint(userAddress, mintAmount);
 				await lpToken.burn(userAddress, burnAmount);
 
-				console.log();
+				const totalShares = await lpToken.totalShares();
+
+				assert.equal(totalShares.toString(), "0");
 			});
 		});
 	});

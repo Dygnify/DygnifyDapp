@@ -28,6 +28,6 @@ contract LPTokenFuzz {
 
         uint currentShare = lptoken.totalShares();
 
-        return currentShare == amount / 2;
+        return currentShare == 0;
     }
 }
