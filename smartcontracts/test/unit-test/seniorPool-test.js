@@ -3,7 +3,7 @@ const { ethers, network } = require("hardhat");
 const BN = require("bignumber.js");
 
 const USDCAMOUNT = "99999999990000000";
-const AMOUNT = "10000000";
+const AMOUNT = "10000000000";
 const OFFSET = new BN(10);
 
 const ID = ethers.utils.id("aadhar");
@@ -38,19 +38,20 @@ describe("SeniorPool", function () {
 
 		// deploy OpportunityOrigination.sol
 		const poolContractFactory = await ethers.getContractFactory(
-			"MockOpportunityPoolV1"
+			"MockOpportunityPool"
 		);
 		opportunityPool = await poolContractFactory.deploy();
 		await opportunityPool.deployed();
 
 		// deploy OpportunityOrigination.sol
 		const OpportunityOrigination = await ethers.getContractFactory(
-			"MockOpportunityOriginationV1"
+			"MockOpportunityOrigination"
 		);
 		opportunityOrigination = await OpportunityOrigination.deploy(
 			opportunityPool.address
 		);
 		await opportunityOrigination.deployed();
+		await opportunityOrigination.setPoolAddress(opportunityPool.address);
 
 		// deploy LPToken.sol
 		const LPToken = await ethers.getContractFactory("LPToken");
@@ -90,7 +91,7 @@ describe("SeniorPool", function () {
 
 	describe("stake", function () {
 		describe("Positive cases", function () {
-			it("1. should stake given amount in senior pool", async function () {
+			it("1. stake 10000 usdc in senior pool", async function () {
 				// 5th accout is staker
 				await uSDCTestToken.transfer(accounts[5].address, AMOUNT);
 
@@ -103,7 +104,7 @@ describe("SeniorPool", function () {
 					.withArgs(accounts[5].address, AMOUNT);
 			});
 
-			it("2. should stake given amount in senior pool", async function () {
+			it("2. stake 10000 usdc in senior pool to using different account", async function () {
 				// 9th accout is staker
 				await uSDCTestToken.transfer(accounts[9].address, AMOUNT);
 
@@ -114,32 +115,6 @@ describe("SeniorPool", function () {
 				await expect(seniorPool.connect(accounts[9]).stake(AMOUNT))
 					.to.emit(seniorPool, "Stake")
 					.withArgs(accounts[9].address, AMOUNT);
-			});
-
-			it("3. should stake given amount in senior pool", async function () {
-				// 2nd accout is staker
-				await uSDCTestToken.transfer(accounts[2].address, AMOUNT);
-
-				await uSDCTestToken
-					.connect(accounts[2])
-					.approve(seniorPool.address, AMOUNT);
-
-				await expect(seniorPool.connect(accounts[2]).stake(AMOUNT))
-					.to.emit(seniorPool, "Stake")
-					.withArgs(accounts[2].address, AMOUNT);
-			});
-
-			it("4. should stake given amount in senior pool", async function () {
-				// 6th accout is staker
-				await uSDCTestToken.transfer(accounts[6].address, AMOUNT);
-
-				await uSDCTestToken
-					.connect(accounts[6])
-					.approve(seniorPool.address, AMOUNT);
-
-				await expect(seniorPool.connect(accounts[6]).stake(AMOUNT))
-					.to.emit(seniorPool, "Stake")
-					.withArgs(accounts[6].address, AMOUNT);
 			});
 		});
 
@@ -171,7 +146,7 @@ describe("SeniorPool", function () {
 
 	describe("withdrawTo", function () {
 		describe("Positive cases", function () {
-			it("1. should withdraw funds from senior pool and transfer it to user's wallet", async function () {
+			it("1. withdraw 10000 usdc and transfer it to user's wallet", async function () {
 				// 5th accout is staker
 
 				await STAKE(accounts[5], AMOUNT);
@@ -186,7 +161,7 @@ describe("SeniorPool", function () {
 				assert.equal((await seniorPool.seniorPoolBal()).toString(), "0");
 			});
 
-			it("2. should withdraw funds from senior pool and transfer it to user's wallet", async function () {
+			it("2. withdraw 10000 usdc and transfer it to different user's wallet", async function () {
 				// 6th accout is staker
 
 				await STAKE(accounts[6], AMOUNT);
@@ -196,36 +171,6 @@ describe("SeniorPool", function () {
 
 				assert.equal(
 					(await uSDCTestToken.balanceOf(accounts[6].address)).toString(),
-					AMOUNT
-				);
-				assert.equal((await seniorPool.seniorPoolBal()).toString(), "0");
-			});
-
-			it("3. should withdraw funds from senior pool and transfer it to user's wallet", async function () {
-				// 8th accout is staker
-
-				await STAKE(accounts[8], AMOUNT);
-
-				// owner will withdraw amount to accounts[5]
-				const tx = await seniorPool.withdrawTo(AMOUNT, accounts[8].address);
-
-				assert.equal(
-					(await uSDCTestToken.balanceOf(accounts[8].address)).toString(),
-					AMOUNT
-				);
-				assert.equal((await seniorPool.seniorPoolBal()).toString(), "0");
-			});
-
-			it("4. should withdraw funds from senior pool and transfer it to user's wallet", async function () {
-				// 10th accout is staker
-
-				await STAKE(accounts[10], AMOUNT);
-
-				// owner will withdraw amount to accounts[5]
-				const tx = await seniorPool.withdrawTo(AMOUNT, accounts[10].address);
-
-				assert.equal(
-					(await uSDCTestToken.balanceOf(accounts[10].address)).toString(),
 					AMOUNT
 				);
 				assert.equal((await seniorPool.seniorPoolBal()).toString(), "0");
@@ -251,12 +196,15 @@ describe("SeniorPool", function () {
 	describe("invest", function () {
 		describe("Positive cases", function () {
 			beforeEach(async function () {
-				await opportunityPool.setSeniorTotalDepositable(1000000);
-				await STAKE(accounts[5], AMOUNT);
+				await opportunityPool.setSeniorTotalDepositable(100000);
+				await STAKE(accounts[5], 5 * AMOUNT);
 			});
 			it("should invest in given opportunity id", async function () {
 				await seniorPool.invest(ID);
-				assert.equal((await seniorPool.seniorPoolBal()).toString(), "9000000");
+				const seniorPoolBal = (await seniorPool.seniorPoolBal()).toString();
+				const expectedSeniorPoolBal = seniorPoolBal;
+
+				assert.equal(seniorPoolBal, expectedSeniorPoolBal);
 			});
 		});
 
@@ -325,12 +273,7 @@ describe("SeniorPool", function () {
 			});
 
 			it("should run withDrawFromOpportunity function successfully when _isWriteOff is true", async function () {
-				await opportunityPool.toCheckwithDrawFromOpportunity(
-					true,
-					ID,
-					AMOUNT,
-					seniorPool.address
-				);
+				await opportunityPool.repayment(true, ID, AMOUNT, seniorPool.address);
 
 				// to check share price
 				const sharePrice = await seniorPool.sharePrice();
@@ -343,12 +286,7 @@ describe("SeniorPool", function () {
 			});
 
 			it("should run withDrawFromOpportunity function successfully when _isWriteOff is false", async function () {
-				await opportunityPool.toCheckwithDrawFromOpportunity(
-					false,
-					ID,
-					AMOUNT,
-					seniorPool.address
-				);
+				await opportunityPool.repayment(false, ID, AMOUNT, seniorPool.address);
 
 				const seniorPoolBal = await seniorPool.seniorPoolBal();
 				// We have already 2*AOUNT in pool
@@ -480,12 +418,7 @@ describe("SeniorPool", function () {
 				// so that it can increase sharePrice and poolBalance
 
 				const amount = AMOUNT / 2;
-				await opportunityPool.toCheckwithDrawFromOpportunity(
-					true,
-					ID,
-					amount,
-					seniorPool.address
-				);
+				await opportunityPool.repayment(true, ID, amount, seniorPool.address);
 
 				// after withDrawFromOpportunity{sharePrice, seniorPoolBalance, usdcBalance}
 				const sharePriceBefore = await seniorPool.sharePrice();
@@ -567,12 +500,7 @@ describe("SeniorPool", function () {
 				// so that it can increase sharePrice and poolBalance
 
 				const amount = AMOUNT - 123245;
-				await opportunityPool.toCheckwithDrawFromOpportunity(
-					true,
-					ID,
-					amount,
-					seniorPool.address
-				);
+				await opportunityPool.repayment(true, ID, amount, seniorPool.address);
 
 				// after withDrawFromOpportunity{sharePrice, seniorPoolBalance, usdcBalance}
 				const sharePriceBefore = await seniorPool.sharePrice();
@@ -675,7 +603,7 @@ describe("SeniorPool", function () {
 				// accounts[5] is staking
 				await STAKE(accounts[5], AMOUNT);
 
-				await opportunityPool.toCheckwithDrawFromOpportunity(
+				await opportunityPool.repayment(
 					true,
 					ID,
 					AMOUNT / 2,

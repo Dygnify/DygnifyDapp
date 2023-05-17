@@ -289,7 +289,8 @@ export const getJuniorWithdrawableOp = async () => {
 				if (tx.opportunityStatus.toString() === "8") {
 					obj.yieldGenerated = getDisplayAmount(apy * stakingBal);
 				}
-				let investorWithdrawable = await poolContract.getUserWithdrawableAmount();
+				let investorWithdrawable =
+					await poolContract.getUserWithdrawableAmount();
 				investorWithdrawable = ethers.utils.formatUnits(
 					investorWithdrawable.toString(),
 					sixDecimals
@@ -375,7 +376,9 @@ export const investInSeniorPool = async (amount) => {
 			);
 			amount = ethers.utils.parseUnits(amount, sixDecimals);
 			let transaction = await contract.stake(amount);
-			await transaction.wait();
+			console.log(transaction);
+			const res = await transaction.wait();
+			console.log(res);
 			return { transaction, success: true };
 		} else {
 			Sentry.captureMessage("Wallet connect error", "warning");

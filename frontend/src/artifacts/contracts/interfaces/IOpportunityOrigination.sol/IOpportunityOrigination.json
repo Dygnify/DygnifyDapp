@@ -128,6 +128,97 @@
       "inputs": [
         {
           "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getOpportunity",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "opportunityID",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "opportunityName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "opportunityInfo",
+              "type": "string"
+            },
+            {
+              "internalType": "enum IOpportunityOrigination.LoanType",
+              "name": "loanType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "loanAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "loanTenureInDays",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "loanInterest",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "paymentFrequencyInDays",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "collateralDocument",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "capitalLoss",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum IOpportunityOrigination.OpportunityStatus",
+              "name": "opportunityStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address",
+              "name": "opportunityPoolAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "createdOn",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IOpportunityOrigination.Opportunity",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
           "name": "_opportunityId",
           "type": "bytes32"
         }

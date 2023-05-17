@@ -43,7 +43,7 @@ describe("OpportunityPool", function () {
 
 		// Deploy Mock OpportunityOrigination
 		const OpportunityOrigination = await ethers.getContractFactory(
-			"MockOpportunityOriginationForOpportunityPool"
+			"MockOpportunityOrigination"
 		);
 		opportunityOrigination = await OpportunityOrigination.deploy(
 			borrower.address
@@ -55,11 +55,10 @@ describe("OpportunityPool", function () {
 		investor = await Investor.deploy();
 		await investor.deployed();
 
-		// Deploy and initialize USDC token
-		const UsdcToken = await ethers.getContractFactory("UsdcToken");
-		usdcToken = await UsdcToken.deploy();
+		// Deploy UsdcToken
+		const UsdcToken = await ethers.getContractFactory("TestUSDCToken");
+		usdcToken = await UsdcToken.deploy("100000000000000000");
 		await usdcToken.deployed();
-		await usdcToken.initialize();
 
 		// Deploy lpToken
 		const LPToken = await ethers.getContractFactory("LPToken");
@@ -67,9 +66,7 @@ describe("OpportunityPool", function () {
 		await lpToken.deployed();
 
 		// Deploy seniorPool
-		const SeniorPool = await ethers.getContractFactory(
-			"MockSeniorPoolForOpportunityPool"
-		);
+		const SeniorPool = await ethers.getContractFactory("MockSeniorPool");
 		seniorPool = await SeniorPool.deploy(opportunityPool.address);
 		await seniorPool.deployed();
 

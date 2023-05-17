@@ -1,0 +1,2 @@
+initialize: test/fuzzing-test/CollateralToken/init.json
+cryticArgs: ["--solc-remaps", "@openzeppelin=node_modules/@openzeppelin"]

@@ -30,9 +30,9 @@ describe("DynifyTresury", function () {
 		await multiSign.deployed();
 		await multiSign._MultiSign_init([owner1.address, owner2.address], 2);
 
-		// Deploy and initialize UsdcToken
-		const UsdcToken = await ethers.getContractFactory("UsdcToken");
-		usdcToken = await UsdcToken.deploy();
+		// Deploy UsdcToken
+		const UsdcToken = await ethers.getContractFactory("TestUSDCToken");
+		usdcToken = await UsdcToken.deploy("100000000000000000");
 		await usdcToken.deployed();
 
 		// Deploy and Initialize DygnifyTreasury
@@ -44,9 +44,6 @@ describe("DynifyTresury", function () {
 		await dygnifyConfig.setAddress(11, multiSign.address);
 		await dygnifyConfig.setAddress(2, usdcToken.address);
 		await dygnifyConfig.setAddress(8, dygnifyTreasury.address);
-
-		// Initialize
-		await usdcToken.initialize();
 
 		// Transfer Usdc
 		await usdcToken.transfer(dygnifyTreasury.address, "50000000000000");

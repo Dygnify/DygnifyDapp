@@ -64,6 +64,11 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
         uint8 indexed subpool,
         uint256 amount
     );
+    event Repaid(
+        address indexed borrower,
+        uint256 amount,
+        uint256 repaymentCounter
+    );
 
     function initialize(
         DygnifyConfig _dygnifyConfig,
@@ -369,6 +374,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 dygnifyConfig.dygnifyTreasuryAddress(),
                 dygnifyTreasury
             );
+            emit Repaid(msg.sender, amount, repaymentCounter);
         } else {
             uint256 amount = emiAmount;
             totalRepaidAmount += amount;
@@ -438,6 +444,7 @@ contract OpportunityPool is BaseUpgradeablePausable, IOpportunityPool {
                 dygnifyConfig.dygnifyTreasuryAddress(),
                 dygnifyTreasury
             );
+            emit Repaid(msg.sender, amount, repaymentCounter);
         }
 
         if (repaymentCounter == totalRepayments) {

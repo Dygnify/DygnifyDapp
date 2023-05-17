@@ -12,7 +12,6 @@ describe("LPToken", function () {
 
 	beforeEach(async () => {
 		accounts = await ethers.getSigners();
-		
 
 		const DygnifyConfig = await ethers.getContractFactory("DygnifyConfig");
 		dygnifyConfig = await DygnifyConfig.deploy();

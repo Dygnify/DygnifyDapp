@@ -8,6 +8,8 @@ contract Borrower is BaseUpgradeablePausable {
     DygnifyConfig private dygnifyConfig;
     using ConfigHelper for DygnifyConfig;
 
+    event BorrowerProfileUpdated(address indexed borrower, string cid);
+
     // In future we can update the profile of borrwer when auditor reviews it.
     mapping(address => string) public borrowerProfile;
 
@@ -25,5 +27,6 @@ contract Borrower is BaseUpgradeablePausable {
     function updateBorrowerProfile(string calldata _cid) external {
         require(bytes(_cid).length != 0, "Invalid CID");
         borrowerProfile[msg.sender] = _cid;
+        emit BorrowerProfileUpdated(msg.sender, _cid);
     }
 }

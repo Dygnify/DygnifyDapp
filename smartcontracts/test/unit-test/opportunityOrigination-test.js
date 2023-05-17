@@ -376,7 +376,7 @@ describe("OpportunityOrigination", function () {
 
 			it("revert when opportunityName greater than 50", async function () {
 				const oppoName =
-					"000000000000078978798798798798798798kjkjkjkjkkj7777kjkljlkjlkjjklkjlkjjkjkjkj955555787090000070777";
+					"000000000000078978798798798798798798kjkjk890890809809890jkjkkj7777kjkljlkjlkjjklkjlkjjkjkjkj955555787090000070777";
 				const borrower = await ethers.getSigner();
 				await expect(
 					opportunityOrigination.createOpportunity({
@@ -515,7 +515,8 @@ describe("OpportunityOrigination", function () {
 				).to.be.reverted;
 			});
 			it("revert when opportunityName greater than 50", async function () {
-				const oppoName = "123456789009876543212345678909877";
+				const oppoName =
+					"000000000000078978798798798798798798kjkjk890890809809890jkjkkj7777kjkljlkjlkjjklkjlkjjkjkjkj955555787090000070777";
 				const borrower = await ethers.getSigner();
 				await expect(
 					opportunityOrigination.createOpportunity({

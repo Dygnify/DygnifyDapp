@@ -1,0 +1,2 @@
+cryticArgs: ["--solc-remaps", "@openzeppelin=node_modules/@openzeppelin"]
+coverage: true
